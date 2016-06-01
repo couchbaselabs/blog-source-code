@@ -1,0 +1,73 @@
+:imagesdir: images
+
+= Scan Consistency options
+
+What I'm learning about link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase] is that while it aims to provide sensible defaults, it also aims to provide options. Using Couchbase sometimes requires you to think about tradeoffs. The one I'm going to focus on in this blog post is Scan Consistency for N1QL queries.
+
+image::n1ql_graphic.png[N1QL is SQL for JSON Documents]
+
+Couchbase 4.5 introduces a new link:http://developer.couchbase.com/documentation/server/4.5/architecture/querying-data-with-n1ql.html?utm_source=blogs&utm_medium=link&utm_campaign=blog[Scan Consistency option]: AtPlus. This joins the existing options:
+
+* NotBounded (default)
+* RequestPlus
+
+This blog post is going to review NotBounded and RequestPlus, as well as introduce AtPlus. I'll also provide a code sample that you can use to try out all three yourself.
+
+== Not Bounded
+
+This is the default behavior.
+
+A N1QL query that is using "Not Bounded" Scan Consistency means that it will not wait for any indexes to finish updating before running the query and returning results. Let's say you have documents A,B,C in a bucket. At the time of the query, only A and B are indexed. With Not Bounded, only documents A and B will be returned.
+
+Since the query is not waiting on any indexing, this is the best option for performance. Document C will show up once it has been indexed. This shouldn't take long, but if you have just created C, for instance, and then immediately query for a full list of documents, C may not show up.
+
+[source,C#]
+----
+include::ScanConsistencyDemo/ScanConsistencyDemo/Program.cs[tags=NotBoundedExample]
+----
+
+What I would expect to see when running this code is:
+
+1. `Initial count: N`
+2. `Count after insert: N` (still)
+3. Waiting
+4. `Count after waiting: N+1`
+
+I set the wait time at 5 seconds, which is probably overkill. I use Thread.Sleep just for demonstration purposes, but obviously that's a clunky tactic for a real app. That brings us to RequestPlus.
+
+== RequestPlus
+
+This scan consistency option provides nearly the opposite of Not Bounded. It will wait until all document changes and index updates (up until the query was run) are processed before it runs the query.
+
+Here's a simplified example sequence of events when using RequestPlus
+1. Document C is created
+2. N1QL query to get all documents is executed (A,B,C)
+3. N1QL query is put on hold because at least one document needs to be indexed (document C).
+3. Indexing process is completed. Document C is now indexed.
+4. N1QL query executes, returning A,B,C.
+
+[source,C#]
+----
+include::ScanConsistencyDemo/ScanConsistencyDemo/Program.cs[tags=RequestPlusExample]
+----
+
+This gives us completeness in the query results, at the expense of performance. In some cases, it doesn't make sense to wait for the _everything_ to be indexed. And that brings us to AtPlus.
+
+== AtPlus (new to Couchbase 4.5)
+
+This scan consistency option provides something of a middle ground between RequestPlus and Not Bounded. This is also a *brand new scan consistency option for Couchbase 4.5*.
+
+With AtPlus, you'll have to do a little more work in your code, but in return you'll get better performance than using RequestPlus. Instead of waiting for an entire index to complete (which could be multiple documents), it will just wait for the documents that you specify to be indexed before running the query. This is sometimes known as "read your own write" or RYOW.
+
+[source,C#]
+----
+include::ScanConsistencyDemo/ScanConsistencyDemo/Program.cs[tags=AtPlusExample]
+----
+
+With this example, the N1QL query will wait only for the new document to be indexed. It will not wait for anything else. In a high-volume system, this could provide a good balance of increased performance and completeness of results.
+
+== Conclusion
+
+With N1QL, there's a spectrum of speed and completeness. With Couchbase Server 4.5, you now have three options. NotBounded for raw speed, RequestPlus for up-to-now completeness, and AtPlus sits in between.
+
+http://developer.couchbase.com/documentation/server/4.0/n1ql/n1ql-rest-api/executen1ql.html
