@@ -1,0 +1,56 @@
+Video: How to Install Couchbase on Windows
+
+---
+
+I'm Matt Groves, Developer Advocate for Couchbase
+
+In this video I'm going to show you how to install and setup Couchbase Server on Windows
+
+Start at Couchbase.com, pick the version you want to download.
+
+I'm selecting Community Editor, 4.5.0-beta.
+
+Once this downloades, run the executable to begin setup.
+
+Alternatively, you can use chocolatey nuget to do this:
+	choco install couchbase-server-community -pre
+	
+	the "-pre" is because I'm getting a beta version
+
+Click through the wizard (unless you are using chocolatey) 
+	
+I should also point out that a CouchbaseServer windows service is now running.
+If you need to pause or restart the service, you can use service.msc to do that
+
+Once installed, you'll go to localhost:8091 and begin setup
+
+You're going to start a new cluster. A cluster is a collection of nodes.
+
+You can choose which services you want this cluster to have: I'll pick all four.
+Full Text is new to 4.5 and is still an unsupported developer preview feature.
+I can also specify how much ram I want to give to each node.
+
+You can also decide how much ram each service will take. Don't worry, you can change them
+later.
+
+Next I can install a sample bucket. These are great for learning more about
+Couchbase and N1QL. I'll install travel-sample
+
+Next you can choose to create a default bucket. You can choose how much of the
+cluster quota should be dedicated to that bucket. And you get a handy visual guide
+to help.
+
+You can elect to put a password on a new bucket. If you plan to deploy this, you definitely should.
+
+You can also skip creating a default bucket, which I will.
+
+Next, create an admin account for this node. I'll just enter a password.
+
+And that's it. The travel-sample will take a minute to load, but now you are ready to use
+Couchbase Server.
+
+Thanks for watching my video
+
+Please let me know what you think, and what else you would like to see in a video tutorial.
+
+Leave a comment below or contact me at matthew.groves@couchbase.com

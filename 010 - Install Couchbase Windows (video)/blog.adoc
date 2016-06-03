@@ -1,0 +1,17 @@
+= How to Install Couchbase Server on Windows (Video)
+
+I created a video to walk you through the entire process of installing and setting up Couchbase Server 4.5 on Windows.
+
+Some links that will help if you're following along with the video:
+
+* link:http://www.couchbase.com/nosql-databases/downloads?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Download Couchbase Server]
+* link:https://chocolatey.org[Chocolatey NuGet]
+* link:https://chocolatey.org/packages/couchbase-server-community[Couchbase Community Server on Chocolatey NuGet]
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dZpnANelV2M" frameborder="0" allowfullscreen></iframe>
++++
+
+If you'd like to learn more about how to use Couchbase, please visit our Couchbase Developer Portal.
+
+Questions? Comments? Leave a comment, link:http://twitter.com/mgroves[ping me on Twitter], or email me (matthew.groves AT couchbase DOT com). I'd love to hear from you.
