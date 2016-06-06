@@ -79,4 +79,6 @@ include::ScanConsistencyDemo/ScanConsistencyDemo/Program.cs[tags=UseEnhancedDura
 
 With N1QL, there's a spectrum of speed and completeness. With Couchbase Server 4.5, you now have three options. NotBounded for raw speed, RequestPlus for up-to-now completeness, and AtPlus sits in between.
 
-You can link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/009N1QLQueryScanConsistencyOptions[download the complete source code for this blog post on Github].
+You can link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/009N1QLQueryScanConsistencyOptions/ScanConsistencyDemo[download the complete source code for this blog post on Github].
+
+Please leave a comment, link:http://twitter.com/mgroves[ping me on Twitter], or email me (matthew.groves AT couchbase DOT com).
