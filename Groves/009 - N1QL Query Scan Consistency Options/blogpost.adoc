@@ -1,14 +1,15 @@
 :imagesdir: images
 
-= Scan Consistency options
+= N1QL Query Scan Consistency options
 
-What I'm learning about link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase] is that while it aims to provide sensible defaults, it also aims to provide options. Using Couchbase sometimes requires you to think about tradeoffs. The one I'm going to focus on in this blog post is Scan Consistency for N1QL queries.
+What I'm learning about link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase] is that while it aims to provide sensible defaults, it also provides options to make trade-offs. The trade-off I'm going to focus on in this blog post is Scan Consistency for N1QL queries.
 
 image::n1ql_graphic.png[N1QL is SQL for JSON Documents]
 
-Couchbase 4.5 introduces a new link:http://developer.couchbase.com/documentation/server/4.5/architecture/querying-data-with-n1ql.html?utm_source=blogs&utm_medium=link&utm_campaign=blog[Scan Consistency option]: AtPlus. This joins the existing options:
+Couchbase 4.5 introduces a new link:http://developer.couchbase.com/documentation/server/4.5/architecture/querying-data-with-n1ql.html?utm_source=blogs&utm_medium=link&utm_campaign=blog[Scan Consistency option]: AtPlus. This joins the existing options to make a total of three:
 
 * NotBounded (default)
+* AtPlus (new to Couchbase Server 4.5)
 * RequestPlus
 
 This blog post is going to review NotBounded and RequestPlus, as well as introduce AtPlus. I'll also provide a code sample that you can use to try out all three yourself.
@@ -65,6 +66,14 @@ include::ScanConsistencyDemo/ScanConsistencyDemo/Program.cs[tags=AtPlusExample]
 ----
 
 With this example, the N1QL query will wait only for the new document to be indexed. It will not wait for anything else. In a high-volume system, this could provide a good balance of increased performance and completeness of results.
+
+Note that at the time of writing this post, you'll need to make sure that you explicitly set UseEnhancedDurability to true when setting up your `ClientConfiguration`:
+
+[source,C#]
+----
+include::ScanConsistencyDemo/ScanConsistencyDemo/Program.cs[tags=UseEnhancedDurability]
+----
+
 
 == Conclusion
 

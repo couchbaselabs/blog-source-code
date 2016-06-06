@@ -2,7 +2,7 @@ Video: How to Install Couchbase on Windows
 
 ---
 
-I'm Matt Groves, Developer Advocate for Couchbase
+Hello I'm Matt Groves, Developer Advocate for Couchbase
 
 In this video I'm going to show you how to install and setup Couchbase Server on Windows
 
@@ -10,15 +10,21 @@ Start at Couchbase.com, pick the version you want to download.
 
 I'm selecting Community Editor, 4.5.0-beta.
 
-Once this downloades, run the executable to begin setup.
+Once this downloads, run the executable to begin setup.
 
 Alternatively, you can use chocolatey nuget to do this:
 	choco install couchbase-server-community -pre
 	
 	the "-pre" is because I'm getting a beta version
-
-Click through the wizard (unless you are using chocolatey) 
 	
+	that will download and automate the first part of couchbase installation
+
+I'm going to run the executable just to show the whole experience
+	
+Click through the wizard (unless you are using chocolatey) 
+
+------
+
 I should also point out that a CouchbaseServer windows service is now running.
 If you need to pause or restart the service, you can use service.msc to do that
 
@@ -53,4 +59,5 @@ Thanks for watching my video
 
 Please let me know what you think, and what else you would like to see in a video tutorial.
 
-Leave a comment below or contact me at matthew.groves@couchbase.com
+Leave a comment below or contact me at matthew.groves@couchbase.com, or ping me on twitter
+I'm mgroves

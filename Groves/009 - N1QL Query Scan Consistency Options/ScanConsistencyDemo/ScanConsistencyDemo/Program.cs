@@ -12,15 +12,15 @@ namespace ScanConsistencyDemo
     class Program
     {
         private static IBucket _bucket;
-        private static Random _random = new Random();
+        private static readonly Random _random = new Random();
 
         static void Main(string[] args)
         {
             SetupCouchbase();
 
-//            NotBoundedExample();
-//
-//            RequestPlusExample();
+            NotBoundedExample();
+
+            RequestPlusExample();
 
             AtPlusExample();
 
@@ -133,16 +133,27 @@ namespace ScanConsistencyDemo
 
         private static void SetupCouchbase()
         {
-
             var config = new ClientConfiguration();
             config.Servers = new List<Uri>
             {
                 new Uri("http://localhost:8091")
             };
+
+            // this BucketConfigs code needs to be here to support AtPlus
+            // tag::UseEnhancedDurability[]
+            config.BucketConfigs = new Dictionary<string, BucketConfiguration> {
+                { 
+                    "travel-sample", new BucketConfiguration
+                    {
+                        UseEnhancedDurability = true
+                    }
+                }
+            };
+            // end::UseEnhancedDurability[]
+            
             config.UseSsl = false;
             ClusterHelper.Initialize(config);
             _bucket = ClusterHelper.GetBucket("travel-sample");
-            _bucket.Configuration.UseEnhancedDurability = true;
         }
     }
 }
