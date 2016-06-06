@@ -119,9 +119,9 @@ namespace ScanConsistencyDemo
 
             // get the count again
             var state = MutationState.From(insertResult.Document);
-            var request = new QueryRequest("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
-                .ConsistentWith(state);
-            var result2 = _bucket.Query<dynamic>(request).Rows.First();
+            var request = new QueryRequest("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'");
+            var t = request.ConsistentWith(state);
+            var result2 = _bucket.Query<dynamic>(t).Rows.First();
             Console.WriteLine($"Count after insert with AtPlus: {result2.airportCount}");
         }
         // end::AtPlusExample[]
