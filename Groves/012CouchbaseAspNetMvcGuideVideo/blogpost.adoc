@@ -1,0 +1,15 @@
+= Couchbase on ASP.NET MVC with Matthew Groves (Video)
+
+This video will walk you through the basics of using Couchbase in your ASP.NET MVC application.
+
+You will need to have link:http://www.couchbase.com/nosql-databases/downloads?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server] already installed to follow along. I've already created a video to show you link:http://blog.couchbase.com/2016/june/how-to-install-couchbase-server-on-windows-video[how to install Couchbase Server on Windows].
+
+You can also refer to the link:/http://blog.couchbase.com/2016/may/couchbase-with-windows-and-.net---part-1[first part of my blog post series on Couchbase with Windows].
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TCGKJ1j71nw" frameborder="0" allowfullscreen></iframe>
++++
+
+If you'd like to learn more about how to use Couchbase, please visit our link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Developer Portal].
+
+Questions? Comments? Leave a comment, link:http://twitter.com/mgroves[ping me on Twitter], or email me (matthew.groves AT couchbase DOT com). I'd love to hear from you.
