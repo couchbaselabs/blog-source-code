@@ -40,12 +40,14 @@ include::PartialReadExample/PartialReadExample/Program.cs[tags=WholeDocument]
 
 That code gets the whole document (by key), and writes out the whole document to console (it uses JsonConvert and Formatting.Indented to make it look nicer).
 
-In this example, the document is very small. In your system, it could be much larger. But maybe you only want the username. You can pull back just the username, using the sub-document API:
+In this example, the document is very small. But now imagine that it's much larger, and you only want to get the username. It would be a waste to pull down an entire document just for one field. This is where the sub-document API comes in. You can pull back a portion, or sub-document, of a JSON document, using the sub-document API:
 
 [source,C#]
 ----
 include::PartialReadExample/PartialReadExample/Program.cs[tags=ShowSubdocument]
 ----
+
+Notice that this method has a `path` parameter. This is a simple dotted syntax telling Couchbase how to navigate the "JSON tree" to find the subdocument that you're interested in. In the above example, if I just want username, then the path would be `username`. If I just want the city of the address, the path would be `profile.address.city`. Think of it like a very simple XPath for JSON, except forget I said that because XPath can be a nightmare.
 
 This method uses the `LookupIn<>` method on `IBucket` instead of `Get<>`. When using `LookupIn`, you can chain sub-document operations (like `Get(path)` above) followed by an `Execute`. The result of `Execute` is an `IDocumentFragment<>`. With this object, you can check to see if the sub-document request succeeded or not, as well as get the content of the sub-document.
 
