@@ -1,0 +1,72 @@
+Hi everyone, Matt Groves here
+
+Today I'm going to show you how to install couchbase on Windows Azure
+using the Azure Marketplace
+
+portal.azure.com
+
+click + New
+
+search "Couchbase" hit enter
+
+click 4.0.0 community edition, click "create"
+
+Name: MyCouchbaseVM
+User name: mgroves
+Password: G2G#QBY1$Oge
+Resource Group: MyCouchbaseResourceGroup
+
+A3 Standard, A3 Basic is another possibility if you are budget minded
+
+Settings:
+
+	Before I proceed, note that I am not a devops or security expert
+	I'm just trying to get you up and running on Azure with Couchbase
+	When you decide to go into production, please carefully consider the settings
+	And consult with devops and/or security professionals
+
+	New virtual network, defaults are fine
+	Subnet: change the name to MyCouchbaseSubnet
+	Network security group:
+		Add inbound rule
+			Name: AllowCouchbaseInbound
+			Priority: 100
+			Source: Any
+			Protocol: TCP
+			Destination Port Range: *
+		
+		Add outbound rule
+			Name: AllowCouchbaseOutbound
+			Destination Port range: *
+			Protocol: TCP
+			Source port range: *
+	
+	Disable monitoring
+
+Buy:
+	Couchbase Server Community is no charge
+	Microsoft is charging for the VM
+	If I were to use Couchbase Enterprise, there would be a cost
+	I want to point out that Azure credits cannot be used on the Couchbase purchase, only on the Microsoft purchase
+		I believe this is a constraint that Microsoft imposes
+
+	Now click purchase
+
+Deployment has started
+
+This will take around 3-5 minutes, so I'm going to hit fast-forward and come back when the deployment is finished
+
+[Time lapse started around 11:10am, ended around 11:13am]
+
+Deployment is completed, and the machine is running
+
+Now that the machine is deployed, I can get an IP address
+
+Open this IP address in another browser window on port 8091, which is the standard couchbase console port
+
+Start new cluster, use defaults
+
+Now your couchbase cluster with a single node is set up. You can start adding more nodes
+or you can start writing code that uses this cluster
+
+Thanks for watching

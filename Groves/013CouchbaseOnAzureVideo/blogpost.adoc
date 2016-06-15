@@ -1,0 +1,13 @@
+= Couchbase on the Microsoft Azure Marketplace (Video)
+
+This video will walk you through installing a single node link:http://www.couchbase.com/nosql-databases/downloads?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server] (Community Edition) cluster on a Windows Azure VM via the link:http://portal.azure.com[Azure marketplace].
+
+If you've not yet tried Azure, link:https://azure.microsoft.com/en-us/pricing/free-trial/[Microsoft is offering a free one-month trial] with $200 worth of Azure credits. That gives you plenty of credit to test out Couchbase Server and check out all the other amazing stuff that is available on Azure.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/9sjRmdoatt4" frameborder="0" allowfullscreen></iframe>
++++
+
+If you'd like to learn more about how to use Couchbase, please visit our link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Developer Portal].
+
+Questions? Comments? link:http://twitter.com/mgroves[Ping me on Twitter], or email me (matthew.groves AT couchbase DOT com).
