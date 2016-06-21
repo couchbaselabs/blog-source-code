@@ -1,6 +1,6 @@
 :imagesdir: images
 
-= N1QL Query Scan Consistency options
+= New to Couchbase 4.5: AtPlus
 
 What I'm learning about link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase] is that while it aims to provide sensible defaults, it also provides options to make trade-offs. The trade-off I'm going to focus on in this blog post is Scan Consistency for N1QL queries.
 
@@ -20,7 +20,7 @@ This is the default behavior.
 
 A N1QL query that is using "Not Bounded" Scan Consistency means that it will not wait for any indexes to finish updating before running the query and returning results. Let's say you have documents A,B,C in a bucket. At the time of the query, only A and B are indexed. With Not Bounded, only documents A and B will be returned.
 
-Since the query is not waiting on any indexing, this is the best option for performance. Document C will show up once it has been indexed. This shouldn't take long, but if you have just created C, for instance, and then immediately query for a full list of documents, C may not show up.
+Since the query is not waiting on any indexing, this is the best option for performance. Document C will show up once it has been indexed. This shouldn't take long, but if you have just created C, for instance, and then immediately query for a full list of documents, C may not show up. To demonstrate with the `travel-sample` bucket:
 
 [source,C#]
 ----
@@ -41,8 +41,9 @@ I set the wait time at 5 seconds, which is probably overkill. I use Thread.Sleep
 This scan consistency option provides nearly the opposite of Not Bounded. It will wait until all document changes and index updates (up until the query was run) are processed before it runs the query.
 
 Here's a simplified example sequence of events when using RequestPlus
+
 1. Document C is created
-2. N1QL query to get all documents is executed (A,B,C)
+2. N1QL query to get all documents is executed (A,B,C all exist in the bucket)
 3. N1QL query is put on hold because at least one document needs to be indexed (document C).
 3. Indexing process is completed. Document C is now indexed.
 4. N1QL query executes, returning A,B,C.
@@ -52,7 +53,7 @@ Here's a simplified example sequence of events when using RequestPlus
 include::ScanConsistencyDemo/ScanConsistencyDemo/Program.cs[tags=RequestPlusExample]
 ----
 
-This gives us completeness in the query results, at the expense of performance. In some cases, it doesn't make sense to wait for the _everything_ to be indexed. And that brings us to AtPlus.
+This gives us completeness in the query results, at the expense of performance. In some cases, it doesn't make sense to wait for _everything_ to be indexed. And that brings us to AtPlus.
 
 == AtPlus (new to Couchbase 4.5)
 
