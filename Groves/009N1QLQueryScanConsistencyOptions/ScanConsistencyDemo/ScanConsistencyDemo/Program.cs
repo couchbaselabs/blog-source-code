@@ -101,8 +101,7 @@ namespace ScanConsistencyDemo
             Console.WriteLine("========= AtPlus");
 
             // get the current count
-            var result1 =
-                _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
+            var result1 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
                     .Rows.First();
             Console.WriteLine($"Initial count: {result1.airportCount}");
 
