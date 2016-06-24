@@ -1,0 +1,81 @@
+We're looking at Couchbase Server 4.5
+and a new feature that is in developer preview
+called Full Text Search
+
+Full text search gives us a 'search engine'
+for documents in a Couchbase bucket
+
+It's language aware and ranks results with a relevance score
+
+----
+
+Looking at the Couchbase Console, go to nodes, I just
+have a single node cluster set up here, and it indeed has
+the Full Text service enabled
+
+I'll go over to Data Buckets, and you can see that I have
+the travel-sample bucket loaded, with 31000+ documents in it
+
+----
+
+In the sample data, there are documents of type 'landmark'
+
+I can query a few of them with N1QL like so:
+
+select * from `travel-sample` where type='landmark' LIMIT 10;
+
+I can see that landmarks have a 'content' field and that would be
+nice to be able to search for with language awareness and relevance
+say I wanted to find a 'bed and breakfast'
+
+----
+
+Let's go to the Index tab, and then click Full Text
+
+I'll add a new index, I'll call it "LandmarkContentIndex"
+choose the bucket
+then I'll expand 'type mappings'
+
+I want this search to just be for landmarks, so I'll click 'add type mapping'
+and enter 'landmark' as the type name
+this would make any 'landmark' document available for full text search
+
+now I want to restrict it further to just look in the content field
+so I'll check 'only index specified fields' and hit 'ok'
+now I have to specify the fields, so I'll click the 'plus' and say 'insert child field'
+I enter the field name, which was 'content'
+leave everything else as-is, except I'm also going to check 'store', you'll see why in a bit
+and then hit 'ok'
+
+finally, there's this 'default' type mapping. this is here to make every field in the bucket
+searchable by default, which might be nice for a demo, but we're moving beyond that
+so I'll edit it and uncheck 'enabled'
+
+then I'll click 'create index'
+
+I can now watch the index being created, and click 'refesh' to see how far it's gotten
+since we're just indexing 1 field on 1 type of document, it shouldn't take long
+
+----
+
+Now let's put the index to use. To demonstrate, I don't even have to leave the console,
+I'll just click 'Full Text' again, and select the new index in the dropdown
+and enter a search, like "bed and breakfast"
+
+Couchbase Console will give me a paged list of documents, I can click the link to see the whole document
+
+also notice that I'm seeing a highlighted fragment of the content field based on my search terms
+remember when I checked that 'store' icon? if I didn't do that, then I would only see the document IDs, not the fragments
+
+----
+
+Any of the couchbase SDKs that support this (I know that at least .NET does) support
+full text search: you just supply the name of the index, the search query, and you'll get back results and highlighted fragments
+
+----
+
+Remember that this feature is currently a developer preview and is not yet officially supported
+by couchbase. In fact, if you want to contribute to the RFC, you can have a say in how this feature is ultimately
+implemented. I've put a link in the video description.
+
+Thanks for watching!
