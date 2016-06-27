@@ -1,0 +1,15 @@
+= Full Text Search on Couchase 4.5 (Video)
+
+This video shows the new  link:http://developer.couchbase.com/documentation/server/4.5/fts/full-text-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Full Text Search feature  in Couchbase Server 4.5].
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NK_DnsiybP0" frameborder="0" allowfullscreen></iframe>
++++
+
+__This feature is a developer preview: it's not supported and it's not recommended for production (yet)__.
+
+You can have a say in how the feature is implemented. Check out the link:https://github.com/couchbaselabs/sdk-rfcs/pull/30[Full Text Search RFC on GitHub], and feel free to ask questions or leave feedback.
+
+If you'd like to learn more about how to use Couchbase, please visit our link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Developer Portal].
+
+Questions or comments? link:http://twitter.com/mgroves[Follow me on Twitter], email me (matthew.groves AT couchbase DOT com), or check out link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[the Couchbase forums].
