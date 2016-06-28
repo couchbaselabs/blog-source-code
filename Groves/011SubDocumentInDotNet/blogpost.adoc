@@ -1,0 +1,488 @@
+:imagesdir: images
+
+= Sub-document API in Couchbase Server 4.5 (revisted)
+
+_This blog post is based on an link:http://blog.couchbase.com/2016/march/developer-preview-of-new-sub-document-api-included-w-2.2.6-release-of-couchbase-.net-sdk[earlier blog post by Jeff Morris] that covered the sub-document API while it was still in developer preview._
+
+Today we are releasing a very special Developer Preview (DP) of a new feature in the upcoming release of Couchbase Server called__Sub-document__, along with our normal Couchbase Server .NET SDK 2.2.6! The Sub-document API is a new feature of Couchbase Server that is available in the http://www.couchbase.com/4-5-dp[Developer Preview of Couchbase Server 4.5].
+
+If you recall, in Couchbase all document mutations are atomic and involve the entire document. If you only want to change a single field and then do an update, the entire document in Couchbase server is copied over by the new revision. The problem with is that if the document is large or the network slow (or both), then a lot of resources are wasted sending data that hasn't been modified. A better, more performant solution would be to just send the portion of the document or the value which has been mutated. Essentially, that is what you get with sub-document API; when you update an element or delete an element of a document, only thepath of the fragment to be mutated is sent over the wire and only that part of the document is modified.
+
+There are several different operations that are supported by the API, from mutations on individual nested elements or __sub-__documents to array and dictionary modifications. Counter operations are also supported, as are retrieval operations for embedded JSON fragments.
+
+The API Is exposed via a fluent interface which allows you append multiple operations and then executing them against the document atomically. There there are two different "builders": a builder for mutation operations and a builder for reads or "lookups" and to check if an element exists at a given path.
+
+== IMPORTANT: Sub-document API is a Developer Preview!!!
+
+Please note that this is an early DP of the Sub-document API and has not gone through the usual checks and balances that are normal API's go through before a release. Additionally, based on user feedback, the public interfaces may change in subsequent releases, therefore it is not suggested you use the Sub-document API in production...just yet. **__The rest of 2.2.6 has been tested, however, and is ready for production usage.__**
+
+=== Prerequisite: Couchbase Server 4.5.0 Developer Preview
+
+In order to follow the examples below, you'll need to download and install http://www.couchbase.com/4-5-dp[Couchbase Server 4.5 developer preview]. Go, do this now!
+
+== Sub-Document API DP Overview
+
+The following examples will use a document with an id of "puppy" and will look like this:
+
+[source,java]
+----
+  {
+  "type": "dog",
+  "breed": "Pitbull/Chihuahua",
+  "name": "Puppy",
+  "toys": [
+    "squeaker",
+    "ball",
+    "shoe"
+  ],
+  "owner": {
+    "type": "servant",
+    "name": "Don Knotts",
+    "age": 63
+  },
+  "attributes": {
+    "fleas": true,
+    "color": "white",
+    "eyeColor": "brown",
+    "age": 5,
+    "dirty": true,
+    "sex": "female"
+  }
+}
+
+----
+
+All of the examples are available on https://github.com/couchbaselabs/couchbase-net-examples[Github ]so you can clone the project and play around with the API.
+
+=== MutateInBuilder and LookupInBuilder
+
+As mentioned previously, the Sub-document API offers two new Types that utilize a builder pattern via a fluent-interface for chaining together multiple operations on a document. Both objects are created by calling ``MutateIn`` or ``LookupIn`` on a``CouchbaseBucket`` object and passing in the key or id of the document you are working against:
+
+[source,java]
+----
+//Initialize the cluster helper with the default settings - i.e. localhost
+ClusterHelper.Initialize();
+var bucket = ClusterHelper.GetBucket("default");
+
+//create a mutation builder for the document "thekey"
+var mutate = bucket.MutateIn("thekey");
+
+//create a lookup builder for the document "thekey2"
+var lookup = bucket.LookupIn("thekey2");
+
+ClusterHelper.Close();
+
+----
+
+Once you have the builder object, you can chain together a number of operations to execute against the document, for example:
+
+[source,java]
+----
+var builder = bucket.LookupIn(id).
+            Get("type").
+            Get("name").
+            Get("owner").
+            Exists("notfound");
+
+----
+
+Then you can send all of the operations to the server in a single batch:
+
+[source,java]
+----
+var fragment = builder.Execute<dynamic>();
+
+----
+
+And then check the result of one operation operation for the path ``type``:
+
+[source,java]
+----
+if (fragment.OpStatus("type") == ResponseStatus.Success)
+{
+    string format = "Path='{0}' Value='{1}'";
+    Console.WriteLine(format, "type", fragment.Content("type"));
+}
+
+----
+
+The IDocumentFragment
+
+|====
+| Name | Description
+| Content(...) | Gets the content for a given path or index.
+| Exists(...) | Returns true if there is a result for a given path or index.
+| Count() | The count of current operations maintained by the builder.
+| OpStatus(...) | The ``ResponseStatus`` of an operation at a given index or path.
+| Status | The ``ResponseStatus`` for the entire multi-operation.
+| Success | True if the entire multi-operation succeeds.
+|====
+
+Besides these properties or methods, there are all of the other properties inherited from ``OperationResult`` which is the standard response from a K/V operation: Upsert, Remove, Replace, etc.
+
+=== Error Handling
+
+When sending multiple mutations, if one of them fails, the entire multi-operation request fails, allowing transactional all-or-nothing semantics when performing mutations within a single document. When sending multiple lookups, some operations may succeed and some may fail, with the server attempting to return as many items as requested. If the operations failed then Status property will contain a top-level error response such as ``SubDocMultiPathFailure,`` which is an indication to dig deeper into the operation's results to get the specific error. You can do this by iterating by calling the OpStatus method and passing either the index or the path:
+
+[source,java]
+----
+var builder = bucket.LookupIn(id).
+            Get("type").
+            Get("somepaththatdoesntexist").
+            Get("owner");
+
+var fragment = builder.Execute<dynamic>();
+Console.WriteLine("Generic error: {0}{1}Specific Error: {2}", 
+    fragment.Status, Environment.NewLine, fragment.OpStatus(1));
+
+Console.WriteLine("Generic error: {0}{1}Specific Error: {2}",
+    fragment.Status, Environment.NewLine, fragment.OpStatus("somepaththatdoesntexist"));
+
+----
+
+In this case since the path didn't exist within the document, the specific error returned was ``SubDocPathNotFound``. There are many different combinations of errors depending upon the builder type and the condition for the error - this is a brief introduction and should be suitable for starting out with the API.
+
+== LookupInBuilder Examples
+
+The LookUpInBuilder supports two operations: fetching a value by path and checking for the existence of a value at a given path.
+
+=== Get:
+
+Let's lookup the ``owner`` fragment by ``path``:
+
+[source,java]
+----
+var builder = bucket.LookupIn(id).
+            Get("owner").
+            Execute<dynamic>();
+
+var owner = builder.Content("owner");
+
+----
+
+The output is:
+
+[source,java]
+----
+{
+    "type": "servant",
+    "name": "Don Knotts",
+    "age": 63
+}
+
+----
+
+=== Exist:
+
+Let's check if the ``owner`` path exists:
+
+[source,java]
+----
+var builder = bucket.LookupIn(id).
+            Exists("owner").
+            Execute<dynamic>();
+
+var found = builder.Content("owner");
+
+----
+
+The output is ``true``, the path ``owner`` does indeed exist within the document.
+
+== MutateInBuilder
+
+The MutateInBuilder offers a number of methods supporting mutations on scalar values, dictionaries and arrays, along with support for atomic counter operations.
+
+=== Insert:
+
+Insert adds a value to a dictionary optionally allowing for the containing element (the dictionary itself) to be added:
+
+[source,java]
+----
+var builder = bucket.MutateIn(id).
+            Insert("attributes.hairLength", "short").
+            Execute<dynamic>();
+
+----
+
+The document's attributes dictionary will now look like this:
+
+[source,java]
+----
+...
+"attributes": 
+{
+    "fleas": true,
+    "color": "white",
+    "eyeColor": "brown",
+    "age": 5,
+    "dirty": true,
+    "sex": "female",
+    "hairLength": "short"
+}
+...
+
+----
+
+Now if the parent element doesn't exist, the ``createParents`` parameter can be used to create the parent element. This is true by default, so you do not have to do anything - pass false if you want to fail if the parent element doesn't exist:
+
+[source,java]
+----
+var builder = bucket.MutateIn(id).
+            Insert("anewattribute.withakey", "somevalue").
+            Execute<dynamic>();
+
+----
+
+This will create the new attribute called ``anewattribute`` in the document and add a single key called ``withakey`` with a value of``somevalue``.
+
+[source,java]
+----
+...
+"anewattribute": 
+{
+    "withakey": "somevalue"
+}
+...
+
+----
+
+Now, if we passed on ``false`` for ``createParents`` and the parent attribute did not exist, then the multi-mutation would fail with a top-level response status of ``SubDocMultiPathFailure`` and the specific error would be ``SubDocPathNotFound``.
+
+=== Upsert
+
+Upsert will add or replace an existing dictionary entry. The usage is exactly the same as ``Insert`` with the exception of the method name being ``Upsert``.
+
+=== Remove
+
+``Remove`` will remove an element at a given path. As an example, we will remove the owner's name from the document above:
+
+[source,java]
+----
+ var fragment = bucket.MutateIn(id).
+            Remove("owner.name").
+            Execute<dynamic>();
+
+----
+
+And the document after called ``Remove``:
+
+[source,java]
+----
+...
+"owner": 
+{
+    "type": "servant",
+    "age": 63
+},
+...
+
+----
+
+=== Replace
+
+Replace will swap the value of element at a given path, failing if the path does not exist:
+
+[source,java]
+----
+var fragment = bucket.MutateIn(id).
+            Replace("owner", new { CatLover=true, CatName="celia"}).
+            Execute<dynamic>();
+
+----
+
+The document will now have a different value for "owner":
+
+[source,java]
+----
+...
+"owner": 
+{
+    "catLover": true,
+    "catName": "celia"
+},
+...
+
+----
+
+=== PushBack
+
+Adds a value to the back of an array optionally adding the parent element (the array element itself) if it doesn't exist.
+
+[source,java]
+----
+var fragment = bucket.MutateIn(id).
+            PushBack(path, value, false).
+            Execute<dynamic>();
+
+----
+
+The ``toys`` array in the document now has the value "slipper" in the last ordinal:
+
+[source,java]
+----
+...
+"toys": 
+[ 
+    "squeaker", 
+    "ball", 
+    "shoe", 
+    "slipper"
+],
+...
+
+----
+
+=== PushFront
+
+Adds a value to the front of an array optionally adding the parent element (the array itself) if it doesn't exist:
+
+[source,java]
+----
+var fragment = bucket.MutateIn(id).
+            PushFront(path, value, false).
+            Execute<dynamic>();
+
+----
+
+The ``toys`` array now has the value "slipper" in it's first ordinal:
+
+[source,java]
+----
+...
+"toys": 
+[
+    "slipper",
+    "squeaker",
+    "ball",
+    "shoe"
+],
+...
+
+----
+
+=== ArrayInsert
+
+Inserts a value into an array at a given index:
+
+[source,java]
+----
+ var fragment = bucket.MutateIn(id).
+            ArrayInsert("toys[2]", "slipper").
+            Execute<dynamic>();
+
+----
+
+The ``toys`` array now has the value "slipper" at it's 3rd ordinal (index 2):
+
+[source,java]
+----
+"toys": 
+[
+    "squeaker",
+    "ball",
+    "slipper",
+    "shoe"
+ ],
+
+----
+
+=== AddUnique
+
+Inserts a value into an array, failing if it exists (the value must be unique within the array):
+
+[source,java]
+----
+ var fragment = bucket.MutateIn(id).
+            AddUnique("toys", "shoe").
+            Execute<dynamic>();
+
+----
+
+Since the value "shoe" already exists in the original document's ``toys`` array, this will fail withe following status:
+
+[source,java]
+----
+SubDocPathExists
+
+----
+
+Note that this method only allows for JSON primitives to be inserted: strings, numbers, and special values for true, false or null. The reason is that there is no way to compare for uniqueness without descending into each JSON object and comparing elements item by item.
+
+=== Counter
+
+Adds a the specified delta to an existing value, creating the element if it doesn't exist and defaulting the value and delta to 0. If the delta is negative, the value of the element will be decremented by the given delta.
+
+[source,java]
+----
+var fragment = bucket.MutateIn(id).
+            Counter("likes", 1).
+            Execute<dynamic>();
+
+----
+
+Since the element doesn't exist it will be created and then set to one (1). The document will now look like this:
+
+[source,java]
+----
+...
+    ],
+    "likes": 1
+}
+
+----
+
+If we pass a negative one (-1), then the counter for ``likes`` will be decremented back to zero (0):
+
+[source,java]
+----
+var fragment = bucket.MutateIn(id).
+            Counter("likes", -1).
+            Execute<dynamic>();
+
+----
+
+And the JSON document will now look like this:
+
+[source,java]
+----
+...
+    ],
+    "likes": 0
+}
+
+----
+
+== Release Notes for v2.2.6
+
+=== Bug
+
+*   [https://issues.couchbase.com/browse/NCBC-981[NCBC-981]] - When FQDN is defined for Couchbase instance SSL fails
+*   [https://issues.couchbase.com/browse/NCBC-1074[NCBC-1074]] - View request blocks indefinitely if waited on synchronously
+*   [https://issues.couchbase.com/browse/NCBC-1083[NCBC-1083]] - PoolConfiguration still uses default settings when overridden
+*   [https://issues.couchbase.com/browse/NCBC-1084[NCBC-1084]] - ConfigurationSection ignores UseSsl
+*   [https://issues.couchbase.com/browse/NCBC-1086[NCBC-1086]] - GetAndLock not returning Locked status but timed out when doc is locked
+
+=== Improvement
+
+*   [https://issues.couchbase.com/browse/NCBC-1070[NCBC-1070]] - Make QueryRequest not depend upon JSON.NET
+*   [https://issues.couchbase.com/browse/NCBC-1082[NCBC-1082]] - Add support for sortCount in QueryResult.Metrics
+*   [https://issues.couchbase.com/browse/NCBC-1085[NCBC-1085]] - Await callback so that the executing thread is not blocked
+*   [https://issues.couchbase.com/browse/NCBC-1090[NCBC-1090]] - Fix " Cannot await in the body of a catch clause" in SSL IO
+
+=== New Feature
+
+*   [https://issues.couchbase.com/browse/NCBC-998[NCBC-998]] - Include support for Subdocument API - Part 1 Multi-commands DP
+
+== How to get v2.2.6
+
+*   Download the binaries https://s3.amazonaws.com/packages.couchbase.com/clients/net/2.2/Couchbase-Net-Client-2.2.6.zip[here.]
+*   The NuGet package can be found https://www.nuget.org/packages/CouchbaseNetClient/2.2.6[here].
+*   The Github repo is https://github.com/couchbase/couchbase-net-client/tree/2.2.6[here].
+
+== Conclusion
+
+The sub-document API gives you the ability to be more granular in your interactions with documents, and return just the portions that you need.
+
+Partial writes will be covered in a future blog post, so stay tuned.
+
+Leave a comment below, link:http://twitter.com/mgroves[talk to me on Twitter], or email me (matthew.groves AT couchbase DOT com) if you have any questions or comments.
