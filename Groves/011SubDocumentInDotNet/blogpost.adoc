@@ -2,29 +2,28 @@
 
 = Sub-document API in Couchbase Server 4.5 (revisted)
 
-_This blog post is based on an link:http://blog.couchbase.com/2016/march/developer-preview-of-new-sub-document-api-included-w-2.2.6-release-of-couchbase-.net-sdk[earlier blog post by Jeff Morris] that covered the sub-document API while it was still in developer preview._
+_This blog post is based on an link:http://blog.couchbase.com/2016/march/developer-preview-of-new-sub-document-api-included-w-2.2.6-release-of-couchbase-.net-sdk[earlier blog post by Jeff Morris] that covered the sub-document API while it was still in developer preview. There have been some changes to the API since that release._
 
-Today we are releasing a very special Developer Preview (DP) of a new feature in the upcoming release of Couchbase Server called__Sub-document__, along with our normal Couchbase Server .NET SDK 2.2.6! The Sub-document API is a new feature of Couchbase Server that is available in the http://www.couchbase.com/4-5-dp[Developer Preview of Couchbase Server 4.5].
+With link:http://developer.couchbase.com/documentation/server/current/introduction/intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server 4.5] and the link:http://developer.couchbase.com/documentation/server/4.5/sdk/dotnet/start-using-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[.NET SDK 2.3.x], you can now use the __Sub-document__ feature in your .NET application.
 
-If you recall, in Couchbase all document mutations are atomic and involve the entire document. If you only want to change a single field and then do an update, the entire document in Couchbase server is copied over by the new revision. The problem with is that if the document is large or the network slow (or both), then a lot of resources are wasted sending data that hasn't been modified. A better, more performant solution would be to just send the portion of the document or the value which has been mutated. Essentially, that is what you get with sub-document API; when you update an element or delete an element of a document, only thepath of the fragment to be mutated is sent over the wire and only that part of the document is modified.
+In previous Couchbase releases, all document mutations were atomic and involve the entire document. If you only want to change a single field and then do an update, the entire document in Couchbase server is copied over by the new revision. The problem with is that if the document is large or the network slow (or both), then a lot of resources are wasted sending data that hasn't been modified. A better, more performant solution would be to just send the portion of the document or the value which has been mutated. Essentially, that is what you get with sub-document API; when you update an element or delete an element of a document, only the path of the fragment to be mutated is sent over the wire and only that part of the document is
+modified.
 
-There are several different operations that are supported by the API, from mutations on individual nested elements or __sub-__documents to array and dictionary modifications. Counter operations are also supported, as are retrieval operations for embedded JSON fragments.
+image::Subdocument_001.jpg[Subdocument]
 
-The API Is exposed via a fluent interface which allows you append multiple operations and then executing them against the document atomically. There there are two different "builders": a builder for mutation operations and a builder for reads or "lookups" and to check if an element exists at a given path.
+There are several different operations that are supported by the API, from mutations on individual nested elements (aka __sub-__documents) to array and dictionary modifications. Counter operations are also supported, as are retrieval operations for embedded JSON fragments.
 
-== IMPORTANT: Sub-document API is a Developer Preview!!!
+The API is exposed via a _fluent_ interface which allows you to append multiple operations and then execute them against the document atomically. There are two different "builders": a builder for mutation operations and a builder for reads or "lookups" (which can also check if an element exists at a given path).
 
-Please note that this is an early DP of the Sub-document API and has not gone through the usual checks and balances that are normal API's go through before a release. Additionally, based on user feedback, the public interfaces may change in subsequent releases, therefore it is not suggested you use the Sub-document API in production...just yet. **__The rest of 2.2.6 has been tested, however, and is ready for production usage.__**
+=== Prerequisite: Couchbase Server 4.5
 
-=== Prerequisite: Couchbase Server 4.5.0 Developer Preview
+In order to follow the examples below, you'll need to download and install link:http://www.couchbase.com/get-started-developing-nosql#Download_Couchbase_Server?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server 4.5]. If you've never installed Couchbase Server before, you can check out my video on link:http://blog.couchbase.com/2016/june/how-to-install-couchbase-server-on-windows-video?utm_source=blogs&utm_medium=link&utm_campaign=blogs[how to install Couchbase Server on Windows]. It's really easy, no matter what OS you are using.
 
-In order to follow the examples below, you'll need to download and install http://www.couchbase.com/4-5-dp[Couchbase Server 4.5 developer preview]. Go, do this now!
+== Sub-Document API Overview
 
-== Sub-Document API DP Overview
+The following examples will use a document with an id of "puppy" and will start out looking like this:
 
-The following examples will use a document with an id of "puppy" and will look like this:
-
-[source,java]
+[source,javascript,indent=0]
 ----
   {
   "type": "dog",
@@ -52,13 +51,13 @@ The following examples will use a document with an id of "puppy" and will look l
 
 ----
 
-All of the examples are available on https://github.com/couchbaselabs/couchbase-net-examples[Github ]so you can clone the project and play around with the API.
+All of the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/011SubDocumentInDotNet/src[examples are available on Github] so you can clone the project and play around with the API.
 
 === MutateInBuilder and LookupInBuilder
 
-As mentioned previously, the Sub-document API offers two new Types that utilize a builder pattern via a fluent-interface for chaining together multiple operations on a document. Both objects are created by calling ``MutateIn`` or ``LookupIn`` on a``CouchbaseBucket`` object and passing in the key or id of the document you are working against:
+The Sub-document API offers two new Types that utilize a builder pattern via a fluent-interface for chaining together multiple operations on a document. Both objects are created by calling `MutateIn` or `LookupIn` on a `CouchbaseBucket` object and passing in the key of the document you are working against:
 
-[source,java]
+[source,C#,indent=0]
 ----
 //Initialize the cluster helper with the default settings - i.e. localhost
 ClusterHelper.Initialize();
@@ -71,42 +70,30 @@ var mutate = bucket.MutateIn("thekey");
 var lookup = bucket.LookupIn("thekey2");
 
 ClusterHelper.Close();
-
 ----
 
 Once you have the builder object, you can chain together a number of operations to execute against the document, for example:
 
-[source,java]
+[source,C#,indent=0]
 ----
-var builder = bucket.LookupIn(id).
-            Get("type").
-            Get("name").
-            Get("owner").
-            Exists("notfound");
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=LookupInExample]
 ----
 
 Then you can send all of the operations to the server in a single batch:
 
-[source,java]
+[source,C#,indent=0]
 ----
-var fragment = builder.Execute<dynamic>();
-
-----
-
-And then check the result of one operation operation for the path ``type``:
-
-[source,java]
-----
-if (fragment.OpStatus("type") == ResponseStatus.Success)
-{
-    string format = "Path='{0}' Value='{1}'";
-    Console.WriteLine(format, "type", fragment.Content("type"));
-}
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=LookupInExampleExecute]
 ----
 
-The IDocumentFragment
+You can check the result of one operation, by using OpStatus and a path. In this example, I'm using the path `"type"`:
+
+[source,C#,indent=0]
+----
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=LookupInExampleResult]
+----
+
+These are some of the methods and fields you'll find on the `IDocumentFragment` interface.
 
 |====
 | Name | Description
@@ -118,75 +105,57 @@ The IDocumentFragment
 | Success | True if the entire multi-operation succeeds.
 |====
 
-Besides these properties or methods, there are all of the other properties inherited from ``OperationResult`` which is the standard response from a K/V operation: Upsert, Remove, Replace, etc.
+Besides these properties or methods, there are all of the other properties inherited from `OperationResult` (which is the standard response from a key/value operation): Upsert, Remove, Replace, and so on.
 
 === Error Handling
 
-When sending multiple mutations, if one of them fails, the entire multi-operation request fails, allowing transactional all-or-nothing semantics when performing mutations within a single document. When sending multiple lookups, some operations may succeed and some may fail, with the server attempting to return as many items as requested. If the operations failed then Status property will contain a top-level error response such as ``SubDocMultiPathFailure,`` which is an indication to dig deeper into the operation's results to get the specific error. You can do this by iterating by calling the OpStatus method and passing either the index or the path:
+When sending multiple _mutations_, if one of them fails, the entire multi-operation request fails. This allows transactional "all-or-nothing" semantics when performing mutations within a single document.
 
-[source,java]
+When sending multiple _lookups_, some operations may succeed and some may fail, with the server attempting to return as many items as requested.
+
+If the operation(s) failed, then the`Status` property will contain a top-level error response such as `SubDocMultiPathFailure`. This is an indication that you should dig deeper into the operation's results to get the specific error. You can do this by iterating: calling the `OpStatus` method and passing either the index or the path:
+
+[source,C#,indent=0]
 ----
-var builder = bucket.LookupIn(id).
-            Get("type").
-            Get("somepaththatdoesntexist").
-            Get("owner");
-
-var fragment = builder.Execute<dynamic>();
-Console.WriteLine("Generic error: {0}{1}Specific Error: {2}", 
-    fragment.Status, Environment.NewLine, fragment.OpStatus(1));
-
-Console.WriteLine("Generic error: {0}{1}Specific Error: {2}",
-    fragment.Status, Environment.NewLine, fragment.OpStatus("somepaththatdoesntexist"));
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ErrorExample]
 ----
 
-In this case since the path didn't exist within the document, the specific error returned was ``SubDocPathNotFound``. There are many different combinations of errors depending upon the builder type and the condition for the error - this is a brief introduction and should be suitable for starting out with the API.
+In this case, since the path "`somepaththatdoesntexist`" didn't exist within the document, the specific error returned was `SubDocPathNotFound`. There are many different combinations of errors depending upon the builder type and the condition for the error.
 
 == LookupInBuilder Examples
 
-The LookUpInBuilder supports two operations: fetching a value by path and checking for the existence of a value at a given path.
+The `LookUpInBuilder` type supports two operations: fetching a value by path and checking for the existence of a value at a given path.
 
 === Get:
 
-Let's lookup the ``owner`` fragment by ``path``:
+Let's lookup the `owner` fragment. If I pass in "owner" as the path parameter to this method...
 
-[source,java]
+[source,C#,indent=0]
 ----
-var builder = bucket.LookupIn(id).
-            Get("owner").
-            Execute<dynamic>();
-
-var owner = builder.Content("owner");
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=GetExample]
 ----
 
-The output is:
+...the output to console would be:
 
-[source,java]
+[source,C#,indent=0]
 ----
 {
     "type": "servant",
     "name": "Don Knotts",
     "age": 63
 }
-
 ----
 
 === Exist:
 
-Let's check if the ``owner`` path exists:
+We can also check to see if a path exists. If I pass in "owner" as the path to this method...
 
-[source,java]
+[source,C#,indent=0]
 ----
-var builder = bucket.LookupIn(id).
-            Exists("owner").
-            Execute<dynamic>();
-
-var found = builder.Content("owner");
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ExistsExample]
 ----
 
-The output is ``true``, the path ``owner`` does indeed exist within the document.
+...the output is `true`, because the path `owner` does indeed exist within the document.
 
 == MutateInBuilder
 
@@ -194,19 +163,23 @@ The MutateInBuilder offers a number of methods supporting mutations on scalar va
 
 === Insert:
 
-Insert adds a value to a dictionary optionally allowing for the containing element (the dictionary itself) to be added:
+Insert adds a value to a dictionary, optionally allowing for the containing element (the dictionary itself) to be added.
 
-[source,java]
+[source,C#,indent=0]
 ----
-var builder = bucket.MutateIn(id).
-            Insert("attributes.hairLength", "short").
-            Execute<dynamic>();
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=InsertExample]
 ----
 
-The document's attributes dictionary will now look like this:
+If I called the above method like so:
 
-[source,java]
+[source,C#,indent=0]
+----
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=InsertExampleCall]
+----
+
+Then the document's attributes dictionary will now look like this:
+
+[source,javascript,indent=0]
 ----
 ...
 "attributes": 
@@ -220,22 +193,20 @@ The document's attributes dictionary will now look like this:
     "hairLength": "short"
 }
 ...
-
 ----
 
-Now if the parent element doesn't exist, the ``createParents`` parameter can be used to create the parent element. This is true by default, so you do not have to do anything - pass false if you want to fail if the parent element doesn't exist:
+Note that the `Insert` method has an optional boolean parameter called `createParents`. It is false by default. If it's true, then the sub-document API will create the necessary path for the field to exist. If it's false, the sub-document API will only create the field if the parents of the field already exist. In the above example, the `attributes` field already existed.
 
-[source,java]
+In this next example, I'll use a path with a parent field (`anewattribute`) that doesn't already exist.
+
+[source,C#,indent=0]
 ----
-var builder = bucket.MutateIn(id).
-            Insert("anewattribute.withakey", "somevalue").
-            Execute<dynamic>();
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=InsertExampleCallWithNewAttribute]
 ----
 
-This will create the new attribute called ``anewattribute`` in the document and add a single key called ``withakey`` with a value of``somevalue``.
+This will create the new attribute called `anewattribute` in the document and add a single key called `withakey` with a value of `somevalue`.
 
-[source,java]
+[source,C#,indent=0]
 ----
 ...
 "anewattribute": 
@@ -243,30 +214,33 @@ This will create the new attribute called ``anewattribute`` in the document and 
     "withakey": "somevalue"
 }
 ...
-
 ----
 
-Now, if we passed on ``false`` for ``createParents`` and the parent attribute did not exist, then the multi-mutation would fail with a top-level response status of ``SubDocMultiPathFailure`` and the specific error would be ``SubDocPathNotFound``.
+Now, if we passed `false` for `createParents` and the parent attribute did not exist, then the multi-mutation would fail with a top-level response status of `SubDocMultiPathFailure` and the specific error would be `SubDocPathNotFound`.
 
 === Upsert
 
-Upsert will add or replace an existing dictionary entry. The usage is exactly the same as ``Insert`` with the exception of the method name being ``Upsert``.
+Upsert will add or replace an existing dictionary entry. The usage is exactly the same as `Insert` with the exception of the method name being `Upsert`.
 
 === Remove
 
-``Remove`` will remove an element at a given path. As an example, we will remove the owner's name from the document above:
+`Remove` will remove an element at a given path.
 
-[source,java]
+[source,C#,indent=0]
 ----
- var fragment = bucket.MutateIn(id).
-            Remove("owner.name").
-            Execute<dynamic>();
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=RemoveExample]
 ----
 
-And the document after called ``Remove``:
+When I call this method:
 
-[source,java]
+[source,C#,indent=0]
+----
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=RemoveExampleCall]
+----
+
+Here's how the document will look afterwards:
+
+[source,javascript]
 ----
 ...
 "owner": 
@@ -275,24 +249,27 @@ And the document after called ``Remove``:
     "age": 63
 },
 ...
-
 ----
 
 === Replace
 
 Replace will swap the value of element at a given path, failing if the path does not exist:
 
-[source,java]
+[source,C#,indent=0]
 ----
-var fragment = bucket.MutateIn(id).
-            Replace("owner", new { CatLover=true, CatName="celia"}).
-            Execute<dynamic>();
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ReplaceExample]
+----
 
+After I call this method:
+
+[source,C#,indent=0]
+----
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ReplaceExampleCall]
 ----
 
 The document will now have a different value for "owner":
 
-[source,java]
+[source,javascript,indent=0]
 ----
 ...
 "owner": 
@@ -301,24 +278,27 @@ The document will now have a different value for "owner":
     "catName": "celia"
 },
 ...
-
 ----
 
-=== PushBack
+=== ArrayAppend
 
-Adds a value to the back of an array optionally adding the parent element (the array element itself) if it doesn't exist.
+ArrayAppend adds a value to the end of an array, optionally adding the parent element (the array element itself) if it doesn't exist.
 
-[source,java]
+[source,C#,indent=0]
 ----
-var fragment = bucket.MutateIn(id).
-            PushBack(path, value, false).
-            Execute<dynamic>();
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ArrayAppendExample]
 ----
 
-The ``toys`` array in the document now has the value "slipper" in the last ordinal:
+After that method with the "toys" path...
 
-[source,java]
+[source,C#,indent=0]
+----
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ArrayAppendExampleCall]
+----
+
+...the `toys` array in the document will then have the value "slipper" in the last ordinal:
+
+[source,javascript,indent=0]
 ----
 ...
 "toys": 
@@ -329,24 +309,27 @@ The ``toys`` array in the document now has the value "slipper" in the last ordin
     "slipper"
 ],
 ...
-
 ----
 
-=== PushFront
+=== ArrayPrepend
 
-Adds a value to the front of an array optionally adding the parent element (the array itself) if it doesn't exist:
+ArrayPrepend works the same way as ArrayAppend, except it adds a value to the _front_ of an array.
 
-[source,java]
+[source,C#,indent=0]
 ----
-var fragment = bucket.MutateIn(id).
-            PushFront(path, value, false).
-            Execute<dynamic>();
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ArrayAppendExample]
 ----
 
-The ``toys`` array now has the value "slipper" in it's first ordinal:
+Calling that method with the "toys" path...
 
-[source,java]
+[source,C#,indent=0]
+----
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ArrayAppendExampleCall]
+----
+
+The `toys` array now has the value "slipper" in it's _first_ ordinal:
+
+[source,javascript,indent=0]
 ----
 ...
 "toys": 
@@ -357,24 +340,27 @@ The ``toys`` array now has the value "slipper" in it's first ordinal:
     "shoe"
 ],
 ...
-
 ----
 
 === ArrayInsert
 
-Inserts a value into an array at a given index:
+ArrayPrepend puts a value at the beginning, ArrayAppend puts it at the end. Just to round things out, you can use ArrayInsert to put a value somewhere in between (at a given index).
 
-[source,java]
+[source,C#,indent=0]
 ----
- var fragment = bucket.MutateIn(id).
-            ArrayInsert("toys[2]", "slipper").
-            Execute<dynamic>();
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ArrayInsertExample]
+----
 
+And then calling that method with "toys[2]"...
+
+[source,C#,indent=0]
+----
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ArrayInsertExampleCall]
 ----
 
 The ``toys`` array now has the value "slipper" at it's 3rd ordinal (index 2):
 
-[source,java]
+[source,javascript,indent=0]
 ----
 "toys": 
 [
@@ -386,103 +372,76 @@ The ``toys`` array now has the value "slipper" at it's 3rd ordinal (index 2):
 
 ----
 
-=== AddUnique
+=== ArrayAddUnique
 
-Inserts a value into an array, failing if it exists (the value must be unique within the array):
+ArrayAddUnique will inserts a value into an array, but it will fail if that value already exists (i.e. the value must be unique within the array).
 
-[source,java]
+[source,C#,indent=0]
 ----
- var fragment = bucket.MutateIn(id).
-            AddUnique("toys", "shoe").
-            Execute<dynamic>();
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ArrayAddUniqueExample]
 ----
 
-Since the value "shoe" already exists in the original document's ``toys`` array, this will fail withe following status:
+When I call that with "shoe"...
 
-[source,java]
+[source,C#,indent=0]
 ----
-SubDocPathExists
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=ArrayAddUniqueExampleCall]
 ----
 
-Note that this method only allows for JSON primitives to be inserted: strings, numbers, and special values for true, false or null. The reason is that there is no way to compare for uniqueness without descending into each JSON object and comparing elements item by item.
+...since the value "shoe" already exists in the original document's `toys` array, this will fail with the status `SubDocPathExists`.
+
+_Note that this method only allows for JSON primitives to be inserted: strings, numbers, and special values for true, false or null. There is no way to compare for uniqueness without descending into each JSON object and comparing elements item by item._
 
 === Counter
 
-Adds a the specified delta to an existing value, creating the element if it doesn't exist and defaulting the value and delta to 0. If the delta is negative, the value of the element will be decremented by the given delta.
+Adds the specified delta (change) to an existing value, creating the element if it doesn't exist. It will default both the value and delta to 0. If the delta is negative, the value of the element will be decremented by the given delta.
 
-[source,java]
+I'll create a method that uses `Counter`:
+
+[source,C#,indent=0]
 ----
-var fragment = bucket.MutateIn(id).
-            Counter("likes", 1).
-            Execute<dynamic>();
-
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=CounterExample]
 ----
 
-Since the element doesn't exist it will be created and then set to one (1). The document will now look like this:
+Then, I'll call the method twice using a positive 1 and a negative 1 as the "deltas":
 
-[source,java]
+[source,C#,indent=0]
+----
+include::src/Couchbase.Examples.SubDocumentAPI/Program.cs[tag=CounterExampleCalls]
+----
+
+After the first call, since the element doesn't exist it will be created and then set to one (1). The document will now look like this:
+
+[source,javascript,indent=0]
 ----
 ...
     ],
     "likes": 1
 }
-
 ----
 
-If we pass a negative one (-1), then the counter for ``likes`` will be decremented back to zero (0):
+The second call passes a negative one (-1), so then the counter for `likes` will be decremented to zero (0). The JSON document will now look like this:
 
-[source,java]
-----
-var fragment = bucket.MutateIn(id).
-            Counter("likes", -1).
-            Execute<dynamic>();
-
-----
-
-And the JSON document will now look like this:
-
-[source,java]
+[source,javascript,indent=0]
 ----
 ...
     ],
     "likes": 0
 }
-
 ----
-
-== Release Notes for v2.2.6
-
-=== Bug
-
-*   [https://issues.couchbase.com/browse/NCBC-981[NCBC-981]] - When FQDN is defined for Couchbase instance SSL fails
-*   [https://issues.couchbase.com/browse/NCBC-1074[NCBC-1074]] - View request blocks indefinitely if waited on synchronously
-*   [https://issues.couchbase.com/browse/NCBC-1083[NCBC-1083]] - PoolConfiguration still uses default settings when overridden
-*   [https://issues.couchbase.com/browse/NCBC-1084[NCBC-1084]] - ConfigurationSection ignores UseSsl
-*   [https://issues.couchbase.com/browse/NCBC-1086[NCBC-1086]] - GetAndLock not returning Locked status but timed out when doc is locked
-
-=== Improvement
-
-*   [https://issues.couchbase.com/browse/NCBC-1070[NCBC-1070]] - Make QueryRequest not depend upon JSON.NET
-*   [https://issues.couchbase.com/browse/NCBC-1082[NCBC-1082]] - Add support for sortCount in QueryResult.Metrics
-*   [https://issues.couchbase.com/browse/NCBC-1085[NCBC-1085]] - Await callback so that the executing thread is not blocked
-*   [https://issues.couchbase.com/browse/NCBC-1090[NCBC-1090]] - Fix " Cannot await in the body of a catch clause" in SSL IO
-
-=== New Feature
-
-*   [https://issues.couchbase.com/browse/NCBC-998[NCBC-998]] - Include support for Subdocument API - Part 1 Multi-commands DP
-
-== How to get v2.2.6
-
-*   Download the binaries https://s3.amazonaws.com/packages.couchbase.com/clients/net/2.2/Couchbase-Net-Client-2.2.6.zip[here.]
-*   The NuGet package can be found https://www.nuget.org/packages/CouchbaseNetClient/2.2.6[here].
-*   The Github repo is https://github.com/couchbase/couchbase-net-client/tree/2.2.6[here].
 
 == Conclusion
 
-The sub-document API gives you the ability to be more granular in your interactions with documents, and return just the portions that you need.
+Since the developer preview blog post, the Couchbase .NET SDK has been updated to version 2.3.2 (as of the time of this blog post). You can check out the work that's been done in the link:https://issues.couchbase.com/projects/NCBC/versions/13438?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Release Notes of Version 2.3.2].
 
-Partial writes will be covered in a future blog post, so stay tuned.
+=== How to get v2.3.x
+
+*   Download the binaries https://s3.amazonaws.com/packages.couchbase.com/clients/net/2.3/Couchbase-Net-Client-2.3.2.zip[for .NET SDK 2.3.2 from our repository.]
+*   You can find the link:https://www.nuget.org/packages/CouchbaseNetClient/[latest SDKs on NuGet].
+*   The link:https://github.com/couchbase/couchbase-net-client[source code is available on Github]
+
+=== Final Notes
+
+The sub-document API gives you the ability to be more granular in your interactions with documents. You can modify and retrieve just the portions that you need.
 
 Leave a comment below, link:http://twitter.com/mgroves[talk to me on Twitter], or email me (matthew.groves AT couchbase DOT com) if you have any questions or comments.
