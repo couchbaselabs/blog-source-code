@@ -1,6 +1,6 @@
 :imagesdir: images
 
-= Sub-document API in Couchbase Server 4.5 (revisted)
+= Sub-document API in Couchbase Server 4.5 with the .NET SDK (revisted)
 
 _This blog post is based on an link:http://blog.couchbase.com/2016/march/developer-preview-of-new-sub-document-api-included-w-2.2.6-release-of-couchbase-.net-sdk[earlier blog post by Jeff Morris] that covered the sub-document API while it was still in developer preview. There have been some changes to the API since that release._
 
