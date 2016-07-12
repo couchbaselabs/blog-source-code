@@ -1,0 +1,41 @@
+:imagesdir: images
+
+= Summer Project 2016: Meet the Suitcase Cluster
+
+I am enjoying my time as a Developer Advocate here at Couchbase. I get to write blog posts, make videos, interact with the community, and go out to a bunch of conferences and meetups. My boss, link:http://blog.couchbase.com/facet/Author/Arun+Gupta[Arun Gupta], has been very supportive, as have my fellow developer advocates.
+
+I had a crazy idea that I wanted to try at some point. I told him about it, and he said "yeah, go for it!"
+
+== The problem
+
+link:http://developer.couchbase.com/documentation/server/current/introduction/intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server] is meant to run on a cluster of hardware, not just a single node. Cluster is the first letter in the Couch acronym! A lot of the engineers here develop by spinning up a cluster of VMs or docker containers or whatever. That's effective and efficient, but if I'm trying to explain Couchbase to you for the first time, I thought it would be more interesting if I had something tangible to show you. Something visual, visceral, and even interactive.
+
+The problem is that to show you a physical cluster requires multiple physical machines, a router, power cables, etc. Maybe I could set up a lab here in my office, but I can't take that out on the road very easily.
+
+== A solution
+
+While I was in Mountain View meeting with my team, I heard about another project that uses link:http://www.couchbase.com/nosql-databases/couchbase-mobile?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Lite and Couchbase Sync Gateway]. It link:https://github.com/couchbaselabs/pi-on-couch[used several Raspberry Pis] that acted in concert together to help visually demonstrate the flow of data and how syncing worked.
+
+I don't think I came up with it originally, but someone in the room thought it would be great if we could do the same thing with Couchbase Server. The only problem is that there isn't an ARM version of Couchbase Server.
+
+But the idea stuck with me. I researched to see if there were any Raspberry Pi-like maker boards that had x64 CPUs and could have at least 2gb of RAM. There are a few, but they are pretty expensive. I kept looking, and I eventually came across "compute sticks". They are like bigger Chromecasts, except they run Windows or Linux on x64 architecture. Some of them have 2gb of RAM built in. They have USB, HDMI, and WiFi. Some of them were under $100. Now the wheels were turning. I could certainly travel with a handful of those.
+
+== A project
+
+I kept researching and thinking about this. I had a picture in my head, and (inspired by a link:https://t.co/683c6GjjSh[blog post from David Neal on hand-drawn illustrations]) I drew it (badly) on my white board.
+
+image::SuitcaseCluster001.jpg[Suitcase Cluster drawing]
+
+I could maybe get by just carrying around 3 compute sticks and a router, but if I had everything wired up and contained in a single suitcase, that would be even easier.
+
+I can take this suitcase to a session or to a booth, open it up, and start using a full cluster. I could demonstrate what happens if a node in a cluster goes down. I could invite a volunteer from the audience to unplug a node of her choice and show what happens. I could then show what happens if that node comes back online (or what to do if the node is offline for good).
+
+Plus, it's just a great conversation starter. It's a cool looking piece of nerdery. Once I get it working, I could dress it up with lights and stickers for even more fun.
+
+When I tweeted about it (I'm link:http://twitter.com/mgroves[@mgroves on Twitter]), link:https://twitter.com/GerdAschemann/status/751279683107377152[Gerd Aschemann tweeted] that something similar had been built called link:http://qaware.blogspot.de/2016/03/building-solr-spark-zookeeper-cloud.html?m=1["cloud in a box"]. Now I was really excited, because my idea had already been proven to be possible.
+
+== Conclusion
+
+I just started working on this. I'm trying out some compute sticks to see if I can get them to run Couchbase Server. I plan to blog about this project as I go, so stay tuned!
+
+If you have any tips or suggestions for this project, link:http://twitter.com/mgroves[contact me on Twitter], or email me (matthew.groves AT couchbase DOT com).
