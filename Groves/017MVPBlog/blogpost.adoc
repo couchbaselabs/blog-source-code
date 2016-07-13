@@ -584,7 +584,7 @@ public class Person
 }
 ----
 
-That's pretty much it, except that I also need to add a corresponding UI. I used a bit of jQuery to allow the user to add any number of movies. I won't show the code for it here, because the implementation details aren't important. But I have made the whole link:http://google.com[!!! TODO sample available on Github TODO !!!], so you can check it out later if you'd like.
+That's pretty much it, except that I also need to add a corresponding UI. I used a bit of jQuery to allow the user to add any number of movies. I won't show the code for it here, because the implementation details aren't important. But I have made the whole link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/017MVPBlog/CouchbaseAspNetExample[sample available on Github], so you can follow along or check it out later if you'd like.
 
 image:EditPersonIteration_002.png[Iteration on Person with new UI form]
 
@@ -655,6 +655,6 @@ Thanks for reading through this blog post. Hopefully, you're on your way to cons
 
 ## Conclusion
 
-I've put the link:http://google.com[!!! TODO full source code for this example on Github !!! TODO]. 
+I've put the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/017MVPBlog/CouchbaseAspNetExample[full source code for this example on Github]. 
 
 What did I leave out? What's keeping you from trying Couchbase with ASP.NET today? Please leave a comment, [ping me on Twitter](http://twitter.com/mgroves), or email me (matthew.groves AT couchbase DOT com). I'd love to hear from you.
