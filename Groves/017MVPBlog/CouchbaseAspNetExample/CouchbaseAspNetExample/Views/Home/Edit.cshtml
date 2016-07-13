@@ -1,0 +1,60 @@
+﻿@model CouchbaseAspNetExample3.Models.Person
+
+@{
+    ViewBag.Title = "Add : Couchbase & ASP.NET Example";
+}
+
+@using (Html.BeginForm("Save", "Home", FormMethod.Post))
+{
+    <input type="hidden" name="Id" value="@Model.Id"/>
+
+    <p>
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name)
+    </p>
+
+    <p>
+        @Html.LabelFor(m => m.Address)
+        @Html.TextBoxFor(m => m.Address)
+    </p>
+
+    <p>
+        @Html.LabelFor(m => m.PhoneNumber)
+        @Html.TextBoxFor(m => m.PhoneNumber)
+    </p>
+
+    <p>
+        @Html.LabelFor(m => m.FavoriteMovies)
+        <input type="button" id="addFavoriteMovie" value="+"/>
+        <div id="favoriteMovies">
+            @if (Model.FavoriteMovies != null)
+            {
+                foreach (var movie in Model.FavoriteMovies)
+                {
+                    <div>
+                        <input type="text" name="FavoriteMovies" value="@movie" /><input type="button" value="-" class="removeFavoriteMovie" />
+                    </div>
+                }
+            }
+        </div>
+    </p>
+
+    <input type="submit" value="Submit" />
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        var movieIndex = 0;
+        $(function() {
+            $("#addFavoriteMovie").click(function() {
+                $("#favoriteMovies").append('<div><input type="text" name="FavoriteMovies" /><input type="button" value="-" class="removeFavoriteMovie" /></div>');
+                movieIndex++;
+            });
+
+            $(document).on("click", ".removeFavoriteMovie", function() {
+                var parentDiv = $(this).closest("div");
+                parentDiv.remove();
+            });
+        });
+    </script>
+}

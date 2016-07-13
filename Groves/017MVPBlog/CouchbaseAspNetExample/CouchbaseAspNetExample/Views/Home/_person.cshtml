@@ -1,0 +1,30 @@
+﻿@model CouchbaseAspNetExample3.Models.Person
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h2 class="panel-title">
+            @Model.Name
+            @Html.ActionLink("[Edit]", "Edit", new {id = Model.Id.Replace("Person::", "")})
+            @Html.ActionLink("[Delete]", "Delete", new {id = Model.Id.Replace("Person::", "")}, new { @class="deletePerson"})
+        </h2>
+    </div>
+    <div class="panel-body">
+        @Model.Address
+        @if (!string.IsNullOrEmpty(Model.PhoneNumber))
+        {
+            <br />
+            @Model.PhoneNumber
+        }
+        @if (Model.FavoriteMovies != null && Model.FavoriteMovies.Any())
+        {
+            <br/>
+            <h4>Favorite Movies</h4>
+            <ul>
+                @foreach (var movie in Model.FavoriteMovies)
+                {
+                    <li>@movie</li>
+                }
+            </ul>
+        }
+    </div>
+</div>

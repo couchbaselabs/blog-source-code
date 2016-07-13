@@ -1,0 +1,28 @@
+﻿@model List<CouchbaseAspNetExample3.Models.Person>
+
+@{
+    ViewBag.Title = "Home : Couchbase & ASP.NET Example";
+}
+
+@if (!Model.Any())
+{
+    <p>There are no people yet.</p>
+}
+
+@foreach (var item in Model)
+{
+    @Html.Partial("_person", item)
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $(".deletePerson").click(function(e) {
+                if (confirm("Are you sure you want to delete?")) {
+                    return true;
+                }
+                return false;
+            });
+        });
+    </script>
+}
