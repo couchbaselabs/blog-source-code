@@ -4,7 +4,7 @@
 
 I am enjoying my time as a Developer Advocate here at Couchbase. I get to write blog posts, make videos, interact with the community, and go out to a bunch of conferences and meetups. My boss, link:http://blog.couchbase.com/facet/Author/Arun+Gupta[Arun Gupta], has been very supportive, as have my fellow developer advocates.
 
-I had a crazy idea that I wanted to try at some point. I told him about it, and he said "yeah, go for it!"
+Just to give you an idea of what it's like working with Arun: I had a crazy idea that I wanted to try at some point. I told him about it, and he said "yeah, go for it!"
 
 == The problem
 
@@ -28,7 +28,7 @@ image::SuitcaseCluster001.jpg[Suitcase Cluster drawing]
 
 I could maybe get by just carrying around 3 compute sticks and a router, but if I had everything wired up and contained in a single suitcase, that would be even easier.
 
-I can take this suitcase to a session or to a booth, open it up, and start using a full cluster. I could demonstrate what happens if a node in a cluster goes down. I could invite a volunteer from the audience to unplug a node of her choice and show what happens. I could then show what happens if that node comes back online (or what to do if the node is offline for good).
+I can take this suitcase to a session or to a booth, open it up, and start using a full cluster. I could demonstrate what happens if a node in a cluster goes down. I could invite a volunteer to unplug a node of her choice and show what happens. I could then show what happens if that node comes back online (or what to do if the node is offline for good).
 
 Plus, it's just a great conversation starter. It's a cool looking piece of nerdery. Once I get it working, I could dress it up with lights and stickers for even more fun.
 
