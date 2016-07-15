@@ -1,0 +1,80 @@
+hi again, Matt Groves here
+
+today I'm going to talk about executing N1QL queries using an SDK
+and the Scan Consistency options
+
+I'm going to be using the .NET SDK, but if you use another platform
+I think this video will still be applicable
+
+---
+
+Let me start in Couchbase Console.
+
+I have the `travel-sample` sample bucket installed, and this bucket has a number of indexes on it already.
+To use N1QL you need at least a primary index, but you will probably want some secondary indexes for better performance.
+---
+
+I'm switching back to Visual Studio
+I've got a simple console app here.
+
+I'm going to create some simple functionality:
+- connect to couchbase
+- get a count of all the airports
+- insert a new airport
+- get another count of all the airports
+- exit
+
+the N1QL query to do the count is here
+then I run an insert
+then I run the count again
+
+when I execute this, something happens that you might not expect: the count is the same
+why is this?
+
+It's not because the document didn't get created. If I head over to couchbase console, I can look it up and it's there.
+
+So what happened? The answer is in how I'm executing the N1QL query through the SDK.
+When I execute a N1QL query, there is a ScanConsistency option.
+By default, Couchbase optimizes for speed. This means that the default option is something called "NotBounded"
+NotBounded means that when a query is executed, it will get grab all the documents in the index, even if there
+are new documents that haven't been indexed yet, such as in our example.
+
+So, I could, for instance, put my application to sleep right after I create the new document, and THEN run the query
+and that should give Couchbase enough time to index the new document.
+
+If I run it again, then the count will be correct.
+
+But please, don't do a Thread.Sleep. There's a much better way.
+
+----
+
+Another ScanConsistency option is called RequestPlus. RequestPlus means that Couchbase will wait for all documents
+to be indexed that have been created at the time of the query's execution. This will likely make your query execution
+time slower, but it will ensure that any recently created documents will be included in the results.
+
+I'll do the same query as before, but this time I'll set the ScanConsistency with the SDK to RequestPlus, as shown here.
+
+----
+
+Finally, there is one more ScanConsistency option that's new to Couchbase Server 4.5, and that's called
+AtPlus or "A T Plus".
+
+RequestPlus waits for all documents to get indexed, NotBounded doesn't wait for anything. AtPlus is in the middle.
+It will wait for the document or documents that you specify to be indexed only. This is sometimes known as "read your own write"
+In a system with a high number of writes, this can provide better performance than RequestPlus while returning a more complete
+result set than NotBounded.
+
+It's a little more complex: I have to create a MutationState object that contains the documents I care about.
+And I give that MutationState to the QueryRequest. In this example, I'm only using one document, but you can create a MutationState
+with multiple documents.
+
+One important thing to note about AtPlus. At the time of this video, you need to enable EnhancedDurability on your bucket config
+otherwise you'll get an exception.
+
+----
+
+With these scan consistency options, Couchbase gives you the flexibility to make trade offs in performance, completeness, and complexity.
+
+The source code I used for this video is available on github, check out the description for the link.
+
+Thanks for watching!
