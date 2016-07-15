@@ -1,0 +1,13 @@
+= N1QL Scan Consistency including new AtPlus (Video)
+
+This video shows the `ScanConsistency` options when executing N1QL queries, and covers  link:http://developer.couchbase.com/documentation/server/4.5/architecture/querying-data-with-n1ql.html?utm_source=blogs&utm_medium=link&utm_campaign=blog[all the ScanConsistency options, including the new AtPlus].
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/v7eTeKpaqG4?list=PLZWwU1YVRehJIk_KtrfEdcBQyXQDRHMv5" frameborder="0" allowfullscreen></iframe>
++++
+
+link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/018N1QLQueryScanConsistencyOptionsVideo/ScanConsistencyDemo[The source code used in this video is available on Github].
+
+If you'd like to learn more about how to use Couchbase, please visit our link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Developer Portal].
+
+Questions or comments? link:http://twitter.com/mgroves[Follow me on Twitter], email me (matthew.groves AT couchbase DOT com), or check out link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[the Couchbase forums].

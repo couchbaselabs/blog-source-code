@@ -4,7 +4,7 @@ today I'm going to talk about executing N1QL queries using an SDK
 and the Scan Consistency options
 
 I'm going to be using the .NET SDK, but if you use another platform
-I think this video will still be applicable
+I think this video will still help you
 
 ---
 
@@ -12,6 +12,8 @@ Let me start in Couchbase Console.
 
 I have the `travel-sample` sample bucket installed, and this bucket has a number of indexes on it already.
 To use N1QL you need at least a primary index, but you will probably want some secondary indexes for better performance.
+
+In this video, the N1QL queries I'm running will be using this def_type index
 ---
 
 I'm switching back to Visual Studio
@@ -23,6 +25,8 @@ I'm going to create some simple functionality:
 - insert a new airport
 - get another count of all the airports
 - exit
+
+Let's start with this default behavior (aka NotBounded)
 
 the N1QL query to do the count is here
 then I run an insert
@@ -78,3 +82,55 @@ With these scan consistency options, Couchbase gives you the flexibility to make
 The source code I used for this video is available on github, check out the description for the link.
 
 Thanks for watching!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
