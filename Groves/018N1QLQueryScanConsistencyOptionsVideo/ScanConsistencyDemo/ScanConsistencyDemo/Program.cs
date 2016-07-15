@@ -11,6 +11,8 @@ namespace ScanConsistencyDemo
 {
     class Program
     {
+        #region Couchbase setup and cleanup
+
         private static IBucket _bucket;
         private static readonly Random _random = new Random();
 
@@ -34,95 +36,96 @@ namespace ScanConsistencyDemo
             _bucket = ClusterHelper.GetBucket("travel-sample");
         }
 
+        #endregion
+
         static void Main(string[] args)
         {
             SetupCouchbase();
 
 //            NotBoundedExample();
 
-//            RequestPlusExample();
+//           RequestPlusExample();
 
-//            AtPlusExample();
+            AtPlusExample();
 
             CleanupCouchbase();
         }
 
-//        private static void NotBoundedExample()
-//        {
-//            Console.WriteLine("========= NonBounded (default)");
-//
-//            // get the current count
-//            var result1 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
-//                    .Rows.First();
-//            Console.WriteLine($"Initial count: {result1.airportCount}");
-//
-//            // insert a new airport
-//            var doc = new Document<dynamic> {
-//                Id = "ScanConsistency::airport::" + _random.Next(10000),
-//                Content = new { type = "airport" }
-//            };
-//            Console.WriteLine($"Creating document with Id: {doc.Id}");
-//            _bucket.Insert(doc);
-//
-//
-////            // get the count again
-////            var result2 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
-////                    .Rows.First();
-////            Console.WriteLine($"Count after insert: {result2.airportCount}");
-//
-//            // wait a few seconds and get the count again
-//            Console.Write("Waiting for 5 seconds...");
-//            Thread.Sleep(5000);
-//            var result3 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
-//                    .Rows.First();
-//            Console.WriteLine($"Count after waiting: {result3.airportCount}");
-//        }
+        private static void NotBoundedExample()
+        {
+            Console.WriteLine("========= NonBounded (default)");
 
-//        private static void RequestPlusExample()
-//        {
-//            Console.WriteLine("========= RequestPlus");
-//
-//            // get the current count
-//            var result1 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
-//                    .Rows.First();
-//            Console.WriteLine($"Initial count: {result1.airportCount}");
-//
-//            // insert a new airport
-//            var doc = new Document<dynamic> {
-//                Id = "ScanConsistency::airport::" + _random.Next(10000),
-//                Content = new { type = "airport" }
-//            };
-//            _bucket.Insert(doc);
-//
-//            // get the count again
-//            var request = QueryRequest.Create("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'");
-//            request.ScanConsistency(ScanConsistency.RequestPlus);
-//            var result2 = _bucket.Query<dynamic>(request).Rows.First();
-//            Console.WriteLine($"Count after insert with RequestPlus: {result2.airportCount}");
-//        }
+            // get the current count
+            var result1 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
+                    .Rows.First();
+            Console.WriteLine($"Initial count: {result1.airportCount}");
 
-//        private static void AtPlusExample()
-//        {
-//            Console.WriteLine("========= AtPlus");
-//
-//            // get the current count
-//            var result1 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
+            // insert a new airport
+            var doc = new Document<dynamic> {
+                Id = "ScanConsistency::airport::" + _random.Next(10000),
+                Content = new { type = "airport" }
+            };
+            Console.WriteLine($"Creating document with Id: {doc.Id}");
+            _bucket.Insert(doc);
+
+            // get the count again
+//            var result2 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
 //                    .Rows.First();
-//            Console.WriteLine($"Initial count: {result1.airportCount}");
-//
-//            // insert a new airport
-//            var doc = new Document<dynamic> {
-//                Id = "ScanConsistency::airport::" + _random.Next(10000),
-//                Content = new { type = "airport" }
-//            };
-//            var insertResult = _bucket.Insert(doc);
-//
-//            // get the count again
-//            var state = MutationState.From(insertResult.Document);
-//            var request = new QueryRequest("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'");
-//            var t = request.ConsistentWith(state);
-//            var result2 = _bucket.Query<dynamic>(t).Rows.First();
-//            Console.WriteLine($"Count after insert with AtPlus: {result2.airportCount}");
-//        }
+//            Console.WriteLine($"Count after insert: {result2.airportCount}");
+
+            // wait a few seconds and get the count again
+            Console.Write("Waiting for 5 seconds...");
+            Thread.Sleep(5000);
+            var result3 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
+                    .Rows.First();
+            Console.WriteLine($"Count after waiting: {result3.airportCount}");
+        }
+
+        private static void RequestPlusExample()
+        {
+            Console.WriteLine("========= RequestPlus");
+
+            // get the current count
+            var result1 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
+                    .Rows.First();
+            Console.WriteLine($"Initial count: {result1.airportCount}");
+
+            // insert a new airport
+            var doc = new Document<dynamic> {
+                Id = "ScanConsistency::airport::" + _random.Next(10000),
+                Content = new { type = "airport" }
+            };
+            _bucket.Insert(doc);
+
+            // get the count again
+            var request = QueryRequest.Create("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'");
+            request.ScanConsistency(ScanConsistency.RequestPlus);
+            var result2 = _bucket.Query<dynamic>(request).Rows.First();
+            Console.WriteLine($"Count after insert with RequestPlus: {result2.airportCount}");
+        }
+
+        private static void AtPlusExample()
+        {
+            Console.WriteLine("========= AtPlus");
+
+            // get the current count
+            var result1 = _bucket.Query<dynamic>("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'")
+                    .Rows.First();
+            Console.WriteLine($"Initial count: {result1.airportCount}");
+
+            // insert a new airport
+            var doc = new Document<dynamic> {
+                Id = "ScanConsistency::airport::" + _random.Next(10000),
+                Content = new { type = "airport" }
+            };
+            var insertResult = _bucket.Insert(doc);
+
+            // get the count again
+            var state = MutationState.From(insertResult.Document);
+            var request = new QueryRequest("SELECT COUNT(1) as airportCount FROM `travel-sample` WHERE type='airport'");
+            var t = request.ConsistentWith(state);
+            var result2 = _bucket.Query<dynamic>(t).Rows.First();
+            Console.WriteLine($"Count after insert with AtPlus: {result2.airportCount}");
+        }
     }
 }
