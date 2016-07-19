@@ -2,41 +2,45 @@
 
 # Couchbase with Windows and .NET
 
-In this blog post, I'm going to show the very basics of interacting with Couchbase for .NET developers on Windows. I'll start with the basics, and build towards a "vertical" slice of a complete ASP.NET MVC app. If you are interested in diving deeper, please check out link:http://blog.couchbase.com/[my blog posts on Couchbase] and the link:http://developer.couchbase.com[Couchbase Developer Portal].
+We're going to look at the basics of interacting with Couchbase for .NET developers on Windows. We'll start with the basics, and build towards a "vertical" slice of a complete ASP.NET MVC app on the .NET 4.x framework. For a deeper dive, please check out link:http://blog.couchbase.com/[my blog posts on Couchbase] and the link:http://developer.couchbase.com[Couchbase Developer Portal].
 
 ## Installing Couchbase Server
 
-Let's start with the easiest part: downloading and installing Couchbase Server. I'm going to install it on Windows 10, but you can install it pretty much everywhere, including Mac OSX and Linux. Go to the link:http://www.couchbase.com/nosql-databases/downloads[Downloads page on the Couchbase website]. You can now choose from the Enterprise Edition or the Community Edition. I'm going to proceed with the Enterprise Edition for this blog post.
+Let's start with the easiest part:
 
-Run the exe file that you just downloaded. You'll be taken through a simple 4-step wizard.
+#### link:http://www.couchbase.com/nosql-databases/downloads[Download and install Couchbase Server].
 
-At this point, Couchbase should be running as a Windows Service (you can verify by link:https://technet.microsoft.com/en-us/library/cc755249.aspx[opening services.msc]).
+Windows 10, Mac OSX and Linux packages are all available. Go to the link:http://www.couchbase.com/nosql-databases/downloads[Downloads page on the Couchbase website]. We'll use the Enterprise Edition for this blog post. Let's proceed with a Windows 10 installation.
+
+Run the downloaded installation file, and go through a 4-step wizard.
+
+At this point, Couchbase should be running as a Windows Service (verify by link:https://technet.microsoft.com/en-us/library/cc755249.aspx[opening services.msc]).
 
 image:CouchbaseServerWindowsService_006.png[Couchbase Server in services.msc]
 
-You should also be automatically taken to the Couchbase Console, which you access via web browser. Here you can customize your Couchbase setup. You can always return to this console via **http://localhost:8091**
+We'll automatically be taken to the Couchbase Console via web browser to customize the Couchbase setup. We can always return to this console via link:http://localhost:8091[http://localhost:8091].
 
-Click "Setup" to start the configuration wizard. I'm going to stick with the default settings (mostly) for now.
+Click "Setup" to start the configuration wizard. Let's stick with the default settings (mostly) for now.
 
-1. In step 1, you need to specify how much RAM to give to Couchbase. You may want to dial down some of the default RAM Quotas (you can always change them later). Since I'm only using the one node for development, I've enabled all services on this node (Index, Query, and Full Text). I would recommend checking out some of the link:http://learn.couchbase.com/[free Couchbase training] available to dive deeper into tweaking these settings.
+1. In step 1, we need to specify how much RAM to give to Couchbase. It might be a good idea to dial down some of the default RAM Quotas (we can always change them later). Since we only need the one node for development, let's enabled all services on this node (Index, Query, and Full Text). I would recommend checking out some of the link:http://learn.couchbase.com/[free Couchbase training] available to dive deeper into tweaking these settings.
 
 image:CouchbaseServerWizard_008.png[Couchbase Server Configuration Wizard]
 
-2. In step 2, you can choose to install some sample data. For this blog post, you don't need to do this. However, the "travel-sample" is useful for trying out some of the N1QL functionality (more on that later).
+2. In step 2, we can choose to install some sample data. For this blog post, we don't need to do this. However, the "travel-sample" is useful for trying out some of the N1QL functionality (more on that later).
 
-3. In step 3, you create a "default" bucket, which you'll need to follow along with this blog post.
+3. In step 3, let's create a "default" bucket, to follow along with this blog post.
 
-4. In step 4, you can elect to receive notifications from Couchbase and register the product.
+4. In step 4, we can elect to receive notifications from Couchbase and register the product.
 
-5. Finally, in step 5, you need to enter a username and password to create an administrator account.
+5. Finally, in step 5, we need to enter a username and password to create an administrator account.
 
-Now you are ready to start using Couchbase. On the "overview" page, you can see how much RAM is available to Couchbase, and how much is actually being used. If we wanted to scale out Couchbase by adding additional servers, then we would see them listed in the Servers section. If you click on the "Data Buckets" tab, you'll see that there's at least the default bucket you created.
+Now we're ready to start using Couchbase. On the "overview" page, we can see how much RAM is available to Couchbase, and how much is actually in use. If we wanted to scale out Couchbase by adding servers, then we would see them listed in the Servers section. If we click on the "Data Buckets" tab, we'll see that there's at least the default bucket we created.
 
 Feel free to play around with the Couchbase Console and check out the link:http://developer.couchbase.com/documentation/server/4.5/admin/ui-intro.html[Couchbase Console documentation].
 
-## Some NoSQL Lingo
+## Some NoSQL lingo
 
-If you're like me, you're itching to get into some code and see what you can do. But before we go there, I want to go over some of the lingo with Couchbase. It's not a difficult tool to use, but it is different from the RDBMS systems like SQL Server that you're probably used to.
+But before we dive into some code, let's go over some of the lingo with Couchbase. It's not a difficult tool to use, but it is different from RDBMS systems like SQL Server.
 
 **Node**
 
@@ -44,23 +48,23 @@ A node is an invidual machine that is running Couchbase Server.
 
 **Cluster**
 
-Nodes can be joined together into a link:http://developer.couchbase.com/documentation/server/current/clustersetup/manage-cluster-intro.html[cluster] that act in concert to provide scaling and improved availability. Scaling: more nodes means more RAM and disk space. Availability: if one node goes down, the cluster will continue to function. As a developer, you don't generally have to worry about node management and clustering in your code: it's all handled by Couchbase and the Couchbase .NET SDK.
+Nodes are joined together into a link:http://developer.couchbase.com/documentation/server/current/clustersetup/manage-cluster-intro.html[cluster] that act in concert to provide scaling and improved availability. Scaling: more nodes means more RAM and disk space. Availability: if one node goes down, the cluster will continue to function. As developers, we don't generally have to worry about node management and clustering in code: it's all handled by Couchbase and the Couchbase .NET SDK.
 
 **Bucket**
 
-A link:http://developer.couchbase.com/documentation/server/4.5/clustersetup/bucket-setup.html[bucket] is a place to store documents. Each document has a key. Within a bucket, each key must be unique. Typically, a single bucket corresponds to a single application. The documents within a bucket do not have to be similar at all. You could store a document that contains information about a user, and a document with information about a building.
+A link:http://developer.couchbase.com/documentation/server/4.5/clustersetup/bucket-setup.html[bucket] is a place to store documents. Each document has a key. Within a bucket, each key must be unique. Typically, a single bucket corresponds to a single application. The documents within a bucket do not have to be similar at all. We could store a document that contains information about a user, and a document with information about a building, both in the same bucket.
 
 image:CouchbaseBucket_003.png[A bucket with two documents in it]
 
 **Document**
 
-In a very basic sense, a Couchbase bucket is just a giant `Dictionary<string,string>`. Each entry in a bucket consists of a key and a document. Documents consist of JSON. Because Couchbase uses JSON documents, it's called a "document database".
+In a basic sense, a Couchbase bucket is a giant `Dictionary<string,string>`. Each entry in a bucket consists of a key and a document. Documents consist of JSON. Because Couchbase uses JSON documents, it's called a "document database".
 
 image:CouchbaseDocument_004.png[A JSON document]
 
 **N1QL**
 
-Couchbase recognizes that relational databases have been a huge part of many developer's careers. Many developers feel comfortable writing SQL. With Couchbase Server, you can write queries in a language called link:http://developer.couchbase.com/documentation/server/4.5/developer-guide/querying.html[N1QL] (N1QL stands for "Non-first Normal Form Query Language, and is pronounced "nickel"). N1QL is a superset of SQL. This means that, basically, if you know SQL, then you know N1QL. An example:
+With Couchbase Server, we can write queries in a language called link:http://developer.couchbase.com/documentation/server/4.5/developer-guide/querying.html[N1QL] (N1QL stands for "Non-first Normal Form Query Language, pronounced "nickel"). N1QL is a superset of SQL. This means that, basically, if you know SQL, then you know N1QL. An example:
 
 [source,SQL]
 ----
@@ -81,25 +85,25 @@ That will return something like:
 }
 ----
 
-As I'll show you in later blog posts, the Linq2Couchbase library leverages N1QL to give you a Linq provider that will feel very similar to Entity Framework, NHibernate.Linq, or other Linq providers that you're used to.
+As we'll see later, the Linq2Couchbase library leverages N1QL into a LINQ provider that is similar to Entity Framework, NHibernate.Linq, etc.
 
 **Indexes**
 
-link:http://developer.couchbase.com/documentation/server/4.5/indexes/n1ql-in-couchbase.html[Indexes] in Couchbase are just as important as in relational databases. Probably more so, because buckets contain a variety of documents.
+link:http://developer.couchbase.com/documentation/server/4.5/indexes/n1ql-in-couchbase.html[Indexes] in Couchbase are as important as in relational databases. Probably more so, because buckets contain a variety of documents.
 
-To enable N1QL queries on a bucket, at the very least you need to create a primary index. This is an index on the bucket itself. Here's how to create one with N1QL: `CREATE PRIMARY INDEX ON `my-bucket``
+To enable N1QL queries on a bucket, we need to at least create a primary index. This is an index on the bucket itself. Here's how to create one with N1QL: `CREATE PRIMARY INDEX ON `my-bucket``
 
-You can create indexes based on the fields in the documents. For instance, if you have a lot of documents that have "name" or "author", and you will often be querying based on this fields, you can create indexes for them. These are called "secondary indexes."
+We can create indexes based on the fields in the documents. For instance, if we have a lot of documents that have "name" or "author" fields, and we end up querying based on this fields often, we can create indexes for them. These are "secondary indexes." As the size of a bucket grows, so does the importance of indexing.
 
 ## ASP.NET MVC
 
-Now that we've got some lingo out the way, let's start a new ASP.NET MVC project, add the Couchbase SDK to it with NuGet, and get the infrastructure in place to start using Couchbase.
+Now that we've got some lingo out the way, let's start a new ASP.NET MVC project, add the link:https://www.nuget.org/packages/CouchbaseNetClient/[Couchbase SDK to it with NuGet], and get the infrastructure in place to start using Couchbase.
 
-I just started in Visual Studio with a File->New, and selected ASP.NET Web Application, then selected "MVC". I'm going to assume you have some familiarity with ASP.NET MVC (I'm going to use traditional .NET, but an .NET Core Couchbase SDK is coming soon).
+Let's start in Visual Studio with a File->New, and select ASP.NET Web Application, then select "MVC". I'm going to assume you have some familiarity with ASP.NET MVC (we're using .NET 4.x, but a .NET Core Couchbase SDK is coming soon).
 
-### Installing the Couchbase client library ###
+### Installing the Couchbase client library
 
-The first thing we'll need to do is add the Couchbase .NET client. You can do this with the NuGet UI by right-clicking on "References", clicking "Manage NuGet Packages", clicking "Browse", and then searching for "CouchbaseNetClient". (If you want to, you can search for "Linq2Couchbase" instead. Installing that will also cause CouchbaseNetClient to be installed, but I won't actually be using any Linq2Couchbase until later blog posts).
+The first thing we'll need to do is add the Couchbase .NET client. We can do this with the NuGet UI by right-clicking on "References", clicking "Manage NuGet Packages", clicking "Browse", and then searching for "CouchbaseNetClient". (We could search for "Linq2Couchbase" instead. Installing that will also install CouchbaseNetClient, but we won't actually be using Linq2Couchbase until later).
 
 image:NuGetUI_001.png[NuGet UI for installing CouchbaseNetClient]
 
@@ -107,7 +111,7 @@ If you prefer the NuGet command line, then open up the Package Manager Console, 
 
 ### Getting ASP.NET to talk to a Couchbase cluster
 
-Now let's setup the ASP.NET app to be able to connect to Couchbase. The first thing we need to do is locate the Couchbase Cluster. The best place to do this is in the `Global.asax.cs` when the application starts. At a minimum, we need to specify one node in the cluster, and give that to the `ClusterHelper`. This only needs to be done once in `Application_Start`. When the application ends, it's a good idea to close the `ClusterHelper`.
+Now let's setup the ASP.NET app to be able to connect to Couchbase. The first thing we need to do is locate the Couchbase Cluster. The best place to do this is in the `Global.asax.cs` when the application starts. At a minimum, we need to specify one node in the cluster, and give that to the `ClusterHelper`. We only need this in `Application_Start`. When the application ends, it's a good idea to close the `ClusterHelper`.
 
 [source,C#]
 ----
@@ -135,7 +139,7 @@ public class MvcApplication : System.Web.HttpApplication
 }
 ----
 
-### Using the IBucket in a controller
+### Using the `IBucket` in a controller
 
 Just to show that this works, go ahead and add IBucket to a constructor of a controller, say `TestController`.
 [source,C#]
@@ -151,15 +155,15 @@ public class TestController : Controller
 }
 ----
 
-(In the long run, we probably don't want an IBucket being used directly in MVC controllers, more on that later).
+(In the long run, we don't want an IBucket directly in MVC controllers, more on that later).
 
-Next, add a document to your bucket, directly in Couchbase Console. Make note of the key you give it.
+Next, let's add a document to the bucket, directly in Couchbase Console. Use anything for a key, but make a note of it.
 
 image:CouchbaseCreateDocument_003.png[Specifying a key for a new document in Couchbase]
 
 image:CouchbaseCreateDocument_004.png[Creating a document in Couchbase]
 
-Now, add an action to `TestController`. This action is the simplest thing that can be done: it will get the document based on the key, and write the document values in the response.
+Now, let's add an action to `TestController`. It will get the document based on the key, and write the document values in the response.
 
 [source,C#]
 ----
@@ -170,21 +174,21 @@ public ActionResult Index()
 }
 ----
 
-`doc.Value` is of type `dynamic`, so make sure that the fields you use (in my case, name and address) match up to the JSON document you put into the bucket. Run your MVC site in a browser, and you should see something like this:
+`doc.Value` is of type `dynamic`, so make sure that the fields (in this case, "name" and "address") match up to the JSON document in the bucket. Run the MVC site in a browser, and we should see something like this:
 
 image:couchbaseaspnethelloworld_005b.png[Outputting the document values to a browser]
 
-Congratulations, you've successfully written an ASP.NET site that uses Couchbase!
+Congratulations, we've successfully written an ASP.NET site that uses Couchbase!
 
 ## Introducing Linq2Couchbase
 
-I'm going to build on what we've already done by introducing link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase]. I'll also move Couchbase out of the Controller and put it into a very basic link:http://www.martinfowler.com/eaaCatalog/repository.html[repository] class. My goal is to have you feeling comfortable with the basics of Couchbase and Linq2Couchbase, and be able to start applying it in your web application.
+Let's build on what we've already done by introducing link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase]. We'll also move Couchbase out of the Controller and put it into a very basic link:http://www.martinfowler.com/eaaCatalog/repository.html[repository] class. My goal is to have you feeling comfortable with the basics of Couchbase and Linq2Couchbase, and be able to start applying it in a web application.
 
 ### Moving Couchbase out of the Controller
 
 The Controller's job is to direct traffic: take incoming requests, hand them to a model, and then give the results to the view. To follow the link:http://www.butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod[SOLID principles] (specifically the Single Responsibility Principle), data access should be somewhere in a "model" and not the controller.
 
-The first step is to refactor the existing code. We can keep the 'really simple example', but it should be moved to a method in another class. Here is the refactored HomeController and the new PersonRepository:
+The first step is to refactor the existing code. We can keep the 'really simple example', but let's move it to a method in another class. Here is the refactored HomeController and the new PersonRepository:
 
 [source,C#]
 ----
@@ -222,9 +226,9 @@ public class PersonRepository
 
 Now, `HomeController` no longer depends directly on Couchbase.
 
-### Refactoring to use a Person Class
+### Refactoring to use a Person class
 
-In the above example, I'm using a `dynamic` object. `dynamic` is great for some situations, but in this case, it would be a good idea to come up with a more concrete definition of what a "Person" is. I can do this with a C# class.
+In the above example, we're using a `dynamic` object. `dynamic` is great for some situations, but in this case, it would be a good idea to come up with a more concrete definition of what a "Person" is. We can do this with a C# class.
 
 [source,C#]
 ----
@@ -235,7 +239,7 @@ public class Person
 }
 ----
 
-I'll also update the PersonRepository to use this class.
+We'll also update the `PersonRepository` to use this class.
 
 [source,C#]
 ----
@@ -245,7 +249,7 @@ public Person GetPersonByKey(string key)
 }
 ----
 
-While we're at it, I'm going to take some steps to make this more of a proper MVC app. Instead of returning `Content()`, I'm going to make the Index action return a View, and I'm going to pass it a *list* of Person objects. I'll create an `Index.cshtml` file, which will delegate to a partial of _person.cshtml. I'm also going to drop in a layout that uses Bootstrap. This last part is completely gratuitous, but it will make the app look nicer.
+While we're at it, we're going to take some steps to make this more of a proper MVC app. Instead of returning `Content()`, We're going to make the Index action return a View, and we're going to pass it a *list* of Person objects. We'll create an `Index.cshtml` file, which will delegate to a partial of _person.cshtml. We're also going to drop in a layout that uses Bootstrap. This last part is gratuitous, but it will make the app look nicer.
 
 New Index action:
 
@@ -302,22 +306,22 @@ image:indexofcouchbasedocumentsinbootstrap_001.png[The Index view of Couchbase P
 
 ### Linq2Couchbase
 
-Earlier I mentioned that Couchbase Server supports a query language known as link:http://www.couchbase.com/n1ql[N1QL]. It's a superset of SQL, and allows you to leverage your existing knowledge of SQL to construct very powerful queries over JSON documents in Couchbase. Linq2Couchbase takes this a step further and converts Linq queries into N1QL queries (much like Entity Framework converts Linq queries into SQL queries).
+Couchbase Server supports a query language known as link:http://www.couchbase.com/n1ql[N1QL]. It's a superset of SQL, and allows us to leverage existing knowledge of SQL syntax to construct very powerful queries over JSON documents in Couchbase. Linq2Couchbase takes this a step further and converts LINQ queries into N1QL queries (much like Entity Framework converts LINQ queries into SQL queries).
 
-Linq2Couchbase is part of link:https://github.com/couchbaselabs[Couchbase Labs], and is not yet part of the core, supported Couchbase .NET SDK library. However, if you're used to Entity Framework, NHibernate.Linq, or any other Linq provider, it's a great way to introduce yourself to Couchbase. For some operations, you will still need to use the core Couchbase .NET SDK, but there is a lot we can do with Linq2Couchbase.
+Linq2Couchbase is part of link:https://github.com/couchbaselabs[Couchbase Labs], and is not yet part of the core, supported Couchbase .NET SDK library. However, if you're used to Entity Framework, NHibernate.Linq, or any other LINQ provider, it's a great way to introduce yourself to Couchbase. For some operations, we will still need to use the core Couchbase .NET SDK, but there is a lot we can do with Linq2Couchbase.
 
 Start by adding Linq2Couchbase with NuGet (if you haven't already).
 
-N1QL (and therefore Linq2Couchbase) depends on the link:http://developer.couchbase.com/documentation/server/4.5/n1ql/n1ql-language-reference/createprimaryindex.html[bucket being indexed]. Go into Couchbase Console, click the 'Query' tab, and create a primary index on the `default` bucket.
+To use N1QL (and therefore Linq2Couchbase), link:http://developer.couchbase.com/documentation/server/4.5/n1ql/n1ql-language-reference/createprimaryindex.html[the bucket must be indexed]. Go into Couchbase Console, click the 'Query' tab, and create a primary index on the `default` bucket.
 
 [source,SQL]
 ----
 CREATE PRIMARY INDEX ON `default`;
 ----
 
-If you don't have an index, Linq2Couchbase will give you a helpful error message like "No primary index on keyspace default. Use CREATE PRIMARY INDEX to create one."
+If we don't have an index, Linq2Couchbase will throw a helpful error message like "No primary index on keyspace default. Use CREATE PRIMARY INDEX to create one."
 
-In order to use Linq2Couchbase most effectively, we have to start giving Couchbase documents a "type" field. This way, we can differentiate between a "person" document and a "location" document. In this example, I'm only going to have "person" documents, but it's a good idea to do this from the start. I'll create a `Type` field, and set it to "Person". I'll also put an attribute on the C# class so that Linq2Couchbase understands that this class is meant for a certain type of document.
+In order to use Linq2Couchbase most effectively, we have to start giving Couchbase documents a "type" field. This way, we can differentiate between a "person" document and a "location" document. In this example, we're only going to have "person" documents, but it's a good idea to do this from the start. We'll create a `Type` field, and set it to "Person". We'll also put an attribute on the C# class so that Linq2Couchbase understands that this class corresponds to a certain document type.
 
 [source,C#]
 ----
@@ -336,7 +340,7 @@ public class Person
 }
 ----
 
-If you make these changes, your app will continue to work. This is because we are still retrieving the document by its key. But now let's change the Index action to try and get ALL Person documents.
+After we make these changes, the app will continue to work. This is because we are still retrieving the document by its key. But now let's change the Index action to try and get ALL Person documents.
 
 [source,C#]
 ----
@@ -379,9 +383,9 @@ public class PersonRepository
 }
 ----
 
-In this example, I'm telling Couchbase to order all the results by Name. If you'd like, you can experiment with the normal Linq methods that you're used to: `Where`, `Select`, `Take`, `Skip`, and so on.
+In this example, we're telling Couchbase to order all the results by Name. At this point, we can experiment with the normal LINQ methods: `Where`, `Select`, `Take`, `Skip`, and so on.
 
-Just ignore that `ScanConsistency` for now: I'll discuss it more later. But what about that `IBucketContext`? The `IBucketContext` is similar to `DbContext` for Entity Framework, or `ISession` for NHibernate. To get that `IBucketContext`, I'll make some changes to `HomeController`.
+Just ignore that `ScanConsistency` for now: we'll discuss it more later. But what about that `IBucketContext`? The `IBucketContext` is similar to `DbContext` for Entity Framework, or `ISession` for NHibernate. To get that `IBucketContext`, we'll make some changes to `HomeController`.
 
 [source,C#]
 ----
@@ -393,33 +397,33 @@ public HomeController()
 }
 ----
 
-I'm doing it this way for simplicity, but I recommend that you use a Dependency Injection (like StructureMap) to handle this, otherwise you'll end up copy/pasting a lot of code into all of your Controllers.
+We're doing it this way for simplicity, but I recommend that you use a link:https://msdn.microsoft.com/en-us/library/ff921152.aspx[dependency injection] framework (like link:http://structuremap.github.io/[StructureMap]) to handle this, otherwise you'll end up copy/pasting a lot of code into your Controllers.
 
-Now, if you compile and run the web app again, it will display "There are no people yet". Hey, where did I go?! I didn't show up because the "foo::123" document doesn't have a "type" field yet. Go to Couchbase Console and add it.
+Now, if we compile and run the web app again, it will display "There are no people yet". Hey, where did that person go?! It didn't show up because the "foo::123" document doesn't have a "type" field yet. Go to Couchbase Console and add it.
 
 image:UpdateCouchbaseDocument_003.png[Adding a type field to a Couchbase document]
 
-Once you do that, refresh your web page, and the person will appear again.
+Once we do that and refresh the web page, the person will appear again.
 
 ### A quick note about ScanConsistency
 
-Linq2Couchbase relies on an Index in order to generate and execute queries. When you add new documents, the index must be updated. Until the index gets updates, any documents not yet indexed will not be returned by Linq2Couchbase (by default). By adding in `ScanConsistency` of `RequestPlus` (link:http://developer.couchbase.com/documentation/server/4.5/architecture/querying-data-with-n1ql.html[See Couchbase documentation for the details about scan consistency]), Linq2Couchbase will effectively wait until the index is updated before executing a query and returning a response. This is a tradeoff that you will have to think about when designing your application. Which is more important: raw speed or complete accuracy? The Couchbase SDK defaults to raw speed.
+Linq2Couchbase relies on an Index to generate and execute queries. Adding a new documents triggers an index update. Until the index finishes updating, any documents not yet indexed will not be returned by Linq2Couchbase (by default). By adding in `ScanConsistency` of `RequestPlus` (link:http://developer.couchbase.com/documentation/server/4.5/architecture/querying-data-with-n1ql.html[See Couchbase documentation for the details about scan consistency]), Linq2Couchbase will effectively wait until the index is updated before executing a query and returning a response. This is a tradeoff that you will have to think about when designing your application. Which is more important: raw speed or complete accuracy? The Couchbase SDK defaults to raw speed.
 
-## A Complete ASP.NET CRUD implementation
+## A complete ASP.NET CRUD implementation
 
-Let's round out the sample app that I've been building with a full suite of CRUD functionality. The app already shows a list of people. After this post, you'll be able to:
+Let's round out the sample app that we've been building with a full suite of CRUD functionality. The app already shows a list of people. We'll next want to:
 
 * Add a new person via the web app (instead of directly in Couchbase Console)
 * Edit a person
 * Delete a person.
 
-Before I start, a disclaimer. I've made some modeling *decisions* in this sample app. I've decided that keys to Person documents should be of the format "Person::{guid}", and I've decided that I will enforce the "Person::" prefix at the repository level. I've also made a decision not to use any intermediate view models or edit models in my MVC app, for the purposes of a concise demonstration. By no means do you have to make the same decisions I did! I encourage you to think through the implications for your particular use case, and I would be happy to discuss the mertis and trade-offs of each approch in the comments or in the link:http://forums.couchbase.com[Couchbase Forums].
+Before I start, a disclaimer. I've made some modeling *decisions* in this sample app. I've decided that keys to Person documents should be of the format "Person::{guid}", and I've decided that we will enforce the "Person::" prefix at the repository level. I've also made a decision not to use any intermediate view models or edit models in my MVC app, for the purposes of a concise demonstration. By no means do you have to make the same decisions I did! I encourage you to think through the implications for your particular use case, and I would be happy to discuss the merits and trade-offs of each approch in the comments or in the link:http://forums.couchbase.com[Couchbase Forums].
 
 ### Adding a new person document
 
-In the previous blog posts, I added new documents through the Couchbase Console. Now let's make it possible via a standard HTML form on an ASP.NET page.
+Up until now, we've used the Couchbase Console to create new documents. Now let's make it possible via a standard HTML form on an ASP.NET page.
 
-First, I need to make a slight change to the Person class:
+First, we need to make a slight change to the `Person` class:
 
 [source,C#]
 ----
@@ -436,7 +440,7 @@ public class Person
 }
 ----
 
-I added an "Id" field, and marked it with the `[Key]` attribute. This attribute comes from System.ComponentModel.DataAnnotations, but Linq2Couchbase interprets it to mean "use this field for the Couchbase key".
+We added an `Id` field, and marked it with the `[Key]` attribute. This attribute comes from System.ComponentModel.DataAnnotations, but Linq2Couchbase interprets it to mean "use this field for the Couchbase key".
 
 Now, let's add a very simple new action to `HomeController`:
 
@@ -448,7 +452,7 @@ public ActionResult Add()
 }
 ----
 
-And I'll link to that with the bootstrap navigation (which I snuck in previously, and by no means are you required to use):
+And We'll link to that with the bootstrap navigation (which I snuck in previously, and by no means are you required to use):
 
 [source,HTML]
 ----
@@ -458,7 +462,7 @@ And I'll link to that with the bootstrap navigation (which I snuck in previously
 </ul>
 ----
 
-Nothing much out of the ordinary so far. I'll create a simple `Edit.cshtml` with a straightforward, plain-looking form.
+Nothing much out of the ordinary so far. We'll create a simple `Edit.cshtml` with a straightforward, plain-looking form.
 
 [source,C#]
 ----
@@ -484,7 +488,7 @@ Nothing much out of the ordinary so far. I'll create a simple `Edit.cshtml` with
 }
 ----
 
-Since that form will be POSTing to a Save action, that needs to be created next:
+Since that form will be POSTing to a Save action, let's create that next:
 
 [source,C#]
 ----
@@ -496,7 +500,7 @@ public ActionResult Save(Person model)
 }
 ----
 
-Notice that the `Person` type used in the parameter is the same type as before. Here is where a more complex web application would probably want to use an edit model, validation, mapping, and so on. I've omitted all of that, and I send the model straight to a new method in `PersonRepository`:
+Notice that the `Person` type used in the parameter is the same type as before. Here is where a more complex web application would probably want to use an edit model, validation, mapping, and so on. I've omitted that, and I send the model straight to a new method in `PersonRepository`:
 
 [source,C#]
 ----
@@ -511,7 +515,7 @@ public void Save(Person person)
 }
 ----
 
-This repository method will set the ID, if one isn't already set (it won't be now, but it will be later, when we cover 'Edit'). The "Save" method on `IBucketContext` is from Linq2Couchbase. It will add a new document if the key doesn't exist, or update an existing document if it does. It's known as an "upsert" operation. In fact, I can do nearly the same thing without Linq2Couchbase:
+This repository method will set the `Id`, if one isn't already set (it won't be now, but it will be later, when we cover 'Edit'). The `Save` method on `IBucketContext` is from Linq2Couchbase. It will add a new document if the key doesn't exist, or update an existing document if it does. It's known as an link:http://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/upsert.html["upsert" operation]. In fact, we can do nearly the same thing without Linq2Couchbase:
 
 [source,C#]
 ----
@@ -525,7 +529,7 @@ _bucket.Upsert(doc);
 
 ### Editing an existing person document
 
-Now, I want to be able to edit an existing person document in my ASP.NET site. First, let's add an edit link to each person, by making a change to `_person.cshtml` partial view.
+Now, we want to be able to edit an existing person document in my ASP.NET site. First, let's add an edit link to each person, by making a change to `_person.cshtml` partial view.
 
 [source,HTML]
 ----
@@ -536,9 +540,9 @@ Now, I want to be able to edit an existing person document in my ASP.NET site. F
 </h2>
 ----
 
-I also added a "delete" link while I was in there, which we'll get to later. One more thing to point out: when creating the routeValues, I stripped out "Person::" from the Id. If I don't do this, ASP.NET will complain about a potentially malicious HTTP request. It would probably be better to give each person a document a more friendly link:https://en.wikipedia.org/wiki/Semantic_URL#Slug["slug"] to use in the URL, or maybe to use that as the document key. That's going to depend on your use case and your data design.
+We also added a "delete" link while we were in there, which we'll get to later. One more thing to point out: when creating the routeValues, we stripped out "Person::" from `Id`. If we don't do this, ASP.NET will complain about a potentially malicious HTTP request. It would probably be better to give each person a document a more friendly link:https://en.wikipedia.org/wiki/Semantic_URL#Slug["slug"] to use in the URL, or maybe to use that as the document key. That's going to depend on your use case and your data design.
 
-Now I need an `Edit` action in HomeController:
+Now we need an `Edit` action in HomeController:
 
 [source,C#]
 ----
@@ -549,7 +553,7 @@ public ActionResult Edit(Guid id)
 }
 ----
 
-I'm reusing the same `Edit.cshtml` view, but now I need to add a hidden field to hold the document ID.
+We're reusing the same `Edit.cshtml` view, but now we need to add a hidden field to hold the document ID.
 
 [source,HTML]
 ----
@@ -558,13 +562,13 @@ I'm reusing the same `Edit.cshtml` view, but now I need to add a hidden field to
 
 Alright! Now we can add and edit person documents.
 
-This may not be terribly impressive to those of you already comfortable with ASP.NET MVC. So, next, let's look at something cool that a NoSQL database like Couchbase brings to the table.
+This may not be terribly impressive to anyone already comfortable with ASP.NET MVC. So, next, let's look at something cool that a NoSQL database like Couchbase brings to the table.
 
 ### Iterating on the data stored in the person document
 
-My new requirement is that I want to collect more information about a Person. Let's say I want to get a phone number, and a list of that person's favorite movies. With a relational database, that means that I would need to add _at least_ two columns, and more likely, at least one other table to hold the movies, with a foreign key.
+A new requirement is that we want to collect more information about a Person. Let's say we want to get a phone number, and a list of that person's favorite movies. With a relational database, that means that we would need to add _at least_ two columns, and more likely, at least one other table to hold the movies, with a foreign key.
 
-With Couchbase, there is no explicit schema. Instead, all I have to do is add a couple more properties to the Person class.
+With Couchbase, there is no explicit schema. Instead, all we have to do is add a couple more properties to the Person class.
 
 [source,C#]
 ----
@@ -584,11 +588,11 @@ public class Person
 }
 ----
 
-That's pretty much it, except that I also need to add a corresponding UI. I used a bit of jQuery to allow the user to add any number of movies. I won't show the code for it here, because the implementation details aren't important. But I have made the whole link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/017MVPBlog/CouchbaseAspNetExample[sample available on Github], so you can follow along or check it out later if you'd like.
+That's pretty much it, except that we also need to add a corresponding UI. I used a bit of jQuery to allow the user to add any number of movies. I won't show the code for it here, because the implementation details aren't important. But I have made the whole link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/017MVPBlog/CouchbaseAspNetExample[sample available on Github], so you can follow along or check it out later if you'd like.
 
 image:EditPersonIteration_002.png[Iteration on Person with new UI form]
 
-I also need to make changes to `_person.cshtml` to (conditionally) display the extra information:
+We also need to make changes to `_person.cshtml` to (conditionally) display the extra information:
 
 [source,HTML]
 ----
@@ -617,13 +621,13 @@ And here's how that would look (this time with two Person documents):
 
 image:IterationDisplayUI_003.png[Iteration on Person with new UI display]
 
-I didn't have to migrate a SQL schema. I didn't have to create any sort of foreign key relationship. I didn't have to setup any OR/M mappings. I simply added a couple of new fields, and Couchbase turned it into a corresponding JSON document.
+We didn't have to migrate a SQL schema. We didn't have to create any sort of foreign key relationship. We didn't have to setup any OR/M mappings. We simply added a couple of new fields, and Couchbase turned it into a corresponding JSON document.
 
 image:IterationCouchbaseDocument_004.png[Iteration on Person with new JSON document]
 
 ### Deleting a person document
 
-I already added the "Delete" link, so I just need to create a new Controller action...
+We already added the "Delete" link, so we need to create a new Controller action...
 
 [source,C#]
 ----
@@ -644,17 +648,15 @@ public void Delete(Guid id)
 }
 ----
 
-Notice that this method is not using Linq2Couchbase. It's using the `Remove` method on `IBucket`. There is a `Remove` available on `IBucketContext`, but you need to pass it an object, and not just a key. I elected to use the `IBucket`, but there's nothing inherently superior about it.
+Notice that this method is not using Linq2Couchbase. It's using the `Remove` method on `IBucket`. A `Remove` method is available on `IBucketContext`, but we need to pass it an entire document, and not just a key. I elected to use the `IBucket`, but there's nothing inherently superior about it.
 
 ### Wrapping up
 
 Thanks for reading through this blog post. Hopefully, you're on your way to considering or even including Couchbase in your next ASP.NET project. Here are some more interesting links for you to continue your Couchbase journey:
 
-- You might be interested in the link:http://blog.couchbase.com/2015/july/the-couchbase-asp.net-identity-storage-provider-part-1[ASP.NET Identity Provider for Couchbase] (link:https://github.com/couchbaselabs/couchbase-aspnet-identity[github]). If you want to store identity information in Couchbase, this is one way you could do it. At the time of this blog post, it's an early developer preview, and is missing support for social logins.
+- There is a link:http://blog.couchbase.com/2015/july/the-couchbase-asp.net-identity-storage-provider-part-1[ASP.NET Identity Provider for Couchbase] (link:https://github.com/couchbaselabs/couchbase-aspnet-identity[github]). At the time of this blog post, it's an early developer preview, and is missing support for social logins.
 - Linq2Couchbase is a great project with a lot of features and documentation, but it's still a work in progress. If you are interested, I suggest visiting link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase on Github]. Ask questions on Gitter, and feel free to submit issues or pull requests.
-
-## Conclusion
 
 I've put the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/017MVPBlog/CouchbaseAspNetExample[full source code for this example on Github]. 
 
-What did I leave out? What's keeping you from trying Couchbase with ASP.NET today? Please leave a comment, [ping me on Twitter](http://twitter.com/mgroves), or email me (matthew.groves AT couchbase DOT com). I'd love to hear from you.
+What did I leave out? What's keeping you from trying Couchbase with ASP.NET today? Please leave a comment, link:http://twitter.com/mgroves[ping me on Twitter], or email me (matthew.groves AT couchbase DOT com). I'd love to hear from you.
