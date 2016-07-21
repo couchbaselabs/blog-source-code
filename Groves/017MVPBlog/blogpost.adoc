@@ -10,7 +10,7 @@ Let's start with the easiest part:
 
 #### link:http://www.couchbase.com/nosql-databases/downloads[Download and install Couchbase Server].
 
-Windows 10, Mac OSX and Linux packages are all available. Go to the link:http://www.couchbase.com/nosql-databases/downloads[Downloads page on the Couchbase website]. We'll use the Enterprise Edition for this blog post. Let's proceed with a Windows 10 installation.
+Windows 10, Mac OS X and Linux packages are all available. Go to the link:http://www.couchbase.com/nosql-databases/downloads[Downloads page on the Couchbase website]. We'll use the Enterprise Edition for this blog post. Let's proceed with a Windows 10 installation.
 
 Run the downloaded installation file, and go through a 4-step wizard.
 
