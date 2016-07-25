@@ -27,13 +27,15 @@ The next device I got was an Intel Compute Stick. It's almost identical to the G
 
 _Warning: replacing the factory OS with something else is likely to void your warranty and/or any hope of getting help from Intel in the future._
 
-However, it's not 100% straightforward to go from unboxing to Couchbase Server. Here's a brief overview of the steps I took.
+However, it's not 100% straightforward to go from unboxing to Couchbase Server. Here's an overview of the steps I took.
 
 === 1. Update BIOS
 
-The Compute Stick is meant to always be plugged into your TV via HDMI. I have no need to have any display adapter attached to them. However, if a stick is turned off or on, it will not boot to the OS unless there is a display attached. UNLESS, you update the BIOS.
+The Compute Stick is meant to always be plugged into your TV via HDMI. It's actually a pretty cool alternative to a Chromecast or Roku stick because you aren't limited to a set of apps. You can browse the web and view Netflix, of course, but if some other streaming service comes along, or you want to use some obscure service that doesn't have a Roku app yet, this is the tool for you.
 
-I got the latest BIOS from Intel's site, copied it to a USB thumb drive. Then I boot the Compute Stick, load up the BIOS, and update the BIOS firmware.
+Anyway, for this project, I have no need to have any display adapter attached to them. However, what I found is that if a stick is turned off and back on, it will not boot to the OS if there is no display attached. UNLESS, you update the BIOS.
+
+I got the link:https://downloadcenter.intel.com/download/25506/BIOS-Update-FCBYT10H-86A-[latest BIOS from Intel's site], copied it to a USB thumb drive. Then I boot the Compute Stick, load up the BIOS, and update the BIOS firmware.
 
 image::003_BIOS_update.jpg[Updating the BIOS]
 
@@ -41,11 +43,11 @@ After you do this, the compute stick has no problem booting into the OS without 
 
 === 2. Create a bootable USB thumbdrive.
 
-I decided to use Ubuntu 14, 64-bit. I did it from Windows using a tool called link:http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows[Rufus, following the instructions on Ubuntu's website]. The only thing I believe I did differently is that under the "Create a bootable disk using" setting, I selected "DD Image" instead of "ISO Image".
+I decided to use Ubuntu 14, 64-bit. I created a bootable USB drive from Windows using a tool called link:http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows[Rufus, following the instructions on Ubuntu's website]. The only thing I believe I did differently is that under the "Create a bootable disk using" setting, I selected "DD Image" instead of "ISO Image". YMMV, but if you use "ISO Image" you may get a "CD-ROM" error during Ubuntu installation.
 
 === 3. Attach the bootable USB thumbdrive, a keyboard, and mouse.
 
-The compute stick only has one USB port, so I had to use a hub to connect all the deviced I wanted to use.
+The compute stick only has one USB port, so I had to use a hub to connect all the devices I wanted to use: keyboard, mouse, thumbdrives, and USB-Ethernet adapter.
 
 image::004_USB_hub.jpg[USB hub attached to compute stick]
 
@@ -53,11 +55,11 @@ image::004_USB_hub.jpg[USB hub attached to compute stick]
 
 The next thing to do is to change a couple settings in the BIOS.
 
-First, change the "Select Operating System" setting from Windows to Ubuntu.
+Change the "Select Operating System" setting from Windows to Ubuntu.
 
 image::005_select_operating_system.jpg[Change Select Operating System BIOS setting]
 
-Second, change the "Boot Drive Order" so that the BIOS will boot into the bootable USB drive you created in step 2.
+Change the "Boot Drive Order" so that the BIOS will boot into the bootable USB drive you created in step 2.
 
 image::006_boot_drive_order.jpg[Change the Boot Drive Order]
 
@@ -73,7 +75,7 @@ _Note that I'm using Ubuntu Desktop. Ubuntu Server should work fine too, if you'
 
 === 6. Install wifi driver
 
-If I had purchased the Intel Compute Stick that came preinstalled with Ubuntu, I'm guessing it would already come with a driver installed. Unfortunately, it seems that a stock Ubuntu 14 installation can't recognize the built-in wifi hardware. So, you'll have to build and install it yourself. This took me a while to figure out, but I found some link:http://ubuntuforums.org/showthread.php?t=2249936[information on the Ubuntu Forums] that helped. I mentioned in step 5 that you might need a USB-Ethernet adapter, and that's because installing this driver requires the use of apt-get and git.
+If I had purchased the Intel Compute Stick that came preinstalled with Ubuntu, I'm guessing it would already come with a wifi driver installed. And in my experience, Ubuntu usually has no trouble with most wifi hardward. Unfortunately, it seems that a stock Ubuntu 14 installation can't recognize the built-in wifi hardware on the Compute Stick. So, you'll have to build and install it yourself. This took me a while to figure out, but I found some link:http://ubuntuforums.org/showthread.php?t=2249936[information on the Ubuntu Forums] that helped. I mentioned in step 5 that you might need a USB-Ethernet adapter, and that's because installing this driver requires the use of apt-get and git.
 
 I opened a Terminal window and ran these commands:
 

@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5.dev">
-<title>Couchbase with Windows and .NET</title>
+<title>Couchbase with Windows and .NET - Part 3</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,404 +420,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>Couchbase with Windows and .NET</h1>
+<h1>Couchbase with Windows and .NET - Part 3</h1>
 </div>
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>We&#8217;re going to look at the basics of interacting with Couchbase for .NET developers on Windows. We&#8217;ll start with the basics, and build towards a "vertical" slice of a complete ASP.NET MVC app on the .NET 4.x framework. For a deeper dive, please check out <a href="http://blog.couchbase.com/">my blog posts on Couchbase</a> and the <a href="http://developer.couchbase.com">Couchbase Developer Portal</a>.</p>
+<p>In this three part series, we&#8217;re going to look at the basics of interacting with Couchbase for .NET developers on Windows. We&#8217;ll start with the basics, and build towards a "vertical" slice of a complete ASP.NET MVC app on the .NET 4.x framework. For a deeper dive, please check out <a href="http://blog.couchbase.com/">my blog posts on Couchbase</a> and the <a href="http://developer.couchbase.com">Couchbase Developer Portal</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this first part, we installed Couchbase Server and went over the basics of how it works.</p>
+</div>
+<div class="paragraph">
+<p>In the second part, we looked at using ASP.NET with Couchbase Server.</p>
+</div>
+<div class="paragraph">
+<p>In this final part, we&#8217;ll implement all the CRUD functionality in an ASP.NET application.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="trueinstalling-couchbase-server"><a class="anchor" href="#trueinstalling-couchbase-server"></a>Installing Couchbase Server</h2>
+<h2 id="truelinq2couchbase"><a class="anchor" href="#truelinq2couchbase"></a>Linq2Couchbase</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Let&#8217;s start with the easiest part:</p>
-</div>
-<div class="sect3">
-<h4 id="true-a-href-http-www-couchbase-com-nosql-databases-downloads-download-and-install-couchbase-server-a"><a class="anchor" href="#true-a-href-http-www-couchbase-com-nosql-databases-downloads-download-and-install-couchbase-server-a"></a><a href="http://www.couchbase.com/nosql-databases/downloads">Download and install Couchbase Server</a>.</h4>
-<div class="paragraph">
-<p>Windows 10, Mac OS X and Linux packages are all available. Go to the <a href="http://www.couchbase.com/nosql-databases/downloads">Downloads page on the Couchbase website</a>. We&#8217;ll use the Enterprise Edition for this blog post. Let&#8217;s proceed with a Windows 10 installation.</p>
-</div>
-<div class="paragraph">
-<p>Run the downloaded installation file, and go through a 4-step wizard.</p>
-</div>
-<div class="paragraph">
-<p>At this point, Couchbase should be running as a Windows Service (verify by <a href="https://technet.microsoft.com/en-us/library/cc755249.aspx">opening services.msc</a>).</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="images/CouchbaseServerWindowsService_006.png" alt="Couchbase Server in services.msc"></span></p>
-</div>
-<div class="paragraph">
-<p>We&#8217;ll automatically be taken to the Couchbase Console via web browser to customize the Couchbase setup. We can always return to this console via <a href="http://localhost:8091">http://localhost:8091</a>.</p>
-</div>
-<div class="paragraph">
-<p>Click "Setup" to start the configuration wizard. Let&#8217;s stick with the default settings (mostly) for now.</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>In step 1, we need to specify how much RAM to give to Couchbase. It might be a good idea to dial down some of the default RAM Quotas (we can always change them later). Since we only need the one node for development, let&#8217;s enabled all services on this node (Index, Query, and Full Text). I would recommend checking out some of the <a href="http://learn.couchbase.com/">free Couchbase training</a> available to dive deeper into tweaking these settings.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="images/CouchbaseServerWizard_008.png" alt="Couchbase Server Configuration Wizard"></span></p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>In step 2, we can choose to install some sample data. For this blog post, we don&#8217;t need to do this. However, the "travel-sample" is useful for trying out some of the N1QL functionality (more on that later).</p>
-</li>
-<li>
-<p>In step 3, let&#8217;s create a "default" bucket, to follow along with this blog post.</p>
-</li>
-<li>
-<p>In step 4, we can elect to receive notifications from Couchbase and register the product.</p>
-</li>
-<li>
-<p>Finally, in step 5, we need to enter a username and password to create an administrator account.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Now we&#8217;re ready to start using Couchbase. On the "overview" page, we can see how much RAM is available to Couchbase, and how much is actually in use. If we wanted to scale out Couchbase by adding servers, then we would see them listed in the Servers section. If we click on the "Data Buckets" tab, we&#8217;ll see that there&#8217;s at least the default bucket we created.</p>
-</div>
-<div class="paragraph">
-<p>Feel free to play around with the Couchbase Console and check out the <a href="http://developer.couchbase.com/documentation/server/4.5/admin/ui-intro.html">Couchbase Console documentation</a>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="truesome-nosql-lingo"><a class="anchor" href="#truesome-nosql-lingo"></a>Some NoSQL lingo</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>But before we dive into some code, let&#8217;s go over some of the lingo with Couchbase. It&#8217;s not a difficult tool to use, but it is different from RDBMS systems like SQL Server.</p>
-</div>
-<div class="paragraph">
-<p><strong>Node</strong></p>
-</div>
-<div class="paragraph">
-<p>A node is an invidual machine that is running Couchbase Server.</p>
-</div>
-<div class="paragraph">
-<p><strong>Cluster</strong></p>
-</div>
-<div class="paragraph">
-<p>Nodes are joined together into a <a href="http://developer.couchbase.com/documentation/server/current/clustersetup/manage-cluster-intro.html">cluster</a> that act in concert to provide scaling and improved availability. Scaling: more nodes means more RAM and disk space. Availability: if one node goes down, the cluster will continue to function. As developers, we don&#8217;t generally have to worry about node management and clustering in code: it&#8217;s all handled by Couchbase and the Couchbase .NET SDK.</p>
-</div>
-<div class="paragraph">
-<p><strong>Bucket</strong></p>
-</div>
-<div class="paragraph">
-<p>A <a href="http://developer.couchbase.com/documentation/server/4.5/clustersetup/bucket-setup.html">bucket</a> is a place to store documents. Each document has a key. Within a bucket, each key must be unique. Typically, a single bucket corresponds to a single application. The documents within a bucket do not have to be similar at all. We could store a document that contains information about a user, and a document with information about a building, both in the same bucket.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="images/CouchbaseBucket_003.png" alt="A bucket with two documents in it"></span></p>
-</div>
-<div class="paragraph">
-<p><strong>Document</strong></p>
-</div>
-<div class="paragraph">
-<p>In a basic sense, a Couchbase bucket is a giant <code>Dictionary&lt;string,string&gt;</code>. Each entry in a bucket consists of a key and a document. Documents consist of JSON. Because Couchbase uses JSON documents, it&#8217;s called a "document database".</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="images/CouchbaseDocument_004.png" alt="A JSON document"></span></p>
-</div>
-<div class="paragraph">
-<p><strong>N1QL</strong></p>
-</div>
-<div class="paragraph">
-<p>With Couchbase Server, we can write queries in a language called <a href="http://developer.couchbase.com/documentation/server/4.5/developer-guide/querying.html">N1QL</a> (N1QL stands for "Non-first Normal Form Query Language, pronounced "nickel"). N1QL is a superset of SQL. This means that, basically, if you know SQL, then you know N1QL. An example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-SQL" data-lang="SQL">SELECT name AS bookName, author AS bookAuthor
-FROM `books-bucket`
-WHERE YEAR(published) &gt;= 1998</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>That will return something like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-javascript" data-lang="javascript">{
-	"results": [
-		{ "bookName" : "The Little Book of Calm", "bookAuthor" : "Manny Bianco" },
-		{ "bookName" : "AOP in .NET", "bookAuthor" : "Matthew D. Groves" }
-	]
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>As we&#8217;ll see later, the Linq2Couchbase library leverages N1QL into a LINQ provider that is similar to Entity Framework, NHibernate.Linq, etc.</p>
-</div>
-<div class="paragraph">
-<p><strong>Indexes</strong></p>
-</div>
-<div class="paragraph">
-<p><a href="http://developer.couchbase.com/documentation/server/4.5/indexes/n1ql-in-couchbase.html">Indexes</a> in Couchbase are as important as in relational databases. Probably more so, because buckets contain a variety of documents.</p>
-</div>
-<div class="paragraph">
-<p>To enable N1QL queries on a bucket, we need to at least create a primary index. This is an index on the bucket itself. Here&#8217;s how to create one with N1QL: <code>CREATE PRIMARY INDEX ON `my-bucket`</code></p>
-</div>
-<div class="paragraph">
-<p>We can create indexes based on the fields in the documents. For instance, if we have a lot of documents that have "name" or "author" fields, and we end up querying based on this fields often, we can create indexes for them. These are "secondary indexes." As the size of a bucket grows, so does the importance of indexing.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="trueasp-net-mvc"><a class="anchor" href="#trueasp-net-mvc"></a>ASP.NET MVC</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Now that we&#8217;ve got some lingo out the way, let&#8217;s start a new ASP.NET MVC project, add the <a href="https://www.nuget.org/packages/CouchbaseNetClient/">Couchbase SDK to it with NuGet</a>, and get the infrastructure in place to start using Couchbase.</p>
-</div>
-<div class="paragraph">
-<p>Let&#8217;s start in Visual Studio with a File&#8594;New, and select ASP.NET Web Application, then select "MVC". I&#8217;m going to assume you have some familiarity with ASP.NET MVC (we&#8217;re using .NET 4.x, but a .NET Core Couchbase SDK is coming soon).</p>
-</div>
-<div class="sect2">
-<h3 id="trueinstalling-the-couchbase-client-library"><a class="anchor" href="#trueinstalling-the-couchbase-client-library"></a>Installing the Couchbase client library</h3>
-<div class="paragraph">
-<p>The first thing we&#8217;ll need to do is add the Couchbase .NET client. We can do this with the NuGet UI by right-clicking on "References", clicking "Manage NuGet Packages", clicking "Browse", and then searching for "CouchbaseNetClient". (We could search for "Linq2Couchbase" instead. Installing that will also install CouchbaseNetClient, but we won&#8217;t actually be using Linq2Couchbase until later).</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="images/NuGetUI_001.png" alt="NuGet UI for installing CouchbaseNetClient"></span></p>
-</div>
-<div class="paragraph">
-<p>If you prefer the NuGet command line, then open up the Package Manager Console, and type <code>Install-Package CouchbaseNetClient</code>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="truegetting-asp-net-to-talk-to-a-couchbase-cluster"><a class="anchor" href="#truegetting-asp-net-to-talk-to-a-couchbase-cluster"></a>Getting ASP.NET to talk to a Couchbase cluster</h3>
-<div class="paragraph">
-<p>Now let&#8217;s setup the ASP.NET app to be able to connect to Couchbase. The first thing we need to do is locate the Couchbase Cluster. The best place to do this is in the <code>Global.asax.cs</code> when the application starts. At a minimum, we need to specify one node in the cluster, and give that to the <code>ClusterHelper</code>. We only need this in <code>Application_Start</code>. When the application ends, it&#8217;s a good idea to close the <code>ClusterHelper</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C#" data-lang="C#">public class MvcApplication : System.Web.HttpApplication
-{
-    protected void Application_Start()
-    {
-        AreaRegistration.RegisterAllAreas();
-        FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-        RouteConfig.RegisterRoutes(RouteTable.Routes);
-
-        var config = new ClientConfiguration();
-        config.Servers = new List&lt;Uri&gt;
-        {
-            new Uri("http://localhost:8091")
-        };
-        config.UseSsl = false;
-        ClusterHelper.Initialize(config);
-    }
-
-    protected void Application_End()
-    {
-        ClusterHelper.Close();
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="trueusing-the-code-ibucket-code-in-a-controller"><a class="anchor" href="#trueusing-the-code-ibucket-code-in-a-controller"></a>Using the <code>IBucket</code> in a controller</h3>
-<div class="paragraph">
-<p>Just to show that this works, go ahead and add IBucket to a constructor of a controller, say <code>TestController</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C#" data-lang="C#">public class TestController : Controller
-{
-    IBucket _bucket;
-
-    public TestController()
-    {
-        _bucket = ClusterHelper.GetBucket("default");
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>(In the long run, we don&#8217;t want an IBucket directly in MVC controllers, more on that later).</p>
-</div>
-<div class="paragraph">
-<p>Next, let&#8217;s add a document to the bucket, directly in Couchbase Console. Use anything for a key, but make a note of it.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="images/CouchbaseCreateDocument_003.png" alt="Specifying a key for a new document in Couchbase"></span></p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="images/CouchbaseCreateDocument_004.png" alt="Creating a document in Couchbase"></span></p>
-</div>
-<div class="paragraph">
-<p>Now, let&#8217;s add an action to <code>TestController</code>. It will get the document based on the key, and write the document values in the response.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C#" data-lang="C#">public ActionResult Index()
-{
-    var doc = _bucket.Get&lt;dynamic&gt;("foo::123");
-    return Content("Name: " + doc.Value.name + ", Address: " + doc.Value.address);
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>doc.Value</code> is of type <code>dynamic</code>, so make sure that the fields (in this case, "name" and "address") match up to the JSON document in the bucket. Run the MVC site in a browser, and we should see something like this:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="images/couchbaseaspnethelloworld_005b.png" alt="Outputting the document values to a browser"></span></p>
-</div>
-<div class="paragraph">
-<p>Congratulations, we&#8217;ve successfully written an ASP.NET site that uses Couchbase!</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="trueintroducing-linq2couchbase"><a class="anchor" href="#trueintroducing-linq2couchbase"></a>Introducing Linq2Couchbase</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Let&#8217;s build on what we&#8217;ve already done by introducing <a href="https://github.com/couchbaselabs/Linq2Couchbase">Linq2Couchbase</a>. We&#8217;ll also move Couchbase out of the Controller and put it into a very basic <a href="http://www.martinfowler.com/eaaCatalog/repository.html">repository</a> class. My goal is to have you feeling comfortable with the basics of Couchbase and Linq2Couchbase, and be able to start applying it in a web application.</p>
-</div>
-<div class="sect2">
-<h3 id="truemoving-couchbase-out-of-the-controller"><a class="anchor" href="#truemoving-couchbase-out-of-the-controller"></a>Moving Couchbase out of the Controller</h3>
-<div class="paragraph">
-<p>The Controller&#8217;s job is to direct traffic: take incoming requests, hand them to a model, and then give the results to the view. To follow the <a href="http://www.butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">SOLID principles</a> (specifically the Single Responsibility Principle), data access should be somewhere in a "model" and not the controller.</p>
-</div>
-<div class="paragraph">
-<p>The first step is to refactor the existing code. We can keep the 'really simple example', but let&#8217;s move it to a method in another class. Here is the refactored HomeController and the new PersonRepository:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C#" data-lang="C#">public class HomeController : Controller
-{
-    private readonly PersonRepository _personRepo;
-
-    public HomeController(PersonRepository personRepo)
-    {
-        _personRepo = personRepo;
-    }
-
-    public ActionResult Index()
-    {
-        var person = _personRepo.GetPersonByKey("foo::123");
-        return Content("Name: " + person.name + ", Address: " + person.address);
-    }
-}
-
-public class PersonRepository
-{
-    private readonly IBucket _bucket;
-
-    public PersonRepository(IBucket bucket)
-    {
-        _bucket = bucket;
-    }
-
-    public dynamic GetPersonByKey(string key)
-    {
-        return _bucket.Get&lt;dynamic&gt;(key).Value;
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now, <code>HomeController</code> no longer depends directly on Couchbase.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="truerefactoring-to-use-a-person-class"><a class="anchor" href="#truerefactoring-to-use-a-person-class"></a>Refactoring to use a Person class</h3>
-<div class="paragraph">
-<p>In the above example, we&#8217;re using a <code>dynamic</code> object. <code>dynamic</code> is great for some situations, but in this case, it would be a good idea to come up with a more concrete definition of what a "Person" is. We can do this with a C# class.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C#" data-lang="C#">public class Person
-{
-    public string Name { get; set; }
-    public string Address { get; set; }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>We&#8217;ll also update the <code>PersonRepository</code> to use this class.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C#" data-lang="C#">public Person GetPersonByKey(string key)
-{
-    return _bucket.Get&lt;Person&gt;(key).Value;
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>While we&#8217;re at it, we&#8217;re going to take some steps to make this more of a proper MVC app. Instead of returning <code>Content()</code>, We&#8217;re going to make the Index action return a View, and we&#8217;re going to pass it a <strong>list</strong> of Person objects. We&#8217;ll create an <code>Index.cshtml</code> file, which will delegate to a partial of _person.cshtml. We&#8217;re also going to drop in a layout that uses Bootstrap. This last part is gratuitous, but it will make the app look nicer.</p>
-</div>
-<div class="paragraph">
-<p>New Index action:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C#" data-lang="C#">public ActionResult Index()
-{
-    var person = _personRepo.GetPersonByKey("foo::123");
-    var list = new List&lt;Person&gt; {person};
-    return View(list);
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Index.cshtml:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C#" data-lang="C#">@model List&lt;CouchbaseAspNetExample.Models.Person&gt;
-
-@{
-    ViewBag.Title = "Home : Couchbase &amp; ASP.NET Example";
-}
-
-@if (!Model.Any())
-{
-    &lt;p&gt;There are no people yet.&lt;/p&gt;
-}
-
-@foreach (var item in Model)
-{
-    @Html.Partial("_person", item)
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>_person.cshtml:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C#" data-lang="C#">@model CouchbaseAspNetExample.Models.Person
-
-&lt;div class="panel panel-default"&gt;
-    &lt;div class="panel-heading"&gt;
-        &lt;h2 class="panel-title"&gt;@Model.Name&lt;/h2&gt;
-    &lt;/div&gt;
-    &lt;div class="panel-body"&gt;
-        @Html.Raw(Model.Address)
-    &lt;/div&gt;
-&lt;/div&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now it looks a little nicer. Additionally, we&#8217;ll be able to show a whole list of Person documents later in the demo.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="images/indexofcouchbasedocumentsinbootstrap_001.png" alt="The Index view of Couchbase Person documents in Bootstrap"></span></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="truelinq2couchbase"><a class="anchor" href="#truelinq2couchbase"></a>Linq2Couchbase</h3>
 <div class="paragraph">
 <p>Couchbase Server supports a query language known as <a href="http://www.couchbase.com/n1ql">N1QL</a>. It&#8217;s a superset of SQL, and allows us to leverage existing knowledge of SQL syntax to construct very powerful queries over JSON documents in Couchbase. Linq2Couchbase takes this a step further and converts LINQ queries into N1QL queries (much like Entity Framework converts LINQ queries into SQL queries).</p>
 </div>
@@ -930,7 +554,6 @@ public class PersonRepository
 </div>
 <div class="paragraph">
 <p>Once we do that and refresh the web page, the person will appear again.</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="truea-quick-note-about-scanconsistency"><a class="anchor" href="#truea-quick-note-about-scanconsistency"></a>A quick note about ScanConsistency</h3>
@@ -1227,7 +850,7 @@ public class Person
 <div class="sect2">
 <h3 id="truewrapping-up"><a class="anchor" href="#truewrapping-up"></a>Wrapping up</h3>
 <div class="paragraph">
-<p>Thanks for reading through this blog post. Hopefully, you&#8217;re on your way to considering or even including Couchbase in your next ASP.NET project. Here are some more interesting links for you to continue your Couchbase journey:</p>
+<p>Thanks for reading through this blog post series. Hopefully, you&#8217;re on your way to considering or even including Couchbase in your next ASP.NET project. Here are some more interesting links for you to continue your Couchbase journey:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1251,7 +874,7 @@ public class Person
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-07-21 14:42:19 EDT
+Last updated 2016-07-25 14:39:07 EDT
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
