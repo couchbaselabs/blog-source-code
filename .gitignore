@@ -214,3 +214,4 @@ ModelManifest.xml
 # exclude video files
 *.camrec
 *.mp4
+*.trec
