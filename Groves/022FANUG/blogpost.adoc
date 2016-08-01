@@ -1,0 +1,13 @@
+= .NET and Couchbase - July 2016, Findlay Ohio (video)
+
+I was a guest speaker at the link:http://www.meetup.com/Findlay-Web-Development-Meetup/[FANUG (Findlay Area .NET User Group)] on July 26, 2016. My topic was link:http://www.meetup.com/Findlay-Web-Development-Meetup/events/232731203/[Full Stack Development with .NET and NoSQL]. The group and venue kindly allowed me to record the session, and so I've posted it on YouTube.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/K0w2yb3LoWQ?list=PLZWwU1YVRehKj0E0BxvZ09NWwaH8Ks9U_" frameborder="0" allowfullscreen></iframe>
++++
+
+link:https://github.com/couchbaselabs/restful-angularjs-dotnet[The full stack .NET sample] I used in this session is available on Github. The link:https://github.com/couchbaselabs/ToDoLite-Xamarin-Forms[Xamarin Forms sample that uses Sync Gateway] is also available on Github.
+
+Thanks to everyone that came out. I know Findlay might seem like a remote place and a small city, but you wouldn't know it based on the size and enthusiasm of this user group. It really is one of my favorites: check them out if you ever find yourself in northwest ohio.
+
+You can follow the group on twitter at link:https://twitter.com/FANUG[@FANUG], and you can follow me on twitter at link:https://twitter.com/mgroves[@mgroves].

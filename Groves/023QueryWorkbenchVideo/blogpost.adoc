@@ -1,0 +1,11 @@
+= How to use #Couchbase Query Workbench 
+
+This video shows the new  link:http://developer.couchbase.com/documentation/server/4.5/tools/query-workbench.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Query Workbench in Couchbase Server 4.5]. For more information, check out my blog post from July about link:http://blog.couchbase.com/2016/june/query-workbench-new-to-couchbase-4.5[Query Workbench].
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/VNHXsKafsuk?list=PLZWwU1YVRehJIk_KtrfEdcBQyXQDRHMv5" frameborder="0" allowfullscreen></iframe>
++++
+
+If you'd like to learn more about how to use Couchbase, please visit our link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Developer Portal].
+
+Questions or comments? link:http://twitter.com/mgroves[Follow me on Twitter], email me (matthew.groves AT couchbase DOT com), or check out link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[the Couchbase forums].

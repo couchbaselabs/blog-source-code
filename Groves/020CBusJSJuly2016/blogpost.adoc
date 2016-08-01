@@ -1,0 +1,13 @@
+= Node.js and Couchbase - July 2016, Columbus Ohio (video)
+
+I was a guest speaker at the link:https://cbusjs.github.io/[CBusJS Columbus JavaScript User Group] on July 20, 2016. My topic was link:https://cbusjs.github.io/07-20-2016/full-stack-development-with-nodejs-and-nosql.html[Full Stack Development with Node.js and NoSQL]. The group and venue was kind enough to let me record the session. I've posted it on YouTube.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/S5YAnxzDc2Y?list=PLZWwU1YVRehKj0E0BxvZ09NWwaH8Ks9U_" frameborder="0" allowfullscreen></iframe>
++++
+
+link:https://github.com/couchbaselabs/restful-angularjs-nodejs[The CEAN stack sample] I used in this session is available on Github. The link:https://github.com/couchbaselabs/nativescript-couchbase[Nativescript sample that uses Sync Gateway] is also available on Github.
+
+Thanks to everyone that came out, and if you're ever in the Columbus area and interested in JavaScript, I highly recommend this group.
+
+You can follow the group on twitter at link:https://twitter.com/cbusjs[@cbusjs], and you can follow me on twitter at link:https://twitter.com/mgroves[@mgroves].

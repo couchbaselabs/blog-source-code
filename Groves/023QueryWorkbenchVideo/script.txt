@@ -1,0 +1,50 @@
+hey everyone, it's Matt Groves again
+
+I want to show you one of my favorite things about
+Couchbase Server 4.5, and that's the Query Workbench
+
+as a microsoft developer, I'm used to working with SQL Server
+Management Studio, and this Query Workbench tools feels like
+that to me
+
+just click on the Query tab here
+
+there are three main areas, let's start with the N1QL Editor area at the top
+
+this is where you can edit a N1QL query that you want to try out
+
+I'll type in a really simple one here
+
+SELECT t.*
+FROM `travel-sample` t
+LIMIT 5;
+
+Notice that I get some nice syntax highlighting with N1QL
+There's also a convenient button to save the N1QL query to a text file
+
+As I execute additional queries, this workbench maintains a history of past queries
+that I can navigate to, using these arrow buttons
+
+--------
+
+next, let's look at the Results area
+
+here we can see the results of the query in JSON format. in this case, it's a JSON array
+of the first 5 documents, so there is an array of 5 objects
+
+I can switch to a 'table' view, which is a little more compact way to view the results
+Or the tree view, which is very similar to the json view, except it uses visual cues instead of json 
+syntax
+
+you can also see some useful numbers about the query: if it was successful, how long it took to execute,
+how many results there are, and so on
+
+if I enter an invalid query, I can get some information about the error to help me fix the N1QL query
+
+[do a typo in the bucket name]
+
+---------
+
+finally, on to the bucket analysis area
+
+Couchbase Server is a schema-less document database. There are no constraints to the structure of the JSON documents you enter, and the fields in that document. If you wanted, every single document could be completely unique.
