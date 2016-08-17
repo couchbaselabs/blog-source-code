@@ -1,0 +1,127 @@
+= Learning Angular2 for the CEAN Stack
+
+The CEAN (pronounced "keen") stack is used to design web apps with a segregated UI (it's like the MEAN stack, except it uses link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server]).
+
+I'm learning and writing Angular2 for the first time this month, so I thought I would take a moment to blog about what I've learned. If you see something I'm doing wrong or suboptimally, now is your chance to give me some feedback and help me learn. You can leave a comment or link:https://twitter.com/mgroves[send me a tweet].
+
+Some quick background: I've never used any of these modern UI frameworks in any production code (yet). This includes Angular, Angular2, Ember, React, etc. Where I came from, everything was in JavaScript/jQuery/jQuery UI.
+
+== TypeScript Code-behind
+
+You don't have to use TypeScript to use Angular2, but my coworker link:http://blog.couchbase.com/facet/Author/Nic+Raboy[Nic Raboy] has been using it for a while, and that's what he's been guiding me to use.
+
+TypeScript is a superset of JavaScript (think of it kinda like JavaScript++) that gets transpiled to plain JavaScript. In Angular2, a page (or view) is coupled to a TypeScript (ts) file (coming from an ASP.NET background, I think of these as "code-behind files"). The TS file is responsible for loading data that the view can use, as well as responding to events from the view.
+
+A very simple example of a TS file that loads companies from a REST endpoint and makes them available for the view to use:
+
+[source,JS]
+----
+import { Component } from '@angular/core';
+import { ICompany } from '../../entityInterfaces.ts';
+
+@Component({
+  selector: 'companies',
+  templateUrl: './app/components/companies/companies.html'
+})
+
+export class CompaniesComponent {
+  
+    public companies : Array<ICompany>;
+
+    public constructor() {
+        this.loadCompanies();
+    }
+}
+----
+
+In this example, I've "import"ed (this is kinda like a "using" in C#) an interface type called ICompany. That's right, in TypeScript you can declare types in a much more explicit way than in plain JavaScript. The ```templateUrl``` in the ```@Component``` tells this TS file what HTML file it corresponds to. Finally, I'm creating a class with a constructor and a field called ```companies```. The constructor calls a method to load those companies (from a REST endpoint using Ajax). At this point, ```companies``` is available for the HTML file to reference.
+
+== Angular2 View
+
+An HTML view in Angular2 is mostly HTML, but I think of it as a template. Within this template, I use various Angular2-specific tags and syntax to render something dynamically.
+
+For instance, now that I have the ```companies``` array, I can render out a table to list all the companies.
+
+[source,HTML]
+----
+<table>
+    <tr><th>Name</th></tr>
+    <tr *ngFor="let company of companies;">
+        <td>{{company.companyName}}</td>
+        <td>
+            <a href="#" (click)="delete(company.id)">Delete</a>
+            </div>
+        </td>
+    </tr>
+</table>
+----
+
+Most of this is HTML that you should have no trouble reading.
+
+The first thing that isn't normal HTML is the ```*ngFor``` attribute with a loop specified: ```let company of companies```. I think of this as ```foreach(var company in companies)``` in C# terms. Since the ```ngFor``` is on the ```<tr>``` element, that element (and its children) will get repeated once for each company in the array. So, if there are 3 companies, there will be three ```<tr>``` rows.
+
+The next thing out of the ordinary is the ```{{company.companyName}}```. If you've used link:https://mustache.github.io/[Mustache] or other client-side templates before, this should seem familiar. It's just interpolating the value of the ```companyName``` field into the HTML. So if the first ```company.companyName``` has a value of "Couchbase", then the output will be ```<td>Couchbase</td>```.
+
+Finally, I've created a "delete" link in each row. What's out of the ordinary there is the ```(click)``` attribute. This tells Angular to run some TypeScript when the delete link is clicked . In this case, that's the ```delete``` method in the TS codebehind. It's passing one parameter to that method.
+
+With the delete method, the code-behind would look like this:
+
+[source,JS]
+----
+import { Component } from '@angular/core';
+import { ICompany } from '../../entityInterfaces.ts';
+
+@Component({
+  selector: 'companies',
+  templateUrl: './app/components/companies/companies.html'
+})
+
+export class CompaniesComponent {
+  
+    public companies : Array<ICompany>;
+
+    public constructor() {
+        this.loadCompanies();
+    }
+    
+    public delete(id: string) {
+        console.log("Deleting Company: " + id)
+        this.deleteCompany(id);
+        // delete from the companies array
+        for(let i=0; i < this.companies.length; i++) {
+            if(this.companies[i].id == id) {
+                this.companies.splice(i, 1);
+                break;
+            }
+        }
+    }
+}
+----
+
+Notice that the ```delete``` method has a parameter, and since this is TypeScript, it's a _typed_ parameter.
+
+There are three things I'm doing in that delete method:
+
+1. Writing a message to console (for debugging/illustration)
+2. Calling a method that will send a POST or DELETE request to an HTTP endpoint (I've omitted that method since the details aren't important now. I've also omitted any use of Promise/callback which would be necessary in an asynchronous situation like this).
+3. I'm removing the company from the companies field (looping through and splicing out the company with the matching id). Alternatively, I could call loadCompanies and refresh the whole list again, and that would mean another trip to the database.
+
+Step 3 contains some Angular2 magic you should know about: when the ```companies``` field is changed, Angular2 will notice and automatically update the rendered HTML by running the ```*ngFor``` loop again.
+
+=== Other Stuff
+
+Some other things I've been doing that I may blog about later:
+
+* Forms in Angular2: these would allow me to create/edit companies in the above example.
+* JavaScript libraries/plugins: for the ```delete``` method, it would be nice to have a confirmation dialog. I'm using http://getbootstrap.com/[bootstrap], and so it would be nice if I could http://http://bootboxjs.com/[bring in bootbox] to use for confirmation dialogs.
+* Promises: these are imporant when working asynchronously (like when making HTTP requests to API endpoints)
+
+=== Conclusion
+
+I remain a skeptic about the long term benefits of these JS frameworks and TypeScript itself (link:https://twitter.com/mgroves[ask me about it on Twitter sometime]), but I am taking steps to learn the tools. If after all of this, I'm still skeptical, at least I won't be an ignorant skeptic.
+
+Some resources to continue exploring TypeScript and Angular2:
+
+* link:http://www.typescriptlang.org/[TypeScript]
+* link:https://angular.io/[Angular]
+* link:https://visualstudiogallery.msdn.microsoft.com/4190ee5c-15d9-4afe-ac14-515bdb6493da[Angular2 sample application] for Visual Studio

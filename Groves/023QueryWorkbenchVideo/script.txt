@@ -41,10 +41,65 @@ how many results there are, and so on
 
 if I enter an invalid query, I can get some information about the error to help me fix the N1QL query
 
+[switch back to JSON view]
+
 [do a typo in the bucket name]
 
 ---------
 
 finally, on to the bucket analysis area
 
-Couchbase Server is a schema-less document database. There are no constraints to the structure of the JSON documents you enter, and the fields in that document. If you wanted, every single document could be completely unique.
+Couchbase Server is a schema-less document database. There are no constraints to the 
+structure of the JSON documents you enter, and the fields in that document.
+If you wanted, every single document could be completely unique.
+
+However, it is often the case that documents will tend to take on a regular form.
+Some percentage of the documents will share roughly the same fields and structure.
+With this in mind, if we were to take a random sample of all the documents in a
+bucket and examine them, we could "infer" a schema. That is exactly what you
+can do in the Bucket Analysis area.
+
+Click to expand a bucket, and Couchbase will take a sample
+(default of 1000 documents) and construct an implied schema. The bucket analysis 
+will list each "flavor" of document that it finds, and what percentage of
+documents it sampled that match that flavor. For instance, in the travel-bucket,
+I see 5 flavors listed. 
+
+now I can use this information to construct more interesting N1QL queries
+for instance:
+SELECT t.* FROM `travel-sample` t WHERE t.type='route' LIMIT 5;`
+
+that's going to return the first five route documents
+
+routes in the travel-sample are interesting because they have a 'schedule' field
+which is an array of json objects
+it takes up a lot of space in the JSON result, but if we switch over the the table view
+we can get a little more compact view of what's going on
+
+------
+
+I don't know how I would get by without Query Workbench, and I'm really glad it was
+part of Couchbase Server 4.5
+
+Thanks for watching!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
