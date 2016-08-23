@@ -1,0 +1,57 @@
+:imagesdir: images
+
+= Copying Documents Between Buckets in Couchbase
+
+When I'm at a user group or conference, people often come up to me afterwards with good questions. This is a great way for me to get blog post ideas: if they have a question, chances are lots of other people have the same one. It's also a great way for me to get to know link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase] better.
+
+This post is for one of those questions: **can I copy documents from one bucket to another**?
+
+== Copy from bucket to bucket
+
+Yes! In fact, if you've done this sort of thing in SQL, then you are not too far from already knowing the answer.
+
+.Fire buckets Image Licensed through Creative Commons link:http://www.geograph.org.uk/photo/2666296[via Paul Harrop]
+image::001Buckets.jpg[Fire buckets Image Licensed through Creative Commons via Paul Harrop - http://www.geograph.org.uk/photo/2666296]
+
+There are command line tools to link:http://developer.couchbase.com/documentation/server/current/cli/cbbackup-tool.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[backup]/link:http://developer.couchbase.com/documentation/server/4.5/cli/cbrestore-tool.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[restore] a bucket, but for this post, I'm going to assume that what you want is to make a copy of some documents from bucket A into bucket B.
+
+It's as easy as using a link:http://developer.couchbase.com/documentation/server/4.5/n1ql/n1ql-language-reference/insert.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[N1QL INSERT].
+
+Start by creating a N1QL ```SELECT``` to get the documents you want out of the first bucket. I'm going to show a very simplified ```SELECT``` that gets _all_ the documents from my ```default``` bucket. If you only want a subset, you can use a ```WHERE``` clause.
+
+[source, SQL]
+----
+SELECT META().id _k, _v
+from `default` _v
+----
+
+Since we're copying to another bucket, we need both the key and the document itself. This query selects the document key using the ```META()``` function, and selects the document using a ```_v``` alias.
+
+Next, I'll create an ```INSERT``` to put these selected documents into another bucket, which I called ```target```.
+
+[source, SQL]
+----
+INSERT INTO `target` (KEY _k, VALUE _v)
+SELECT META().id _k, _v
+from `default` _v
+----
+
+An ```INSERT``` needs a key and a value. I have those from the ```SELECT```. All done.
+
+== More information about N1QL INSERT
+
+The link:link:http://developer.couchbase.com/documentation/server/4.5/n1ql/n1ql-language-reference/insert.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[N1QL INSERT] is very powerful, and there are a lot of other things you can do with it:
+
+* Insert a single document
+* Bulk inserts
+* Insert values using ```SELECT``` (which is similar to what we did in this post)
+* Insert value with a combination key, using a projection
+* Insert values using subqueries
+* Insert values using N1QL functions
+* Using prepared ```INSERT``` queries
+
+Note that typical caveats apply: make sure you have good indexing when you are writing the SELECT. If you are copying a lot of documents, you may want to temporarily adjust the timeout. Documents in a bucket must all have a unique key. There is no rollback when inserting multiple documents: if an ```INSERT``` fails on the 10th document out of 100, the first 9 documents are still inserted.
+
+For more in-depth answers about N1QL, check out the link:https://forums.couchbase.com/c/n1ql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase N1QL Forum].
+
+link:http://twitter.com/mgroves[Follow me on Twitter] if you have any questions: your question might become my next blog post!
