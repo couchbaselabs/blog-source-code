@@ -1,0 +1,34 @@
+:imagesdir: images
+
+= Couchbase Server on Windows 10 Anniversary Update
+
+I was very excited about the Windows 10 Anniversary Update (AU), mainly because of the new Bash on Ubuntu on Windows stuff! My experience has been generally positive, but with any major upgrade comes risk. I ran into a couple of problems. One of them was with some link:http://crosscuttingconcerns.com/WMVCore-dll-is-missing-Windows-10-Anniversary-Update[missing DLL files], not related to Couchbase Server. But the other one is related to link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server]. Short story: we're aware, and we're working on it.
+
+image:001Windows10Anniversary.jpg[Windows 10 Anniversary Update]
+
+== Longer Story
+
+Couchbase Server uses a tool called TCMalloc, which is part of link:https://github.com/gperftools/gperftools[gperftools] (originally called Google Performance Tools).
+
+Based on my limited understanding of low-level programming, somewhere in TCMalloc, there is some code being called that's not technically part of the public interface.
+
+Windows 10 Anniversary Update comes along, and suddenly that piece of code doesn't work like it's supposed to anymore. This causes the memcached portion of Couchbase to crash over and over. Whoops. Couchbase engineers are hard at work on this issue, and I would expect this to be fixed soon.
+
+If you're interested in tracking this issue more, here are some places to go for more information:
+
+* link:https://issues.couchbase.com/browse/MB-20519[Couchbase Server MB-20519 - memcached constantly crashing]
+* link:https://github.com/gperftools/gperftools/issues/817[Issue #817 in gperftools - crash after std::thread::join()]
+* link:https://github.com/daverigby/win10_tcmalloc[Repro to make TCMalloc on Windows 10 AU crash]
+
+== Recommendations
+
+In the meantime, if you are using Couchbase Server on Windows 10, here are some recommendations:
+
+* Hold off on upgrading to AU
+* Or use a VM or link:http://blog.couchbase.com/2016/june/couchbase-on-the-microsoft-azure-marketplace-video[Windows Azure] instance to develop
+* Or use another machine on your local network (this is what I'm doing)
+* Or it may be possible to back off of the AU update.
+
+And keep an eye on link:https://issues.couchbase.com/browse/MB-20519[MB-20519] to watch the progess.
+
+link:http://twitter.com/mgroves[Follow me on Twitter] if you'd like to keep in the loop on the latest with Couchbase, .NET, and Windows!
