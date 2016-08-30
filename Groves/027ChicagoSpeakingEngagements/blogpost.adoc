@@ -1,0 +1,15 @@
+:imagedir: images
+
+= Upcoming #Couchbase Events in Chicago
+
+I'm going to be in Chicago for most of next week. If you're in Chicago and interested in NoSQL and Couchbase, now is a good chance to attend some sessions, visit some great user groups, and ask me questions in-person.
+
+image:001WrigleyFieldCouchbase.jpg[Couchbase in Chicago]
+
+I won't be at Wrigley Field (the above image was doctored :), but here's where I _will_ be:
+
+* September 6th, 2016 at 12pm: link:http://www.meetup.com/Geekfest/events/233616341/[Chicago Geekfest] presenting "I Have a NoSQL Toaster" (which is my version of link:http://blog.couchbase.com/facet/Author/Matthew+Revell[Matthew Revell]'s session of the same name)
+* September 7th, 2016 at 6pm: link:http://www.meetup.com/chicagodevnet/events/233089838/[Chicago .NET Developers] presenting "Full Stack Development with .NET and NoSQL" (which I have presented before, you can check link:http://blog.couchbase.com/facet/Author/Matthew+Groves[my blog post history] for some of the videos).
+* September 8th, 2016 at 7pm: link:http://www.lcnug.org[Lake County .NET Users Group] presenting "SQL for JSON"
+
+Three different sessions and three great Chicago groups. There will be some surprises in store, and I'm going to bring whatever stickers and swag that I can fit in my luggage with me.
