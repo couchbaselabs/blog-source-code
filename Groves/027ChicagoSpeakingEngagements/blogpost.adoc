@@ -2,7 +2,7 @@
 
 = Upcoming #Couchbase Events in Chicago
 
-I'm going to be in Chicago for most of next week. If you're in Chicago and interested in NoSQL and Couchbase, now is a good chance to attend some sessions, visit some great user groups, and ask me questions in-person.
+I'm going to be in Chicago for most of next week. If you're in Chicago and interested in NoSQL and link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase], now is a good chance to attend some sessions, visit some great user groups, and ask me questions in-person.
 
 image:001WrigleyFieldCouchbase.jpg[Couchbase in Chicago]
 

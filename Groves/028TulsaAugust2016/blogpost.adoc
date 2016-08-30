@@ -1,0 +1,25 @@
+= SQL for JSON and Full Stack Development - August 2016, Tulsa Tech Fest (Videos)
+
+I was a speaker at the link:http://techfests.com/Tulsa[Tulsa Tech Fest] on August 5th, 2016. I had a great time, met a lot of new people, and talked a lot about link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase]. It's rare for me to go to a conference or a user group and not recognize anyone, but it's also great to expand my network of smart developers.
+
+On the night before the conference, the organizer of Tulsa Tech Fest asked me to fill in a vacant spot on his schedule. I was happy to oblige! As a result, I have two videos to show:
+
+== Full Stack Development with Node.js and NoSQL
+
+I've spoken on this topic before, but this is the session that a) I filled in with one night's notice, and b) was the first session in the morning. So please forgive me for not being as prepared as usual :)
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/hpO8X8HJOgE?list=PLZWwU1YVRehKj0E0BxvZ09NWwaH8Ks9U_" frameborder="0" allowfullscreen></iframe>
++++
+
+== SQL for JSON
+
+I was very excited to speak on this topic to close out the database track for the day.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Op7Tsjw_DKc?list=PLZWwU1YVRehKj0E0BxvZ09NWwaH8Ks9U_" frameborder="0" allowfullscreen></iframe>
++++
+
+Thanks to everyone that came out! Tulsa Tech Fest was a huge conference, but it had a great "homemade" community feel to it. My only complaint is that Tulsa was so HOTTT! Too hot for this Ohioan, anyway.
+
+You can follow the Tulsa Tech Fest on twitter at link:https://twitter.com/TulsaTechFest[@TulsaTechFest], and you can follow me on twitter at link:https://twitter.com/mgroves[@mgroves].
