@@ -1,0 +1,54 @@
+:imagedir: images
+
+= Summer Project 2016 update: The Couchcase Rises
+
+Last time, I blogged about getting the most important pieces of the Couchcase together. I installed Ubuntu on 3 Intel Compute Sticks and installed link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blog[Couchbase Server] on them.
+
+It's been a while since my last update, because I ran into some hiccups. But the Couchcase is now working. It's a mess of wires right now, but it's working.
+
+image::images\couchcase_800.jpg[The Couchbase Couchcase still needs some work to make it look nice]
+
+== Manifest
+
+Here's a manifest of all the parts in the Couchcase:
+
+* link:https://www.amazon.com/Intel-Generation-Compute-Processor-BOXSTCK1A32WFC/dp/B00W8T61O0[Three Intel Compute Sticks]
+* link:https://www.amazon.com/Belkin-F4U061-USB-Ethernet-Adapter/dp/B00MHC4S02[Three USB-to-Ethernet adapters] (Belkin)
+* link:https://www.amazon.com/gp/product/B01A3ZIEW2[Surge protector for AC and USB]
+* link:https://www.amazon.com/RangeMax-Wireless-WNR1000-100NAS-G54-N150/dp/B001UI4RTG[Netgear router]
+* link:https://www.amazon.com/CIKOO-Colorful-Visible-Charger-Charging/dp/B00M4CR3Z2[Three colorful glowing USB power cables] (for fun)
+* link:https://www.amazon.com/Vaultz-Locking-Handgun-Inches-VZ00408/dp/B00P45GBYK[Vaultz Locking Case]
+
+Some of these items I already had laying around, as I'm sure you do as well.
+
+== Why USB-to-Ethernet?
+
+In my last post, I spent some time installing and setting up wifi drivers on Ubuntu. Individually, the wifi worked fine. I purchased a travel wifi router with the intention of using an even smaller case than the one I'm using now.
+
+However, when I tried to connect all the Compute Sticks to a wifi router, the connections kept dropping. To this day, I'm not 100% sure why. I've heard that the wifi radios in the Compute Stick can be troublesome. I also think that having all those radios so close together may have caused some contention. It may be some combination of those two things, or something completely different.
+
+I decided that I should go with wired as a workaround. But the Compute Sticks don't have an ethernet jack (why would they), hence the need for a USB adapter. Ultimately, having a wired connection may prove to be more useful anyway in demostrating what happens in the event of a network failure.
+
+I should warn you that not every USB-to-Ethernet adapter is going to play nicely with Linux and/or Compute Sticks. I used Belkin F4UO61 adapters (which I believe are discontinued, but I know they work). I tried some off-brand inexpensive USB adapters (CH9200). I was able to find a Linux driver, but the adapters seemed to work intermittantly.
+
+== Ubuntu Tweaks
+
+As I was trying to solve the networking issue, I came across a link:http://blog.couchbase.com/often-overlooked-linux-os-tweaks[blog post from Kirk Kirkconnell about Linux OS tweaks]. I had never heard of "swappiness" or "Transparent Huge Pages (THP)" before, but since I'm running Couchbase on Linux, I decided to make the suggested adjustments.
+
+And by the way, these adjustments are a good idea not just for Couchbase, but for other similar software running on Linux servers.
+
+== OpenSSH
+
+Another optimization that I did was to disable the Ubuntu UI (which I believe is Unity/GNOME) on boot up. Since these machines will not usually be plugged into a monitor, there's no reason to be using resources to show a window manager.
+
+The way I did this was by making changes to the grub file in `/etc/default`. I ran gedit as administrator: I set `GRUB_CMDLINE_LINUX="text"`, and I set `GRUB_TERMINAL=console`. Don't forget to update GRUB after you do this with: `sudo update-grub`.
+
+I still want to be able to remotely access the command line in order to make changes (such as the tweaks mentioned above), so I installed OpenSSH server. `sudo apt-get install openssh-server` is all it takes. Now I can log in to each of my Couchbase servers using a tool like link:http://www.putty.org/[PuTTY].
+
+== Next steps
+
+Once I had three machines running Couchbase, getting them to form a cluster was easy. More details on that in the next blog post.
+
+I've also commissioned some help from my wife in tidying up the mess of wires into something more presentable. We're going to use some velcro, glue, tape, and foam padding to make it look nice as well as make it resistant to damage during travel.
+
+Let me know what you think about the Couchcase: link:http://twitter.com/mgroves[tweet me at @mgroves] or leave a comment.

@@ -1,0 +1,13 @@
+= .NET and Couchbase - August 2016, Dayton Ohio (video)
+
+I was a guest speaker at the link:http://daytondevgroup.net/[Dayton .NET Developers Group] on August 24, 2016. My topic was link:http://daytondevgroup.net/?p=347[Full Stack Development with .NET and NoSQL]. The group and venue kindly allowed me to record the session, and so I've posted it on YouTube.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/EyAI01QrVmI" frameborder="0" allowfullscreen></iframe>
++++
+
+link:https://github.com/couchbaselabs/restful-angularjs-dotnet[The full stack .NET sample] I used in this session is available on Github. The link:https://github.com/couchbaselabs/ToDoLite-Xamarin-Forms[Xamarin Forms sample that uses Sync Gateway] is also available on Github.
+
+Thanks to everyone that came out. Dayton has some really interesting things going on in the technical field, and they have a very nice baseball park for the Single-A Dayton Dragons (which I checked out while I was in town, of course!)
+
+There is a link:https://www.linkedin.com/groups/3800952/profile[Dayton .NET Developers Group has a LinkedIn group], and you can follow me on Twitter at link:https://twitter.com/mgroves[@mgroves].
