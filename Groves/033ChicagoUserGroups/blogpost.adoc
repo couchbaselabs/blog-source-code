@@ -1,0 +1,41 @@
+= Chicago User Group Visits - September 2016 (Videos)
+
+I spend nearly a week in Chicago, visiting three user groups, appearing on a video podcast, and talking to everyone who would listen about link:http://developer.couchbase.com/documentation/server/current/introduction/intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase].
+
+Something happened at the link:http://www.meetup.com/chicagodevnet/[Chicago .NET Developers Downtown] user group that I have never seen before. A surprise marriage proposal! Right before I started my presentation! Fortunately, I was in on it, running interference for the groom-to-be. And she said yes! It was a tremendous honor to be involved (even in a small way).
+
+Now on with the videos:
+
+== Chicago Geekfest - I Have a NoSQL Toaster
+
+This is a really fun presentation, based heavily on the original presentation by former Couchbaser link:http://blog.couchbase.com/facet/Author/Matthew+Revell[Matthew Revell] with some updates and a .NET twist. The link:http://www.meetup.com/Geekfest/[Chicago Geekfest] is hosted at GroupOn, hosted by Chris Powers. It's a great group, and when you're in the Chicago area, you should check it out.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/lMLpXNCuB3U" frameborder="0" allowfullscreen></iframe>
++++
+
+== Chicago .NET Developers - Full Stack with .NET
+
+This is the user group with the surprise marriage proposal. I apologize for the sound quality, and there's a few minutes of missing audio towards the end. Technical difficulties. But there were some great questions from a great audience. If you want to skip the marriage proposal, fast forward to 00:00.
+
++++
+[todo]
++++
+
+== Lake County .NET User Group - SQL for JSON
+
+link:http://www.lcnug.org/[LCNUG] was a smaller group, just a little ways north of Chicago. But I had a lot of fun here, diving into more detail about N1QL than I did in previous days.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jmqyTWoz36w?list=PLZWwU1YVRehKj0E0BxvZ09NWwaH8Ks9U_" frameborder="0" allowfullscreen></iframe>
++++
+
+== Technology and Friends - Couchbase
+
+Finally, I got a chance to sit down with link:http://davidgiard.com/[David Giard] and record an episode for his video podcast link:https://channel9.msdn.com/Blogs/Technology-and-Friends[Technology and Friends]. David works for Microsoft, but he interviews technologists of all kinds on his show. I give it my highest recommendation, especially this episode:
+
++++
+<iframe src="https://channel9.msdn.com/Blogs/Technology-and-Friends/tf449/player" width="560" height="315" allowFullScreen frameBorder="0"></iframe>
++++
+
+Thank you, Chicago! You can follow me on twitter at link:https://twitter.com/mgroves[@mgroves].

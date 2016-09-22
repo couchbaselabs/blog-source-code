@@ -1,0 +1,19 @@
+:imagedir: images
+
+= Upcoming #Couchbase Events in Austin and Houston
+
+I'm going to be in Texas from October 10th to October 13th. If you're in either of those areas and interested in NoSQL and link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase], now is a good chance to attend some sessions, visit some great user groups, and ask me questions in-person.
+
+image:[Couchbase in Texas]
+
+Here's where I will be:
+
+* October 10th, 2016: link:http://www.adnug.org/[Austin .NET User Group (ADNUG)] - presenting "Full Stack Development with .NET and NoSQL" (which I have presented before, you can check link:http://blog.couchbase.com/facet/Author/Matthew+Groves[my blog post history] for some of the videos).
+
+* October 11th, 2016: link:http://www.meetup.com/noders/events/233952180/[Austin Node.JS User Group] presenting "Full Stack Development with Node.js and NoSQL" (which I have _also_ presented before, you can check link:http://blog.couchbase.com/facet/Author/Matthew+Groves[my blog post history] for some of the videos).
+
+* October 12th, 2016: link:http://www.meetup.com/houston-js/events/233821916/[Houston.js] presenting "I Have a NoSQL Toaster" (which I have presented before, and is based on link:http://blog.couchbase.com/facet/Author/Matthew+Revell[Matthew Revell]'s session of the same name).
+
+* October 13th, 2016: link:http://www.hdnug.org/[Houston .NET User Group (HDNUG)] again presenting "Full Stack Development with .NET and NoSQL".
+
+Four great Texas groups! I'm going to bring whatever stickers and swag that I can fit in my luggage with me, and I may even just bring the Couchcase along too.
