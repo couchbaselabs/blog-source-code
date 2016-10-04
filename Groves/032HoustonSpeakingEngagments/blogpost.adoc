@@ -1,14 +1,16 @@
-:imagedir: images
+:imagesdir: images
 
-= Upcoming #Couchbase Events in Austin and Houston
+= Upcoming #Couchbase Events in Austin, Houston and New York City
 
 I'm going to be in Texas from October 10th to October 13th. If you're in either of those areas and interested in NoSQL and link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase], now is a good chance to attend some sessions, visit some great user groups, and ask me questions in-person.
 
-image:[Couchbase in Texas]
+image:001TexasBrisket.jpg[Couchbase in Texas, image by Arnold Gatilao, licensed through Creative Commons]
 
-Here's where I will be:
+Here's where I will be in between meals of beef brisket (link:https://commons.wikimedia.org/wiki/File:Friend%27s_BBQ_tasting_party_with_the_star_of_the_show-_Franklin_BBQ_Brisket._Tastes_best_without_sauce_or_with_Rudy%27s_BBQ_sauce_IMHO._(16500950090).jpg[image by Arnold Gatilao, licensed through Creative Commons]):
 
-* October 10th, 2016: link:http://www.adnug.org/[Austin .NET User Group (ADNUG)] - presenting "Full Stack Development with .NET and NoSQL" (which I have presented before, you can check link:http://blog.couchbase.com/facet/Author/Matthew+Groves[my blog post history] for some of the videos).
+* October 8th, 2016: link:http://codecampnyc.org/schedule/[Code Camp NYC] - presenting "Full Stack Development with .NET and NoSQL" (which I have presented before, you can check link:http://blog.couchbase.com/facet/Author/Matthew+Groves[my blog post history] for some of the videos).
+
+* October 10th, 2016: link:http://adnug.org/Home/october-10-2016-full-stack-development-with-net-and-nosql/[Austin .NET User Group (ADNUG)] - also presenting "Full Stack Development with .NET and NoSQL" .
 
 * October 11th, 2016: link:http://www.meetup.com/noders/events/233952180/[Austin Node.JS User Group] presenting "Full Stack Development with Node.js and NoSQL" (which I have _also_ presented before, you can check link:http://blog.couchbase.com/facet/Author/Matthew+Groves[my blog post history] for some of the videos).
 
@@ -16,4 +18,4 @@ Here's where I will be:
 
 * October 13th, 2016: link:http://www.hdnug.org/[Houston .NET User Group (HDNUG)] again presenting "Full Stack Development with .NET and NoSQL".
 
-Four great Texas groups! I'm going to bring whatever stickers and swag that I can fit in my luggage with me, and I may even just bring the Couchcase along too.
+A great NYC conference! Four great Texas groups! I'm going to bring whatever stickers and swag that I can fit in my luggage with me, and I may even just bring the link:http://blog.couchbase.com/2016/september/summer-project-2016-update-the-couchcase-rises[CouchCase] along too.
