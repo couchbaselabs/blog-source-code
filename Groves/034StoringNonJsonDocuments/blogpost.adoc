@@ -2,11 +2,11 @@
 
 = Using Couchbase to Store Non-JSON Data
 
-I believe most of the power of link:http://developer.couchbase.com?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server] comes when you use it as a document database to store JSON documents. You get to use link:http://developer.couchbase.com/documentation/server/4.5/getting-started/first-n1ql-query.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[N1QL], for instance! However, there are some times when you need Couchbase to store something else. In this blog post, I'm going to show you how to store XML and binary data into Couchbase. I'll be using the .NET SDK, but I believe the other SDKs also support these operations too.
+I believe most of the power of link:http://developer.couchbase.com?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server] comes when you use it as a document database to store JSON documents. You get to use link:http://developer.couchbase.com/documentation/server/4.5/getting-started/first-n1ql-query.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[N1QL], for instance! However, there are some times when you need Couchbase to store something else. In this blog post, I'm going to show you how to store XML and binary data into Couchbase. I'll be using the .NET SDK, but I believe the other SDKs also support these operations.
 
 == Review storing JSON documents
 
-A quick review of storing JSON documents in Couchbase. Once you have a bucket, you can just use `Insert`/`Upsert` to create/update a document, and then use `Get` to get the document back out. With the .NET SDK, the serialization is handled automatically to the type you specify.
+First, a quick review of storing JSON documents in Couchbase. Once you have a bucket, you can just use `Insert`/`Upsert`/`Replace` to create/update a document, and then use `Get` to get the document back out by its key. With the .NET SDK, the JSON serialization is handled automatically to the type you specify.
 
 [source,C#,indent=0]
 ----
