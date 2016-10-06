@@ -1,0 +1,37 @@
+:imagesdir: images
+
+= Summer Project 2016: The CouchCase
+
+I know that Summer 2016 is long gone, but I promised one more blog post about building the CouchCase. This part was the easiest, since clustering link:http://developer.couchbase.com?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server] nodes together is really easy.
+
+== Networking
+
+First, a little information about how I networked the Intel Compute Sticks. On the router in the CouchCase, I've pegged each network adapter to a specific IP address. How to do this is going to vary from router to router, so consult your manual.
+
+Here's a snapshot of STICK1, STICK2, and STICK3 all pegged to three IP addresses and attached to the router.
+
+[image]
+
+== Clustering
+
+The first time you setup Couchbase Server, you are creating a cluster with a single node. So, if you've done this, as far as setting up an entire cluster, you are most of the way there.
+
+Next, install Couchbase Server on another machine (or VM or whatever). Instead of selecting "Start a new Cluster", select "Join a cluster now". Enter the IP address of the first node you created, as well as the username/password information that you set it to be.
+
+image::002JoinCluster.png[Join a Couchbase node to a Couchbase cluster]
+s
+Once you do that, you should get a message saying "This server has been associated with the cluster and will join on the next rebalance operation."
+
+image::003ClusterJoinedMessage.png[A Couchbase node has been successfully joined to a Couchbase cluster]
+
+A rebalance operation is necessary for Couchbase to figure out all the details of which node a given document should live on. For more information, check out the link:http://developer.couchbase.com/documentation/server/current/clustersetup/rebalance.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[documentation on Rebalancing a Cluster].
+
+A rebalance is a background operation, and should not interfere with the operation of nodes that are already working. This means that if you need to add capacity to your database, you don't have to take down your website or schedule a 'maintenence window' or anything like that.
+
+Once the rebalance is complete, you should see a list of nodes:
+
+image:004ListOfNodes.png[List of nodes in a Couchbase cluster]
+
+== CouchCase is going on the road
+
+There are a few finishing cosmetic touches, but CouchCase is ready to go on the road. In fact, look for it at the upcoming link:http://www.codemash.org/[CodeMash] conference in January 2017: link:http://www.codemash.org/session/are-you-ready-for-chaos-horizontal-scaling-in-a-briefcase/["Are You Ready for Chaos? Horizontal Scaling in a Briefcase"]. If you have any questions or suggestions, I'd love to hear from you. I'm on link:https://twitter.com/mgroves[Twitter as @mgroves].
