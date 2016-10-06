@@ -1,0 +1,50 @@
+:imagesdir: images
+
+= Using Couchbase to Store Non-JSON Data
+
+I believe most of the power of link:http://developer.couchbase.com?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server] comes when you use it as a document database to store JSON documents. You get to use link:http://developer.couchbase.com/documentation/server/4.5/getting-started/first-n1ql-query.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[N1QL], for instance! However, there are some times when you need Couchbase to store something else. In this blog post, I'm going to show you how to store XML and binary data into Couchbase. I'll be using the .NET SDK, but I believe the other SDKs also support these operations too.
+
+== Review storing JSON documents
+
+A quick review of storing JSON documents in Couchbase. Once you have a bucket, you can just use `Insert`/`Upsert` to create/update a document, and then use `Get` to get the document back out. With the .NET SDK, the serialization is handled automatically to the type you specify.
+
+[source,C#,indent=0]
+----
+include::CouchbaseNonJsonFormats/CouchbaseNonJsonFormats/Program.cs[tag=JSON]
+----
+
+== Storing XML
+
+Storing XML takes a little more work. First, I seralize an object into an XML string, using `XmlSerializer`. Then, I `Insert` that value as a string. To get it back out, I use the `XmlSeralizer` again to go from string to a type.
+
+[source,C#,indent=0]
+----
+include::CouchbaseNonJsonFormats/CouchbaseNonJsonFormats/Program.cs[tag=XML]
+----
+
+== Storing a byte array serialization
+
+Next, I'm going to serialize an object into a `byte` array. Unlike JSON and XML, storing in a byte array means that the object can only be serialized back into a .NET object.
+
+The process is similar to XML, except `Insert` and `Get` will specify `byte[]` instead of `string`, and I'm using the `BinaryFormatter` instead of `XmlSerializer`.
+
+[source,C#,indent=0]
+----
+include::CouchbaseNonJsonFormats/CouchbaseNonJsonFormats/Program.cs[tag=bytes]
+----
+
+== Summary
+
+Running the sample console program (link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/034StoringNonJsonDocuments[source code is available on Github]) produces:
+
+image:002NonJsonConsoleOutput.png[Console output of sample program creating non-JSON values in Couchbase Server]
+
+After you run the above code examples, this is what you'll see in Couchbase Console:
+
+image:001CouchbaseConsoleNonJson.png[View of JSON, XML, and byte array values in Couchbase Console]
+
+The non-JSON documents exist in the same bucket as the JSON documents. But as you can see, Couchbase Server doesn't know how to interpret them. So, you won't be able to perform most N1QL operations on these documents. You can't index their values like in a JSON document. And, in the case of the .NET byte array, a non-.NET program won't be able to interpret them at all.
+
+If you can store your values in JSON, I'd recommend it. But Couchbase Server gives you the flexibility to store other types of values.
+
+Got questions? Need help with Couchbase Server? Check out the link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Forums] or link:http://twitter.com/mgroves[Follow me on Twitter].
