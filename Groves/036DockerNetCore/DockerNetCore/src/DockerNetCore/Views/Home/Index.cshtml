@@ -1,0 +1,14 @@
+﻿@using System.Globalization
+@model List<DockerNetCore.Model.Gift>
+@{
+    ViewData["Title"] = "Gifts!";
+}
+
+<p>@Html.ActionLink("Add a new Gift", "AddGift")</p>
+
+<ol>
+    @foreach (var m in Model)
+    {
+        <li><strong>@m.GiftName</strong> - @m.Price.ToString("C", new CultureInfo("en-US"))</li>
+    }
+</ol>
