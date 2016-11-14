@@ -10,7 +10,7 @@ First, a little information about how I networked the Intel Compute Sticks. On t
 
 Here's a snapshot of STICK1, STICK2, and STICK3 all pegged to three IP addresses and attached to the router.
 
-[image]
+image::001Router.png[Compute sticks running Couchbase Server attached to a router]
 
 == Clustering
 
