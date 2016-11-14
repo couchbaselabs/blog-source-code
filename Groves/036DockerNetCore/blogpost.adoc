@@ -1,0 +1,61 @@
+= Docker and ASP.NET Core with Couchbase Server
+
+In many of my blog posts and samples, I use a single Couchbase Server node. I do this because it's easy, and much of what I demonstrate can be done with a single node. However, Couchbase Server is typically run on multiple nodes in production (sometimes 3, sometimes 3000). In order to simulate this locally, I can use some lightweight Docker containers.
+
+While I'm at it, I'm going to show you how to get started with an ASP.NET Core website, also running on Docker.
+
+== What you need to get started
+
+* link:http://www.docker.com/products/docker#/windows[Docker for Windows]. You can use Docker for any platform, but in this sample, I'm using Windows and...
+* Visual Studio 2015 (or later). You don't need Visual Studio to use ASP.NET Core or Docker, but I'm using some tooling to makes things easier that uses Visual Studio.
+* link:https://www.microsoft.com/net/core#windows[.NET Core VS 2015 tooling preview 2] or higher. This is tooling for Visual Studio.
+* link:https://visualstudiogallery.msdn.microsoft.com/0f5b2caa-ea00-41c8-b8a2-058c7da0b3e4[Visual Studio Tools for Docker] (preview). More VS tooling to make the job easier.
+
+Once you have all of the above installed, make sure to turn on drive sharing in docker. Otherwise you will get a error like `The "PrepareForLaunch" task failed unexpectedly` later. (I needed to enable sharing on both C and D drive, but your setup will vary).
+
+== Setup Couchbase Server on Docker
+
+Start by running a Couchbase Docker image. Since the ASP.NET Core site will be running within Docker, we only need to expose port 8091 (to use the Couchbase Console).
+
+`docker run -d --name db -p 8091:8091 couchbase`
+
+I named it `db` but you are welcome to name it whatever you'd like. I specified `couchbase` as the image, which is Couchbase Server 4.5.1 at the time I'm writing this.
+
+Next, run at least one more container with Couchbase. There's no need to map any ports for these. I'll just create two:
+
+`docker run -d --name db2 couchbase`
+`docker run -d --name db3 couchbase`
+
+Make note of the IP addresses of these two containers by using `docker inspect db`/`docker inspect db2`/etc and looking for `IPAddress` in the output.
+
+Now, connect to `http://localhost:8091` to setup the Couchbase cluster. If you've not done this before, you can check out link:http://blog.couchbase.com/2016/may/couchbase-with-windows-and-.net---part-1[this blog post on setting up Couchbase Server] or you can link:http://blog.couchbase.com/2016/june/how-to-install-couchbase-server-on-windows-video[watch this video on stepping through Couchbase Server setup].
+
+When you setup and create a bucket (I created a bucket named 'default'), go ahead and enable replication, since we're going to add some more nodes.
+
+Go to the Server Nodes tab and click "Add Server". Enter the IP Address of db2 and click "Add Server". Repeat for db3 and any other nodes you've created. At this point, you should see a number next to "Pending Rebalance". This means the nodes are ready to become part of the cluster. Click 'rebalance'. This will take a little bit of time, but when it's done, you'll have a Couchbase Server cluster all running within Docker.
+
+While you're in the Couchbase Console, go ahead and create a primary index: `CREATE PRIMARY INDEX on `default``. The ASP.NET Core app will need this.
+
+== Create an ASP.NET Core app
+
+From Visual Studio, create a new ASP.NET Core app (or you can use the source code I've already prepared for this example on GitHub). Add the CouchbaseNetClient dependency with NuGet. We'll be using the .NET Core SDK, which is currently in developer preview. So you will need to execute `Install-Package CouchbaseNetClient -Pre` in the Package Manager Console.
+
+Next, add Docker support to the project, by right-clicking the project, then Add, then "Docker Support". This will add some Docker files to your project. If you don't see this option, then you need to install link:https://visualstudiogallery.msdn.microsoft.com/0f5b2caa-ea00-41c8-b8a2-058c7da0b3e4[Visual Studio Tools for Docker].
+
+In the ASP.NET Core app, setup the `ClusterHelper` to point to the Couchbase Cluster by using one or more of the IP addresses of the db/db2/db3 containers.
+
+I created a very basic "gift" application to list and add new gift documents. Check out the full source code on GitHub, especially `HomeController.cs` and `Gift.cs`.
+
+Since you have docker tools installed, there's a new deploy button for Docker. Click this to run your ASP.NET Core app in Docker. Note that when you first run this, it might take longer because it's downloading the link:https://hub.docker.com/r/microsoft/aspnetcore/[aspnetcore] image from Docker Hub.
+
+Once that container is deployed, there's one more step. For whatever reason, the aspnetcore Docker image doesn't attach to the 'bridge' Docker network. Therefore, the ASP.NET Core app can't see the Couchbase cluster. To add 'bridge', run `docker network connect bridge dockernetcore_dockernetcore_1` (the name of your container may vary). There might be another way to do this by changing the `Dockerfile` or `docker-compose.yml`, but I don't know what it is (yet).
+
+Go ahead and run the ASP.NET Core app again (with docker). The website should appear in your browser. At this point, you have 4 containers running in the Docker host together: a web server running ASP.NET Core and three Couchbase Server nodes.
+
+== Summary
+
+When your site is running, and you've added a few gifts, go back to the Couchbase Console and open the Server Nodes tab. Take a look at the "Items" column and note the Active/Replica split. As you add gifts, note that the documents are being automatically sharded amongst the nodes, and the replicas are being stored in the other nodes.
+
+Something else you can try for fun: turn on auto-failover (Settings -> Auto-Failover -> Enable), and then shut down one of the Couchbase nodes (`docker stop db2` for instance). Then watch the Couchbase Console as the node goes down and the other nodes compenstate. Finally, bring the node back online, and notice that the cluster gives you some options for adding the node back in to the cluster.
+
+I'm pretty new at both Docker and ASP.NET Core, so if you have any tips or suggestions, I'd love to hear them. Please leave a comment or link:http://twitter.com/mgroves[find @mgroves on Twitter].
