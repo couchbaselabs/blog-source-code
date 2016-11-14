@@ -5,11 +5,13 @@ namespace DockerNetCore.Controllers
 {
     public class HomeController : Controller
     {
+        // tag::IndexAction[]
         public IActionResult Index()
         {
             var gifts = Gift.GetAllGifts();
             return View(gifts);
         }
+        // end::IndexAction[]
 
         public IActionResult AddGift()
         {

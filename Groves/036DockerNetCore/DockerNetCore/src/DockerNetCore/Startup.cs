@@ -21,9 +21,11 @@ namespace DockerNetCore
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
+            // tag::CouchbaseStartup[]
             var client = new ClientConfiguration();
             client.Servers = new List<Uri> {new Uri("couchbase://172.17.0.2")};
             ClusterHelper.Initialize(client);
+            // end::CouchbaseStartup[]
         }
 
         public IConfigurationRoot Configuration { get; }

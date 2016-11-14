@@ -10,6 +10,7 @@ namespace DockerNetCore.Model
         public string GiftName { get; set; }
         public decimal Price { get; set; }
 
+        // tag::GetAllGifts[]
         public static List<Gift> GetAllGifts()
         {
             var bucket = ClusterHelper.GetBucket("default");
@@ -17,6 +18,7 @@ namespace DockerNetCore.Model
             query.ScanConsistency(ScanConsistency.RequestPlus);
             return bucket.Query<Gift>(query).Rows;
         }
+        // end::GetAllGifts[]
 
         public static void CreateNewGift()
         {
