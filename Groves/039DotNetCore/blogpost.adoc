@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = .NET Core with Visual Studio Code
 
 Jeff Morris already wrote a great link:http://blog.couchbase.com/2016/october/introducing-couchbase-.net-sdk-core-2.4.0-dp1[blog post to introduce the Couchbase .NET Core SDK], which is now in developer preview.
@@ -24,7 +26,11 @@ Use Powershell or CMD to make a project folder. Once you are there:
 
 `dotnet new`
 
-This will create some files: `Program.cs` and `project.json`. Then, to get the dependencies listed in `project.json`, run another command:
+This will create some files: `Program.cs` and `project.json`.
+
+image::039dotnetnew.png[Running dotnet new to create a new .NET Core project]
+
+Then, to get the dependencies listed in `project.json`, run another command:
 
 `dotnet restore`
 
@@ -38,7 +44,11 @@ At this point, the project is ready to execute. You can go back to Powershell/CM
 
 `dotnet run`
 
-At this point, you'd get a "Hello World". Let's add some Couchbase to this project.Start with *Ctrl+P*, then type ">nuget" until "Add New Package" appears. Enter a search term, like "couchbase". "CouchbaseNetClient" should appear in the list. Select it, and then you should be able to select a version. Currently, for .NET Core, you'll need to select 2.4.0-dp2, since .NET Core support is still a "developer preview".
+If you ran that now, you'd get a "Hello World". Let's add some Couchbase to this project.Start with *Ctrl+P*, then type ">nuget" until "Add New Package" appears. Enter a search term, like "couchbase". "CouchbaseNetClient" should appear in the list. Select it, and then you should be able to select a version.
+
+image::039nugetvsc.png[Using NuGet to install the Couchbase .NET Core SDK]
+
+Currently, for .NET Core, you'll need to select 2.4.0-dp2, since .NET Core support is still a "developer preview".
 
 Once you have this added to your project, working with the .NET Core SDK should be familiar to you if you've used the .NET SDK. Inside of the `Main` method, here's how you connect to a cluster and setup a bucket:
 
@@ -67,6 +77,10 @@ Again, this is using the Async API, but since I'm calling `.Result`, it's functi
 ----
 include::src/Program.cs[tag=n1qlresults]
 ----
+
+When I run this program, it will create a new document (each time) and list all the documents you've created cumulatively.
+
+image::039dotnetrun.png[Running .NET Core project using Couchbase]
 
 == What's different?
 
