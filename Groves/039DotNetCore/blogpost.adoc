@@ -82,6 +82,8 @@ When I run this program, it will create a new document (each time) and list all 
 
 image::039dotnetrun.png[Running .NET Core project using Couchbase]
 
+_Note: if you are having trouble getting started with Couchbase Server, or you are getting errors, especially in regards to N1QL indexing, you may want to revisit some of my "Getting Started" blog posts:_ link:http://blog.couchbase.com/2016/may/couchbase-with-windows-and-.net---part-1[Couchbase with Windows Part 1] _and_ link:http://blog.couchbase.com/2016/may/couchbase-with-windows-and-.net---part-2[Couchbase with Windows Part 2] _in particular_.
+
 == What's different?
 
 For the most part, this feels very much like working with full Visual Studio and .NET. Visual Studio Code is not as full-featured, yet, but already has a great library of extensions. For Couchbase developers, working with the .NET Core SDK is practically identical.
@@ -99,6 +101,6 @@ It's also a little strange to create a project with `dotnet new` instead of File
 
 Even if you don't plan on writing .NET Core code just yet, you should still check out Visual Studio Code. It's a great text editor, if nothing else. If you are currently writing .NET with Couchbase, the Couchbase part of your transition to .NET Core will be painless (your mileage may vary getting used to the new .NET Core tooling).
 
-The full source code for this example is available on GitHub.
+link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/039DotNetCore/src[The full source code for this .NET Core example using Couchbase is available on GitHub].
 
 What do you like or not like about VSC and .NET Core? Leave a comment below or let me know on Twitter. I'm link:http://twitter.com/mgroves[@mgroves]. If you are having any trouble with .NET, .NET Core, or Couchbase Server, I'm here to help you.
