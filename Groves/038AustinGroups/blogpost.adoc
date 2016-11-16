@@ -1,0 +1,21 @@
+= Austin User Group Visits - October 2016 (Videos)
+
+I spent nearly a week in Texas, visiting four user groups and talking about link:http://developer.couchbase.com/documentation/server/current/introduction/intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase] as much as possible.
+
+The first two days of the week I spent in Austin. Here are the videos:
+
+== Austin .NET User Group - Full Stack with .NET
+
+I started the week off with the link:http://adnug.org/Home/october-10-2016-full-stack-development-with-net-and-nosql/[.NET user group in Austin]. Shawn Weisfeld from link:http://usergroup.tv/videos/full-stack-development-with-net-and-nosql[UserGroup.TV] was there to record my session. He has a way better technical setup than what I travel with, so I'm embedding his recording below.
+
++++
+<iframe src="//player.vimeo.com/video/187158392" width="567" height="318" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
++++
+
+Definitely check out link:http://usergroup.tv/[UserGroup.TV] for other great sessions!
+
+== Austin Node.JS User Group - Full Stack with Node.js
+
+
+
+Thank you, Austin! You can follow me on twitter at link:https://twitter.com/mgroves[@mgroves].
