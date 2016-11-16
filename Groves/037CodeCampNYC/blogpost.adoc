@@ -1,0 +1,13 @@
+= .NET and Couchbase - October 2016, New York Code Camp (video)
+
+I was a speaker at the link:http://codecampnyc.org/[Code Camp NYC] conference on October 8, 2016. My topic was Full Stack Development with .NET and NoSQL. The organizers and venue allowed me to record the session, and so I've posted it on YouTube.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/U5oI3TIDTEM?list=PLZWwU1YVRehKj0E0BxvZ09NWwaH8Ks9U_" frameborder="0" allowfullscreen></iframe>
++++
+
+link:https://github.com/couchbaselabs/restful-angularjs-dotnet[The full stack .NET sample] I used in this session is available on Github. The link:https://github.com/couchbaselabs/ToDoLite-Xamarin-Forms[Xamarin Forms sample that uses Sync Gateway] is also available on Github.
+
+Thanks to everyone that came out. If you are in the New York area, I definitely recommend checking out this lively conference next year. I got more hands raised during this session than just about any other I've presented this year.
+
+You can follow the conference on link:https://twitter.com/codecampnyc[Twitter @codecampnyc], and you can follow me on Twitter at link:https://twitter.com/mgroves[@mgroves].
