@@ -78,7 +78,7 @@ Again, this is using the Async API, but since I'm calling `.Result`, it's functi
 include::src/Program.cs[tag=n1qlresults]
 ----
 
-When I run this program, it will create a new document (each time) and list all the documents you've created cumulatively.
+When I run this program, it will create a new document (each time) and list all the documents it's created cumulatively.
 
 image::039dotnetrun.png[Running .NET Core project using Couchbase]
 
@@ -88,7 +88,7 @@ _Note: if you are having trouble getting started with Couchbase Server, or you a
 
 For the most part, this feels very much like working with full Visual Studio and .NET. Visual Studio Code is not as full-featured, yet, but already has a great library of extensions. For Couchbase developers, working with the .NET Core SDK is practically identical.
 
-One thing that it may take some time to get used to is the lack of ReSharper. I don't know if ReSharper is going to come to VSC (JetBrains has their own light-weight C# IDE called link:https://www.jetbrains.com/rider/[Rider]). I have a habit of using *Alt+Enter* to add `using` statements, and that same keyboard shortcut doesn't work in VSC (by default). The refactoring lightbulds still show up, and here are the namespaces for the record:
+One thing that it may take some time to get used to is the lack of ReSharper. I don't know if ReSharper is going to come to VSC (JetBrains has their own light-weight C# IDE called link:https://www.jetbrains.com/rider/[Rider]). I have a habit of using *Alt+Enter* to add `using` statements, and that same keyboard shortcut doesn't work in VSC (by default). The refactoring lightbulbs still show up, and here are the namespaces for the record:
 
 [source,C#,indent=0]
 ----
@@ -99,7 +99,7 @@ It's also a little strange to create a project with `dotnet new` instead of File
 
 == Summary
 
-Even if you don't plan on writing .NET Core code just yet, you should still check out Visual Studio Code. It's a great text editor, if nothing else. If you are currently writing .NET with Couchbase, the Couchbase part of your transition to .NET Core will be painless (your mileage may vary getting used to the new .NET Core tooling).
+Even if you don't plan on writing .NET Core code just yet, you should still check out Visual Studio Code. It's a great text editor, if nothing else. If you are currently writing .NET with Couchbase, the Couchbase part of your transition to .NET Core should be painless (your mileage may vary getting used to the new .NET Core tooling).
 
 link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/039DotNetCore/src[The full source code for this .NET Core example using Couchbase is available on GitHub].
 
