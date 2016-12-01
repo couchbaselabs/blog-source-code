@@ -1,0 +1,31 @@
+= Houston User Group Visits - October 2016 (Videos)
+
+I spent nearly a week in Texas, visiting four user groups and talking about link:http://developer.couchbase.com/documentation/server/current/introduction/intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase] as much as possible.
+
+The second two days of the week I spent in Houston. Here are the videos:
+
+== Houston.js Group - I Have a NoSQL Toaster
+
+I visited the link:https://www.meetup.com/houston-js/events/233821916/[Houston.js meetup on October 12th]. The Iron Yard hosted the meetup. It was a cool little boot camp / startup facility, with a great mix of people with a variety of focuses: experienced, new, enterprise, startup, were all in attendance.
+
+Unfortunately, the video of my screen didn't record correctly, so I just have video of myself and the projector. But you can get the link:https://speakerdeck.com/mgroves/houston-dot-js-october-2016-i-have-a-nosql-toaster[slides for I Have a NoSQL Toaster from SpeakerDeck and follow along if you want].
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HwYoip6YPeY" frameborder="0" allowfullscreen></iframe>
++++
+
+== Houston .NET User Group
+
+Finally, I visited the link:http://www.hdnug.org/[Houston .NET User Group], which I learned may be the oldest .NET user group in the nation. It was a very unique group and very lively.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/6HvHZvLnvSc?list=PLZWwU1YVRehKj0E0BxvZ09NWwaH8Ks9U_" frameborder="0" allowfullscreen></iframe>
++++
+
+They were kind enough to give me a (very comfortable) polo shirt featuring the user group logo. If you are in the Houston area, you simply must attend one of these meetings, even if you aren't a .NET developer.
+
+== Summary
+
+Thank you, Houston, and thank you, Texas! Let's do it again some time.
+
+If you'd like me to visit your user group or conference, I'd love to! Ask me on twitter at link:https://twitter.com/mgroves[@mgroves] or leave a comment below.

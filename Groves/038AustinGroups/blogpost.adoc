@@ -16,6 +16,12 @@ Definitely check out link:http://usergroup.tv/[UserGroup.TV] for other great ses
 
 == Austin Node.JS User Group - Full Stack with Node.js
 
+The next night, I was at the link:http://www.meetup.com/noders/[Austin Node.JS User Group]. There was a big crowd at this event, and a lot of great questions.
 
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Q6quGEuVG8o" frameborder="0" allowfullscreen></iframe>
++++
+
+If you are in the Austin area, I definitely recommend you check out both of these groups. After spending two days in Austin, I drove over to Houston and spoke at two more great user groups there. Videos and blog post are coming soon!
 
 Thank you, Austin! You can follow me on twitter at link:https://twitter.com/mgroves[@mgroves].
