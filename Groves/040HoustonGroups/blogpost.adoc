@@ -8,7 +8,7 @@ The second two days of the week I spent in Houston. Here are the videos:
 
 I visited the link:https://www.meetup.com/houston-js/events/233821916/[Houston.js meetup on October 12th]. The Iron Yard hosted the meetup. It was a cool little boot camp / startup facility, with a great mix of people with a variety of focuses: experienced, new, enterprise, startup, were all in attendance.
 
-Unfortunately, the video of my screen didn't record correctly, so I just have video of myself and the projector. But you can get the link:https://speakerdeck.com/mgroves/houston-dot-js-october-2016-i-have-a-nosql-toaster[slides for I Have a NoSQL Toaster from SpeakerDeck and follow along if you want].
+Unfortunately, the video of my screen didn't record correctly, so I just have video of myself and the projector. But you can get the link:https://speakerdeck.com/mgroves/houston-dot-js-october-2016-i-have-a-nosql-toaster[slides for I Have a NoSQL Toaster from SpeakerDeck] and follow along if you want].
 
 +++
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HwYoip6YPeY" frameborder="0" allowfullscreen></iframe>
