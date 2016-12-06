@@ -11,25 +11,25 @@ This blog post assumes that you have Couchbase Server setup locally, a bucket cr
 
 _Note: if you are having trouble getting started with Couchbase Server, or you are getting errors, especially in regards to N1QL indexing, you may want to revisit some of my "Getting Started" blog posts:_ link:http://blog.couchbase.com/2016/may/couchbase-with-windows-and-.net---part-1[Couchbase with Windows Part 1] _and_ link:http://blog.couchbase.com/2016/may/couchbase-with-windows-and-.net---part-2[Couchbase with Windows Part 2] _in particular_.
 
-I'm created a simple .NET Core console project, with the same tooling and setup that I used in my link:http://blog.couchbase.com/2016/november/.net-core-with-visual-studio-code[.NET Core with Visual Studio Code blog post].
+I'm using a simple .NET Core console project, with the same tooling and setup that I used in my link:http://blog.couchbase.com/2016/november/.net-core-with-visual-studio-code[.NET Core with Visual Studio Code blog post].
 
 == Coding with .NET and N1QL
 
-Most of this code should be pretty familiar if you used .NET and Couchbase before. I'm creating 5 documents that have (initially) a processed field set to `false`. This code inserts them. It also writes them out to console for illustration purposes.
+Most of this code should be pretty familiar if you've used .NET and Couchbase before. I'm creating 5 documents that have (initially) a processed field set to `false`. The code below inserts them. It also writes them out to console for illustration purposes.
 
 [source,C#,indent=0]
 ----
 include::src/Program.cs[tag=createdocuments]
 ----
 
-Next, this code immediately runs a N1QL `UPDATE` to set all the `processed` fields to true. It also has a `RETURNING` statement at the end to return the document as well as the key.
+Next, this code immediately runs a N1QL `UPDATE` to set all the `processed` fields to true. It also has a `RETURNING` statement at the end to return the documents as well as the keys.
 
 [source,C#,indent=0]
 ----
 include::src/Program.cs[tag=updatereturning]
 ----
 
-Finally, I would expect the 5 documents I created to be returned by the RETURNING (along with their keys). This code prints out the returned JSON to console for illustration purposes.
+Finally, the following code prints out the returned JSON to console for illustration purposes.
 
 [source,C#,indent=0]
 ----
