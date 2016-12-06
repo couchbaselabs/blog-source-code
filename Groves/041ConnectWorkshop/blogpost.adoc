@@ -27,7 +27,7 @@ Part 3 contains an Angular 2 application. There's actually nothing specific to C
 
 == Summary
 
-If anything is confusing or missing, please feel free to link:https://github.com/couchbaselabs/workshop/issues[open a GitHub issue]. Or, if you would like to add an enhancements, other languages, bug fixes, typo fixes, etc, link:https://github.com/couchbaselabs/workshop/pulls[pull requests are greatly appreciated].
+If anything is confusing or missing, please feel free to link:https://github.com/couchbaselabs/workshop/issues[open a GitHub issue]. Or, if you would like to add enhancements, other languages, bug fixes, typo fixes, etc, link:https://github.com/couchbaselabs/workshop/pulls[pull requests are greatly appreciated].
 
 Finally, if you are interested in having a workshop at your conference, user group, or place of business, I would be delighted to customize and deliver the it for you.
 
