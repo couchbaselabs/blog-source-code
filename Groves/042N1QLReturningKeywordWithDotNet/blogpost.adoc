@@ -46,4 +46,6 @@ image::042_01_consoleoutput.png[Console output demonstrating the N1QL RETURNING 
 
 The `RETURNING` keyword can save you a step when updating/inserting a group of documents. Try experimenting with a more complex `UPDATE` to see what happens. For example, try using `IS MISSING` instead of relying on a boolean flag like 'processed'.
 
+The link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/042N1QLReturningKeywordWithDotNet/src[full source code for this blog post is available on Github].
+
 If you have any questions, please leave a comment or link:http://twitter.com/mgroves[contact me on Twitter].
