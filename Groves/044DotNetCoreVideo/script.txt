@@ -1,0 +1,78 @@
+http://blog.couchbase.com/2016/november/.net-core-with-visual-studio-code
+
+I'm going to show you some of the tooling that you can use to write .NET Core
+on Windows. For the most part, this can be applied to Linux and Mac too.
+
+First, I need .NET core installed.
+
+: dotnet --version
+
+If you don't have .net core installed, download and install from microsoft, the link is in the video description
+
+Since I have them installed, I'm going to create a new .net project
+
+: dotnet new
+: dir
+
+This creates some files for a barebones project. Project.json specifies the dependencies. To restore them:
+
+: dotnet restore
+
+Next, I've installed Visual Studio Code. It's a lightweight text editor from MS built on Atom. You can use
+the editor of your choice, or even just notepad if you want. To open this folder in VSC
+
+: code .
+
+Once I'm in VSC, I can bring up the Integrated Terminal with ctrl+` or via the menu. Now I can run commands
+right from VSC. Or you can use a seperate CMD or powershell window. Whatever you want. To run the program:
+
+: dotnet run
+
+It's just a hello world for now. Note that I have the C# extension for VSC installed. VSC will often recommend
+extensions for you based on what you are doing.
+
+Let's do something a bit more interesting that involves a third party. I'm
+going to setup this console app to talk to Couchbase Server. If you don't have Couchbase Server installed, check
+out some of my other videos and blog posts at blog.couchbase.com.
+
+Another extension I have is a NuGet project manager. To use it, hit Ctrl+P to get the "go to file" prompt.
+Enter ">" to get a list of commands aka the "command palette". You can also use Ctrl+Shift+P if that's your jam.
+Start typing "Nuget", you should see two commands. Select "add new package". Enter the name of a nuget package.
+Type "CouchbaseNetClient". It will come up with suggestions. I'll file CouchbaseNetClient in that list. Then select
+a version. As of now, the .NET core SDK is in DP, so I'll select that one. This library will get added to project.json
+(which you can also do manually if you're into that). You'll need to restore packages again (VSC will likely prompt you
+or use dotnet restore at the command line)
+
+Now I'll write some code that uses Couchbase.
+
+(initialize cluster helper - note the lightbulb)
+
+(insert document with guid id, random invoice number, random amount due, and type electric bill)
+
+(write N1QL query to select all electric bill, using parameterization)
+
+(handle result of N1QL)
+
+Console.WriteLine("Success: " + result.Success);
+if(!result.Success) {
+    Console.WriteLine("Message: " + result.Message);
+    Console.WriteLine("Exception: " + result.Exception?.GetType().Name);
+    Console.WriteLine("Exception Message: " + result?.Exception?.Message);
+    result.Errors.ForEach(e => Console.WriteLine("Error: " + e?.Message));
+    return;
+}
+
+Console.WriteLine();
+Console.WriteLine("Bills:");
+Console.WriteLine("------");
+foreach(var bill in result.Rows) {
+    Console.WriteLine($"{bill.invoiceNumber} - {bill.amountDue.ToString("C")}");
+}
+
+execute at the command line:
+
+dotnet run
+
+full source code available on github: https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/039DotNetCore/src
+
+thanks for watching, if you have any questions or comments, leave a comment below or ping me on twitter, I'm mgroves
