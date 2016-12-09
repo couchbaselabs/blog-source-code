@@ -1,5 +1,6 @@
 http://blog.couchbase.com/2016/november/.net-core-with-visual-studio-code
 
+Hello everyone, Matt Groves here again.
 I'm going to show you some of the tooling that you can use to write .NET Core
 on Windows. For the most part, this can be applied to Linux and Mac too.
 
@@ -28,7 +29,11 @@ right from VSC. Or you can use a seperate CMD or powershell window. Whatever you
 
 : dotnet run
 
-It's just a hello world for now. Note that I have the C# extension for VSC installed. VSC will often recommend
+It's just a hello world for now.
+
+Open program.cs file
+
+Note that I have the C# extension for VSC installed. VSC will often recommend
 extensions for you based on what you are doing.
 
 Let's do something a bit more interesting that involves a third party. I'm
