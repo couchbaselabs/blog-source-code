@@ -1,0 +1,14 @@
+= .NET Core and Visual Studio Code (video)
+
+This video shows how I'm using  link:http://blog.couchbase.com/2016/november/.net-core-with-visual-studio-code[.NET Core with Visual Studio Code] and the link:http://developer.couchbase.com/documentation/server/4.5/sdk/dotnet/start-using-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase .NET Core SDK].
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eldLhEGHWTA" frameborder="0" allowfullscreen></iframe>
++++
+
+* link:https://www.microsoft.com/net/core[Download .NET Core]
+* link:http://code.visualstudio.com/[Download Visual Studio Code]
+
+If you'd like to learn more about how to use Couchbase, please visit our link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Developer Portal].
+
+Questions or comments? link:http://twitter.com/mgroves[Follow me on Twitter], email me (matthew.groves AT couchbase DOT com), or check out link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[the Couchbase forums].
