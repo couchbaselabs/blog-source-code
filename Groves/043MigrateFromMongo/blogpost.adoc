@@ -132,7 +132,7 @@ When you grow beyond one MongoDB server you need to introduce router processes a
 
 With Couchbase Server, both these functions are found in the client SDK. When you connect to the cluster from your application, the SDK receives a map of where in the cluster each shard lives. Couchbase Server then automatically updates the cluster map each time the shape of the cluster changes. Each request then happens directly from the application server to the relevant Couchbase node.
 
-Once your cluster grows, you can choose to run specialised data, query and indexing nodes. link:http://developer.couchbase.com/documentation/server/4.1/concepts/multidimensional-scaling.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Read more about multi-dimensional scaling].
+Once your cluster grows, you can choose to run specialised data, query and indexing nodes. link:http://developer.couchbase.com/documentation/server/current/clustersetup/services-mds.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Read more about multi-dimensional scaling].
 
 This all happens transparently to you as the developer.
 
