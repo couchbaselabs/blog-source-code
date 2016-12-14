@@ -1,28 +1,28 @@
 // user 1
 {
-  "Name": "Matt Groves",
-  "Friends": ["2","3","1031"],
-  "Updates": ["938","313","481"]
+  "name": "Matt Groves",
+  "friends": ["2","3","1031"],
+  "updates": ["938","313","481"]
 }
 
 // user 2
 {
-  "Name": "Nic Raboy",
-  "Friends": ["4"],
-  "Updates": ["909"]
+  "name": "Nic Raboy",
+  "friends": ["4"],
+  "updates": ["909"]
 }
 // etc: user 3, user 1031, user 4
 
 // update 938
 {
-    "PostedDate": "1/29/2017 1:31:10 PM",
-    "Body": "There's birthday cake in the break room!"
+    "postedDate": "1/29/2017 1:31:10 PM",
+    "body": "There's birthday cake in the break room!"
 }
 
 // update 313
 {
-    "PostedDate": "1/29/2017 1:32:10 PM",
-    "Body": "Nevermind, it's all been eaten :("
+    "postedDate": "1/29/2017 1:32:10 PM",
+    "body": "Nevermind, it's all been eaten :("
 }
 
 // etc: update 481, 909

@@ -1,10 +1,10 @@
 [
   {
-    "Body": "There's birthday cake in the break room!",
-    "PostedDate": "1/29/2017 1:31:10 PM"
+    "body": "There's birthday cake in the break room!",
+    "postedDate": "1/29/2017 1:31:10 PM"
   },
   {
-    "Body": "Nevermind, it's all been eaten :(",
-    "PostedDate": "1/29/2017 1:32:10 PM"
+    "body": "Nevermind, it's all been eaten :(",
+    "postedDate": "1/29/2017 1:32:10 PM"
   }
 ]
