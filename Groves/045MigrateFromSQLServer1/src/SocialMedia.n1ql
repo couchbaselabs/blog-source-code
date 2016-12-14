@@ -1,0 +1,4 @@
+SELECT u.*
+FROM `SocialMedia` s
+JOIN `SocialMedia` u ON KEYS s.Updates
+WHERE s.Name = 'Matt Groves'

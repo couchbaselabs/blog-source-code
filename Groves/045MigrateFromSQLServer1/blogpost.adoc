@@ -1,0 +1,131 @@
+= Moving from SQL Server Part 1: Data Modeling
+
+In this series of blog posts, I'm going to lay out the considerations when moving from a relational database to a document database. Specifically, Microsoft SQL Server to link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
+
+I'm going to cover data modeling, data migration, and app migration. These blog posts can't possibly cover every edge case. The goal is to lay down some general architecture guidelines that you, an architect, can apply to your application.
+
+== Why would I do this?
+
+Before we get started, I want to spend a little bit of time on motivation. There are 3 main reasons why one might consider migrating to a document data store. Your motivation may be one or all three:
+
+* Speed: Couchbase Server uses a link:http://developer.couchbase.com/documentation/server/current/architecture/managed-caching-layer-architecture.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[memory-first architecture] which can provide a great speed boost as compared to a relational database
+* Scalability: Couchbase Server is a link:http://developer.couchbase.com/documentation/server/current/architecture/architecture-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[distributed database], which allows you to scale out (and scale back in) capacity by just racking up commodity hardware.
+* Flexibility: Some data fits nicely in a relational model, but some data can benefit from the link:http://developer.couchbase.com/documentation/server/current/data-modeling/concepts-data-modeling-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[flexibility of using JSON].
+
+It should be noted that document databases and relational databases can be complimentary. Your application may be best served by one, the other, or a combination of both.
+
+Finally, the ease or difficultly of a migration varies widely based on a number of factors. In some cases it may be extremely easy; in some cases it will be time-consuming an difficult; in some (shrinking number of) cases it may not even be a good idea.
+
+== Understanding the differences
+
+The first step is to understand how data is modeled in a document database. In a relational database, data is typically stored flat in a table and it is given structure with primary and foreign keys. In a document database, data is stored as keys and values. A Couchbase bucket contains documents; each document has a unique key and a JSON value. There are no foreign keys (or, more accurately, there are no foreign key constraints).
+
+Because of the flexibility of JSON, the data in a document database can be structured more like a domain object in your application. Therefore you don't need an OR/M layer to deal with object impedence mismatch.
+
+== Denormalization example
+
+If you are using an OR/M, you can use that information as a starting point in modeling your data as JSON.
+
+For instance, let's say you have a "shopping cart" object.
+
+[source,C#,indent=0]
+----
+include::src/ShoppingCart.cs[tag=Classes]
+----
+
+To represent this in a relational table would likely require two tables: a ShoppingCart table and a ShoppingCartItem table with a foreign key to a row in ShoppingCart. Then, in an OR/M like NHibernate or Entity Framework, you would likely define a mapping somewhere like:
+
+[source,C#,indent=0]
+----
+include::src/ShoppingCart.cs[tag=Mappings]
+----
+
+When creating the model for a document database, the decision has to be made whether to continue modeling this as two separate entities (e.g. a Shopping Cart document and corresponding Shopping Cart Item documents) or whether to "denormalize" and combine a row from ShoppingCart and row(s) from ShoppingCartItem into a single document to represent a shopping cart.
+
+In this situation, I think it's pretty clear that it would be better off as a single document. The ShoppingCartItemMap only exists so that the OR/M knows how to populate the `Items` property in `ShoppingCart`. If we take that information into consideration, we can denormalize a shopping cart (spread over multiple tables and rows) into a single document:
+
+[source,JavaScript,indent=0]
+----
+include::src/ShoppingCart.json[]
+----
+
+Notice that the relationship between the items and the shopping cart is now implicit to being contained in the same document. No more need for an ID on the items to represent a relationship. In a later post, application code migration will be discussed, but for now I can say that the `ShoppingCartMap` and `ShoppingCartItemMap` classes can be removed, the `Id` field from `Item` can be removed, and the Couchbase .NET SDK can directly populate a `ShoppingCart` object:
+
+[source,C#,indent=0]
+----
+include::src/ShoppingCart.cs[tag=GetShoppingCart]
+----
+
+== Referential example
+
+It's not always possible or optimal to denormalize relationships like the `ShoppingCart` example. In many cases, a document will need to reference another document. link:http://developer.couchbase.com/documentation/server/current/data-modeling/entity-relationship-doc-design.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[There are pros and cons in deciding to use referencing].
+
+Let's look at an example where referencing might be the best approach. Suppose your application has some social media elements. Users can have friends, and users can post text updates. The way to model that in C# could be:
+
+[source,C#,indent=0]
+----
+include::src/SocialMedia.cs[tag=SocialMediaModel]
+----
+
+And here's the psuedo-mapping code that might be used in the OR/M:
+
+[source,C#,indent=0]
+----
+include::src/SocialMedia.cs[tag=Mappings]
+----
+
+If we applied the same denormalization as the shopping cart example, we would end up with some problems.
+
+* *One*: each user would store the details for their friends. This is not tenable, because now a user's information would be stored in multiple places instead of having a single source of truth (unlike the shopping cart, where having the same item in more than one shopping cart probably doesn't make any domain sense).
+
+* *Two*: Over a period of regular use, an individual user could post hundreds or thousands of updates. This could lead to a very large document which could slow down I/O operations. Additionally, Couchbase has a ceiling of 20mb per document.
+
+_Note: There's an N+1 problem here too (friends of friends, etc), but I'm not going to spend time on addressing that. Both OR/Ms and ODMs have to deal with this._
+
+One way to model this is to have a document to represent a user, one document per update, and reference information to map a user to its friends and updates.
+
+[source,JavaScript,indent=0]
+----
+include::src/SocialMedia.json[]
+----
+
+Note the arrays in the `Friends` and `Updates` fields. These values can be used to retrieve the associated documents. In this post, I'll discuss how to do it with key/value operations and how to do it with N1QL.
+
+=== Key/value operations
+
+To get document(s) in Couchbase, the simplest fastest way is to ask for them by key. Once you have one of the `FriendbookUser` documents above, you can then execute another operation to get the associated documents. For instance, I could ask Couchbase to give me the documents for keys 2, 3, and 1031 (as a batch operation). This would give me the documents for each friend. I can then repeat that for `Updates`, and so on.
+
+The benefit to this is speed: key/value operations are very fast in Couchbase, and you will likely be getting values directly from RAM.
+
+The drawback is that it involves at least two operations (get FriendbookUser document, then get the Updates). So this may involve some extra coding. It may also require you to think more carefully about how you construct document keys (more on that later).
+
+=== N1QL
+
+In Couchbase, you have the ability to write queries using N1QL, which is SQL for JSON. This includes the `JOIN` keyword. This allows me to, for instance, given a name, write a query to get all the updates.
+
+[source,JavaScript,indent=0]
+----
+include::src/SocialMedia.n1ql[]
+----
+
+The result of this query would be:
+
+[source,JavaScript,indent=0]
+----
+include::src/SocialMediaN1qlResult.json[]
+----
+
+N1QL allows you to have great flexibility in retrieving data. I don't have to be restricted by just using keys. It's also easy to pick up, since it's a superset of SQL that SQL Server users will be comfortable with quickly. However, the tradeoff here is that indexing is important. Even more so than SQL Server indexing. The above N1QL query, for instance, should have an index like:
+
+[source,SQL,indent=0]
+----
+CREATE INDEX IX_Name ON `SocialMedia` (Name) USING GSI;
+----
+
+Otherwise it the query will fail to execute (if you have no indexing) or it will not be performant (if you only have a primary index created).
+
+Some important caveats to relational mapping in document databases: The values `Friends` and `Updates` are similar to foreign keys, in that they reference another document. But there is no enforcement of values by Couchbase. The management of these keys must be handled properly by the application. Further, while Couchbase provides ACID transactions for single document operations, there is no multi-document ACID transaction available.
+
+There are ways to deal with these caveats in your application layer that will be discussed further in the application migration blog post in this series.
+
+== Key design
