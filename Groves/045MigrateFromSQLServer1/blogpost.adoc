@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Moving from SQL Server Part 1: Data Modeling
 
 In this series of blog posts, I'm going to lay out the considerations when moving from a relational database to a document database. Specifically, Microsoft SQL Server to link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
@@ -16,31 +18,53 @@ For these reasons and others, link:http://www.couchbase.com/sql-server-to-nosql[
 
 It should be noted that document databases and relational databases can be complimentary. Your application may be best served by one, the other, or a combination of both. In many cases, it simply is not possible to completely remove relational databases, but a document database like Couchbase Server can still bring the above benefits to your software. The rest of this blog series will assume you are replacing SQL Server with Couchbase, but the concepts are still widely applicable even if you are supplementing SQL Server or if you are starting a greenfield application with Couchbase.
 
-The ease or difficultly of a migration varies widely based on a number of factors. In some cases it may be extremely easy; in some cases it will be time-consuming and difficult; in some (shrinking number of) cases it may not even be a good idea.
+The ease or difficulty of a migration varies widely based on a number of factors. In some cases it may be extremely easy; in some cases it will be time-consuming and difficult; in some (shrinking number of) cases it may not even be a good idea.
 
 == Understanding the differences
 
-The first step is to understand how data is modeled in a document database. In a relational database, data is typically stored flat in a table and it is given structure with primary and foreign keys. In a document database, data is stored as keys and values. A Couchbase bucket contains documents; each document has a unique key and a JSON value. There are no foreign keys (or, more accurately, there are no foreign key constraints).
+The first step is to understand how data is modeled in a document database. In a relational database, data is typically stored flat in a table and it is given structure with primary and foreign keys. As a simple example, let's consider a relational database for a web site that has a shopping cart as well as social media features.
 
-Because of the flexibility of JSON, the data in a document database can be structured more like a domain object in your application. Therefore you don't need an OR/M layer to deal with object impedence mismatch.
+image::045_01_diagram.png[Relational database example diagram]
+
+In a document database, data is stored as keys and values. A Couchbase bucket contains documents; each document has a unique key and a JSON value. There are no foreign keys (or, more accurately, there are no foreign key constraints).
+
+Here's a high-level comparison of SQL Server features/naming as compared to Couchbase:
+
+.SQL Server compared to Couchbase
+[width="100%",options="header"]
+|====================
+| SQL Server | Couchbase Server
+| Server | Cluster 
+| Database | Bucket
+| Document | Table + Row
+| Column | JSON key/value
+| Primary Key | Document Key
+| Foreign Key | Reference field
+|====================
+
+These comparisons are a metaphorical starting point. Looking at that table, it might be tempting to take a simplistic approach. There are 5 tables, therefore just create 5 different types of documents, with one document per row. This is the equivalent of literally translating a written language. The approach may work sometimes, but it doesn't take into account the full power of a document database that uses JSON. Just as a literal translation of a written language doesn't take into account cultural context, idioms, and historical context.
+
+Because of the flexibility of JSON, the data in a document database can be structured more like a domain object in your application. Therefore you don't have an impedence mismatch that is often addressed by OR/M tools like Entity Framework and NHibernate.
 
 == Denormalization example
 
 If you are using an OR/M, you can use that information as a starting point in modeling your data as JSON.
 
-For instance, let's say you have a "shopping cart" object.
+For instance, let's look at the "shopping cart" entity.
 
 [source,C#,indent=0]
 ----
 include::src/ShoppingCart.cs[tag=Classes]
 ----
 
-To represent this in a relational table would likely require two tables: a ShoppingCart table and a ShoppingCartItem table with a foreign key to a row in ShoppingCart. Then, in an OR/M like NHibernate or Entity Framework, you would likely define a mapping somewhere like:
+To represent this in a relational table would likely require two tables: a ShoppingCart table and a ShoppingCartItem table with a foreign key to a row in ShoppingCart. Then, in an OR/M like NHibernate or Entity Framework, you would likely define a mapping somewhere like*:
 
 [source,C#,indent=0]
 ----
 include::src/ShoppingCart.cs[tag=Mappings]
 ----
+
+_*This is psuedo-code that is meant to represent EF, NH, or similar OR/Ms_
 
 When creating the model for a document database, the decision has to be made whether to continue modeling this as two separate entities (e.g. a Shopping Cart document and corresponding Shopping Cart Item documents) or whether to "denormalize" and combine a row from ShoppingCart and row(s) from ShoppingCartItem into a single document to represent a shopping cart.
 
@@ -190,7 +214,7 @@ That may be overkill for some applications. It's similar to a pattern I've seen 
 
 == Conclusion of part 1
 
-This blog post covered data modeling using denormalization, data modeling using referencing, key design, and discriminating fields. Modeling data in a document database is a throught process, something of an art form, and not a mechanical process. There is no prescription to how to model your data in a document database: it depends greatly on how your application interacts with your data.
+This blog post covered data modeling using denormalization, data modeling using referencing, key design, and discriminating fields. Modeling data in a document database is a thought process, something of an art form, and not a mechanical process. There is no prescription to how to model your data in a document database: it depends greatly on how your application interacts with your data.
 
 Stay tuned for the next blog in the series, where data migration will be discussed.
 

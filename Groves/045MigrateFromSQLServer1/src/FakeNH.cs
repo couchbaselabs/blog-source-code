@@ -10,6 +10,7 @@ namespace ConsoleApplication
         protected void Id(Expression<Func<T, object>> memberExpression) { throw new NotImplementedException(); }
         protected void Map(Expression<Func<T, object>> memberExpression) { throw new NotImplementedException(); }
         protected void HasMany(Expression<Func<T, object>> memberExpression) { throw new NotImplementedException(); }
+        protected void UseTable(string tableName) { throw new NotImplementedException(); }
     }
     #endregion
 }

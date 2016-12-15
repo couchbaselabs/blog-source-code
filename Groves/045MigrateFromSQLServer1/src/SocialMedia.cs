@@ -25,6 +25,8 @@ namespace ConsoleApplication
     {
         public FriendbookUserMap()
         {
+            UseTable("FriendbookUser");
+            
             Id(x => x.Id);
             Map(x => x.Name);
             HasMany(x => x.Friends);
@@ -32,9 +34,11 @@ namespace ConsoleApplication
         }
     }
 
-    public class UpdatesMap : ClassMap<Update> {
-        public UpdatesMap()
+    public class UpdateMap : ClassMap<Update> {
+        public UpdateMap()
         {
+            UseTable("Update");
+
             Id(x => x.Id);
             Map(x => x.PostedDate);
             Map(x => x.Body);

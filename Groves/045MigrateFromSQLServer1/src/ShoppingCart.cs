@@ -28,6 +28,8 @@ namespace ConsoleApplication
     {
         public ShoppingCartMap()
         {
+            UseTable("ShoppingCart");
+
             Id(x => x.Id);
             Map(x => x.User);
             Map(x => x.DateCreated);
@@ -39,6 +41,8 @@ namespace ConsoleApplication
     {
         public ShoppingCartItemMap()
         {
+            UseTable("ShoppingCartItem");
+            
             Id(x => x.Id);
             Map(x => x.Name);
             Map(x => x.Price);
