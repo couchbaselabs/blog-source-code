@@ -1,0 +1,62 @@
+:imagedir: images
+
+= Using cbimport to import Wikibase data to JSON documents
+
+I'm busy working on some SQL Server to link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server] blog posts, but in the meantime, I'd thought I'd leave you a little chestnut of JSON goodness for the Christmas weekend.
+
+link:http://wikiba.se/[Wikibase] has a huge database of information. All kinds of information. And it's available to download in JSON format. Well, I'm not exactly sure what I'm going to do with it yet, but I thought it would be useful to import that data into Couchbase so I can run some N1QL queries on it.
+
+To do that, I'm going to use link:https://developer.couchbase.com/documentation/server/4.6/tools/cbimport.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[cbimport].
+
+== Getting the Wikibase data
+
+link:https://www.wikidata.org/wiki/Wikidata:Database_download[Wikibase downloads] are available in JSON, XML, and RDF.
+
+The file I downloaded was `wikidata-20161219-all.json.bz2`, which is over 6gb in size. I uncompressed it to `wikidata-20161219-all.json`, which is almost 100gb. This is a lot of data packed in to one file.
+
+Within the file, the data is structured as one big JSON array containing JSON objects. My goal was to create a Couchbase document for each JSON object in that array.
+
+== Using cbimport
+
+link:https://developer.couchbase.com/documentation/server/4.6/tools/cbimport.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[cbimport] is a handy utility to import data (JSON and CSV) that comes with Couchbase Server.
+
+You are required to tell this command line tool:
+
+* *json* or *csv* => What type of file you are importing
+* *-c* => Where your cluster is
+* *-b* => The name of the bucket you want to import to
+* *-u and -p* => Cluster credentials
+* *-d* => The URL to the dataset to import (since my file is local, I use a `file://` URL)
+
+I also used these options:
+
+* *--generate-key* => This tells cbimport how to construct the key for each document. If each document has an `id` field, for instance, I could specify a template of `%id%` to use that as the key
+* *--format list* => This tells cbimport what format the file is in. Some options are Lines, List, Sample. I used "List" because the JSON is all in one file, but it's not one JSON object per line.
+
+== Using cbimport on Wikibase data
+
+I have Couchbase Server installed on drive E. From the folder where the wikidata json file is (mine is called wikidata-20161219-all.json, but yours may differ) I ran:
+
+`E:\Couchbase\Server\bin\cbimport.exe json -c couchbase://localhost -u Administrator -p password -b wikibase file://wikidata-20161219-all.json --generate-key %id% --format list`
+
+Based on the link:https://www.mediawiki.org/wiki/Wikibase/DataModel/Primer[Wikibase data model documentation], I knew that there would be an `id` field in each item with a unique value. That's why I used `%id%`. A more complex key can be generated with the relatively robust link:https://developer.couchbase.com/documentation/server/4.6/tools/cbimport.html[key generator templates] that cbimport offers.
+
+While cbimport ran, I carefully monitored the memory usage of cbimport, since I was afraid it would have a problem with the huge dataset. But no problem, it didn't exceed 21mb of RAM usage while it was running.
+
+I started with 512mb of RAM and moved to 924mb of RAM to my bucket in Couchbase during the import. I only have one node. So, I expected this to mean that a lot of link:https://developer.couchbase.com/documentation/server/4.5/architecture/managed-caching-layer-architecture.html[ejections from the cache] would take place. That is what happened.
+
+image::047-01-couchbase-bucket-ejections.png[Couchbase Server bucket ejections]
+
+The total file is 99gb, so there's no way it could all fit in RAM on my desktop. In production, 99+gb wouldn't be unrealistic to fit into RAM with a handful of nodes. As wikibase continues to grow, it could be accomodated by link:https://developer.couchbase.com/documentation/server/4.5/architecture/architecture-intro.html[Couchbase's easy scaling]: just rack up another server and keep going.
+
+This takes a long time to run. In fact, as I write this blog post, it's still running. It's up to 4.2 million documents and going (I don't know how many records there are in total, but disk usage is currently at 8gb, so I think I have a long way to go).
+
+When it's done, I hope to be able to run some interesting N1QL queries against this data (there are some link:https://www.mediawiki.org/wiki/Talk:Wikibase/Indexing[examples that Wikibase gives that use a "Gremlin" query engine] instead of SQL).
+
+== Summary
+
+If you are interested in working with Wikibase's data or any large repository of data that's already in JSON format, it's very easy to bring it to Couchbase with cbimport.
+
+Now that I have a large data set from Wikibase, my next goal will be to figure out some interesting things that I could use N1QL to query from the data.
+
+If you have any questions, leave a comment or link:http://twitter.com/mgroves[talk to me on Twitter].
