@@ -1,0 +1,33 @@
+:imagesdir: images
+
+= Moving from SQL Server Part 2: Data Migration
+
+data types in json vs data types in sql
+
+date
+
+int/float/double/decimal/bigint vs number discussion
+
+geography to geojson
+
+data types that aren't in json? (hierarchyid? xml? json? unroll xml/json fields into json documents)
+
+use dapper/C# to 'automatically' translate between most common types
+
+autonumber
+
+CLR objects?
+
+migrating SQL queries
+
+migrating views (m/r views)
+
+migrating sprocs (service layer)
+
+migration functions
+
+migrating triggers (DCP)
+
+migrating other things: assemblies, user defined types, rules
+
+migrating security: discuss RBAC now and future

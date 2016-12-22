@@ -1,0 +1,19 @@
+:imagesdir: images
+
+= Moving from SQL Server Part 3: App Migration
+
+discussion about rewriting entire app vs rewriting a data layer
+    - refactoring to SOA/microservices/service tier(s)
+
+sprocs & triggers (or should that be in part 2?)
+
+n1ql - scan consistency
+
+n1ql - parameterization, serialization/deserialization
+
+concurrency - pessimistic / optimistic+cas
+
+ef/nh/linq - linq2couchbase
+    -profiling (to see what N1QL is being generated)
+
+transactions (modeling recap, two phase commit, event sourcing)
