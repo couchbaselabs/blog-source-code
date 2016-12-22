@@ -2,13 +2,13 @@
 
 = Moving from SQL Server Part 1: Data Modeling
 
-In this series of blog posts, I'm going to lay out the considerations when moving from a relational database to a document database. Specifically, Microsoft SQL Server to link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
+In this series of blog posts, I'm going to lay out the considerations when moving to a document database when you have a relational background. Specifically, Microsoft SQL Server as compared to  link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
 
-I'm going to cover data modeling, data migration, and app migration. These blog posts can't possibly cover every edge case. The goal is to lay down some general  guidelines that you, an architect, can apply to your application.
+I'm going to cover data modeling, the data itself, and applications using the data. These blog posts can't possibly cover every edge case. The goal is to lay down some general guidelines that you, an architect, can apply to your application planning and design.
 
 == Why would I do this?
 
-Before we get started, I want to spend a little bit of time on motivation. There are 3 main reasons why one might consider migrating to a document data store. Your motivation may be one or all three:
+Before we get started, I want to spend a little bit of time on motivation. There are 3 main reasons why one might consider using a document data store instead of or in addition to a relational database. Your motivation may be one or all three:
 
 * *Speed*: Couchbase Server uses a link:http://developer.couchbase.com/documentation/server/current/architecture/managed-caching-layer-architecture.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[memory-first architecture] which can provide a great speed boost as compared to a relational database
 * *Scalability*: Couchbase Server is a link:http://developer.couchbase.com/documentation/server/current/architecture/architecture-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[distributed database], which allows you to scale out (and scale back in) capacity by just racking up commodity hardware.
@@ -16,9 +16,9 @@ Before we get started, I want to spend a little bit of time on motivation. There
 
 For these reasons and others, link:http://www.couchbase.com/sql-server-to-nosql[Gannett switched from SQL Server to Couchbase Server]. If you are considering this, definitely link:http://www.couchbase.com/nosql-resources/presentations/how-gannett-achieved-scalability-and-agility-with-nosql.html[check out Gannett's full presentation].
 
-It should be noted that document databases and relational databases can be complimentary. Your application may be best served by one, the other, or a combination of both. In many cases, it simply is not possible to completely remove relational databases, but a document database like Couchbase Server can still bring the above benefits to your software. The rest of this blog series will assume you are replacing SQL Server with Couchbase, but the concepts are still widely applicable even if you are supplementing SQL Server or if you are starting a greenfield application with Couchbase.
+It should be noted that document databases and relational databases can be complimentary. Your application may be best served by one, the other, or a combination of both. In many cases, it simply is not possible to completely remove relational databases from your design, but a document database like Couchbase Server can still bring the above benefits to your software. The rest of this blog series will assume you have a SQL Server background and are either replacing, supplimenting, or starting a new greenfield project using Couchbase.
 
-The ease or difficulty of a migration varies widely based on a number of factors. In some cases it may be extremely easy; in some cases it will be time-consuming and difficult; in some (shrinking number of) cases it may not even be a good idea.
+The ease or difficulty of a transition varies widely based on a number of factors. In some cases it may be extremely easy; in some cases it will be time-consuming and difficult; in some (shrinking number of) cases it may not even be a good idea.
 
 == Understanding the differences
 
@@ -75,7 +75,7 @@ In this situation, I think it's pretty clear that it would be better off as a si
 include::src/ShoppingCart.json[]
 ----
 
-Notice that the relationship between the items and the shopping cart is now implicit to being contained in the same document. No more need for an ID on the items to represent a relationship. In a later post, application code migration will be discussed, but for now I can say that the `ShoppingCartMap` and `ShoppingCartItemMap` classes can be removed, the `Id` field from `Item` can be removed, and the Couchbase .NET SDK can directly populate a `ShoppingCart` object:
+Notice that the relationship between the items and the shopping cart is now implicit to being contained in the same document. No more need for an ID on the items to represent a relationship. In a later post, application code will be discussed, but for now I can say that the `ShoppingCartMap` and `ShoppingCartItemMap` classes can be removed, the `Id` field from `Item` can be removed, and the Couchbase .NET SDK can directly populate a `ShoppingCart` object:
 
 [source,C#,indent=0]
 ----
@@ -168,7 +168,7 @@ Otherwise it the query will fail to execute (if you have no indexing) or it will
 
 link:http://developer.couchbase.com/documentation/server/current/data-modeling/entity-relationship-doc-design.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[There are pros and cons in deciding to use referencing or not]. The values `Friends` and `Updates` are similar to foreign keys, in that they reference another document. But there is no enforcement of values by Couchbase. The management of these keys must be handled properly by the application. Further, while Couchbase provides ACID transactions for single document operations, there is no multi-document ACID transaction available.
 
-There are ways to deal with these caveats in your application layer that will be discussed further in the application migration blog post in this series.
+There are ways to deal with these caveats in your application layer that will be discussed further in later blog posts in this series.
 
 == Key design and document differentiation
 
@@ -216,6 +216,6 @@ That may be overkill for some applications. It's similar to a pattern I've seen 
 
 This blog post covered data modeling using denormalization, data modeling using referencing, key design, and discriminating fields. Modeling data in a document database is a thought process, something of an art form, and not a mechanical process. There is no prescription to how to model your data in a document database: it depends greatly on how your application interacts with your data.
 
-Stay tuned for the next blog in the series, where data migration will be discussed.
+Stay tuned for the next blog in the series, where data and data migration will be discussed.
 
 If you have any questions, please leave a comment below on link:http://twitter.com/mgroves[contact me on Twitter].
