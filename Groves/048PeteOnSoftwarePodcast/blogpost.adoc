@@ -1,0 +1,16 @@
+= Couchbase on the Pete on Software Podcast
+
+I was invited back on the link:http://www.peteonsoftware.com/index.php/category/podcasts/[Pete on Software Podcast] to talk about link:http://developer.couchbase.com?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase]. Pete is a an independent software developer/architect, and he also runs link:http://swiftninja.io/[The Swift Ninja] blog. Pete and I run into eachother occasionally here in Ohio, and it was great to be back on the show with him.
+
+In this episode we talk about things like:
+
+* What is Couchbase?
+* What languages can you use with Couchbase? What SDKs are available?
+* Can Couchbase be used on premise? In the cloud?
+* Can Couchbase be used in conjuction with RDBMS, or is it "all in"?
+* How does Couchbase compare to other document databases?
+* Why I wanted to work at Couchbase (I didn't work for the Couchbase the last time I was on his show).
+* How does Couchbase make money (i.e. is Couchbase going to be around for a while)?
+* The link:https://blog.couchbase.com/2016/october/summer-project-2016-the-couchcase[CouchCase project]!
+
+link:http://www.peteonsoftware.com/index.php/2016/12/27/podcast-episode-51-matthew-groves-on-couchbase/[Listen to Pete on Software Podcast Episode 51 - Matthew Groves on Couchbase]. Don't forget to subscribe on iTunes, Stitcher, etc, and leave a review if you like his show!
