@@ -2,32 +2,121 @@
 
 = Moving from SQL Server Part 2: Data Migration
 
-data types in json vs data types in sql
+In this series of blog posts, I'm going to lay out the considerations when moving to a document database when you have a relational background. Specifically, Microsoft SQL Server as compared to  link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
 
-date
+I've already covered some of the link:http://[considerations for data modeling]. In this post, I'm going to talk about the data itself. In the next blog post, we'll discuss applications that use the data. These blog posts can't possibly cover every edge case. The goal is to lay down some general guidelines that you, an architect, can apply to your application planning and design.
 
-int/float/double/decimal/bigint vs number discussion
+== Data Types in JSON vs SQL
 
-geography to geojson
+Couchbase (and many other document databases) use JSON objects for data. JSON is a powerful, human readable format to store data. When comparing to data types in relational tables, there are some similarities, and there are some important differences.
 
-data types that aren't in json? (hierarchyid? xml? json? unroll xml/json fields into json documents)
+All JSON data can be boiled down to X types: string, number, boolean, array, object, and null. There are a lot of data types available in SQL Server. Let's start with a table that is a kind of "literal" translation, and work from there.
 
-use dapper/C# to 'automatically' translate between most common types
+[width="100%",options="header"]
+|====================
+| JSON | SQL Server 
+| string | nvarchar, varchar, text
+| number | int, float, decimal, double
+| boolean | bit
+| null | null
+| array / object | JSON/XML fields
+|====================
 
-autonumber
+*string* in SQL Server is often defined by a length. _nvarchar(50)_ or _nvarchar(MAX)_ for instance. In JSON, you don't need to define a length. Just use a string.
 
-CLR objects?
+*number* in SQL Server varies widely based on what you are using it for. The *number* type in JSON is flexible, in that it can store integers, decimal, or floating point. In specialized circumstances, like if you need a specific precision or you need to store very large numbers, you may want to store a number as a string instead.
 
-migrating SQL queries
+*boolean* in JSON is true/false. In SQL Server, it's roughly equivalent: a bit that represents true/false.
 
-migrating views (m/r views)
+In JSON, any value can be *null*. In SQL Server, you set this on a field-by-field basis.
 
-migrating sprocs (service layer)
+JSON has no *date* data type. Often dates are stored as UNIX timestamps, but you could also use string representations or other formats for dates. link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/datefun.html[The N1QL query language has a variety of date functions available].
 
-migration functions
+In SQL Server, there is a *geography* data type. In Couchbase, link:https://developer.couchbase.com/documentation/server/current/indexes/querying-using-spatial-views.html[the GeoJSON format is supported].
 
-migrating triggers (DCP)
+There are some other specialized data types in SQL Server, including hierarchyid, xml, and json. Typically, these would be unrolled in JSON objects and/or referenced by key (as explored in link://[part 1 of this blog series on data modeling]). You can still store XML/JSON within JSON (as a string) if you want, but if you do, then you can use the full power of N1QL on those fields.
 
-migrating other things: assemblies, user defined types, rules
+== Migrating and translating data
 
-migrating security: discuss RBAC now and future
+After you've designed your model with link://[part 1 on data modeling], you can use the above guide to start moving data over to Couchbase. You can use a link://https://developer.couchbase.com/documentation/server/current/connectors/talend/talend.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Talend connector] to connect Couchbase to SQL Server (or other relational databases).
+
+You may need to write code to translate the data into your model. One way to do that is to use a tool like link:https://github.com/StackExchange/dapper-dot-net[Dapper]. Dapper works by translating SQL data types into C# data types. You can then use those C# data types to feed into the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase .NET SDK]. This "automatic" translation may still need some tweaks from you depending on how you are modeling relationships and numeric values.
+
+== What about the other features of SQL Server?
+
+Not everything in SQL Server has a direct counterpart in Couchbase. In some cases, it won't ever have a counterpart. In some cases, there will be a rough equivalent. Some features will arrive in the future, as Couchbase is under fast-paced, active, open-source development, and new features are being added when appropriate.
+
+Also keep in mind that document databases and NoSQL databases often force business logic out of the database to a larger extent than relational databases. As nice as it would be if Couchbase Server had every feature under the sun, there are always tradeoffs. Some are technical in nature, some are product design decisions. Tradeoffs could be made to add relational-style features, but at some point in that journey, Couchbase stops being a fast, scalable database and starts being "just another" relational database. There is certainly a lot of convergence in both relational and non-relational databases, and a lot of change happening every year.
+
+With that in mind, I'll cover some of the main SQL Server features you may be curious about, but keep in mind the date of this blog post, and the feature you simply can't live without may have been added in the meantime.
+
+=== Autonumber
+
+Couchbase Server does not currently offer any sort of automatic key generation or sequential key numbering.
+
+However, you can link:https://developer.couchbase.com/documentation/server/current/sdk/core-operations.html[use the *Counter* feature] to do something similar. The idea is that a document is set aside as a special counter document. This document can be incremented as an atomic operation, and the number can be used as a partial or whole key of the new document being created.
+
+=== User-defined CLR objects
+
+SQL Server has the ability to have user-defined CLR functions. There is no equivalent in Couchbase. This kind of code should be moved to a service tier.
+
+=== SQL queries
+
+Thanks to N1QL, migrating your SQL queries should not be very difficult. Your data model probably changed, and not every function in tSQL is (yet) available in N1QL. But for the most part, this shouldn't be difficult.
+
+Back to the shopping cart, here's an example of a simple tSQL query that would get shopping cart information for a given user:
+
+[source,SQL]
+----
+SELECT c.ID, c.DateCreated, i.[Name], i.Price, i.Quantity
+FROM ShoppingCart c
+INNER JOIN ShoppingCartItem i ON i.ShoppingCartID = c.ID
+WHERE c.ID = 'mgroves'
+----
+
+In Couchbase, a shopping cart could be modeled as a single document, so a roughly equivalent query would be:
+
+[source,SQL]
+----
+SELECT META(c).id, c.DateCreated, c.Items
+FROM `mybucket` c
+WHERE c.type = 'ShoppingCart'
+----
+
+(You could unnest the Items collection if you want to filter or sort individual items).
+
+A caveat, for operations that work with a single row of data, you should probably not use N1QL, but instead use the key/value operations. You *can*, but the key/value operation is going to be faster.
+
+In other document databases, you would likely have to learn an API for creating queries, and you would not be able to apply your tSQL experience to help ramp up.
+
+=== SQL Server Views
+
+In SQL server, you can store SELECT statements as Views. You can refer to them like tables, join with them, and so on.
+
+The closest thing in Couchbase is also called link:https://developer.couchbase.com/documentation/server/current/indexes/querying-using-map-reduce-views.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Views].
+
+A view in Couchbase is defined as a Map/Reduce query using JavaScript. The JavaScript is saved to the cluster, and the results of the map/reduce are distributed evenly among the nodes. It is something like a link:https://msdn.microsoft.com/en-us/library/ms191432.aspx[materialized view in SQL Server]. The results of these views are updated automatically on an interval, and are also updated incrementally as documents are mutated. This means that, by default, the results of the views are *eventually* consistent with the actual documents. As a developer, you can link:https://developer.couchbase.com/documentation/server/current/architecture/querying-data-with-views.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[specify the level of consistency] (or staleness) you want. This will have an impact on performance.
+
+=== SQL Stored Procedures
+
+Stored procedures (sprocs) can be very controversial among SQL Server users. Some shops shun them, some shops require them for everything, and some shops only use them when there is a very good reason. My view is that there are sometimes good reasons to use stored procedures, but often sprocs represent logic that should live in another tier. There is no equivalent of sprocs in Couchbase. If you don't already have a service tier, and you are using sprocs to share some logic across domains, I recommend that you create a service tier and move the logic there.
+
+This is also true for SQL Server *functions, user defined types, and rules*.
+
+=== SQL Triggers
+
+If sprocs weren't already controversial enough, just bring up triggers in a converstaion. The closest thing to triggers in Couchbase is the link:https://developer.couchbase.com/documentation/server/current/architecture/high-availability-replication-architecture.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Database Change Protocol (DCP)]. DCP is a stream that Couchbase produces to communicate the state of data in an ordered change log. It is similar to the transaction log in a SQL Server database.
+
+Now, you can't create a trigger within DCP, but if you hook up a listener process to DCP, you might be able to accomplish some of the same things you were doing with triggers in SQL Server. DCP is the protocol that is used by some of the tools that integrate with Couchbase (like Kafka and Spark). 
+
+=== Security
+
+Couchbase has link:https://developer.couchbase.com/documentation/server/current/security/concepts-rba.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[role-based access control (RBAC)] for administrators.
+
+Couchbase can integrate with LDAP to manage Couchbase administrators and assign roles to users. Couchbase can also create read-only users internally.
+
+There are some more robust changes and improvements coming to the Couchbase RBAC system, so stay tuned.
+
+== Summary
+
+This blog post compared and contrasted the data features available in Couchbase Server with SQL Server. If you are currently using SQL Server and are considering adding a document database to your project or starting a new project, I am here to help. Please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com] or ping me on Twitter @mgroves.
