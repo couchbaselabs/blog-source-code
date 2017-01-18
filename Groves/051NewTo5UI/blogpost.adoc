@@ -1,55 +1,55 @@
 :imagesdir: images
 
-= A tour of the new Couchbase Server Console UI
+= A tour of the new Couchbase Web Console
 
-Change is coming to the link:https://developer.couchbase.com/documentation/server/current/admin/ui-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server Web Console UI] that you know and love. But don't worry, the old UI will still be available (for a while).
+Change is coming to the link:https://developer.couchbase.com/documentation/server/current/admin/ui-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Web Console] that you know and love. But don't worry, the old UI will still be available (for a while).
 
 In this blog post, I'm going to take you on a tour of the new UI. I'll be pointing out some of the differences and similarities. If you have anxiety about change, don't worry: the purpose of this change is to improve usability, performance, and to give Couchbase Console room to grow with new features that are coming down the road.
 
 == An important note!
 
-This blog and the screenshots in it were taken before the official release. There may be other changes and improvements that show up by the time the release is in your hands. Feel free to point out any differences in the comments below.
+This blog and the screenshots in it were taken from an early developer build. There may be other changes and improvements that show up by the time the release is in your hands, so the final product might be different. Feel free to point out any differences in the comments below.
 
 == Installation and Setup
 
-The installation and setup process has not changed much, but it does get a fresh coat of paint. The installer itself appears the same. Once the installer is complete, you'll get redirected to a browser (if you're installing Couchbase Server locally, this means a browser pointed to http://localhost:8091 will appear). Functionally, this part of the experience is the same as before, but it gets a new coat of paint.
+The installation and setup process has not changed much, but it does get a fresh coat of paint. The installer itself appears the same (although the setup wizard is likely to be revised in future builds). Once the installer is complete, you'll get redirected to a browser (if you're installing Couchbase Server locally, this means a browser pointed to http://localhost:8091 will appear). Functionally, this part of the experience is the same as before, but it gets a new coat of paint.
 
 .The setup screen forsCouchbase Server 5.0
-image::049_01_Couchbase_Server_Setup.png[Couchbase Server 5.0 Setup Screen]
+image::051_01_Couchbase_Server_Setup.png[Couchbase Server 5.0 Setup Screen]
 
 After you click the "Setup" button, you'll be taken through the installation wizard. Depending on which version you have been using, there may be some new options here that you haven't seen. I'm not going to cover them in this post, but stay tuned for more blog posts about upcoming features in the latest releases.
 
 .Starting a new cluster in Couchbase Server setup
-image::049_02_Couchbase_Setup_Cluster.png[Starting a new Couchbase cluster]
+image::051_02_Couchbase_Setup_Cluster.png[Starting a new Couchbase cluster]
 
 The sample buckets are still available. Note that these buckets (as always) are not password protected, and are meant for development only. link:https://blog.couchbase.com/2017/couchbase-customer-advisory-note-security[Please check out the recent Advisory Note about Couchbase security].
 
 .Loading a sample bucket (optional) during Couchbase Server setup
-image::049_03_Couchbase_Setup_Sample_Buckets.png[Loading an optional sample bucket into Couchbase Server]
+image::051_03_Couchbase_Setup_Sample_Buckets.png[Loading an optional sample bucket into Couchbase Server]
 
 You can also choose to create a bucket named "default" during setup. Again, this is not recommended for production (even if you put a password on it), since it's a well-known bucket name that makes it a target. It's also optional, you can click "Skip".
 
 .Create a default bucket (optional) during Couchbase Server setup
-image::049_04_Couchbase_Setup_Default_Bucket.png[Optionally create a default bucket in Couchbase Server setup]
+image::051_04_Couchbase_Setup_Default_Bucket.png[Optionally create a default bucket in Couchbase Server setup]
 
 Notification and Terms and Conditions are next. Right now, this update is only being released for Enterprise Edition. Later, the Community Edition will be released. If you are viewing this blog post from the future, using Community Edition, then this screen will look different.
 
 .Accept terms and conditions of the Enterprise Edition and sign up for notifications
-image::049_05_Couchbase_terms_and_notifications.png[Accept terms and conditions and sign up for notifications]
+image::051_05_Couchbase_terms_and_notifications.png[Accept terms and conditions and sign up for notifications]
 
 Finally, create an admin user. Once again, I recommend not using "Administrator" as the user name in production, as it is a well-known default. Also, make sure to use a strong password.
 
 .Create an administrator user for Couchbase Server
-image::049_06_Couchbase_Setup_create_administrator.png[Create administrator user in Couchbase Server setup]
+image::051_06_Couchbase_Setup_create_administrator.png[Create administrator user in Couchbase Server setup]
 
-== Using the new Couchbase Server Web Console UI
+== Using the new Couchbase Web Console
 
 Once you've gone through the familiar install process, it's time to see some of the substantive changes to the UI.
 
 The first thing you'll see is the dashboard screen, which has been streamlined.
 
 .The new look of the Couchbase Server Web Console
-image::049_07_Couchbase_Server_dashboard_new_UI.png[New Couchbase Server Console UI]
+image::051_07_Couchbase_Server_dashboard_new_UI.png[New Couchbase Server Console UI]
 
 Some things that jump out at me immediately:
 
@@ -58,23 +58,23 @@ Some things that jump out at me immediately:
 *Main Navigation*. The navigation is now vertical and on the left side of the page. Also notice that is is organized by "cluster" and "data".
 
 .Main navigation is now vertical
-image::049_11_Couchbase_Console_main_navigation.png[Couchbase Console Main UI navigation]
+image::051_11_Couchbase_Console_main_navigation.png[Couchbase Console Main UI navigation]
 
 === Servers
 
 Click on the "Servers" link to see the new look of the servers page.
 
 .The Servers page shows a list of nodes
-image::049_07_Couchbase_UI_Servers.png[Couchbase Servers list of nodes]
+image::051_07_Couchbase_UI_Servers.png[Couchbase Servers list of nodes]
 
-This should look relatively familiar. Each node is listed here, along with details about each node. I only have one node in my example, but each node would be listed here in a production deployment. Notice that there are filters "Active Server" and "Pending Rebalance" that have a rounded highlight. Next to them are some buttons to manage servers and server groups which use rectangle shapes. These shapes help to provide visual cues no matter what the size of your screen is.
+This should look relatively familiar. Each node is listed here, with a list of services running on each node and system metrics. I only have one node in my example, but each node would be listed here in a production deployment. Notice that there are filters "Active Server" and "Pending Rebalance" that have a rounded highlight. Next to them are some buttons to manage servers and server groups which use rectangle shapes. These shapes help to provide visual cues no matter what the size of your screen is.
 
 === Security
 
 Continuing the tour, click on the "Security" navigation link.
 
 .Couchbase Server Security UI
-image::049_08_Couchbase_Security_UI.png[Couchbase Server Security]
+image::051_08_Couchbase_Security_UI.png[Couchbase Server Security]
 
 Not much different on this screen compared to the old UI, but I do want to draw your attention to the sub-navagation at the top: "Internal User/Roles", "Root Certificate", and "Audit". The secondary navigation across the site will be across the top of the page like this.
 
@@ -85,25 +85,31 @@ There are some new features coming soon for role-based security. I would expect 
 As a developer, this is always my favorite part of the Couchbase Console, and the one I spend most of my time in. Besides the obvious design change, there are some minor improvements and changes here that I'd like to call attention to.
 
 .New design of the Query Workbench
-image::049_09_Couchbase_Query_Workbench.png[Couchbase Server Query Workbench]
+image::051_09_Couchbase_Query_Workbench.png[Couchbase Server Query Workbench]
 
 *No more Clear button*. I use the clear button a lot, but my usage is probably atypical from a typical Couchbase user. The clear button is a frustrating button to hit accidentally while working on queries, so it's been removed.
 
-*Data Bucket Insights*. These have been moved to the right side of the screen. Personally, I think this is a better use of space.
+*History*. Click on "history" to see a list of all the queries that you've run. It's searchable! Which can be very useful after a long day of query writing and data modeling. Remember that "clear" button? It's here in the history popup; you can still access it, but you're less likely to click it by accident.
+
+.Query Workbench history with search
+image::051_17_Couchbase_Query_Workbench_history.png[Couchbase Query Workbench history]
+
+*Data Bucket Insights*. These have been moved to the right side of the screen. Personally, I think this is a better use of space. (This is an Enterprise Edition feature).
 
 *Plan* and *Plan Text* options in results. By default, the queries you run will be EXPLAINed, and you can view the output of that in the Plan and Plan Text results. To turn that feature off, click the settings icon next to "Query Editor".
 
 .Plan and Plan Text results tabs
-image::049_10_Couchbase_Query_Workbench_Plan.png[Couchbase Query Workbench Plan and Plan Text]
+image::051_10_Couchbase_Query_Workbench_Plan.png[Couchbase Query Workbench Plan and Plan Text]
 
 *Query Monitor*. Notice the "Query Monitor" secondary navigation link at the top. This page shows you information about some of the link:https://developer.couchbase.com/documentation/server/current/tools/query-monitoring.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[system catalogs that were added in Couchbase Server 4.5].
+
 
 === Buckets
 
 As a developer, I spend a lot of time in the Buckets section of the UI. The new version of this page isn't wildly different, but I have found it a little snappier.
 
 .New Bucket management UI
-image::049_12_Couchbase_Bucket_UI.png[Couchbase Server Bucket UI]
+image::051_12_Couchbase_Bucket_UI.png[Couchbase Server Bucket UI]
 
 Click on a row to expand information about the bucket (as well as to expose the Delete/Compact/Edit buttons).
 
@@ -112,12 +118,12 @@ Click on a row to expand information about the bucket (as well as to expose the 
 One significant area of change is the way that charts and statsitics are shown in the UI. Clicking a bucket name will still bring you to the analytics and information that you're used to.
 
 .Chart that shows the number of N1QL requests
-image::049_13_Couchbase_Chart_N1QL.png[New Couchbase chart for N1QL requests]
+image::051_13_Couchbase_Chart_N1QL.png[New Couchbase chart for N1QL requests]
 
 There aren't any new charts that I'm aware of, but there have been changes made to improve usabilty of the charts as well as get them to adhere closer to the Material Design philosophy. They also take up the full space of the page, to maximize your view.
 
 .Chart that shows the number of HTTP requests
-image::049_14_Couchbase_Chart_HTTP.png[New Couchbase chart for HTTP requests]
+image::051_14_Couchbase_Chart_HTTP.png[New Couchbase chart for HTTP requests]
 
 It's difficult to demonstrate these changes in a blog post with static images (I may make a video walkthrough in the future), so I definitely recommend that you install the latest version of Couchbase Server 5.x and give them a try.
 
@@ -126,12 +132,12 @@ It's difficult to demonstrate these changes in a blog post with static images (I
 Hopefully, these UI changes delight you and make your job easier. However, abrupt change can be difficult. This is why there is still an option to view the "Classic UI". Just click this link (at the top right of the page) and you'll be albe to view the old UI. I don't know how long the old UI is going to stick around.
 
 .Use this link to show the old "Classic UI"
-image::049_15_Couchbase_Classic_UI.png[Click Classic UI to go back to the old UI]
+image::051_15_Couchbase_Classic_UI.png[Click Classic UI to go back to the old UI]
 
 To switch back to the new UI from the old UI, just click "New UI".
 
 .Use this link to go back to the "New UI"
-image::049_16_Couchbase_New_UI.png[Click New UI to back to the new UI]
+image::051_16_Couchbase_New_UI.png[Click New UI to back to the new UI]
 
 == Feedback and Summary
 
