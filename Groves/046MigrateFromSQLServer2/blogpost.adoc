@@ -34,13 +34,13 @@ JSON has no *date* data type. Often dates are stored as UNIX timestamps, but you
 
 In SQL Server, there is a *geography* data type. In Couchbase, link:https://developer.couchbase.com/documentation/server/current/indexes/querying-using-spatial-views.html[the GeoJSON format is supported].
 
-There are some other specialized data types in SQL Server, including hierarchyid, xml, and json. Typically, these would be unrolled in JSON objects and/or referenced by key (as explored in link://[part 1 of this blog series on data modeling]). You can still store XML/JSON within JSON (as a string) if you want, but if you do, then you can use the full power of N1QL on those fields.
+There are some other specialized data types in SQL Server, including hierarchyid, xml, and json. Typically, these would be unrolled in JSON objects and/or referenced by key (as explored in link://[part 1 of this blog series on data modeling]). You can still store XML/JSON within a string if you want, but if you do, then you can't use the full power of N1QL on those fields.
 
 == Migrating and translating data
 
-After you've designed your model with link://[part 1 on data modeling], you can use the above guide to start moving data over to Couchbase. You can use a link://https://developer.couchbase.com/documentation/server/current/connectors/talend/talend.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Talend connector] to connect Couchbase to SQL Server (or other relational databases).
+After you've designed your model with link://[part 1 on data modeling], you can use the above guide to start moving data over to Couchbase. You can optionally use a link://https://developer.couchbase.com/documentation/server/current/connectors/talend/talend.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Talend connector] to connect Couchbase to SQL Server (or other relational databases).
 
-You may need to write code to translate the data into your model. One way to do that is to use a tool like link:https://github.com/StackExchange/dapper-dot-net[Dapper]. Dapper works by translating SQL data types into C# data types. You can then use those C# data types to feed into the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase .NET SDK]. This "automatic" translation may still need some tweaks from you depending on how you are modeling relationships and numeric values.
+For all but the simplest data models, you may need to write code to translate the data into your model. One way to do that is to use a tool like link:https://github.com/StackExchange/dapper-dot-net[Dapper]. Dapper works by translating SQL data types into C# data types. You can then use those C# data types to feed into the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase .NET SDK]. This "automatic" translation may still need some tweaks from you depending on how you are modeling relationships and numeric values. Dapper is a great tool, but it doesn't support *every* obscure data type that SQL Server has to offer.
 
 == What about the other features of SQL Server?
 
@@ -48,17 +48,13 @@ Not everything in SQL Server has a direct counterpart in Couchbase. In some case
 
 Also keep in mind that document databases and NoSQL databases often force business logic out of the database to a larger extent than relational databases. As nice as it would be if Couchbase Server had every feature under the sun, there are always tradeoffs. Some are technical in nature, some are product design decisions. Tradeoffs could be made to add relational-style features, but at some point in that journey, Couchbase stops being a fast, scalable database and starts being "just another" relational database. There is certainly a lot of convergence in both relational and non-relational databases, and a lot of change happening every year.
 
-With that in mind, I'll cover some of the main SQL Server features you may be curious about, but keep in mind the date of this blog post, and the feature you simply can't live without may have been added in the meantime.
+With that in mind, I'll cover some of the main SQL Server features you may be curious about, but keep in mind the date of this blog post. The feature you simply can't live without may have been added in the meantime. When in doubt, leave a comment, check on the link:https://forums.couchbase.co?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Forums], or contact me.
 
 === Autonumber
 
 Couchbase Server does not currently offer any sort of automatic key generation or sequential key numbering.
 
 However, you can link:https://developer.couchbase.com/documentation/server/current/sdk/core-operations.html[use the *Counter* feature] to do something similar. The idea is that a document is set aside as a special counter document. This document can be incremented as an atomic operation, and the number can be used as a partial or whole key of the new document being created.
-
-=== User-defined CLR objects
-
-SQL Server has the ability to have user-defined CLR functions. There is no equivalent in Couchbase. This kind of code should be moved to a service tier.
 
 === SQL queries
 
@@ -85,9 +81,9 @@ WHERE c.type = 'ShoppingCart'
 
 (You could unnest the Items collection if you want to filter or sort individual items).
 
-A caveat, for operations that work with a single row of data, you should probably not use N1QL, but instead use the key/value operations. You *can*, but the key/value operation is going to be faster.
+_A performance caveat: for operations that work with a single document, you should probably not use N1QL, but instead use the key/value operations. You *can* use N1QL, but the key/value operation is going to be faster._
 
-In other document databases, you would likely have to learn an API for creating queries, and you would not be able to apply your tSQL experience to help ramp up.
+In many document databases othat than Couchbase, you would likely have to learn an API for creating queries, and you would not be able to apply your tSQL experience to help ramp up. I'm not saying that translation is always going to be a walk in the park, but it's going to be relatively easy compared to the alternatives. If you're starting a *new* project, then you'll be happy to know that your SQL-writing skills will continue to be put to good use!
 
 === SQL Server Views
 
@@ -101,13 +97,36 @@ A view in Couchbase is defined as a Map/Reduce query using JavaScript. The JavaS
 
 Stored procedures (sprocs) can be very controversial among SQL Server users. Some shops shun them, some shops require them for everything, and some shops only use them when there is a very good reason. My view is that there are sometimes good reasons to use stored procedures, but often sprocs represent logic that should live in another tier. There is no equivalent of sprocs in Couchbase. If you don't already have a service tier, and you are using sprocs to share some logic across domains, I recommend that you create a service tier and move the logic there.
 
+If you are building a new project, I recommend that you create a service tier with the expectation of it being used across your enterprise. This allows you to have the same "shared code" that sprocs would normally provide without putting that code into the database.
+
 This is also true for SQL Server *functions, user defined types, and rules*.
 
 === SQL Triggers
 
-If sprocs weren't already controversial enough, just bring up triggers in a converstaion. The closest thing to triggers in Couchbase is the link:https://developer.couchbase.com/documentation/server/current/architecture/high-availability-replication-architecture.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Database Change Protocol (DCP)]. DCP is a stream that Couchbase produces to communicate the state of data in an ordered change log. It is similar to the transaction log in a SQL Server database.
+If sprocs weren't already controversial enough, just bring up triggers in a conversation. As with stored procedures, I generally recommend that you move the trigger logic into the service tier, away from the database. If your software project depends on a lot of triggers, or complex triggers, or a lot of complex triggers, then you might want to wait or find another project to try using Couchbase Server in.
 
-Now, you can't create a trigger within DCP, but if you hook up a listener process to DCP, you might be able to accomplish some of the same things you were doing with triggers in SQL Server. DCP is the protocol that is used by some of the tools that integrate with Couchbase (like Kafka and Spark). 
+_Note: if you are using a lot of complex triggers, please feel free to contact me at any time for sympathy. I have a lot of funny GIFs I can send you._
+
+That being said, there is some cutting-edge stuff that you might be able to use in the place of triggers. When I say "cutting-edge", I mean it's technology that might help you and might also cut you. "Here be dragons".
+
+---
+*this part pending some information from Matt I*
+
+The closest thing to triggers in Couchbase is the link:https://developer.couchbase.com/documentation/server/current/architecture/high-availability-replication-architecture.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Database Change Protocol (DCP)]. DCP is a stream that Couchbase produces to communicate the state of data in an ordered change log. It is similar to the transaction log in a SQL Server database.
+
+Now, you can't create a trigger within DCP, but if you hook up a listener process to DCP, you might be able to accomplish some of the same things you were doing with triggers in SQL Server. DCP is the protocol that is used by some of the tools that integrate with Couchbase (like Kafka and Spark). There is currently a link:https://github.com/couchbaselabs/java-dcp-client[DCP client project available for Java].
+
+Using DCP directly might be more work than it's worth for a small handful of simple triggers. To that end, there's a link:https://github.com/couchbaselabs/dcpl[project called DCPL] that is a handy facade for DCP. There's a .NET client for DCPL too. These are not officially supported tools (yet), but they are a good starting point if you really need something like SQL triggers in your system.
+
+And, to this end, there is a .NET library available as well.
+
+*end Matt I part*
+
+---
+
+=== User-defined CLR objects
+
+SQL Server has the ability to have user-defined CLR functions. There is no equivalent in Couchbase. This kind of code should be moved to a service tier.
 
 === Security
 
@@ -115,8 +134,8 @@ Couchbase has link:https://developer.couchbase.com/documentation/server/current/
 
 Couchbase can integrate with LDAP to manage Couchbase administrators and assign roles to users. Couchbase can also create read-only users internally.
 
-There are some more robust changes and improvements coming to the Couchbase RBAC system, so stay tuned.
+There are some more robust changes and improvements coming to the Couchbase RBAC system, so stay tuned. In fact, I would recommend that you start link:https://blog.couchbase.com/2017/january/introducing-developer-builds[checking out the monthly developer builds], as I expect to see some interesting improvements and features in this area soon!
 
 == Summary
 
-This blog post compared and contrasted the data features available in Couchbase Server with SQL Server. If you are currently using SQL Server and are considering adding a document database to your project or starting a new project, I am here to help. Please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com] or ping me on Twitter @mgroves.
+This blog post compared and contrasted the data features available in Couchbase Server with SQL Server. If you are currently using SQL Server and are considering adding a document database to your project or starting a new project, I am here to help. Please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com] or ping me on https://twitter.com/mgroves[Twitter @mgroves].
