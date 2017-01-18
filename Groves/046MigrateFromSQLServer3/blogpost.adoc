@@ -2,18 +2,44 @@
 
 = Moving from SQL Server Part 3: App Migration
 
-discussion about rewriting entire app vs rewriting a data layer
-    - refactoring to SOA/microservices/service tier(s)
+In this series of blog posts, I'm going to lay out the considerations when moving to a document database when you have a relational background. Specifically, Microsoft SQL Server as compared to  link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
 
-sprocs & triggers (or should that be in part 2?)
+I've already covered some of the link:http://[considerations for data modeling] and I've link:http://[discussed the data itself]. In this blog post, I'll discuss applications that use the data. These blog posts can't possibly cover every edge case. The goal is to lay down some general guidelines that you, an architect, can apply to your application planning and design.
+
+== Migrate vs Rewrite
+
+Couchbase Server can supplement SQL Server your existing web application. It can be a session store or a cache store. You don't have to replace your RDMBS to benefit from Couchbase Server.
+
+If you're building a new web app, then Couchbase Server is a good choice to use as your "database of record". Flexible data modeling, fast data access, ease of scaling all make it a good choice.
+
+However, if you're considering making a document database your "database of record", then you need to plan what to do about your existing application (assuming you've already come up with a data modeling and data migration plan as covered in the earlier parts of this blog series). There are really two options:
+
+* *Replace your data/service layer*. If you've built your app in a way that decouples it from the underlying persistence, that's going to benefit you tremendously when switching from SQL Server to Couchbase. If you are using an SOA, for instance, then you might not have to make very many changes to the web application.
+
+* *Rebuild your application*. If you don't have a decoupled architecture, then you'll likely have to bite the bullet and rewrite/refactor large portions of your application. This can be a significant cost that you'll have to factor in when deciding whether or not to switch to a document database. I wish I could say it would be easier, that there was some magic sauce you could apply. But remember, even if the cost of a rebuild is too great, you can still use Couchbase Server in 
+tandem with SQL Server.
+
+The rest of this blog post will be tips and guidelines that apply in both scenarios.
+
+== Sprocs and triggers
+
+== Using N1QL
 
 n1ql - scan consistency
 
 n1ql - parameterization, serialization/deserialization
 
+== Concurrency
+
 concurrency - pessimistic / optimistic+cas
+
+== OR/Ms and ODMs
 
 ef/nh/linq - linq2couchbase
     -profiling (to see what N1QL is being generated)
 
+== Transactions
+
 transactions (modeling recap, two phase commit, event sourcing)
+
+== Summary
