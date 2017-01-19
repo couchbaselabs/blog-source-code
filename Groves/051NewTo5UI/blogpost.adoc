@@ -4,7 +4,7 @@
 
 Change is coming to the link:https://developer.couchbase.com/documentation/server/current/admin/ui-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Web Console] that you know and love. But don't worry, the old UI will still be available (for a while).
 
-In this blog post, I'm going to take you on a tour of the new UI. I'll be pointing out some of the differences and similarities. If you have anxiety about change, don't worry: the purpose of this change is to improve usability, performance, and to give Couchbase Console room to grow with new features that are coming down the road.
+In this blog post, I'm going to take you on a tour of the new UI. I'll be pointing out some of the differences and similarities. If you have anxiety about change, don't worry: the purpose of this change is to improve usability, performance, and efficiency. The new UI gives Couchbase Web Console room to grow with new features that are coming down the road.
 
 == An important note!
 
