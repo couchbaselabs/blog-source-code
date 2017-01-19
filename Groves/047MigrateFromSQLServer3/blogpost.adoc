@@ -1,6 +1,6 @@
 :imagesdir: images
 
-= Moving from SQL Server Part 3: App Migration
+= Moving from SQL Server to Couchbase Part 3: App Migration
 
 In this series of blog posts, I'm going to lay out the considerations when moving to a document database when you have a relational background. Specifically, Microsoft SQL Server as compared to  link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
 
@@ -8,32 +8,117 @@ I've already covered some of the link:http://[considerations for data modeling] 
 
 == Migrate vs Rewrite
 
-Couchbase Server can supplement SQL Server your existing web application. It can be a session store or a cache store. You don't have to replace your RDMBS to benefit from Couchbase Server.
+Couchbase Server can supplement SQL Server in your existing web application. It can be a session store or a cache store. You don't have to replace your RDMBS to benefit from Couchbase Server.
 
 If you're building a new web app, then Couchbase Server is a good choice to use as your "database of record". Flexible data modeling, fast data access, ease of scaling all make it a good choice.
 
-However, if you're considering making a document database your "database of record", then you need to plan what to do about your existing application (assuming you've already come up with a data modeling and data migration plan as covered in the earlier parts of this blog series). There are really two options:
+However, if you're considering making a document database your "database of record" for an existing app, then you need to plan what to do about that application (assuming you've already come up with a data modeling and data migration plan as covered in the earlier parts of this blog series). There are really two options:
 
 * *Replace your data/service layer*. If you've built your app in a way that decouples it from the underlying persistence, that's going to benefit you tremendously when switching from SQL Server to Couchbase. If you are using an SOA, for instance, then you might not have to make very many changes to the web application.
 
-* *Rebuild your application*. If you don't have a decoupled architecture, then you'll likely have to bite the bullet and rewrite/refactor large portions of your application. This can be a significant cost that you'll have to factor in when deciding whether or not to switch to a document database. I wish I could say it would be easier, that there was some magic sauce you could apply. But remember, even if the cost of a rebuild is too great, you can still use Couchbase Server in 
+* *Rebuild your application*. If you don't have a decoupled architecture, then you'll likely have to bite the bullet and rewrite/refactor large portions of your application. This can be a significant cost that you'll have to factor in when deciding whether or not to switch to a document database. I wish I could say it would be easier, that there was some magic potion you could use. But remember, even if the cost of a rebuild is too great, you can still use Couchbase Server in 
 tandem with SQL Server.
 
 The rest of this blog post will be tips and guidelines that apply in both scenarios.
 
 == Sprocs and triggers
 
+As was covered in the link://[previous post in this series], sprocs, triggers, functions, and other types of programmatic items should be moved into a service tier. What I mean by "service tier" is a set of services that live on their own. They aren't coupled to the application tier and they aren't coupled to the database tier. This means that multiple application tiers can use this service, and the service itself can interact with multiple database tiers.
+
+This allows you to use the services to orchestrate the functionality that was previously in sprocs and triggers. It can send messages to queues, it can sanitize data, update related pieces of data, perform authorization checks, etc.
+
+This can take the form of RESTful services, for example.
+
+This architecture is not just a simple replacment for sprocs and triggers, but can also give your enterprise the benefits of reusability, governance, and flexibility.
+
+== Views
+
+Map/reduce views can be defined and stored on the Couchbase cluster. To create them, you define a "map" function (with JavaScript) and optionally a "reduce" function (also in JavaScript).
+
+In the Couchbase Console UI, go to Indexes -> Viewes -> Create View. Create a design document, and create a view within that design document.
+
+You should see a development screen. At the center is the Map/Reduce code that you are working on. A sample document and its meta-data is also shown to give you some visual help, and at the bottom you have some options for executing your view.
+
+For complete details on how views work, check out the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/view-queries-with-sdk.html[MapReduce Views documentation].
+
+As a quick example, I want to create a view that lists only the people who have an age greater than 21.
+
+[source,JavaScript]
+----
+function (doc, meta) {
+  if(doc.age > 21) {
+  	emit(meta.id, doc.name);
+  }
+}
+----
+
+This view would emit the key of the document and the value of the "name" field. If my bucket contained the following documents:
+
+[source,JavaScript]
+----
+foo1	{"age":17,"name":"Carmella Albert"}
+foo2	{"age":25,"name":"Lara Salinas"}
+foo3	{"age":35,"name":"Teresa Johns"}
+----
+
+Then the results of the view would look like:
+
+
+.Results
+[width="100%",options="header"]
+|====================
+| Key | Value  
+| "foo2" | "Lara Salinas" 
+| "foo3" | "Teresa Johns" 
+|====================
+
+Map/reduce views can be very helpful when you have very complex logic that's easier to write in JavaScript than it is to write in N1QL. There can also be performance benefits when you are working with a write-heavy system.
+
+Views can be accessed from .NET using `ViewQuery`.
+
+[source,C#]
+----
+var query = new ViewQuery().From("viewdesigndocument", "viewname").Limit(10);
+var people = bucket.Query<dynamic>(query);
+foreach (var person in people.Rows)
+    Console.WriteLine(landmark.Key);
+----
+
+Alternatively, you could create N1QL queries instead of using Views. In many cases, N1QL will be easier to write, and the performance difference will be negligible. Unlike Views, the N1QL queries would live in the service tier. There is currently no way to store a "N1QL View" on the Couchbase Server cluster.
+
 == Using N1QL
 
-n1ql - scan consistency
+The N1QL (pronounced "nickel") query language is one of my favorite features of Couchbase Server. You are already comfortable with the SQL query language. With N1QL, you can apply your expertise to a document database.
 
-n1ql - parameterization, serialization/deserialization
+I'm not going to dive into the N1QL query language now, because it is such a deep topic. But you can link:https://www.couchbase.com/n1ql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[check out the basics of N1QL] and link:https://www.couchbase.com/get-started-developing-nosql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[get started with the N1QL guide].
+
+When writing C# to interact with N1QL, there are a couple key concepts that are important to know.
+
+*Scan consistency*. When executing a N1QL query, there are several scan consistency options. Scan consistency defined how your N1QL query should behave towards indexing. The default behavior is "Not Bounded", and it provides the best performance. At the other end of the spectrum is "RequestPlus", and it provides the best consistency. There is also "AtPlus", which is a good middle-ground, but takes a little more work. I link:https://blog.couchbase.com/2016/june/new-to-couchbase-4.5-atplus[blogged about Scan Consistency] back in June, and it's worth reviewing before you start writing N1QL in .NET.
+
+*Parameterization*. If you are creating N1QL queries, it's important to link:https://developer.couchbase.com/documentation/server/4.5/sdk/dotnet/n1ql-queries-with-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[use parameterization] to avoid SQL injection. There are two options with N1QL: positional (numbered) parameters and named parameters.
+
+*Serialization/deserialization*. It's important to consider how JSON is serialized and deserialized. The .NET SDK uses link:http://www.newtonsoft.com/json[Newtonson JSON.NET]. If you are familiar with that tool (and who among .NET developers isn't), then remember that you can use the same attributes (like link:http://www.newtonsoft.com/json/help/html/SerializationAttributes.htm[JsonProperty, JsonConverter], etc). In some edge cases, it might be useful to create your own customer serializer, which is possible with the .NET SDK. Check out the link:https://developer.couchbase.com/documentation/server/current/sdk/nonjson.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[documentation on serialization and non-JSON documents] for more information. 
 
 == Concurrency
 
-concurrency - pessimistic / optimistic+cas
+Concurrency is something that you often have to deal with, especially in a web application. Multiple users could be taking actions that result in the same document being changed at the same time.
+
+Couchbase offers two options to deal with concurrency: optimistic and pessimistic.
+
+*Optimisitic*. This is called "optimistic" because it works best when it's unlikely that a document will be contended for very much. You are making an optimistic assumption. On Couchbase, this is done with CAS (Compare And Swap). When you retrieve a document, it comes with meta data, including a CAS value (just a number). When you go to update that document, you can supply the CAS value. If the values match, then your optimism paid off, and the changes are saved. If they don't match, then the operation fails, and you'll have to handle it (a merge, an error message, etc).
+
+*Pessimistic*. This is called "pessimistic" because it works best when you know a document is going to be mutated a lot. You are making a pessimistic assumption, and are forcibly locking the document. If you use `GetAndLock` in the .NET SDK, the document will be locked, which means it can't be modified. Documents are locked for a maximum of 15 seconds. You can set a lower value. You can also explicitly unlock a document, but you must keep track of the CAS value to do so.
+
+For more detail, check out the documentation on link:https://developer.couchbase.com/documentation/server/current/sdk/concurrent-mutations-cluster.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Concurrent Document Mutations].
 
 == OR/Ms and ODMs
+
+If you are using SQL Server, you might be familiar with OR/Ms (Object-relational mappers). Entity Framework, NHibernate, Linq2SQL, and many others are OR/Ms. OR/Ms attempt to bridge the gap between structured data in C# and normalized data in relational databases. They also typically provide other capabilities like Linq providers, unit of work, etc. I believe that OR/Ms follow the 80/20 rule. They can be very helpful 80% of the time, and a pain in the neck the other 20%.
+
+For document databases, there is a much lower impedence mismatch, since C# objects can serialized/deserialized to JSON, and don't have to be broken up into a normalized set of tables.
+
+However, the other functionality that OR/Ms provide can still be helpful in document databases. The equivalent tool is called an ODM (Object Document Model). These tools help you define a set of classes to map to documents. In the case of link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase], it also provides a Linq provider. Linq2Couchbase is not an officially supported project (yet), but it is one of the best Linq providers I've ever used.
 
 ef/nh/linq - linq2couchbase
     -profiling (to see what N1QL is being generated)

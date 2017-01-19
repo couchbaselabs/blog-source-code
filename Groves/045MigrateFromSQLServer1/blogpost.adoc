@@ -1,6 +1,6 @@
 :imagesdir: images
 
-= Moving from SQL Server Part 1: Data Modeling
+= Moving from SQL Server to Couchbase Part 1: Data Modeling
 
 In this series of blog posts, I'm going to lay out the considerations when moving to a document database when you have a relational background. Specifically, Microsoft SQL Server as compared to  link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
 
