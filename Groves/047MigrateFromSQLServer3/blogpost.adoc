@@ -29,15 +29,18 @@ This allows you to use the services to orchestrate the functionality that was pr
 
 This can take the form of RESTful services, for example.
 
-This architecture is not just a simple replacment for sprocs and triggers, but can also give your enterprise the benefits of reusability, governance, and flexibility.
+This architecture is not just a simple replacement for sprocs and triggers, but can also give your enterprise the benefits of reusability, governance, and flexibility.
 
 == Views
 
 Map/reduce views can be defined and stored on the Couchbase cluster. To create them, you define a "map" function (with JavaScript) and optionally a "reduce" function (also in JavaScript).
 
-In the Couchbase Console UI, go to Indexes -> Viewes -> Create View. Create a design document, and create a view within that design document.
+In the Couchbase Console UI, go to Indexes -> Views -> Create View. Create a design document, and create a view within that design document.
 
-You should see a development screen. At the center is the Map/Reduce code that you are working on. A sample document and its meta-data is also shown to give you some visual help, and at the bottom you have some options for executing your view.
+.Screenshot of the Map/Reduce view editor in the latest Couchbase Console
+image::047_01_Couchbase_View_editor.png[Editing a Map/Reduce view in Couchbase]
+
+At the center is the Map/Reduce code that you are working on. A sample document and its meta-data is also shown to give you some visual help, and at the bottom you have some options for executing your view.
 
 For complete details on how views work, check out the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/view-queries-with-sdk.html[MapReduce Views documentation].
 
@@ -98,7 +101,11 @@ When writing C# to interact with N1QL, there are a couple key concepts that are 
 
 *Parameterization*. If you are creating N1QL queries, it's important to link:https://developer.couchbase.com/documentation/server/4.5/sdk/dotnet/n1ql-queries-with-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[use parameterization] to avoid SQL injection. There are two options with N1QL: positional (numbered) parameters and named parameters.
 
-*Serialization/deserialization*. It's important to consider how JSON is serialized and deserialized. The .NET SDK uses link:http://www.newtonsoft.com/json[Newtonson JSON.NET]. If you are familiar with that tool (and who among .NET developers isn't), then remember that you can use the same attributes (like link:http://www.newtonsoft.com/json/help/html/SerializationAttributes.htm[JsonProperty, JsonConverter], etc). In some edge cases, it might be useful to create your own customer serializer, which is possible with the .NET SDK. Check out the link:https://developer.couchbase.com/documentation/server/current/sdk/nonjson.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[documentation on serialization and non-JSON documents] for more information. 
+== Serialization/deserialization
+
+Whether you're using N1QL, Views, or key/value operations, it's important to consider how JSON is serialized and deserialized.
+
+The .NET SDK uses link:http://www.newtonsoft.com/json[Newtonson JSON.NET]. If you are familiar with that tool (and who among .NET developers isn't), then remember that you can use the same attributes (like link:http://www.newtonsoft.com/json/help/html/SerializationAttributes.htm[JsonProperty, JsonConverter], etc). In some edge cases, it might be useful to create your own customer serializer, which is possible with the .NET SDK. Check out the link:https://developer.couchbase.com/documentation/server/current/sdk/nonjson.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[documentation on serialization and non-JSON documents] for more information. 
 
 == Concurrency
 
@@ -106,7 +113,7 @@ Concurrency is something that you often have to deal with, especially in a web a
 
 Couchbase offers two options to deal with concurrency: optimistic and pessimistic.
 
-*Optimisitic*. This is called "optimistic" because it works best when it's unlikely that a document will be contended for very much. You are making an optimistic assumption. On Couchbase, this is done with CAS (Compare And Swap). When you retrieve a document, it comes with meta data, including a CAS value (just a number). When you go to update that document, you can supply the CAS value. If the values match, then your optimism paid off, and the changes are saved. If they don't match, then the operation fails, and you'll have to handle it (a merge, an error message, etc).
+*Optimisitic*. This is called "optimistic" because it works best when it's unlikely that a document will be in contention very often. You are making an optimistic assumption. On Couchbase, this is done with link:https://developer.couchbase.com/documentation/server/current/sdk/concurrent-mutations-cluster.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[CAS (Compare And Swap)]. When you retrieve a document, it comes with meta data, including a CAS value (just a number). When you go to update that document, you can supply the CAS value. If the values match, then your optimism paid off, and the changes are saved. If they don't match, then the operation fails, and you'll have to handle it (a merge, an error message, etc).
 
 *Pessimistic*. This is called "pessimistic" because it works best when you know a document is going to be mutated a lot. You are making a pessimistic assumption, and are forcibly locking the document. If you use `GetAndLock` in the .NET SDK, the document will be locked, which means it can't be modified. Documents are locked for a maximum of 15 seconds. You can set a lower value. You can also explicitly unlock a document, but you must keep track of the CAS value to do so.
 
@@ -118,13 +125,44 @@ If you are using SQL Server, you might be familiar with OR/Ms (Object-relational
 
 For document databases, there is a much lower impedence mismatch, since C# objects can serialized/deserialized to JSON, and don't have to be broken up into a normalized set of tables.
 
-However, the other functionality that OR/Ms provide can still be helpful in document databases. The equivalent tool is called an ODM (Object Document Model). These tools help you define a set of classes to map to documents. In the case of link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase], it also provides a Linq provider. Linq2Couchbase is not an officially supported project (yet), but it is one of the best Linq providers I've ever used.
+However, the other functionality that OR/Ms provide can still be helpful in document databases. The equivalent tool is called an ODM (Object Document Model). These tools help you define a set of classes to map to documents. Ottoman and Linq2Couchbase are popular ODMs for Couchbase, for Node and .NET respectively.
 
-ef/nh/linq - linq2couchbase
-    -profiling (to see what N1QL is being generated)
+link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase], it also has a Linq provider. It's not an officially supported project (yet), but it is one of the most complete Linq providers I've ever used, and is used in production by Couchbase customers.
+
+Below is an example from the Linq2Couchbase documentation that should look somewhat familiar for users of Entity Framework and NHibernate.Linq:
+
+[source,C#]
+----
+var context = new BucketContext(ClusterHelper.GetBucket("travel-sample"));
+var query = (from a in context.Query<AirLine>()
+             where a.Country == "United Kingdom"
+             select a).
+             Take(10);
+----
+
+Beyond being a great Linq provider, Linq2Couchbase also has an experimental change tracking feature. It's definitely worth checking out. Brant Burnett is one of the key contributes to the project, and he's also a link:https://developer.couchbase.com/experts-and-champions?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Expert]. He presented a session at Couchbase Connect 2016 called link:https://connect.couchbase.com/watch-connect2016-ondemand?utm_source=blogs&utm_medium=link&utm_campaign=blogs[LINQing to data: Easing the transition from SQL].
 
 == Transactions
 
-transactions (modeling recap, two phase commit, event sourcing)
+I've already covered pessimistic and optimistic locking for transactions on a single document. Because of those, we can say that Couchbase supports ACID transactions on a per-document level. Couchbase does not, at this time, support ACID transactions among multiple documents.
+
+Thinking back to the link://[first blog post on data modeling], the need for multi-document transactions is reduced as compared to a relational model. A concept (like shopping cart) may require rows in multiple tables in a relational model, but a single document model in Couchbase.
+
+If you are following a referential model, as in the social media example from the link://[first blog post], you might be concerned about the lack of transactions. This highlights the importance of thinking about your use cases while creating your data model. If transactions are vital to your use case, the data model can often be structured to accomodate. link:https://forums.couchbase.com/[We are happy to help you through this, just ask!]
+
+However, there may be some times where you absolutely need a multi-document transaction. Couchbase doesn't support this, but as with stored procedures and triggers, the answer is to move it up into the service layer.
+
+There are two design patterns that I can think of that might help, depending on your use case.
+
+* *Event Sourcing*: The link:https://martinfowler.com/eaaDev/EventSourcing.html[event sourcing pattern] can be a good fit when you can store data as a sequence of events. The current state can be calculated using the history.
+* *Two-phase commit*: The link:https://en.wikipedia.org/wiki/Two-phase_commit_protocol[two-phase commit pattern] can be used to provide a commit/rollback to multi-document transactions.
+
+It also may be worth checking out the link:https://ndescribe.atlassian.net/wiki/display/DOC/Transactional+Documents[NDescribe project], as it includes an SDK that works on top of the Couchbase SDK and provides a transaction system. It does this by adding its own meta-data in the body of the document and creating a transaction document. It's a generic implementation of the two-phase commit. (Note that this is not an officially supported tool).
+
+_Note: if you're concerned about document size from these patterns affecting performance, link:https://developer.couchbase.com/documentation/server/current/sdk/subdocument-operations.html[sub-document access] was added in Couchbase 4.5. This means you don't have to read/write entire documents when you're just interested in small parts of them._
 
 == Summary
+
+I've covered data modeling, data migration, and application migration for users of SQL Server. This is a good starting point for your next project, and will give you something to think about if you are considering migrating.
+
+I want to hear from you about what Couchbase can do to make your transition easier, whether you're migrating or starting fresh. Did I miss something? Do you have a tool or system that you recommend? Email me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com] or find me on link:https://twitter.com/mgroves[Twitter @mgroves].
