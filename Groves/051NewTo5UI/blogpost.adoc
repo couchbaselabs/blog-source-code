@@ -32,7 +32,7 @@ You can also choose to create a bucket named "default" during setup. Again, this
 .Create a default bucket (optional) during Couchbase Server setup
 image::051_04_Couchbase_Setup_Default_Bucket.png[Optionally create a default bucket in Couchbase Server setup]
 
-Notification and Terms and Conditions are next. Right now, this update is only being released for Enterprise Edition. Later, the Community Edition will be released. If you are viewing this blog post from the future, using Community Edition, then this screen will look different.
+Notification and Terms and Conditions are next. We are offering the full Enterprise edition in the developer build, so you can check out the Enterprise features.
 
 .Accept terms and conditions of the Enterprise Edition and sign up for notifications
 image::051_05_Couchbase_terms_and_notifications.png[Accept terms and conditions and sign up for notifications]
@@ -139,11 +139,15 @@ To switch back to the new UI from the old UI, just click "New UI".
 .Use this link to go back to the "New UI"
 image::051_16_Couchbase_New_UI.png[Click New UI to back to the new UI]
 
+It's likely that new features will only appear in the new UI.
+
 == Feedback and Summary
+
+Stay tuned to the link:http://blog.couchbase.com[Couchbase Blog] for information about what's coming in the new UI in the next developer build.
 
 I've given you the basic tour, but to really get a feel for the UI, I recommend you download and try it. link:https://couchbase.com/download[Download Couchbase Server 5.0] today!
 
-We want feedback!
+We want feedback! Developer releases are coming every month, so you have a chance to make a difference in what we are building.
 
 There are two types of feedback we're looking for:
 
