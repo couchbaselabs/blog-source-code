@@ -34,7 +34,7 @@ JSON has no *date* data type. Often dates are stored as UNIX timestamps, but you
 
 In SQL Server, there is a *geography* data type. In Couchbase, link:https://developer.couchbase.com/documentation/server/current/indexes/querying-using-spatial-views.html[the GeoJSON format is supported].
 
-There are some other specialized data types in SQL Server, including hierarchyid, xml, and json. Typically, these would be unrolled in JSON objects and/or referenced by key (as explored in link://[part 1 of this blog series on data modeling]). You can still store XML/JSON within a string if you want, but if you do, then you can't use the full power of N1QL on those fields.
+There are some other specialized data types in SQL Server, including hierarchyid, and xml. Typically, these would be unrolled in JSON objects and/or referenced by key (as explored in link://[part 1 of this blog series on data modeling]). You can still store XML/JSON within a string if you want, but if you do, then you can't use the full power of N1QL on those fields.
 
 == Migrating and translating data
 

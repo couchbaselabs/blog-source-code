@@ -4,7 +4,7 @@
 
 In this series of blog posts, I'm going to lay out the considerations when moving to a document database when you have a relational background. Specifically, Microsoft SQL Server as compared to  link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
 
-I'm going to cover data modeling, the data itself, and applications using the data. These blog posts can't possibly cover every edge case. The goal is to lay down some general guidelines that you, an architect, can apply to your application planning and design.
+I'm going to cover data modeling, the data itself, and applications using the data. The goal is to lay down some general guidelines that you can apply to your application planning and design.
 
 == Why would I do this?
 
@@ -36,7 +36,7 @@ Here's a high-level comparison of SQL Server features/naming as compared to Couc
 | SQL Server | Couchbase Server
 | Server | Cluster 
 | Database | Bucket
-| Document | Table + Row
+| Document | Row
 | Column | JSON key/value
 | Primary Key | Document Key
 | Foreign Key | Reference field
@@ -48,16 +48,31 @@ Because of the flexibility of JSON, the data in a document database can be struc
 
 == Denormalization example
 
-If you are using an OR/M, you can use that information as a starting point in modeling your data as JSON.
+Let's consider the "shopping cart" entity.
 
-For instance, let's look at the "shopping cart" entity.
+To represent this in a relational database would likely require two tables: a ShoppingCart table and a ShoppingCartItem table with a foreign key to a row in ShoppingCart.
+
+When creating the model for a document database, the decision has to be made whether to continue modeling this as two separate entities (e.g. a Shopping Cart document and corresponding Shopping Cart Item documents) or whether to "denormalize" and combine a row from ShoppingCart and row(s) from ShoppingCartItem into a single document to represent a shopping cart.
+
+In Couchbase, using a denormalization strategy, a shopping cart and the items in it would be reprsented by a single document.
+
+[source,JavaScript,indent=0]
+----
+include::src/ShoppingCart.json[]
+----
+
+Notice that the relationship between the items and the shopping cart is now implicit to being contained in the same document. No more need for an ID on the items to represent a relationship.
+
+In C#, you would likely define `ShoppingCart` and `Item` classes to model this data:
 
 [source,C#,indent=0]
 ----
 include::src/ShoppingCart.cs[tag=Classes]
 ----
 
-To represent this in a relational table would likely require two tables: a ShoppingCart table and a ShoppingCartItem table with a foreign key to a row in ShoppingCart. Then, in an OR/M like NHibernate or Entity Framework, you would likely define a mapping somewhere like*:
+These classes would still make sense with Couchbase, so you can reuse them or design them this way. But this design does not match up to a relational table in a direct way.
+
+So, with a relational database, you might use an OR/M like NHibernate or Entity Framework. The way this mapping is represented in an OR/M* would look like this:
 
 [source,C#,indent=0]
 ----
@@ -66,16 +81,9 @@ include::src/ShoppingCart.cs[tag=Mappings]
 
 _*This is psuedo-code that is meant to represent EF, NH, or similar OR/Ms_
 
-When creating the model for a document database, the decision has to be made whether to continue modeling this as two separate entities (e.g. a Shopping Cart document and corresponding Shopping Cart Item documents) or whether to "denormalize" and combine a row from ShoppingCart and row(s) from ShoppingCartItem into a single document to represent a shopping cart.
+Based on these mappings and an analysis of the use cases, I could decide that it would be modeled as a single document in Couchbase. `ShoppingCartItemMap` only exists so that the OR/M knows how to populate the `Items` property in `ShoppingCart`. Also, it's unlikely that the application will be doing reads of the shopping cart without _also_ needing to read the items.
 
-In this situation, I think it's pretty clear that it would be better off as a single document. `ShoppingCartItemMap` only exists so that the OR/M knows how to populate the `Items` property in `ShoppingCart`. Also, it's unlikely that the application will be doing reads of the shopping cart without _also_ needed to read the items. If we take that information into consideration, we can denormalize a shopping cart (spread over multiple tables and rows) into a single document:
-
-[source,JavaScript,indent=0]
-----
-include::src/ShoppingCart.json[]
-----
-
-Notice that the relationship between the items and the shopping cart is now implicit to being contained in the same document. No more need for an ID on the items to represent a relationship. In a later post, application code will be discussed, but for now I can say that the `ShoppingCartMap` and `ShoppingCartItemMap` classes can be removed, the `Id` field from `Item` can be removed, and the Couchbase .NET SDK can directly populate a `ShoppingCart` object:
+In a later post, OR/Ms will be discussed further, but for now I can say that the `ShoppingCartMap` and `ShoppingCartItemMap` classes are not necessary with Couchbase, the `Id` field from `Item` isn't necessary, and the Couchbase .NET SDK can directly populate a `ShoppingCart` object without an OR/M in a single line of code:
 
 [source,C#,indent=0]
 ----
@@ -86,7 +94,16 @@ include::src/ShoppingCart.cs[tag=GetShoppingCart]
 
 It's not always possible or optimal to denormalize relationships like the `ShoppingCart` example. In many cases, a document will need to reference another document. Depending on how your application expects to do reads and writes, you may want to keep your model in separate documents by using referencing.
 
-Let's look at an example where referencing might be the best approach. Suppose your application has some social media elements. Users can have friends, and users can post text updates. The way to model that in C# could be:
+Let's look at an example where referencing might be the best approach. Suppose your application has some social media elements. Users can have friends, and users can post text updates.
+
+One way to model this is to have a document to represent a user, one document per update, and reference information to map a user to its friends and updates. This could be modeled in Couchbase using multiple documents. In this example, the `updates` field is an array of keys to other documents.
+
+[source,JavaScript,indent=0]
+----
+include::src/SocialMedia.json[]
+----
+
+The way to model this in C# could be:
 
 [source,C#,indent=0]
 ----
@@ -102,24 +119,17 @@ include::src/SocialMedia.cs[tag=Mappings]
 
 If we applied the same denormalization as the shopping cart example, we would end up with some problems.
 
-* *One*: each user would store the details for their friends. This is not tenable, because now a user's information would be stored in multiple places instead of having a single source of truth (unlike the shopping cart, where having the same item in more than one shopping cart probably doesn't make any domain sense).
+* *One*: each user would store the details for their friends. This is not tenable, because now a user's information would be stored in multiple places instead of having a single source of truth (unlike the shopping cart, where having the same item in more than one shopping cart probably doesn't make any domain sense). This might be okay when using Couchbase as a cache, but not as a primary data store.
 
 * *Two*: Over a period of regular use, an individual user could post hundreds or thousands of updates. This could lead to a very large document which could slow down I/O operations. Additionally, Couchbase has a ceiling of 20mb per document.
 
-_Note: There's an N+1 problem here too (friends of friends, etc), but I'm not going to spend time on addressing that. Both OR/Ms and ODMs have to deal with this._
+_Note: There's an N+1 problem here too (friends of friends, etc), but I'm not going to spend time on addressing that. It's a problem that's not unique to either database._
 
-Additionally, it may not be the case that when the application reads or writes a user that it will need to read or write friends & updates. And, when writing an update, it's not likely that the application will need to update a user. Since these entities may often be read/written on their own, that likely indicates that they need to be modeled as separate documents.
-
-One way to model this is to have a document to represent a user, one document per update, and reference information to map a user to its friends and updates.
-
-[source,JavaScript,indent=0]
-----
-include::src/SocialMedia.json[]
-----
+Additionally, it may not be the case that when the application reads or writes a user that it will need to read or write friends & updates. And, when writing an update, it's not likely that the application will need to update a user. Since these entities may often be read/written on their own, that indicates that they need to be modeled as separate documents.
 
 Note the arrays in the `Friends` and `Updates` fields. These values can be used to retrieve the associated documents. Later in this post, I'll discuss how to do it with key/value operations and how to do it with N1QL.
 
-To sum up modeling options, these are the two ways to model data in a document database. The shopping cart example used *nested objects*, while the social media example used *separate documents*. In those examples, it was relatively straightforward to choose. When you're making your own modeling decisions, here's a handy cheat sheet:
+To sum up, there are two ways to model data in a document database. The shopping cart example used *nested objects*, while the social media example used *separate documents*. In those examples, it was relatively straightforward to choose. When you're making your own modeling decisions, here's a handy cheat sheet:
 
 .Modeling Data Cheat Sheet
 [width="100%",options="header"]
@@ -164,7 +174,7 @@ N1QL allows you to have great flexibility in retrieving data. I don't have to be
 CREATE INDEX IX_Name ON `SocialMedia` (Name) USING GSI;
 ----
 
-Otherwise it the query will fail to execute (if you have no indexing) or it will not be performant (if you only have a primary index created).
+Otherwise the query will fail to execute (if you have no indexing) or it will not be performant (if you only have a primary index created).
 
 link:http://developer.couchbase.com/documentation/server/current/data-modeling/entity-relationship-doc-design.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[There are pros and cons in deciding to use referencing or not]. The values `Friends` and `Updates` are similar to foreign keys, in that they reference another document. But there is no enforcement of values by Couchbase. The management of these keys must be handled properly by the application. Further, while Couchbase provides ACID transactions for single document operations, there is no multi-document ACID transaction available.
 
@@ -214,7 +224,7 @@ That may be overkill for some applications. It's similar to a pattern I've seen 
 
 == Conclusion of part 1
 
-This blog post covered data modeling using denormalization, data modeling using referencing, key design, and discriminating fields. Modeling data in a document database is a thought process, something of an art form, and not a mechanical process. There is no prescription to how to model your data in a document database: it depends greatly on how your application interacts with your data.
+This blog post covered data modeling using denormalization, data modeling using referencing, key design, and discriminating fields. Modeling data in a document database is a thought process, something of an art form, and not a mechanical process. There is no prescription on how to model your data in a document database: it depends greatly on how your application interacts with your data.
 
 Stay tuned for the next blog in the series, where data and data migration will be discussed.
 
