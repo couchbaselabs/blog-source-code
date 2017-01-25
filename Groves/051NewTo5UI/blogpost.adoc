@@ -149,10 +149,8 @@ I've given you the basic tour, but to really get a feel for the UI, I recommend 
 
 We want feedback! Developer releases are coming every month, so you have a chance to make a difference in what we are building.
 
-There are two types of feedback we're looking for:
+*Bugs*: If you find a bug (something that is broken or doesn't work how you'd expect), please file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers give me a candy bar and pat me on the head every time I submit a good bug).
 
-*Bugs*: If you find a bug (something that is broken or doesn't work how you'd expect), please file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers give me a candy bar and pat me on the head every time I submit a substantive bug).
-
-*Suggestions*: If you have a suggestion, complaint, or comment about the new UI, please use the UI feedback system that's built right into the Couchbase Server UI.
+*Feedback*: Let me know what you think. Something you don't like? Something you really like? Something missing?
 
 In some cases, it may be tricky to decide if your feedback is a bug or a suggestion. Use your best judgement, or again, feel free to contact me for help. I want to hear from you. No suggestion is too small! The only stupid question is the one you don't ask! The best way to contact me is either link:https://twitter.com/mgroves[Twitter @mgroves] or email me matthew.groves@couchbase.com.
