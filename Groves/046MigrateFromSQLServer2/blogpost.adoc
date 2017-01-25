@@ -22,6 +22,8 @@ All JSON data is made up of 6 types: string, number, boolean, array, object, and
 | array / object | JSON/XML fields
 |====================
 
+It's important to understand how JSON works. I've listed some high-level differences between JSON data types of SQL Server data types. Assuming you already understand SQL data types, you might want to link:http://json.org/[spend some time learning more about JSON and JSON data types].
+
 *string* in SQL Server is often defined by a length. _nvarchar(50)_ or _nvarchar(MAX)_ for instance. In JSON, you don't need to define a length. Just use a string.
 
 *number* in SQL Server varies widely based on what you are using it for. The *number* type in JSON is flexible, in that it can store integers, decimal, or floating point. In specialized circumstances, like if you need a specific precision or you need to store very large numbers, you may want to store a number as a string instead.
@@ -97,36 +99,17 @@ A view in Couchbase is defined as a Map/Reduce query using JavaScript. The JavaS
 
 There is no equivalent of sprocs in Couchbase. If you don't already have a service tier, and you are using sprocs to share some logic across domains, I recommend that you create a service tier and move the logic there.
 
+*** put REST example here I guess ***
+
 If you are building a new project, I recommend that you create a service tier with the expectation of it being used across your enterprise. This allows you to have the same "shared code" that sprocs would normally provide without putting that code into the database.
 
-This is also true for SQL Server *functions, user defined types, and rules*.
+This is also true for SQL Server *functions, user defined types, rules, user-defined CLR objects*.
 
 === SQL Triggers
 
 If sprocs weren't already controversial enough, just bring up triggers in a conversation. As with stored procedures, I generally recommend that you move the trigger logic into the service tier, away from the database. If your software project depends on a lot of triggers, or complex triggers, or a lot of complex triggers, then you might want to wait or find another project to try using Couchbase Server in.
 
-_Note: if you are using a lot of complex triggers, please feel free to contact me at any time for sympathy. I have a lot of funny GIFs I can send you._
-
-That being said, there is some cutting-edge stuff that you might be able to use in the place of triggers. When I say "cutting-edge", I mean it's technology that might help you and might also cut you. "Here be dragons".
-
----
-*this part pending some information from Matt I*
-
-The closest thing to triggers in Couchbase is the link:https://developer.couchbase.com/documentation/server/current/architecture/high-availability-replication-architecture.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Database Change Protocol (DCP)]. DCP is a stream that Couchbase produces to communicate the state of data in an ordered change log. It is similar to the transaction log in a SQL Server database.
-
-Now, you can't create a trigger within DCP, but if you hook up a listener process to DCP, you might be able to accomplish some of the same things you were doing with triggers in SQL Server. DCP is the protocol that is used by some of the tools that integrate with Couchbase (like Kafka and Spark). There is currently a link:https://github.com/couchbaselabs/java-dcp-client[DCP client project available for Java].
-
-Using DCP directly might be more work than it's worth for a small handful of simple triggers. To that end, there's a link:https://github.com/couchbaselabs/dcpl[project called DCPL] that is a handy facade for DCP. There's a .NET client for DCPL too. These are not officially supported tools (yet), but they are a good starting point if you really need something like SQL triggers in your system.
-
-And, to this end, there is a .NET library available as well.
-
-*end Matt I part*
-
----
-
-=== User-defined CLR objects
-
-SQL Server has the ability to have user-defined CLR functions. There is no equivalent in Couchbase. This kind of code should be moved to a service tier.
+That being said, there is some cutting-edge stuff that is being worked on that might be roughly equivalent to triggers. If you are interested in this, please contact me, and also stay tuned to link:http://blog.couchbase.com[the Couchbase Blog] for the latest information.
 
 === Security
 
