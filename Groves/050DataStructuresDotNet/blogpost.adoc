@@ -1,0 +1,155 @@
+= .NET Core List, Queue, and Dictionary Data Structures backed by Couchbase
+
+The addition of the link:https://developer.couchbase.com/documentation/server/current/developer-guide/sub-doc-api.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[sub-document API] to Couchbase 4.5 has paved the way for effecient data structure support in link:https://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase].
+
+In this blog post, I'm going to show a demo of three types of data structures you can use with the Couchbase .NET SDK:
+
+* List - a list of objects, basically a List<T> backed by Couchbase
+* Queue - a queue of objects, basically a Queue<T> backed by Couchbase
+* Dictionary - a dictionary of objects, basically a Dictionary<T,T> backed by Couchbase
+
+I'll also discuss a little bit how this works behind the scenes.
+
+You can play along at home if you like. The source code for this blog is link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/050DataStructuresDotNet/src[available on GitHub], and link:https://www.couchbase.com/download?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server is free to download] (developer previews of version 5 are currently available monthly).
+
+== List
+
+A List<T> is a .NET data structure that is held in memory. With the new data structures, you can store that data strucute in a Couchbase document.
+
+To create a Couchbase-backed List:
+
+[source,C#,indent=0]
+----
+include::src/Program.cs[tag=createlist]
+----
+
+The string "myList" corresponds to the document key. When using `CouchbaseList<T>`, a single document with that key will be created (if one doesn't exist already). If a document by that key already exists, `CouchbaseList` will use it.
+
+You can now add/remove items from the list, get counts from the list, etc, and that will all be persisted to the document.
+
+[source,C#,indent=0]
+----
+include::src/Program.cs[tag=examplesoflist]
+----
+
+The above code would result in a document with a key "myList" that looks like below. Notice that the item with num of 5 is not listed, because it was removed.
+
+[source,JavaScript]
+----
+[
+  {
+    "num": 0,
+    "foo": "bara1fd74ee-a790-4a0f-843c-abe449cb8b1d"
+  },
+  {
+    "num": 1,
+    "foo": "bardc1d8f9a-4e93-46f9-b8ae-ec036743869e"
+  },
+  {
+    "num": 2,
+    "foo": "bar9a60abe9-1e04-4fba-bd1f-f1ec39d69f56"
+  },
+  {
+    "num": 3,
+    "foo": "bar9566605b-7abf-4a0c-aa9d-63b98ce86274"
+  },
+  {
+    "num": 4,
+    "foo": "bar6261323f-de50-42a7-a8a7-6fcafb356deb"
+  },
+  {
+    "num": 6,
+    "foo": "bar13832bcb-2aa0-491a-a01f-1d496f999ffc"
+  },
+  
+  // ... etc ...
+]
+----
+
+== Queue
+
+Very similar to List, you can create a Couchbase-backed queue:
+
+[source,C#,indent=0]
+----
+include::src/Program.cs[tag=createqueue]
+----
+
+A queue is stored just like a list. The different is that the ordering is significant, and this is reflected by the operations you perform on a queue: Enqueue and Dequeue.
+
+[source,C#,indent=0]
+----
+include::src/Program.cs[tag=queueexample]
+----
+
+The above code would result in a document with a key "myQueue" that looks like the below. Notice there is no object in the array with num "0" because it was dequeued.
+
+[source,JavaScript]
+----
+[
+  {
+    "num": 1,
+    "foo": "baz64bb62b6-bf23-4e52-b584-d2fa02accce6"
+  },
+  {
+    "num": 2,
+    "foo": "baz0a160bd9-aa7b-4c45-9e19-d1a3d982a554"
+  }
+]
+----
+
+== Dictionary
+
+Hopefully you're seeing a pattern now. To create a dictionary:
+
+[source,C#,indent=0]
+----
+include::src/Program.cs[tag=createdict]
+----
+
+Again, a document will be created with the given key. The operations that can be performed include Add, Remove, and the indexer `[]` operation.
+
+[source,C#,indent=0]
+----
+include::src/Program.cs[tag=dictexample]
+----
+
+A dictionary document looks like the below:
+
+[source,JavaScript]
+----
+{
+  "key5aa2520d-123c-4fca-b444-b0cb8846d46e": {
+    "num": 0,
+    "foo": "qux93b197dc-f175-4246-a38d-7b080eb9bea0"
+  },
+  "key55dee298-14c6-4da7-97a8-66c69d7e8a70": {
+    "num": 1,
+    "foo": "quxa593ee4c-682c-402d-887b-3f09f029e9b6"
+  },
+  "key3386afcf-7b70-4e4d-b9ae-6defbca33fe7": {
+    "num": 2,
+    "foo": "qux1259ae94-1008-4e1f-86a1-bfbd0873b09b"
+  },
+  "key2bc8c451-f125-4282-9fb4-7ea15f4b3168": {
+    "num": 3,
+    "foo": "qux1b6fb62b-9918-46dc-9a2f-610a55d017ef"
+  },
+  "key3f7041f3-abd3-49c7-a373-454cbd2ac0fc": {
+    "num": 4,
+    "foo": "qux0a87655f-197d-4fb2-8a54-b1de6e288de4"
+  }
+}
+----
+
+== Behind the scenes
+
+Before the subdocument API, these data structures were _possible_, of course. The catch was that you would be loading up the entire document, putting it in a list, and then saving the entire document. If you have large data structures, but are only reading or making changes to a single item, this would often result in wasted time and wasted bandwidth.
+
+The subdocument-API (which you can use directly, and I covered in link:https://blog.couchbase.com/2016/july/sub-document-api-in-couchbase-server-4.5-with-the-.net-sdk-revisted[Sub-document API in Couchbase Server 4.5 with the .NET SDK (revisited)]) is used behind the scenes in CouchbaseList, CouchbaseQueue, and CouchbaseDictionary. So when you add an item to CouchbaseList, for instance, only that item is being sent over the wire, not the entire list.
+
+== Summary
+
+These data structures are another tool to help you manage your data. Since they use the sub-document API, they are more performant than a whole-document approach. For more detail, check out the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/datastructures.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Data Structures documentation].
+
+Have questions? Feedback? Need help? link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Please visit our forums], ping me on link:https://twitter.com/mgroves[Twitter @mgroves], or leave a comment.
