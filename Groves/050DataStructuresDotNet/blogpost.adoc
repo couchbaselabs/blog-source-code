@@ -1,12 +1,12 @@
 = .NET Core List, Queue, and Dictionary Data Structures backed by Couchbase
 
-The addition of the link:https://developer.couchbase.com/documentation/server/current/developer-guide/sub-doc-api.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[sub-document API] to Couchbase 4.5 has paved the way for effecient data structure support in link:https://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase].
+The addition of the link:https://developer.couchbase.com/documentation/server/current/developer-guide/sub-doc-api.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[sub-document API] to Couchbase 4.5 has paved the way for efficient data structure support in link:https://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase].
 
 In this blog post, I'm going to show a demo of three types of data structures you can use with the Couchbase .NET SDK:
 
 * List - a list of objects, basically a List<T> backed by Couchbase
 * Queue - a queue of objects, basically a Queue<T> backed by Couchbase
-* Dictionary - a dictionary of objects, basically a Dictionary<T,T> backed by Couchbase
+* Dictionary - a dictionary of objects, basically a Dictionary<K,T> backed by Couchbase
 
 I'll also discuss a little bit how this works behind the scenes.
 
@@ -14,7 +14,7 @@ You can play along at home if you like. The source code for this blog is link:ht
 
 == List
 
-A List<T> is a .NET data structure that is held in memory. With the new data structures, you can store that data strucute in a Couchbase document.
+A List<T> is a .NET data structure that is held in memory. With the data structures provided by the Couchbase .NET SDK, you can store it in a Couchbase document.
 
 To create a Couchbase-backed List:
 
@@ -23,9 +23,9 @@ To create a Couchbase-backed List:
 include::src/Program.cs[tag=createlist]
 ----
 
-The string "myList" corresponds to the document key. When using `CouchbaseList<T>`, a single document with that key will be created (if one doesn't exist already). If a document by that key already exists, `CouchbaseList` will use it.
+The string "myList" corresponds to the key for the document that will contain the list. When using `CouchbaseList<T>`, a single document with that key will be created (if one doesn't exist already). If a document by that key already exists, `CouchbaseList` will use it.
 
-You can now add/remove items from the list, get counts from the list, etc, and that will all be persisted to the document.
+You can now add/remove items from the list and that will all be persisted to the document. You can also perform other operations like getting a count of the items in the list.
 
 [source,C#,indent=0]
 ----
@@ -75,14 +75,14 @@ Very similar to List, you can create a Couchbase-backed queue:
 include::src/Program.cs[tag=createqueue]
 ----
 
-A queue is stored just like a list. The different is that the ordering is significant, and this is reflected by the operations you perform on a queue: Enqueue and Dequeue.
+A queue is stored just like a list. The difference is that the ordering is significant, and this is reflected by the operations you perform on a queue: Enqueue and Dequeue.
 
 [source,C#,indent=0]
 ----
 include::src/Program.cs[tag=queueexample]
 ----
 
-The above code would result in a document with a key "myQueue" that looks like the below. Notice there is no object in the array with num "0" because it was dequeued.
+The above code would result in a document with a key "myQueue" (see JSON below). Notice there is no object in the array with num "0" because it was dequeued.
 
 [source,JavaScript]
 ----
@@ -114,7 +114,7 @@ Again, a document will be created with the given key. The operations that can be
 include::src/Program.cs[tag=dictexample]
 ----
 
-A dictionary document looks like the below:
+A dictionary document looks like:
 
 [source,JavaScript]
 ----
@@ -142,16 +142,18 @@ A dictionary document looks like the below:
 }
 ----
 
+A note about C# dynamic: I used `dynamic` to keep the code samples short and simple. In your application, you are probably better off using a real defined C# type. It all gets serialized to JSON in Couchbase, of course.
+
 == Behind the scenes
 
-Before the subdocument API, these data structures were _possible_, of course. The catch was that you would be loading up the entire document, putting it in a list, and then saving the entire document. If you have large data structures, but are only reading or making changes to a single item, this would often result in wasted time and wasted bandwidth.
+Before the subdocument API was released in Couchbase Server 4.5, these data structures were _possible_, of course. The catch was that you would be loading up the entire document, putting it in a list, making changes to the list, and then saving the entire document. If you have large data structures, but are only reading or making changes to a single item, this would often result in wasted time and wasted bandwidth and possibly increased contention.
 
-The subdocument-API (which you can use directly, and I covered in link:https://blog.couchbase.com/2016/july/sub-document-api-in-couchbase-server-4.5-with-the-.net-sdk-revisted[Sub-document API in Couchbase Server 4.5 with the .NET SDK (revisited)]) is used behind the scenes in CouchbaseList, CouchbaseQueue, and CouchbaseDictionary. So when you add an item to CouchbaseList, for instance, only that item is being sent over the wire, not the entire list.
+The subdocument-API (which you can use directly; I covered it in the link:https://blog.couchbase.com/2016/july/sub-document-api-in-couchbase-server-4.5-with-the-.net-sdk-revisted[Sub-document API in Couchbase Server 4.5 with the .NET SDK (revisited)] blog post) is used behind the scenes in `CouchbaseList`, `CouchbaseQueue`, and `CouchbaseDictionary`. So when you add an item to a `CouchbaseList`, for instance, only that item is being sent over the wire, not the entire list.
 
-Some operations will still need to get the entire document. For instance, iterating through a collection using a foreach loop will retrieve the full document. Removing an item from a list will result in the full document being scanned. But the great thing is that if sub-document operations come along to support those actions, the SDK implementation will be updated accordinging.
+Some operations will still need to get the entire document. For instance, iterating through a collection using a `foreach` loop will retrieve the full document. Removing an item from a list will result in the full document being scanned. But if sub-document operations come along in the future to support those actions, the SDK implementations will be updated accordinging.
 
 == Summary
 
-These data structures are another tool to help you manage your data. Since they use the sub-document API, they are more performant than a whole-document approach. For more detail, check out the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/datastructures.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Data Structures documentation].
+These data structures are another tool to help you manage your data. Since they use the sub-document API, they are generally more performant than a whole-document approach. For more detail, check out the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/datastructures.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Data Structures documentation].
 
 Have questions? Feedback? Need help? link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Please visit our forums], ping me on link:https://twitter.com/mgroves[Twitter @mgroves], or leave a comment.
