@@ -148,6 +148,8 @@ Before the subdocument API, these data structures were _possible_, of course. Th
 
 The subdocument-API (which you can use directly, and I covered in link:https://blog.couchbase.com/2016/july/sub-document-api-in-couchbase-server-4.5-with-the-.net-sdk-revisted[Sub-document API in Couchbase Server 4.5 with the .NET SDK (revisited)]) is used behind the scenes in CouchbaseList, CouchbaseQueue, and CouchbaseDictionary. So when you add an item to CouchbaseList, for instance, only that item is being sent over the wire, not the entire list.
 
+Some operations will still need to get the entire document. For instance, iterating through a collection using a foreach loop will retrieve the full document. Removing an item from a list will result in the full document being scanned. But the great thing is that if sub-document operations come along to support those actions, the SDK implementation will be updated accordinging.
+
 == Summary
 
 These data structures are another tool to help you manage your data. Since they use the sub-document API, they are more performant than a whole-document approach. For more detail, check out the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/datastructures.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Data Structures documentation].
