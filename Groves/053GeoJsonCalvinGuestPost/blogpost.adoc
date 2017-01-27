@@ -1,0 +1,195 @@
+= Getting Started with GeoJSON, Couchbase, .NET, and Google Maps
+
+_This is a guest post by Calvin Allen. Calvin is a .NET developer in Columbus, OH that enjoys designing software that not only solves business problems, but it easy to use, on budget, and on time. If he isn't designing software, he's learning how to be a better software developer. This isn’t just a career for him – it’s also a lifestyle._
+
+_Follow along with Calvin's post by link:https://github.com/CalvinAllen/geojson-with-couchbase-and-dotnet[checking out the source code and GitHub] and link:https://couchbase.com/download?utm_source=blogs&utm_medium=link&utm_campaign=blogs[downloading the latest developer preview release of Couchbase]._
+
+What is GeoJSON? link:http://geojson.org/[GeoJSON.org] defines it as:
+"GeoJSON is a format for encoding a variety of geographic data structures"
+
+What does that really mean, though?  Essentially, it's a standard format, using the JSON structure, for defining geographic objects.  These "geographic objects" can be a number of various items, ranging from a simple "Point", to a more complex object, such as a "Polygon".
+
+Here is a simple example of a "point on a map" for the "Dinagat Islands":
+
+[source,JavaScript]
+----
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          125.6,
+          10.1
+        ]
+      },
+      "properties": { }
+    }
+  ]
+}
+----
+
+Now that you have all the backstory, you may be asking, "Why do I even need GeoJSON?".  The simple answer is that it's a standard currently supported in a variety of mapping technologies, such as Google Maps.  With your data already in the GeoJSON format, you can provide that data *directly* to Google Maps, and render your object as described.  Not only does it save you from having to "roll your own" format, but other providers are already supporting it, which you can leverage as desired.
+
+Let's get to some code!
+
+I'm going to demonstrate the GeoJSON format using a .NET MVC application, Couchbase (Community) Server (and the .NET SDK), and Google Maps - I'm going to have to assume that you have some working knowledge of all of these utilities.
+
+I won't go into details on how to create the MVC project, or installing/configuring Couchbase, as there are plenty of other tutorials/articles out there describing how to accomplish these items, especially on link:https://blog.couchbase.com/facet/Author/Matthew+Groves[Matthew Groves Couchbase blog].  
+One thing I will mention now, is that I called the Couchbase bucket "features", and have pre-loaded it (all through the Couchbase Console) with two documents - one for a polygon around Rome, and one with a point over the Dinagat Islands (as seen above). Both of these json files can be found in the github repository that I'll link to later in the article.
+
+With the new MVC website loaded up in Visual Studio, open the NuGet package manager console, and type the following command to load the Couchbase .NET SDK:
+
+----
+Install-Package couchbasenetclient
+----
+
+Once the Couchbase .NET SDK has finished installing, run the following command to install the geojson library:
+
+----
+Install-Package geojson.net
+----
+
+The first package, "couchbasenetclient", will be used to communicate to our local Couchbase server for managing our GeoJSON documents.  This is a library created / supported by the Couchbase Team.  The next, "geojson.net", is a helper library to create / read GeoJSON documents.  Under the hood, the geojson.net library utilizes JSON.Net for json serialization / deserialization of the .NET types that the library provides to us.  You could definitely get away without this package/library, and manage the types yourself, but to keep thing simple, I'm choosing to utilize it.
+
+The first thing we need to do is wire up our controller.  I'm going to reuse the "HomeController" that already exists in the project.
+
+First, I'll add a constructor, which we'll use to store our bucket:
+
+[source,C#,indent=0]
+----
+    public class HomeController : Controller {
+
+	    private readonly IBucket _bucket;
+
+	    public HomeController() {
+		    _bucket = ClusterHelper.GetBucket("features");
+	    }
+
+    }
+----
+
+Now, I'm going to need three endpoints - 
+
+1. One to get a list of all features
+2. One that will act as a simple routing to the map page (you'll see what I mean)
+3. And, lastly, one that the Google Maps API will make a direct call to, in order to get the JSON for the feature.
+
+Here are all three:
+
+First - is the action that returns the entire list of features in my Couchbase bucket.  This is just a simple N1QL query to get the Feature Ids as a list of strings. (I only care about the ID of the feature in the list page)
+
+[source,C#,indent=0]
+----
+public ActionResult Features() {
+	var request = QueryRequest.Create("SELECT META().id as `id` FROM `features` as f");
+
+	request.ScanConsistency(ScanConsistency.RequestPlus);
+
+	var featureIds = _bucket
+			.Query<dynamic>(request)
+			.Rows
+			.Select(x => x.id.ToString() as string)
+			.ToList();
+
+	return View(featureIds);
+}
+----
+
+This is the simple routing method that I utilize while navigating from the list page to hold the ID of the requested feature the user clicked on.
+
+[source,C#,indent=0]
+----
+public ActionResult MapFeature(string id) {
+    ViewBag.FeatureId = id;
+    return View();
+}
+----
+
+And, finally, this method gets called via the Google Maps API in the MapFeature page to get the JSON of the feature the user wishes to map (again, using the FeatureCollection object from the geojson.net library - this uses Json.Net to serialize that object, which comes with its own serializers in the library as well).
+
+[source,C#,indent=0]
+----
+public ContentResult GetFeatureJson(string id) {
+    var feature = _bucket.Get<FeatureCollection>(id).Value;
+	var json = JsonConvert.SerializeObject(feature);
+
+	return Content(json, "application/json");
+}
+----
+
+Now, onto the view pages themselves (there's only two)
+
+On the "Features" page, which is just a listing of the features in our Couchbase bucket - we just output each of the feature IDs into an action link inside of an unordered list:
+
+[source,C#,indent=0]
+----
+@model List<string>
+
+<h2>Features</h2>
+
+<ul>
+	@foreach (var feature in Model) {
+		<li>@Html.ActionLink(feature, "MapFeature", "Home", new { id = feature }, null)</li>
+	}
+</ul>
+----
+
+The last page, MapFeature, is the one that does the "heavy lifting":
+
+[source,C#,indent=0]
+----
+<h2>Map Feature</h2>
+@{
+	var id = ViewBag.FeatureId;
+}
+
+<div id="map_wrap" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;">
+	<div id="map" style="position: absolute; top: 0; bottom: 0; width: 100%; height: 100%;">
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function () {
+		var map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 6
+		});
+
+		map.data.loadGeoJson('/Home/GetFeatureJson/@id');
+		
+		//the callback for each of the features in the loop - last one wins
+		function forEachGeometry(feature) {
+			feature.getGeometry().forEachLatLng(resetCenter);
+		};
+
+		//takes the Latitute and Longitude from each Geometry and resets the center point on the map - last one wins - totally inefficient
+		function resetCenter(latLng) {
+			map.setCenter(latLng);
+		};
+
+		//every time a feature is added to the map, loop over the collection - completely inefficient, but should provide an idea
+		map.data.addListener('addfeature', function (e) {
+			map.data.forEach(forEachGeometry);
+		});
+
+	});
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=<YOUR_API_KEY>"></script>
+----
+
+As this page loads up, we get the ID of the feature that the user clicked on (stored in ViewBag), and then dive right into our HTML markup.  You'll notice the two divs, which are placeholders (especially the interior one), that the Google Maps API will utilize to display the map/features.
+
+Then we get into the Javascript - most of this is pretty basic, and link:https://developers.google.com/maps/documentation/javascript/[straight from the documents Google provides], except for the few bolt-on methods I added, which we'll look at.
+
+The very first thing we do is 'new up' our map object, and tell it what DOM element to utilize, and what the default zoom level will be.  Then you can see that we are using a built-in method of Google Maps, loadGeoJson, that takes our local URL for grabbing the JSON out of our Couchbase bucket.
+
+The next few methods are quick bolt-on's I added for the sake of the demo, which are not meant to be utilized in a production environment, as they are very inefficient.  They reset the center of the map to the last Latitude/Longitude object we find in the data we loaded into the map.  This is not precise logic, but it will "center" the map over top of whichever feature we are rendering.
+
+The last thing we do is load the Google Maps API from their CDN.
+
+This is a very simple example of storing/querying GeoJSON data from a Couchbase instance, and loading it into a mapping product.  And, although I chose Google Maps, other providers, such as MapBox, support GeoJSON as well.
+
+And, lastly, if you need to see the example in its entirety, link:https://github.com/CalvinAllen/geojson-with-couchbase-and-dotnet[check out the code over on github].  You'll simply need to modify the MapFeature.cshtml page to include your own Google Maps API Key (visit link:https://developers.google.com/maps/documentation/javascript/[ https://developers.google.com/maps/documentation/javascript/], log in with your Google account, and click the "Get A Key" button on the top-right) and that should be it!  Feel free to drop me a line if you have further questions - I'm on Twitter as link:https://twitter.com/CalvinAllen_[CalvinAllen_], or check out my personal blog at link:https://www.calvinallen.net/[https://www.calvinallen.net].
