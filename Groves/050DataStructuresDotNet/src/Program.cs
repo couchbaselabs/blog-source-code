@@ -29,7 +29,8 @@ namespace ConsoleApplication
             list.RemoveAt(5);
 
             // show an item from the list by index
-            Console.WriteLine("5th item in the list: " + list[5].foo + " / " + list[5].num);
+            var item = list[5];
+            Console.WriteLine("6th item in the list: " + item.foo + " / " + item.num);
             // end::examplesoflist[]
 
             // --- queue

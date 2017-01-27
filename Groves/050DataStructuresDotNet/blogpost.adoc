@@ -34,6 +34,8 @@ include::src/Program.cs[tag=examplesoflist]
 
 The above code would result in a document with a key "myList" that looks like below. Notice that the item with num of 5 is not listed, because it was removed.
 
+There's something subtle in the above example that needs to be pointed out. Notice that I used `var item = list[5];` and then `item.foo` and `item.num` in the `WriteLine`. If I used `list[5].foo` and `list[5].num` directly, that would result in two different subdocument calls to Couchbase. Not only is this less than optimal efficiency, but it's possible for the values to change between the two calls.
+
 [source,JavaScript]
 ----
 [
