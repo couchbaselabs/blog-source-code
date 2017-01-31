@@ -60,15 +60,15 @@ First, I'll add a constructor, which we'll use to store our bucket:
 
 [source,C#,indent=0]
 ----
-    public class HomeController : Controller {
+public class HomeController : Controller {
 
-	    private readonly IBucket _bucket;
-
-	    public HomeController() {
-		    _bucket = ClusterHelper.GetBucket("features");
-	    }
-
+    private readonly IBucket _bucket;
+    
+    public HomeController() {
+        _bucket = ClusterHelper.GetBucket("features");
     }
+
+}
 ----
 
 Now, I'm going to need three endpoints - 
