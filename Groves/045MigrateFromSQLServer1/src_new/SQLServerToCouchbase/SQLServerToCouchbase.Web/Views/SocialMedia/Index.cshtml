@@ -1,0 +1,24 @@
+﻿@model List<SQLServerToCouchbase.Core.SocialMedia.Update>
+@{
+    ViewBag.Title = "Social Media";
+}
+
+<p>@Html.ActionLink("Create a new update (and a new user).","SeedData")</p>
+
+@if (!Model.Any())
+{
+    <p>There are no updates yet.</p>
+}
+else
+{
+    <h2>10 Latest Social Media Posts</h2>
+    <div class="list-group">
+        @foreach (var update in Model)
+        {
+            <div class="list-group-item">
+                <p><strong>@Html.ActionLink(update.User.Name, "UserPage", new { id = update.User.Id})</strong> - @update.PostedDate</p>
+                <p>@update.Body</p>
+            </div>
+        }
+    </div>
+}

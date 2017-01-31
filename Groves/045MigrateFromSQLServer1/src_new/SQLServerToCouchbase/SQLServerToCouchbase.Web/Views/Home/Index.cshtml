@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>SQL Server to Couchbase</h1>
+    <p class="lead">This project is meant to compare and contrast using SQL Server and Couchbase Server.</p>
+    <p>Currently, this site is configured to use <strong>@ViewBag.DatabaseType</strong>. Change the "WhichDatabase" setting in Web.config to switch.</p>
+    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Social Media</h2>
+        <p>
+            This is an example of a data model for simple social media functionality. SQL Server uses its standard denormalization.
+            Couchbase uses a referencial model to associate documents by key.
+        </p>
+        <p>@Html.ActionLink("Social Media >>","Index", new { Controller = "SocialMedia"},new { @class ="btn btn-default"})</p>
+    </div>
+    <div class="col-md-6">
+        <h2>Shopping Cart</h2>
+        <p>This is an example of a data model for shopping cart functionality. SQL Server uses its standard denormalization.
+            Couchbase uses a denormalized approach.</p>
+        <p>@Html.ActionLink("Shopping Cart >>", "Index", new { Controller = "ShoppingCart" }, new { @class = "btn btn-default" })</p>
+    </div>
+</div>
