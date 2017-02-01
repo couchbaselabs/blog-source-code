@@ -1,0 +1,25 @@
+﻿@model List<SQLServerToCouchbase.Core.Shopping.ShoppingCart>
+@{
+    ViewBag.Title = "Shopping Carts";
+}
+
+<p>@Html.ActionLink("Create a new shopping cart.","SeedData")</p>
+
+@if (!Model.Any())
+{
+    <p>There are no shopping carts.</p>
+}
+else
+{
+    <h2>10 Newest Shopping Carts</h2>
+    <div class="list-group">
+        @foreach (var cart in Model)
+        {
+            <div class="list-group-item">
+                <p><strong>@cart.User</strong>'s shopping cart</p>
+                <p>Contains @cart.Items.Count item(s), totalling @cart.Items.Sum(i => i.Total).ToString("c")</p>
+                <p>@Html.ActionLink("View Cart", "Cart", new { id = @cart.Id })</p>
+            </div>
+        }
+    </div>
+}
