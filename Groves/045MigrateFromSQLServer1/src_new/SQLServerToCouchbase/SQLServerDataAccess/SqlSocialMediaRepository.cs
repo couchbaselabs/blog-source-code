@@ -17,7 +17,10 @@ namespace SQLServerDataAccess
 
         public List<Update> GetTenLatestUpdates()
         {
-            var updates = _context.FriendBookUpdates.OrderByDescending(u => u.PostedDate).Take(10).ToList();
+            var updates = _context.FriendBookUpdates
+                .OrderByDescending(u => u.PostedDate)
+                .Take(10)
+                .ToList();
             return updates;
         }
 
@@ -47,27 +50,54 @@ namespace SQLServerDataAccess
 
         public List<Update> GetTenLatestUpdatesForUser(Guid id)
         {
-            throw new NotImplementedException();
+            var updates = _context.FriendBookUpdates
+                .Where(u => u.User.Id == id)
+                .OrderByDescending(u => u.PostedDate)
+                .Take(10)
+                .ToList();
+            return updates;
         }
 
         public void SendUpdate(Guid userId, string body)
         {
-            throw new NotImplementedException();
+           // get user
+            var user = _context.FriendBookUsers
+                .SingleOrDefault(u => u.Id == userId);
+
+            // create update
+            var update = new Update
+            {
+                Id = Guid.NewGuid(),
+                Body = body,
+                User = user,
+                PostedDate = DateTime.Now
+            };
+            _context.FriendBookUpdates.Add(update);
+            _context.SaveChanges();
         }
 
         public FriendbookUser GetUserById(Guid id)
         {
-            throw new NotImplementedException();
+            var user = _context.FriendBookUsers
+                .Where(u => u.Id == id)
+                .FirstOrDefault();
+            return user;
         }
 
         public FriendbookUser GetUserByName(string friendName)
         {
-            throw new NotImplementedException();
+            var user = _context.FriendBookUsers
+                .Where(u => u.Name.ToLower() == friendName.ToLower())
+                .FirstOrDefault();
+            return user;
         }
 
         public void AddFriend(Guid userId, Guid friendId)
         {
-            throw new NotImplementedException();
+            var user = GetUserById(userId);
+            var friend = GetUserById(friendId);
+            user.Friends.Add(friend);
+            _context.SaveChanges();
         }
     }
 }

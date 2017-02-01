@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace SQLServerToCouchbase.Core.SocialMedia
 {
@@ -7,6 +8,7 @@ namespace SQLServerToCouchbase.Core.SocialMedia
         public Guid Id { get; set; }
         public DateTime PostedDate { get; set; }
         public string Body { get; set; }
-        public FriendbookUser User { get; set; }
+        public virtual FriendbookUser User { get; set; }
+        public Guid UserId { get; set; }
     }
 }

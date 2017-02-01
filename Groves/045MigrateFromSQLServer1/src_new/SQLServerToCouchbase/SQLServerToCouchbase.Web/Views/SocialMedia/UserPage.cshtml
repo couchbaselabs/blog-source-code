@@ -16,7 +16,7 @@ else
 {
     <h2>@Model.User.Name</h2>
     <h3>Write an update</h3>
-    using (Html.BeginForm("UserPage"))
+    using (Html.BeginForm("UserPage", "SocialMedia", FormMethod.Post))
     {
         @Html.Hidden("UserId", Model.User.Id)
         @Html.TextArea("Body", new { placeholder = "What's happening?", style="width: 500px;", rows=3})

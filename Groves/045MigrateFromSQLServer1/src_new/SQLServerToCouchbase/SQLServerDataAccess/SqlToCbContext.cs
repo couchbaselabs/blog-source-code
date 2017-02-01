@@ -1,3 +1,4 @@
+using System;
 using System.Data.Entity.ModelConfiguration;
 using SQLServerToCouchbase.Core.Shopping;
 using SQLServerToCouchbase.Core.SocialMedia;
@@ -63,12 +64,8 @@ namespace SQLServerDataAccess
             this.Property(m => m.Body);
             this.Property(m => m.PostedDate);
             this.HasRequired(m => m.User)
-                .WithRequiredDependent()
-                .Map(m =>
-                {
-                    m.MapKey("User");
-                    m.ToTable("FriendBookUsers");
-                });
+                .WithMany()
+                .HasForeignKey(m => m.UserId);
         }
     }
 
