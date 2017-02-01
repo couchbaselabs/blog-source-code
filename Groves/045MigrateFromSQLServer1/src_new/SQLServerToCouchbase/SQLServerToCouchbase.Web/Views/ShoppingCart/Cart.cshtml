@@ -11,7 +11,7 @@
 
 <h2>Items</h2>
 
-@if (!Model.Items.Any())
+@if (Model.Items == null || !Model.Items.Any())
 {
     <p>There are no items in this shopping cart.</p>
 }

@@ -17,7 +17,7 @@ else
         {
             <div class="list-group-item">
                 <p><strong>@cart.User</strong>'s shopping cart</p>
-                <p>Contains @cart.Items.Count item(s), totalling @cart.Items.Sum(i => i.Total).ToString("c")</p>
+                <p>Contains @cart.ItemCount item(s), totalling @cart.ItemTotal.ToString("c")</p>
                 <p>@Html.ActionLink("View Cart", "Cart", new { id = @cart.Id })</p>
             </div>
         }

@@ -44,6 +44,7 @@ namespace SQLServerToCouchbase.Web.Controllers
             // normally validation would go here
             var item = new Item
             {
+                Id = Guid.NewGuid(), // only necessary for entity framework
                 Name = name,
                 Price = price ?? 0,
                 Quantity = quantity ?? 0

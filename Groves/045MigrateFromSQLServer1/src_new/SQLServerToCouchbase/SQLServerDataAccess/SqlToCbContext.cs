@@ -50,7 +50,9 @@ namespace SQLServerDataAccess
             this.ToTable("ShoppingCart");
             this.Property(m => m.User);
             this.Property(m => m.DateCreated);
-            this.HasMany(m => m.Items);
+            this.HasMany(m => m.Items)
+                .WithOptional()
+                .HasForeignKey(m => m.ShoppingCartId);
         }
     }
 
