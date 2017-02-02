@@ -23,7 +23,7 @@ namespace CouchbaseServerDataAccess
             var n1ql = @"SELECT up.body, up.postedDate, TOOBJECT({ 'id': META(u).id, u.name}) AS `user`
                 FROM `sqltocb` up
                 JOIN `sqltocb` u ON KEYS up.`user`
-                WHERE up.type = 'update'
+                WHERE up.type = 'Update'
                 ORDER BY STR_TO_MILLIS(up.postedDate) DESC
                 LIMIT 10;";
             var query = QueryRequest.Create(n1ql);
@@ -48,7 +48,7 @@ namespace CouchbaseServerDataAccess
                 {
                     Friends = new List<dynamic>(),
                     Name = user.Name,
-                    Type = "user"
+                    Type = "User"
                 }
             });
 
@@ -67,7 +67,7 @@ namespace CouchbaseServerDataAccess
                     Body = update.Body,
                     PostedDate = update.PostedDate,
                     User = userId,
-                    Type = "update"
+                    Type = "Update"
                 }
             });
         }
@@ -77,7 +77,7 @@ namespace CouchbaseServerDataAccess
             var n1ql = @"SELECT up.body, up.postedDate, TOOBJECT({ 'id': META(u).id, u.name}) AS `user`
                 FROM `sqltocb` up
                 JOIN `sqltocb` u ON KEYS up.`user`
-                WHERE up.type = 'update'
+                WHERE up.type = 'Update'
                 AND META(u).id = $userId
                 ORDER BY STR_TO_MILLIS(up.postedDate) DESC
                 LIMIT 10;";
@@ -98,7 +98,7 @@ namespace CouchbaseServerDataAccess
                     Body = body,
                     PostedDate = DateTime.Now,
                     User = userId.ToString(),
-                    Type = "update"
+                    Type = "Update"
                 }
             });
         }

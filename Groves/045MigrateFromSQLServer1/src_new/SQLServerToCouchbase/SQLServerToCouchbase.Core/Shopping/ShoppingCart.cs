@@ -9,6 +9,7 @@ namespace SQLServerToCouchbase.Core.Shopping
         public Guid Id { get; set; }
         public string User { get; set; }
         public DateTime DateCreated { get; set; }
+        public string Type { get; set; }
 
         public List<Item> Items { get; set; }
 
