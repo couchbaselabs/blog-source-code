@@ -63,10 +63,12 @@ namespace CouchbaseServerDataAccess
             });
         }
 
+        // tag::GetCartById[]
         public ShoppingCart GetCartById(Guid id)
         {
             return _bucket.Get<ShoppingCart>(id.ToString()).Value;
         }
+        // end::GetCartById[]
 
         public void AddItemToCart(Guid cartId, Item item)
         {

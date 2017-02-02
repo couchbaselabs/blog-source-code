@@ -131,22 +131,19 @@ include::src/SQLServerToCouchbase/SQLServerToCouchbase.Core/SocialMedia/Friendbo
 include::src/SQLServerToCouchbase/SQLServerToCouchbase.Core/SocialMedia/Update.cs[tag=Update]
 ----
 
-_The `Update` to `FriendbookUser` relationship can be modeled as either a `Guid` or as another `FriendbookUser` object. This is an implementation detail. You might prefer one, the other, or both, depending on your application needs and/or how your OR/M works. In either case, the underlying model is the same._
-
-Here's the mapping I used for these classes in Entity Framework. Your mileage may vary, depending on how you use EF or other OR/M tool. Focus on the underlying model and not the details of the OR/M mapping tool.
+Notice that `
+And here's the mapping psuedo-code that might be used in the OR/M:
 
 [source,C#,indent=0]
 ----
-include::src/SQLServerToCouchbase/SQLServerDataAccess/UpdateMap.cs[tag=Map]
-
-include::src/SQLServerToCouchbase/SQLServerDataAccess/FriendbookUserMap.cs[tag=Map]
+include::src/SocialMedia.cs[tag=Mappings]
 ----
 
-If, instead of storing these entities as separate documents, we applied the same denormalization as the shopping cart example and attempted to store a user and updates in one document, we would end up with some problems.
+If we applied the same denormalization as the shopping cart example, we would end up with some problems.
 
-* *Duplication of friends*: each user would store the details for their friends. This is not tenable, because now a user's information would be stored in multiple places instead of having a single source of truth (unlike the shopping cart, where having the same item in more than one shopping cart probably doesn't make any domain sense). This might be okay when using Couchbase as a cache, but not as a primary data store.
+* *One*: each user would store the details for their friends. This is not tenable, because now a user's information would be stored in multiple places instead of having a single source of truth (unlike the shopping cart, where having the same item in more than one shopping cart probably doesn't make any domain sense). This might be okay when using Couchbase as a cache, but not as a primary data store.
 
-* *Size of updates*: Over a period of regular use, an individual user could post hundreds or thousands of updates. This could lead to a very large document which could slow down I/O operations. This can be mitigated with Couchbase's sub-document API, but also note that Couchbase has a ceiling of 20mb per document.
+* *Two*: Over a period of regular use, an individual user could post hundreds or thousands of updates. This could lead to a very large document which could slow down I/O operations. Additionally, Couchbase has a ceiling of 20mb per document.
 
 _Note: There's an N+1 problem here too (friends of friends, etc), but I'm not going to spend time on addressing that. It's a problem that's not unique to either database._
 
@@ -178,21 +175,21 @@ The drawback is that it involves at least two operations (get FriendbookUser doc
 
 === N1QL
 
-In Couchbase, you have the ability to write queries using N1QL, which is SQL for JSON. This includes the `JOIN` keyword. This allows me to, for instance, write a query to get the 10 latest updates and the users that correspond to them.
+In Couchbase, you have the ability to write queries using N1QL, which is SQL for JSON. This includes the `JOIN` keyword. This allows me to, for instance, given a name, write a query to get all the updates.
 
-[source,C#,indent=0]
+[source,JavaScript,indent=0]
 ----
-include::src/SQLServerToCouchbase/CouchbaseServerDataAccess/CouchbaseSocialMediaRepository.cs[tag=GetTenLatestUpdates]
+include::src/SocialMedia.n1ql[]
 ----
 
 The result of this query would be:
 
 [source,JavaScript,indent=0]
 ----
-include::src/SQLServerToCouchbase/CouchbaseServerDataAccess/ExampleResultsGetTenLatestUpdates.json[]
+include::src/SocialMediaN1qlResult.json[]
 ----
 
-N1QL allows you to have great flexibility in retrieving data. I don't have to be restricted by just using keys. It's also easy to pick up, since it's a superset of SQL that SQL Server users will be comfortable with quickly. However, the tradeoff here is that indexing is important. Even more so than SQL Server indexing. If you were to write a query on the `Name` field, for instance, you should have an index like:
+N1QL allows you to have great flexibility in retrieving data. I don't have to be restricted by just using keys. It's also easy to pick up, since it's a superset of SQL that SQL Server users will be comfortable with quickly. However, the tradeoff here is that indexing is important. Even more so than SQL Server indexing. The above N1QL query, for instance, should have an index like:
 
 [source,SQL,indent=0]
 ----
@@ -228,7 +225,7 @@ When using N1QL, another tactic that can be used in addition to or instead of me
 
 [source,JavaScript,indent=0]
 ----
-include::src/SQLServerToCouchbase/TypeField1.json[]
+include::src/TypeField1.json[]
 ----
 
 There's nothing magical about the `type` field. It's not a reserved word within a document and it's not treated specially by Couchbase Server. It could just as easily be named `documentType`, `theType`, etc. But it can be useful within your application when using N1QL to query documents of a certain kind.
@@ -244,7 +241,7 @@ You may even take it a step further and add an embedded object to your documents
 
 [source,JavaScript,indent=0]
 ----
-include::src/SQLServerToCouchbase/TypeField2.json[]
+include::src/TypeField2.json[]
 ----
 
 That may be overkill for some applications. It's similar to a pattern I've seen in relational databases: a 'root' table to simulate inheritence within a relational database, or perhaps the same fields tacked on to every table.

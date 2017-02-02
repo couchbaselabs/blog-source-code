@@ -18,6 +18,7 @@ namespace CouchbaseServerDataAccess
             _bucket = ClusterHelper.GetBucket("sqltocb");
         }
 
+        // tag::GetTenLatestUpdates[]
         public List<Update> GetTenLatestUpdates()
         {
             var n1ql = @"SELECT up.body, up.postedDate, TOOBJECT({ 'id': META(u).id, u.name}) AS `user`
@@ -31,6 +32,7 @@ namespace CouchbaseServerDataAccess
             var result = _bucket.Query<Update>(query);
             return result.Rows;
         }
+        // end::GetTenLatestUpdates[]
 
         public void SeedData()
         {

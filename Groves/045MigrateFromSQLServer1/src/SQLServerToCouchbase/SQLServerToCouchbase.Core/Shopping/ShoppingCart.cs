@@ -4,14 +4,18 @@ using System.Linq;
 
 namespace SQLServerToCouchbase.Core.Shopping
 {
+    // tag::ShoppingCart[]
     public class ShoppingCart
     {
+    // end::ShoppingCart[]
+    // tag::ShoppingCart2[]
         public Guid Id { get; set; }
         public string User { get; set; }
         public DateTime DateCreated { get; set; }
-        public string Type { get; set; }
-
         public List<Item> Items { get; set; }
+    // end::ShoppingCart2[]
+
+        public string Type { get; set; }
 
         public int ItemCount
         {
@@ -32,5 +36,7 @@ namespace SQLServerToCouchbase.Core.Shopping
                 return Items.Sum(i => i.Total);
             }
         }
+    // tag::ShoppingCart3[]
     }
+    // end::ShoppingCart3[]
 }
