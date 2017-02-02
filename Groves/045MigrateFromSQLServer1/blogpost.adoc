@@ -4,27 +4,37 @@
 
 In this series of blog posts, I'm going to lay out the considerations when moving to a document database when you have a relational background. Specifically, Microsoft SQL Server as compared to  link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
 
-I'm going to cover data modeling, [links when posts are published, put them in numbered list] the data itself, and applications using the data. The goal is to lay down some general guidelines that you can apply to your application planning and design.
+In three parts, I'm going to cover:
+
+* Data modeling (this blog post)
+* The data itself
+* Applications using the data
+
+The goal is to lay down some general guidelines that you can apply to your application planning and design.
+
+If you would like to follow along, I've created an application that demonstrates Couchbase and SQL Server side-by-side. link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer1/src[Get the source code from GitHub], and make sure to link:https://couchbase.com/downloads?utm_source=blogs&utm_medium=link&utm_campaign=blogs[download a developer preview of Couchbase Server].
 
 == Why would I do this?
 
-Before we get started, I want to spend a little bit of time on motivation. There are 3 main reasons why one might consider using a document data store instead of or in addition to a relational database. Your motivation may be one or all three:
+Before we get started, I want to spend a little bit of time on motivation. There are 3 main reasons why one might consider using a document data store instead of (or in addition to) a relational database. Your motivation may be one or all three:
 
-* *Speed*: Couchbase Server uses a link:http://developer.couchbase.com/documentation/server/current/architecture/managed-caching-layer-architecture.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[memory-first architecture] which can provide a great speed boost as compared to a relational database
-* *Scalability*: Couchbase Server is a link:http://developer.couchbase.com/documentation/server/current/architecture/architecture-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[distributed database], which allows you to scale out (and scale back in) capacity by just racking up commodity hardware. [mention some of the drawbacks of scalaiblity with SQL server]
-* *Flexibility*: Some data fits nicely in a relational model, but some data can benefit from the link:http://developer.couchbase.com/documentation/server/current/data-modeling/concepts-data-modeling-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[flexibility of using JSON]. [mention schema maintenance, SQL Server restrictions]
+* *Speed*: Couchbase Server uses a link:http://developer.couchbase.com/documentation/server/current/architecture/managed-caching-layer-architecture.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[memory-first architecture] which can provide a great speed boost as compared to a relational databases
+* *Scalability*: Couchbase Server is a link:http://developer.couchbase.com/documentation/server/current/architecture/architecture-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[distributed database], which allows you to scale out (and scale back in) capacity by just racking up commodity hardware. Built-in Couchbase features like auto-sharding, replication, load balancing make scaling a lot smoother and easier than relational databases. 
+* *Flexibility*: Some data fits nicely in a relational model, but some data can benefit from the link:http://developer.couchbase.com/documentation/server/current/data-modeling/concepts-data-modeling-intro.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[flexibility of using JSON]. Unlike SQL Server, schema maintenance is no longer an issue. With JSON: the schema bends as you need it to.
 
 For these reasons and others, link:http://www.couchbase.com/sql-server-to-nosql[Gannett switched from SQL Server to Couchbase Server]. If you are considering this, definitely link:http://www.couchbase.com/nosql-resources/presentations/how-gannett-achieved-scalability-and-agility-with-nosql.html[check out Gannett's full presentation].
 
-[embed Gannett video]
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mor2p0UqZ14" frameborder="0" allowfullscreen></iframe>
++++
 
 It should be noted that document databases and relational databases can be complimentary. Your application may be best served by one, the other, or a combination of both. In many cases, it simply is not possible to completely remove relational databases from your design, but a document database like Couchbase Server can still bring the above benefits to your software. The rest of this blog series will assume you have a SQL Server background and are either replacing, supplimenting, or starting a new greenfield project using Couchbase.
 
-The ease or difficulty of a transition varies widely based on a number of factors. In some cases it may be extremely easy; in some cases it will be time-consuming and difficult; in some (shrinking number of) cases it may not even be a good idea.
+The ease or difficulty of transitioning an existing application varies widely based on a number of factors. In some cases it may be extremely easy; in some cases it will be time-consuming and difficult; in some (shrinking number of) cases it may not even be a good idea.
 
 == Understanding the differences
 
-The first step is to understand how data is modeled in a document database. In a relational database, data is typically stored flat in a table and it is given structure with primary and foreign keys. As a simple example, let's consider a relational database for a web site that has a shopping cart as well as social media features.
+The first step is to understand how data is modeled in a document database. In a relational database, data is typically stored flat in a table and it is given structure with primary and foreign keys. As a simple example, let's consider a relational database for a web site that has a shopping cart as well as social media features. (In this example, those features are unrelated to keep things simple).
 
 image::045_01_diagram.png[Relational database example diagram]
 
@@ -38,15 +48,19 @@ Here's a high-level comparison of SQL Server features/naming as compared to Couc
 | SQL Server | Couchbase Server
 | Server | Cluster 
 | Database | Bucket
-| Row(s) from multiple tables | Document
+| Row(s) from table(s) | Document
 | Column | JSON key/value
 | Primary Key | Document Key
-| Foreign Key | Reference field
 |====================
 
-These comparisons are a metaphorical starting point. Looking at that table, it might be tempting to take a simplistic approach. There are 5 tables, therefore just create 5 different types of documents, with one document per row. This is the equivalent of literally translating a written language. The approach may work sometimes, but it doesn't take into account the full power of a document database that uses JSON. Just as a literal translation of a written language doesn't take into account cultural context, idioms, and historical context.
+These comparisons are a metaphorical starting point. Looking at that table, it might be tempting to take a simplistic approach. "I have 5 tables, therefore I'll just create 5 different types of documents, with one document per row." This is the equivalent of literally translating a written language. The approach may work sometimes, but it doesn't take into account the full power of a document database that uses JSON. Just as a literal translation of a written language doesn't take into account cultural context, idioms, and historical context.
 
 Because of the flexibility of JSON, the data in a document database can be structured more like a domain object in your application. Therefore you don't have an impedence mismatch that is often addressed by OR/M tools like Entity Framework and NHibernate.
+
+There are two main approaches you can use when modeling data in Couchbase that we will examine further:
+
+* *Denormalization* - Instead of splitting data between tables using foreign keys, group concepts together into a single document.
+* *Referential* - Concepts are given their own documents, but reference other documents using the document key.
 
 == Denormalization example
 
@@ -78,9 +92,9 @@ include::src/SQLServerToCouchbase/SQLServerToCouchbase.Core/Shopping/Item.cs[tag
 include::src/SQLServerToCouchbase/SQLServerToCouchbase.Core/Shopping/Item.cs[tag=Item3]
 ----
 
-These classes would still make sense with Couchbase, so you can reuse them or design them this way. But this design does not match up to a relational table in a direct way.
+These classes would still make sense with Couchbase, so you can reuse them or design them this way. But with a relational database, this design does not match up in a direct way.
 
-So, with a relational database, you might use an OR/M like NHibernate or Entity Framework. The way this mapping is represented in Entity Framework* like this:
+Hence the need for OR/Ms like NHibernate or Entity Framework. The way the above model can be mapped to a relational database is represented in Entity Framework* like this:
 
 [source,C#,indent=0]
 ----
@@ -111,16 +125,18 @@ Let's look at an example where referencing might be the best approach. Suppose y
 
 One way to model this:
 
-* Model users as individual documents
-* Model updates as individual documents that reference a user
-* Model friends as an array of keys that reference other users
+* Users as individual documents
+* Updates as individual documents that reference a user
+* Friends as an array of keys within a user document
 
-With two users, two updates, that would look like 4 documents in Couchbase:
+With two users, two updates, we would have 4 documents in Couchbase that look like this:
 
 [source,JavaScript,indent=0]
 ----
 include::src/SQLServerToCouchbase/CouchbaseServerDataAccess/ExampleSocialMediaDocuments.json[]
 ----
+
+_I decided to model 'friends' as a one-way relationship (like Twitter) for this example, which is why Matt Groves has a friend while Nic Raboy has an empty friends array._
 
 The way to model this in C# could be:
 
@@ -133,7 +149,7 @@ include::src/SQLServerToCouchbase/SQLServerToCouchbase.Core/SocialMedia/Update.c
 
 _The `Update` to `FriendbookUser` relationship can be modeled as either a `Guid` or as another `FriendbookUser` object. This is an implementation detail. You might prefer one, the other, or both, depending on your application needs and/or how your OR/M works. In either case, the underlying model is the same._
 
-Here's the mapping I used for these classes in Entity Framework. Your mileage may vary, depending on how you use EF or other OR/M tool. Focus on the underlying model and not the details of the OR/M mapping tool.
+Here's the mapping I used for these classes in Entity Framework. Your mileage may vary, depending on how you use EF or other OR/M tools. Focus on the underlying model and not the details of the OR/M mapping tool.
 
 [source,C#,indent=0]
 ----
@@ -152,7 +168,7 @@ _Note: There's an N+1 problem here too (friends of friends, etc), but I'm not go
 
 Additionally, it may not be the case that when the application reads or writes a user that it will need to read or write friends & updates. And, when writing an update, it's not likely that the application will need to update a user. Since these entities may often be read/written on their own, that indicates that they need to be modeled as separate documents.
 
-Note the arrays in the `Friends` and `Updates` fields. These values can be used to retrieve the associated documents. Later in this post, I'll discuss how to do it with key/value operations and how to do it with N1QL.
+Note the array in the `Friends` field in the user document and the value in `User` field in the update document. These values can be used to retrieve the associated documents. Later in this post, I'll discuss how to do it with key/value operations and how to do it with N1QL.
 
 To sum up, there are two ways to model data in a document database. The shopping cart example used *nested objects*, while the social media example used *separate documents*. In those examples, it was relatively straightforward to choose. When you're making your own modeling decisions, here's a handy cheat sheet:
 
@@ -201,7 +217,7 @@ CREATE INDEX IX_Name ON `SocialMedia` (Name) USING GSI;
 
 Otherwise the query will fail to execute (if you have no indexing) or it will not be performant (if you only have a primary index created).
 
-link:http://developer.couchbase.com/documentation/server/current/data-modeling/entity-relationship-doc-design.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[There are pros and cons in deciding to use referencing or not]. The values `Friends` and `Updates` are similar to foreign keys, in that they reference another document. But there is no enforcement of values by Couchbase. The management of these keys must be handled properly by the application. Further, while Couchbase provides ACID transactions for single document operations, there is no multi-document ACID transaction available.
+link:http://developer.couchbase.com/documentation/server/current/data-modeling/entity-relationship-doc-design.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[There are pros and cons in deciding to use referencing or not]. The values in `friends` and `user` are similar to foreign keys, in that they reference another document. But there is no enforcement of values by Couchbase. The management of these keys must be handled properly by the application. Further, while Couchbase provides ACID transactions for single document operations, there is no multi-document ACID transaction available.
 
 [forward reference, stay tuned]
 
@@ -209,7 +225,7 @@ There are ways to deal with these caveats in your application layer that will be
 
 == Key design and document differentiation
 
-In relational databases, rows of data (typically, not always) correspond to a primary key, which is often an integer or a Guid, and sometimes a composite key. These keys don't necessarily have any meaning: they are just used to identify a row within a table. For instance, two rows of data in two different tables may have the same key (an integer value of 123, for instance), but that doesn't necessarily mean the data is related. This is because the schema enforced by relational databases often conveys meaning on their own (e.g. a table name).
+In relational databases, rows of data (typically, not always) correspond to a primary key, which is often an integer or a Guid, and sometimes a composite key. These keys don't necessarily have any meaning: they are just used to identify a row within a table. For instance, two rows of data in two different tables may have the same key (an integer value of 123, for instance), but that doesn't necessarily mean the data is related. This is because the schema enforced by relational databases often conveys meaning on its own (e.g. a table name).
 
 In document databases like Couchbase, there isn't anything equivalent to a table, per se. Each document in a bucket must have a unique key. But a bucket can have a variety of documents in it. Therefore, it's often wise to come up with a way to differentiate documents within a bucket.
 
@@ -253,8 +269,8 @@ That may be overkill for some applications. It's similar to a pattern I've seen 
 
 This blog post covered data modeling using denormalization, data modeling using referencing, key design, and discriminating fields. Modeling data in a document database is a thought process, something of an art form, and not a mechanical process. There is no prescription on how to model your data in a document database: it depends greatly on how your application interacts with your data.
 
-You can get the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer1/src[source code for the entire blog series on GitHub now]. If you have questions about various parts of that code, feel free to leave a comment below, or open an issue on GitHub.
+You can get the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer1/src[source code for the entire blog series on GitHub now], parts of which were featured in this blog post. If you have questions about various parts of that code, feel free to leave a comment below, or open an issue on GitHub.
 
 Stay tuned for the next blog in the series, where data and data migration will be discussed.
 
-If you have any questions, please leave a comment below on link:http://twitter.com/mgroves[contact me on Twitter].
+If you have any questions, please leave a comment below, link:http://twitter.com/mgroves[contact me on Twitter], or use the link:https://forums.couchbase.com?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Forums].

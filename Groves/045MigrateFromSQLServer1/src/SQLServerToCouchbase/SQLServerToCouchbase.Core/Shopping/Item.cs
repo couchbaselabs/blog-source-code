@@ -7,7 +7,7 @@ namespace SQLServerToCouchbase.Core.Shopping
     {
         // end::Item[]
         // tag::Item2[]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; }    // necessary for SQL Server, not for Couchbase
         public string Name { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }

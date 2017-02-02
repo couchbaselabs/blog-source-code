@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ExampleResultsGetTenLatestUpdates.json" />
     <None Include="ExampleSocialMediaDocuments.json" />
     <None Include="ExampleShoppingCartDocument.json" />
     <None Include="packages.config" />

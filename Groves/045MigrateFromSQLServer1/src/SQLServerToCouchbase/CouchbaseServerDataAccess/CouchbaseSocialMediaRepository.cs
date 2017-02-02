@@ -21,7 +21,7 @@ namespace CouchbaseServerDataAccess
         // tag::GetTenLatestUpdates[]
         public List<Update> GetTenLatestUpdates()
         {
-            var n1ql = @"SELECT up.body, up.postedDate, TOOBJECT({ 'id': META(u).id, u.name}) AS `user`
+            var n1ql = @"SELECT up.body, up.postedDate, { 'id': META(u).id, u.name} AS `user`
                 FROM `sqltocb` up
                 JOIN `sqltocb` u ON KEYS up.`user`
                 WHERE up.type = 'Update'
