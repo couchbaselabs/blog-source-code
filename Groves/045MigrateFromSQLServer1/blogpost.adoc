@@ -219,9 +219,7 @@ Otherwise the query will fail to execute (if you have no indexing) or it will no
 
 link:http://developer.couchbase.com/documentation/server/current/data-modeling/entity-relationship-doc-design.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[There are pros and cons in deciding to use referencing or not]. The values in `friends` and `user` are similar to foreign keys, in that they reference another document. But there is no enforcement of values by Couchbase. The management of these keys must be handled properly by the application. Further, while Couchbase provides ACID transactions for single document operations, there is no multi-document ACID transaction available.
 
-[forward reference, stay tuned]
-
-There are ways to deal with these caveats in your application layer that will be discussed further in later blog posts in this series.
+There are ways to deal with these caveats in your application layer that will be discussed further in later blog posts in this series, so stay tuned!
 
 == Key design and document differentiation
 
