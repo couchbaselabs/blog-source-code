@@ -1,0 +1,11 @@
+= A tour of the new Couchbase Web Console (video)
+
+Earlier this month, we link:https://blog.couchbase.com/2017/january/introducing-developer-builds[introduced Developer Builds]. In this video, I take you on a quick tour of the new Couchbase Web Console.
+
+_This is a video version of the link:https://blog.couchbase.com/2017/january/a-tour-of-the-new-couchbase-web-console[blog I wrote earlier about the new Couchbase Web Console]._
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Fu4bK5KdhxU" frameborder="0" allowfullscreen></iframe>
++++
+
+If you have questions or feedback, please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com], or on link:https://twitter.com/mgroves[@mgroves at Twitter], or just leave a comment below.

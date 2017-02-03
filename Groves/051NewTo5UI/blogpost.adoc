@@ -32,7 +32,7 @@ You can also choose to create a bucket named "default" during setup. Again, this
 .Create a default bucket (optional) during Couchbase Server setup
 image::051_04_Couchbase_Setup_Default_Bucket.png[Optionally create a default bucket in Couchbase Server setup]
 
-Notification and Terms and Conditions are next. Right now, this update is only being released for Enterprise Edition. Later, the Community Edition will be released. If you are viewing this blog post from the future, using Community Edition, then this screen will look different.
+Notification and Terms and Conditions are next. We are offering the full Enterprise edition in the developer build, so you can check out the Enterprise features.
 
 .Accept terms and conditions of the Enterprise Edition and sign up for notifications
 image::051_05_Couchbase_terms_and_notifications.png[Accept terms and conditions and sign up for notifications]
@@ -139,16 +139,18 @@ To switch back to the new UI from the old UI, just click "New UI".
 .Use this link to go back to the "New UI"
 image::051_16_Couchbase_New_UI.png[Click New UI to back to the new UI]
 
+It's likely that new features will only appear in the new UI.
+
 == Feedback and Summary
+
+Stay tuned to the link:http://blog.couchbase.com[Couchbase Blog] for information about what's coming in the new UI in the next developer build.
 
 I've given you the basic tour, but to really get a feel for the UI, I recommend you download and try it. link:https://couchbase.com/download[Download Couchbase Server 5.0] today!
 
-We want feedback!
+We want feedback! Developer releases are coming every month, so you have a chance to make a difference in what we are building.
 
-There are two types of feedback we're looking for:
+*Bugs*: If you find a bug (something that is broken or doesn't work how you'd expect), please file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers give me a candy bar and pat me on the head every time I submit a good bug).
 
-*Bugs*: If you find a bug (something that is broken or doesn't work how you'd expect), please file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers give me a candy bar and pat me on the head every time I submit a substantive bug).
-
-*Suggestions*: If you have a suggestion, complaint, or comment about the new UI, please use the UI feedback system that's built right into the Couchbase Server UI.
+*Feedback*: Let me know what you think. Something you don't like? Something you really like? Something missing?
 
 In some cases, it may be tricky to decide if your feedback is a bug or a suggestion. Use your best judgement, or again, feel free to contact me for help. I want to hear from you. No suggestion is too small! The only stupid question is the one you don't ask! The best way to contact me is either link:https://twitter.com/mgroves[Twitter @mgroves] or email me matthew.groves@couchbase.com.

@@ -93,11 +93,24 @@ Alternatively, you could create N1QL queries instead of using Views. In many cas
 
 The N1QL (pronounced "nickel") query language is one of my favorite features of Couchbase Server. You are already comfortable with the SQL query language. With N1QL, you can apply your expertise to a document database.
 
-I'm not going to dive into the N1QL query language now, because it is such a deep topic. But you can link:https://www.couchbase.com/n1ql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[check out the basics of N1QL] and link:https://www.couchbase.com/get-started-developing-nosql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[get started with the N1QL guide].
+Here are a few examples to show the similarities between N1QL and tSQL:
+
+
+[width="100%",options="header,footer"]
+|====================
+| tSQL | N1QL 
+| SELECT * FROM [table] | SELECT * from `bucket`
+| SELECT t1.* , t2.* FROM [table1] t1 JOIN [table2] t2 ON t1.id = t2.id | SELECT b1.* , b2.* FROM `bucket` b1 JOIN `bucket` b2 ON KEYS b1.mykeys
+| INSERT INTO [table] (key, col1, col2) VALUES (1, 'val1','val2') | INSERT INTO `bucket` (KEY, VALUE) VALUES ('1', {"col1":"val1", "col2":"val2"})
+| UPDATE [table] SET val1 = 'newvalue' WHERE val1 = 'foo' | UPDATE `bucket` SET val1 ='newvalue' WHERE val1 = 'foo'  
+| DELETE FROM [table] WHERE val1 = 'foo' | DELETE FROM `bucket` WHERE val1 = 'foo'
+|====================
+
+I'm not going to dive into the link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[N1QL query language] now, because it is such a deep topic. But you can link:https://www.couchbase.com/n1ql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[check out the basics of N1QL] and link:https://www.couchbase.com/get-started-developing-nosql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[get started with the N1QL guide].
 
 When writing C# to interact with N1QL, there are a couple key concepts that are important to know.
 
-*Scan consistency*. When executing a N1QL query, there are several scan consistency options. Scan consistency defined how your N1QL query should behave towards indexing. The default behavior is "Not Bounded", and it provides the best performance. At the other end of the spectrum is "RequestPlus", and it provides the best consistency. There is also "AtPlus", which is a good middle-ground, but takes a little more work. I link:https://blog.couchbase.com/2016/june/new-to-couchbase-4.5-atplus[blogged about Scan Consistency] back in June, and it's worth reviewing before you start writing N1QL in .NET.
+*Scan consistency*. When executing a N1QL query, there are several scan consistency options. Scan consistency defines how your N1QL query should behave towards indexing. The default behavior is "Not Bounded", and it provides the best performance. At the other end of the spectrum is "RequestPlus", and it provides the best consistency. There is also "AtPlus", which is a good middle-ground, but takes a little more work. I link:https://blog.couchbase.com/2016/june/new-to-couchbase-4.5-atplus[blogged about Scan Consistency] back in June, and it's worth reviewing before you start writing N1QL in .NET.
 
 *Parameterization*. If you are creating N1QL queries, it's important to link:https://developer.couchbase.com/documentation/server/4.5/sdk/dotnet/n1ql-queries-with-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[use parameterization] to avoid SQL injection. There are two options with N1QL: positional (numbered) parameters and named parameters.
 
