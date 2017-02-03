@@ -70,7 +70,7 @@ To represent this in a relational database would likely require two tables: a Sh
 
 When creating the model for a document database, the decision has to be made whether to continue modeling this as two separate entities (e.g. a Shopping Cart document and corresponding Shopping Cart Item documents) or whether to "denormalize" and combine a row from ShoppingCart and row(s) from ShoppingCartItem into a single document to represent a shopping cart.
 
-In Couchbase, using a denormalization strategy, a shopping cart and the items in it would be reprsented by a single document.
+In Couchbase, using a denormalization strategy, a shopping cart and the items in it would be represented by a single document.
 
 [source,JavaScript,indent=0]
 ----
@@ -136,7 +136,7 @@ With two users, two updates, we would have 4 documents in Couchbase that look li
 include::src/SQLServerToCouchbase/CouchbaseServerDataAccess/ExampleSocialMediaDocuments.json[]
 ----
 
-_I decided to model 'friends' as a one-way relationship (like Twitter) for this example, which is why Matt Groves has a friend while Nic Raboy has an empty friends array._
+_I decided to model 'friends' as a one-way relationship (like Twitter) for this example, which is why Matt Groves has Nic Raboy as a friend but not vice-versa. (Don't read too much into this, Nic :)._
 
 The way to model this in C# could be:
 
@@ -168,7 +168,7 @@ _Note: There's an N+1 problem here too (friends of friends, etc), but I'm not go
 
 Additionally, it may not be the case that when the application reads or writes a user that it will need to read or write friends & updates. And, when writing an update, it's not likely that the application will need to update a user. Since these entities may often be read/written on their own, that indicates that they need to be modeled as separate documents.
 
-Note the array in the `Friends` field in the user document and the value in `User` field in the update document. These values can be used to retrieve the associated documents. Later in this post, I'll discuss how to do it with key/value operations and how to do it with N1QL.
+Note the array in the `Friends` field in the user document and the value in the `User` field in the update document. These values can be used to retrieve the associated documents. Later in this post, I'll discuss how to do it with key/value operations and how to do it with N1QL.
 
 To sum up, there are two ways to model data in a document database. The shopping cart example used *nested objects*, while the social media example used *separate documents*. In those examples, it was relatively straightforward to choose. When you're making your own modeling decisions, here's a handy cheat sheet:
 
