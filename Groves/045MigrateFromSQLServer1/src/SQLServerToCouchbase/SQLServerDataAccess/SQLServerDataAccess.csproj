@@ -79,6 +79,7 @@
     <Content Include="Scripts\02FriendBookUserFriends.sql" />
     <Content Include="Scripts\03FriendBookUpdates.sql" />
     <Content Include="Scripts\04ShoppingCart.sql" />
+    <Content Include="Scripts\05Sproc.sql" />
     <Content Include="Scripts\04ShoppingCartItems.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

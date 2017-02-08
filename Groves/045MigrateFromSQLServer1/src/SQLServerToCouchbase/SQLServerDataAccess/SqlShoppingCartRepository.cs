@@ -4,6 +4,9 @@ using System.Linq;
 using SQLServerToCouchbase.Core;
 using SQLServerToCouchbase.Core.Shopping;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 
 namespace SQLServerDataAccess
 {
@@ -55,5 +58,24 @@ namespace SQLServerDataAccess
             cart.Items.Add(item);
             _context.SaveChanges();
         }
+
+        // tag::Sproc[]
+        public List<ShoppingCart> SearchForCartsByUserName(string searchString)
+        {
+            var cmd = _context.Database.Connection.CreateCommand();
+            cmd.CommandText = "SP_SEARCH_SHOPPING_CART_BY_NAME @searchString";
+            cmd.Parameters.Add(new SqlParameter("@searchString", searchString));
+            _context.Database.Connection.Open();
+            var reader = cmd.ExecuteReader();
+
+            var carts = ((IObjectContextAdapter) _context)
+                .ObjectContext
+                .Translate<ShoppingCart>(reader, "ShoppingCarts", MergeOption.AppendOnly);
+
+            var result = carts.ToList();
+            _context.Database.Connection.Close();
+            return result;
+        }
+        // end::Sproc[]
     }
 }

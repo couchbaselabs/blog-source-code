@@ -4,7 +4,15 @@
 
 In this series of blog posts, I'm going to lay out the considerations when moving to a document database when you have a relational background. Specifically, Microsoft SQL Server as compared to  link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
 
-I've already covered some of the link:http://[considerations for data modeling]. In this post, I'm going to talk about the data itself. In the next blog post, we'll discuss applications that use the data. The goal is to lay down some general guidelines that you can apply to your application planning and design.
+In three parts, I'm going to cover:
+
+* link:https://blog.couchbase.com/2017/february/moving-from-sql-server-to-couchbase-part-1-data-modeling[Data modeling]
+* The data itself (this blog post)
+* Applications using the data
+
+The goal is to lay down some general guidelines that you can apply to your application planning and design.
+
+If you would like to follow along, I've created an application that demonstrates Couchbase and SQL Server side-by-side. link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer1/src[Get the source code from GitHub], and make sure to link:https://couchbase.com/downloads?utm_source=blogs&utm_medium=link&utm_campaign=blogs[download a developer preview of Couchbase Server].
 
 == Data Types in JSON vs SQL
 
@@ -36,13 +44,60 @@ JSON has no *date* data type. Often dates are stored as UNIX timestamps, but you
 
 In SQL Server, there is a *geography* data type. In Couchbase, link:https://developer.couchbase.com/documentation/server/current/indexes/querying-using-spatial-views.html[the GeoJSON format is supported].
 
-There are some other specialized data types in SQL Server, including hierarchyid, and xml. Typically, these would be unrolled in JSON objects and/or referenced by key (as explored in link://[part 1 of this blog series on data modeling]). You can still store XML/JSON within a string if you want, but if you do, then you can't use the full power of N1QL on those fields.
+There are some other specialized data types in SQL Server, including hierarchyid, and xml. Typically, these would be unrolled in JSON objects and/or referenced by key (as explored in link:https://blog.couchbase.com/2017/february/moving-from-sql-server-to-couchbase-part-1-data-modeling[part 1 of this blog series on data modeling]). You can still store XML/JSON within a string if you want, but if you do, then you can't use the full power of N1QL on those fields.
 
 == Migrating and translating data
 
-After you've designed your model with link://[part 1 on data modeling], you can use the above guide to start moving data over to Couchbase. You can optionally use a link://https://developer.couchbase.com/documentation/server/current/connectors/talend/talend.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Talend connector] to connect Couchbase to SQL Server (or other relational databases).
+After you've designed your model with link:https://blog.couchbase.com/2017/february/moving-from-sql-server-to-couchbase-part-1-data-modeling[part 1 on data modeling], you can use the above guide to start moving data over to Couchbase.
 
-For all but the simplest data models, you may need to write code to translate the data into your model. One way to do that is to use a tool like link:https://github.com/StackExchange/dapper-dot-net[Dapper]. Dapper works by translating SQL data types into C# data types. You can then use those C# data types to feed into the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase .NET SDK]. This "automatic" translation may still need some tweaks from you depending on how you are modeling relationships and numeric values. Dapper is a great tool, but it doesn't support *every* obscure data type that SQL Server has to offer. Hierarchyid, derived fields, user defined types, for instance, could be problematic, and could require you to intervene with custom code.
+For a naive migration (1 row to 1 document), you can write a very simple program to loop through the tables, columns, and values of a relational database and spit out corresponding documents. A tool like link:https://github.com/StackExchange/dapper-dot-net[Dapper] would handle all the data type translations within C# and feed them into the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase .NET SDK].
+
+You could also try using a link:https://developer.couchbase.com/documentation/server/current/connectors/talend/talend.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Talend connector] to connect Couchbase to SQL Server (or other relational databases).
+
+Completely flat data is relatively uncommon, so for more complex models, you will probably need to write code to migrate from the old relational model to the new document model.
+
+Here are some things you want to keep in mind when writing migration code (of any kind, but especially relational-to-nonrelational):
+
+* *Give yourself plenty of time in planning.* While migrating, you may discover that you need to rethink your model. You will need to test and make adjustments, and it's better to have extra time than make mistakes while hurrying.
+* *Test your migration using real data.* Data can be full of surprises. You may think that NVARCHAR field only ever contains string representations of numbers, but maybe there are some abnormal rows that contain words. Use a copy of the real data to test and verify your migration.
+* *Be prepared to run the migration multiple times.* Have a plan to rollback a failed migration and start over. This might be a simple `DELETE FROM bucket` in N1QL, or it could be a more nuanaced and targeted series of cleanups. If you plan from the start, this will be easier.
+* *ETL or ELT?* Extract-Transform-Load, or Extract-Load-Transform. When are you going to do a transform? When putting data into Couchbase, the flexibility of JSON allows you to transfer-in-place _after_ loading if you choose.
+
+=== An example ETL migration
+
+I wrote a very simple migration console app using C#, Entity Framework, and the Couchbase .NET SDK. It migrates both the shopping cart and the social media examples from the previous blog post. The full https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer1/src[source code is available on GitHub].
+
+This app is going to do the transformation, so this is an ETL approach. When the data gets into Couchbase, it will already be transformed.
+
+I created a `ShoppingCartMigrator` class and a `SocialMediaMigrator` class. I'm only going to cover the shopping cart in this post. I pass it a Couchbase `bucket` and the Entity Framework context that I used in the last blog post. (You could instead pass an NHibernate session or a plain `DbConnection` here, depending on your preference).
+
+[source,C#,indent=0]
+----
+include::src/SQLServerToCouchbase/SQLServerToCouchbase.Migrate/ShoppingCartMigrator.cs[tag=ShoppingCartMigratorTop]
+include::src/SQLServerToCouchbase/SQLServerToCouchbase.Migrate/ShoppingCartMigrator.cs[tag=ShoppingCartMigratorBottom]
+----
+
+With those objects in place, I created a `Go` method to perform the migration, and a `Rollback` method to delete any documents created in the migration, should I choose to.
+
+For the `Go` method, I let Entity Framework do the hard work of the joins, and loop through every shopping cart.
+
+[source,C#,indent=0]
+----
+include::src/SQLServerToCouchbase/SQLServerToCouchbase.Migrate/ShoppingCartMigrator.cs[tag=ShoppingCartMigratorGo]
+----
+
+I chose to abort the migration if there's even one error. You may not want to do that. You may want to log to a file instead, and address all the records that cause errors at once.
+
+For the rollback, I elected to delete every document that has a type of "ShoppingCart".
+
+[source,C#,indent=0]
+----
+include::src/SQLServerToCouchbase/SQLServerToCouchbase.Migrate/ShoppingCartMigrator.cs[tag=ShoppingCartMigratorRollback]
+----
+
+This is the simplest approach. A more complex approach could involve putting a temporary "fingerprint" marker field onto certain documents, and then deleting documents with a certain fingerprint in the rollback. (E.g. `DELETE FROM sqltocb WHERE fingerprint = '999cfbc3-186e-4219-ab5d-18ad130a9dc6'`). Or vice versa: fingerprint the problematic data for later analysis and delete the rest. Just make sure to cleanup these temporary fields when the migration is completed successfully.
+
+When you try this out yourself, you may want to run the console application twice, just to see the rollback in action. The second attempt will result in errors because it will be attempting to create documents with duplicate keys.
 
 == What about the other features of SQL Server?
 
@@ -66,24 +121,23 @@ Back to the shopping cart, here's an example of a simple tSQL query that would g
 
 [source,SQL]
 ----
-SELECT c.ID, c.DateCreated, i.[Name], i.Price, i.Quantity
+SELECT c.Id, c.DateCreated, c.[User], i.Price, i.Quantity
 FROM ShoppingCart c
-INNER JOIN ShoppingCartItem i ON i.ShoppingCartID = c.ID
-WHERE c.ID = 'mgroves'
+INNER JOIN ShoppingCartItems i ON i.ShoppingCartID = c.Id
+WHERE c.[User] = 'mschuster'
 ----
 
 In Couchbase, a shopping cart could be modeled as a single document, so a roughly equivalent query would be:
 
 [source,SQL]
 ----
-SELECT META(c).id, c.DateCreated, c.Items
-FROM `mybucket` c
+SELECT META(c).id, c.dateCreated, c.items, c.`user`
+FROM `sqltocb` c
 WHERE c.type = 'ShoppingCart'
+AND c.`user` = 'mschuster';
 ----
 
-(You could unnest the Items collection if you want to filter or sort individual items).
-
-_A performance caveat: for operations that work with a single document, you should probably not use N1QL, but instead use the key/value operations. You *can* use N1QL, but the key/value operation is going to be faster._
+(You could `UNNEST` the Items collection if you want to filter or sort individual items).
 
 In many document databases othat than Couchbase, you would likely have to learn an API for creating queries, and you would not be able to apply your tSQL experience to help ramp up. I'm not saying that translation is always going to be a walk in the park, but it's going to be relatively easy compared to the alternatives. If you're starting a *new* project, then you'll be happy to know that your SQL-writing skills will continue to be put to good use!
 
@@ -99,7 +153,53 @@ A view in Couchbase is defined as a Map/Reduce query using JavaScript. The JavaS
 
 There is no equivalent of sprocs in Couchbase. If you don't already have a service tier, and you are using sprocs to share some logic across domains, I recommend that you create a service tier and move the logic there.
 
-*** put REST example here I guess ***
+Typical tiers:
+
+* Web tier (UI - Angular/React/Traditional ASP.NET MVC)
+* Service tier (ASP.NET WebApi)
+* Database
+
+If you already have a service tier, move the sproc logic into that. If you don't have a service tier, create one. This will live between the database and the UI.
+
+In the source code for this series, I've created a single stored procedure.
+
+[source,SQL]
+----
+include::src/SQLServerToCouchbase/SQLServerDataAccess/Scripts/05Sproc.sql[]
+----
+
+This sproc can be executed from Entity Framework as follows:
+ 
+[source,C#]
+----
+include::src/SQLServerToCouchbase/SQLServerDataAccess/SqlShoppingCartRepository.cs[tag=Sproc]
+----
+
+This is a very simple sproc, but it introduces a basic search functionality. The benefits to such a sproc:
+
+* *Reusable* The same sproc can be reused between different applications
+* *Abstraction* The sproc implementation can be changed or improved. In this case, a basic `LIKE` could be switched out for a more robust full text search.
+
+Any approach taken with introducing a service tier should provide the same benefits. I created an ASP.NET WebApi endpoint to take the place of the sproc.
+
+[source,C#]
+----
+include::src/SQLServerToCouchbase/SQLServerToCouchbase.Web/Controllers/ServiceController.cs[tag=service]
+----
+
+_Note: for the sake of simplicity in the sample code, this endpoint actually lives in the same web project, but in production, it should be moved to its own project and deployed separately._
+
+This endpoint holds a N1QL query that is similar in nature to the above sproc. Let's see if it holds up to the same benefits:
+
+* *Reusable?* Yes. This endpoint can be deployed to its own server and be reused from other applications.
+* *Abstraction?* Again, yes. The implementation uses the naive `LIKE` approach, which we could improve by switching it to use link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/full-text-searching-with-sdk.html[Couchbase's Full Text Search features] without changing the API.
+
+Instead of calling a sproc through Entity Framework, this endpoint would be called via HTTP. Here's an example that uses the RestSharp library:
+
+[source,C#]
+----
+include::src/SQLServerToCouchbase/CouchbaseServerDataAccess/CouchbaseShoppingCartRepository.cs[tag=SearchForCartsByUserName]
+----
 
 If you are building a new project, I recommend that you create a service tier with the expectation of it being used across your enterprise. This allows you to have the same "shared code" that sprocs would normally provide without putting that code into the database.
 

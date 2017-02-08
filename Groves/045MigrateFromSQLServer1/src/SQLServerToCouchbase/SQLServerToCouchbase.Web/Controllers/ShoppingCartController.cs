@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using CouchbaseServerDataAccess;
 using SQLServerDataAccess;
@@ -51,6 +54,21 @@ namespace SQLServerToCouchbase.Web.Controllers
             };
             _shoppingRepo.AddItemToCart(cartId, item);
             return RedirectToAction("Cart", new { id = cartId });
+        }
+
+        public ViewResult Search()
+        {
+            return View("Search", new List<ShoppingCart>());
+        }
+
+        [HttpPost]
+        public ActionResult Search(string searchTerm)
+        {
+            TempData["SearchTerm"] = searchTerm;
+
+            var results = _shoppingRepo.SearchForCartsByUserName(searchTerm);
+
+            return View("Search", results);
         }
     }
 }

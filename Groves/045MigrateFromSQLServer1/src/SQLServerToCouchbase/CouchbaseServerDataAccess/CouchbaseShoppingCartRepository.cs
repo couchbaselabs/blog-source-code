@@ -6,6 +6,7 @@ using Couchbase.Core;
 using Couchbase.Linq;
 using Couchbase.Linq.Extensions;
 using Couchbase.N1QL;
+using RestSharp;
 using SQLServerToCouchbase.Core;
 using SQLServerToCouchbase.Core.Shopping;
 
@@ -15,11 +16,17 @@ namespace CouchbaseServerDataAccess
     {
         private readonly IBucket _bucket;
         private readonly BucketContext _context;
+        private readonly string _baseUrl;
 
         public CouchbaseShoppingCartRepository()
         {
             _bucket = ClusterHelper.GetBucket("sqltocb");
             _context = new BucketContext(_bucket);
+
+            // the base URL for REST endpoints
+            // typically this would NOT be the same base URL as the current web site
+            // so this is just to keep the sample simple
+            _baseUrl = System.Web.HttpContext.Current.Request.Url.GetComponents(UriComponents.SchemeAndServer | UriComponents.UserInfo, UriFormat.Unescaped);
         }
 
         public List<ShoppingCart> GetTenLatestShoppingCarts()
@@ -81,5 +88,17 @@ namespace CouchbaseServerDataAccess
                 .ArrayAppend("items", item)
                 .Execute();
         }
+
+        // tag::SearchForCartsByUserName[]
+        public List<ShoppingCart> SearchForCartsByUserName(string searchString)
+        {
+            // typically there would be authentication/authorization with a REST call like this
+            var client = new RestClient(_baseUrl);
+            var request = new RestRequest("/api/searchByName/" + searchString);
+            request.AddHeader("Accept", "application/json");
+            var response = client.Execute<List<ShoppingCart>>(request);
+            return response.Data;
+        }
+        // end::SearchForCartsByUserName[]
     }
 }

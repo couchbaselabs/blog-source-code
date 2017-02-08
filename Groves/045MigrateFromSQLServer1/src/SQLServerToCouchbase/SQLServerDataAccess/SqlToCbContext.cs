@@ -1,4 +1,6 @@
 using System;
+using System.Data;
+using System.Data.Common;
 using SQLServerToCouchbase.Core.Shopping;
 using SQLServerToCouchbase.Core.SocialMedia;
 
@@ -9,6 +11,10 @@ namespace SQLServerDataAccess
     public class SqlToCbContext : DbContext
     {
         public SqlToCbContext() : base("name=CodeFirstModel")
+        {
+        }
+
+        public SqlToCbContext(DbConnection dbConnection) : base(dbConnection, true)
         {
         }
 

@@ -10,5 +10,6 @@ namespace SQLServerToCouchbase.Core
         void SeedEmptyShoppingCart();
         ShoppingCart GetCartById(Guid id);
         void AddItemToCart(Guid cartId, Item item);
+        List<ShoppingCart> SearchForCartsByUserName(string searchString);
     }
 }
