@@ -205,6 +205,8 @@ If you are building a new project, I recommend that you create a service tier wi
 
 This is also true for SQL Server *functions, user defined types, rules, user-defined CLR objects*.
 
+_Note: the above sproc example is a `SELECT` just to keep the example simple. In this case, you could potentially create a MapReduce View instead. A MapReduce view cannot mutate documents though, so a service tier approach is a better general solution to replacing sprocs._
+
 === SQL Triggers
 
 If sprocs weren't already controversial enough, just bring up triggers in a conversation. As with stored procedures, I generally recommend that you move the trigger logic into the service tier, away from the database. If your software project depends on a lot of triggers, or complex triggers, or a lot of complex triggers, then you might want to wait or find another project to try using Couchbase Server in.
@@ -221,4 +223,4 @@ There are some more robust changes and improvements coming to the Couchbase RBAC
 
 == Summary
 
-This blog post compared and contrasted the data features available in Couchbase Server with SQL Server. If you are currently using SQL Server and are considering adding a document database to your project or starting a new project, I am here to help. Please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com] or ping me on https://twitter.com/mgroves[Twitter @mgroves].
+This blog post compared and contrasted the data features available in Couchbase Server with SQL Server. If you are currently using SQL Server and are considering adding a document database to your project or starting a new project, I am here to help. Please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com], ask a question on link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[the Couchbase Forums], or ping me on https://twitter.com/mgroves[Twitter @mgroves].
