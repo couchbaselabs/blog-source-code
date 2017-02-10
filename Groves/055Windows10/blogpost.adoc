@@ -1,0 +1,25 @@
+:imagesdir: images
+
+= Couchbase Server 4.6 Supports Windows 10 Anniversary Update
+
+link:https://blog.couchbase.com/2016/august/couchbase-server-on-windows-10-anniversary-update[Back in August 2016], when the Windows 10 Anniversary Update was rolling out, I blogged that Couchbase Server was not working correctly on it. That is no longer true!
+
+Short version: link:http://couchbase.com/downloads?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server 4.6 now supports Windows 10 Anniversary Update]. Go download and try it out today.
+
+image::055_01_Windows10Anniversary.jpg[Windows 10 Anniversary Update]
+
+The longer story is that this issue was addressed in the 4.5.1 release. The fix was somewhat experimental, and the anniversary update was still in the process of being rolled out. So there were two releases of Couchbase Server 4.5.1 for Windows:
+
+* Normal windows release (works with Windows 10, Windows Server, etc but not Anniversary Update)
+* Windows 10 Anniversary Edition Developer Preview (DP) release
+
+Furthermore, Couchbase Server 4.6 has had a Developer Preview release of its own for a while, and that release also works with the anniversary update.
+
+But now everything is official.
+
+* Couchbase Server 4.6 has been released
+* Couchbase Server 4.6 officially supports Windows 10 Anniversary Update
+
+Go link:http://couchbase.com/downloads[download Couchbase Server 4.6 now].
+
+Got questions? Got comments? Check out our documentation on the link:https://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Developer Portal], post a question on the link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Forums], leave a comment here, or link:https://twitter.com/mgroves[ping me on Twitter].
