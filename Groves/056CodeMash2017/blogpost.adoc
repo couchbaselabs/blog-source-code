@@ -1,0 +1,29 @@
+= CAP Theorum and Chaos at CodeMash Conference - January 2017 (Videos)
+
+I was again honored to be selected as a speaker at the great link:http://www.codemash.org/[CodeMash conference] in Ohio.
+
+I took part in three speaking events:
+
+== Are You Ready for Chaos? Horizontal Scaling in a Briefcase
+
+This session was partly a demonstration of the CouchCase project that I worked on in the summer, but also a demonstration of the CAP Theorum and Couchbase in action. The CouchCase did not cooperate, but I had a backup plan of using Docker which went okay. I give a very high-level overview in the video, but for link:https://developer.couchbase.com/documentation/server/4.5/architecture/high-availability-replication-architecture.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[more detail on Couchbase's architecture, check out the Couchbase Developer Portal].
+
++++
+[video here]
++++
+
+== Have Your Best Season Yet: Becoming a (Microsoft) MVP
+
+I was asked by Microsoft's Lisa Anderson to be on a panel of Microsoft MVPs to answer questions about the Microsoft MVP program. I didn't talk about Couchbase or technology very much. I don't have a video for you. But, if you are a Microsoft developer who is helping to build a developer community, you should definitely link:https://mvp.microsoft.com/en-us/Nomination/nominate-an-mvp[look into the MVP program].
+
+== Lego Bucket Races
+
+This was my first time presenting at the "KidzMash" event for children that runs in parallel to CodeMash. link://[I asked the kids to put different colored blocks into different buckets] according to rules as fast as they can. The idea was to demonstrate how a database works, how an indexed database works, and how performance testing works.
+
+I really had no idea what to expect, as I've never presented anything technical to kids before. There was a wide array of age differences, so the races didn't always go to plan. I won't embed the video here, since most of it is kids yelling. Think of it "explain it to me like I'm five" explanation on database indexing.
+
+== Summary
+
+CodeMash is my favorite conference. I always have a great time and learn a lot. I highly recommend that you check it out!
+
+If you enjoyed the CouchCase video, please let me know by leaving a comment below. If you have any questions about Couchbase, you can always link:https://twitter.com/mgroves[ask me on Twitter @mgroves], or link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[ask a question on the Couchbase Forums].
