@@ -4,7 +4,7 @@
 
 February's developer preview release of Couchbase Server 5.0.0 is chock full of goodness. In this blog post, I'm going to show you the N1QL query monitoring and profiling tools and some of the new features in this latest developer preview release.
 
-Go link:https://couchbase.com/downloads[download the February 5.0.0 developer release of Couchbase Server] today and check it out. You still have time to give us some feedback before the official release.
+Go link:https://couchbase.com/downloads[download the February 5.0.0 developer release of Couchbase Server] today, click the "Developer" tab, and check it out. You still have time to give us some feedback before the official release.
 
 _As always, keep in mind that I'm writing this blog post on early builds, and some things may change in minor ways by the time you get the release._
 
