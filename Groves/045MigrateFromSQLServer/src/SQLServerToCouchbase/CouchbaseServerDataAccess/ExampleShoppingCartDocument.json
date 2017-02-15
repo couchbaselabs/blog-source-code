@@ -1,0 +1,17 @@
+﻿{
+  "user": "mgroves",
+  "dateCreated": "2017-02-02T15:28:11.0208157-05:00",
+  "items": [
+    {
+      "name": "BB-8 Sphero",
+      "price": 80.18,
+      "quantity": 1
+    },
+    {
+      "name": "Shopkins Season 5",
+      "price": 59.99,
+      "quantity": 2
+    }
+  ],
+  "type": "ShoppingCart"
+}

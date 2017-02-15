@@ -1,0 +1,29 @@
+﻿@model List<SQLServerToCouchbase.Core.Shopping.ShoppingCart>
+@{
+    ViewBag.Title = "Shopping Carts";
+}
+
+<p>@Html.ActionLink("< Back to Home","Index")</p>
+
+@using (Html.BeginForm("Search","ShoppingCart",FormMethod.Post))
+{
+    <input type="text" name="searchTerm" placeholder="Search by username" value="@TempData["SearchTerm"]" />
+    <input type="submit" value="Search" class="btn btn-info" />
+}
+
+@if (!Model.Any())
+{
+    <p>There are no search results.</p>
+}
+else
+{
+    <h2>Search results:</h2>
+    <div class="list-group">
+        @foreach (var cart in Model)
+        {
+            <div class="list-group-item">
+                <p><strong>@Html.ActionLink(cart.User, "Cart", new { id = @cart.Id })</strong>'s shopping cart</p>
+            </div>
+        }
+    </div>
+}

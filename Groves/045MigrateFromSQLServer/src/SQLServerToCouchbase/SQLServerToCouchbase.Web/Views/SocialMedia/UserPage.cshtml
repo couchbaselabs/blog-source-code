@@ -1,0 +1,56 @@
+﻿@model SQLServerToCouchbase.Web.Models.UserPageView
+@{
+    ViewBag.Title = "User";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"].ToString()</div>
+}
+
+@if (!Model.Updates.Any())
+{
+    <p>There are no updates for this user yet.</p>
+}
+else
+{
+    <h2>@Model.User.Name</h2>
+    <h3>Write an update</h3>
+    using (Html.BeginForm("UserPage", "SocialMedia", FormMethod.Post))
+    {
+        @Html.Hidden("UserId", Model.User.Id)
+        @Html.TextArea("Body", new { placeholder = "What's happening?", style="width: 500px;", rows=3})
+        <input type="submit" value="Send Update" class="btn btn-info" />
+    }
+    <h3>Updates</h3>
+    <div class="list-group">
+        @foreach (var update in Model.Updates)
+        {
+            <div class="list-group-item">
+                <p><strong>@update.User.Name</strong> - @update.PostedDate</p>
+                <p>@update.Body</p>
+            </div>
+        }
+    </div>
+    <h3>Friends</h3>
+    if (Model.User.Friends == null || !Model.User.Friends.Any())
+    {
+        <p>No friends yet.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var friend in Model.User.Friends)
+            {
+                <li>@Html.ActionLink(friend.Name, "UserPage", new { id = friend.Id})</li>
+            }
+        </ul>
+    }
+    using (Html.BeginForm("AddFriend", "SocialMedia", FormMethod.Post))
+    {
+        @Html.Hidden("UserId", Model.User.Id)
+        @Html.TextBox("FriendName", "", new { placeholder = "Add a friend by name"})
+        <input type="submit" value="Add Friend" class="btn btn-info" />
+    }
+
+}

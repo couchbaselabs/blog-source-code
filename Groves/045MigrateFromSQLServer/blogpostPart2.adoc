@@ -1,0 +1,130 @@
+:imagesdir: images
+
+= Moving from SQL Server to Couchbase Part 2: Data Migration
+
+In this series of blog posts, I'm going to lay out the considerations when moving to a document database when you have a relational background. Specifically, Microsoft SQL Server as compared to  link:http://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server].
+
+In three parts, I'm going to cover:
+
+* link:https://blog.couchbase.com/2017/february/moving-from-sql-server-to-couchbase-part-1-data-modeling[Data modeling]
+* The data itself (this blog post)
+* Applications using the data
+
+The goal is to lay down some general guidelines that you can apply to your application planning and design.
+
+If you would like to follow along, I've created an application that demonstrates Couchbase and SQL Server side-by-side. link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer1/src[Get the source code from GitHub], and make sure to link:https://couchbase.com/downloads?utm_source=blogs&utm_medium=link&utm_campaign=blogs[download a developer preview of Couchbase Server].
+
+== Data Types in JSON vs SQL
+
+Couchbase (and many other document databases) use JSON objects for data. JSON is a powerful, human readable format to store data. When comparing to data types in relational tables, there are some similarities, and there are some important differences.
+
+All JSON data is made up of 6 types: string, number, boolean, array, object, and null. There are a lot of link:https://msdn.microsoft.com/en-us/library/ms187752(v=sql.110).aspx[data types available in SQL Server]. Let's start with a table that is a kind of "literal" translation, and work from there.
+
+[width="100%",options="header"]
+|====================
+| SQL Server | JSON
+| nvarchar, varchar, text | string
+| int, float, decimal, double | number
+| bit | boolean
+| null | null
+| XML/hierarchyid fields | array / object
+|====================
+
+It's important to understand how JSON works. I've listed some high-level differences between JSON data types and SQL Server data types. Assuming you already understand SQL data types, you might want to link:http://json.org/[spend some time learning more about JSON and JSON data types].
+
+A *string* in SQL Server is often defined by a length. _nvarchar(50)_ or _nvarchar(MAX)_ for instance. In JSON, you don't need to define a length. Just use a string.
+
+A *number* in SQL Server varies widely based on what you are using it for. The *number* type in JSON is flexible, in that it can store integers, decimal, or floating point. In specialized circumstances, like if you need a specific precision or you need to store very large numbers, you may want to store a number as a string instead.
+
+A *boolean* in JSON is true/false. In SQL Server, it's roughly equivalent: a bit that represents true/false.
+
+In JSON, any value can be *null*. In SQL Server, you set this on a field-by-field basis. If a field in SQL Server is not set to "nullable", then it will be enforced. In a JSON document, there is no such enforcement.
+
+JSON has no *date* data type. Often dates are stored as UNIX timestamps, but you could also use string representations or other formats for dates. link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/datefun.html[The N1QL query language has a variety of date functions available], so if you want to use N1QL on dates, you can use those functions to plan your date storage accordingly.
+
+In SQL Server, there is a *geography* data type. In Couchbase, link:https://developer.couchbase.com/documentation/server/current/indexes/querying-using-spatial-views.html[the GeoJSON format is supported].
+
+There are some other specialized data types in SQL Server, including hierarchyid, and xml. Typically, these would be unrolled in JSON objects and/or referenced by key (as explored in link:https://blog.couchbase.com/2017/february/moving-from-sql-server-to-couchbase-part-1-data-modeling[part 1 of this blog series on data modeling]). You can still store XML/JSON within a string if you want, but if you do, then you can't use the full power of N1QL on those fields.
+
+== Migrating and translating data
+
+Depending on your organization and your team, you may have to bring in people from multiple roles to ensure a successful migration. If you have a DBA, that DBA will have to know how to run and manage Couchbase just as well as SQL Server. If you are DevOps, or have a DevOps team, it's important to involve them early on, so that they are aware of what you're doing and can help you coordinate your efforts. Moving to a document database *does not* mean that you no longer need DBAs or Ops or DevOps to be involved. These roles should also be involved when doing data modeling, if possible, so that they can provide input and understand what is going on.
+
+After you've designed your model with link:https://blog.couchbase.com/2017/february/moving-from-sql-server-to-couchbase-part-1-data-modeling[part 1 on data modeling], you can start moving data over to Couchbase.
+
+For a naive migration (1 row to 1 document), you can write a very simple program to loop through the tables, columns, and values of a relational database and spit out corresponding documents. A tool like link:https://github.com/StackExchange/dapper-dot-net[Dapper] would handle all the data type translations within C# and feed them into the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase .NET SDK].
+
+Completely flat data is relatively uncommon, however, so for more complex models, you will probably need to write code to migrate from the old relational model to the new document model.
+
+Here are some things you want to keep in mind when writing migration code (of any kind, but especially relational-to-nonrelational):
+
+* *Give yourself plenty of time in planning.* While migrating, you may discover that you need to rethink your model. You will need to test and make adjustments, and it's better to have extra time than make mistakes while hurrying. Migrating data is an iterative cycle: migrate a table, see if that works, adjust, and keep iterating. You may have to go through this cycle many times.
+* *Test your migration using real data.* Data can be full of surprises. You may think that NVARCHAR field only ever contains string representations of numbers, but maybe there are some abnormal rows that contain words. Use a copy of the real data to test and verify your migration.
+* *Be prepared to run the migration multiple times.* Have a plan to cleanup a failed migration and start over. This might be a simple `DELETE FROM bucket` in N1QL, or it could be a more nuanaced and targeted series of cleanups. If you plan from the start, this will be easier. Automate your migration, so this is less painful.
+* *ETL or ELT?* Extract-Transform-Load, or Extract-Load-Transform. When are you going to do a transform? When putting data into Couchbase, the flexibility of JSON allows you to transfer-in-place _after_ loading if you choose.
+
+=== An example ETL migration
+
+I wrote a very simple migration console app using C#, Entity Framework, and the Couchbase .NET SDK. It migrates both the shopping cart and the social media examples from the previous blog post. The full https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer1/src[source code is available on GitHub].
+
+This app is going to do the transformation, so this is an ETL approach. This approach uses Entity Framework to map relational tables to C# classes, which are then inserted into documents. The data model for Couchbase can be better represented by C# classes than by relational tables (as demonstrated in the previous blog post), so this approach has lower friction.
+
+I'm going to to use C# to write a migration program, but the automation is what's important, not the specific tool. This is going to be essentially "throwaway" code after the migration is complete. My C# approach doesn't do any sort of batching, and is probably not well-suited to extremely large amounts of data, so it might be a good idea to use a tool like link:https://developer.couchbase.com/documentation/server/current/connectors/talend/talend.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Talend] and/or an ELT approach for very large scale/Enterprise data.
+
+I created a `ShoppingCartMigrator` class and a `SocialMediaMigrator` class. I'm only going to cover the shopping cart in this post. I pass it a Couchbase `bucket` and the Entity Framework `context` that I used in the last blog post. (You could instead pass an NHibernate `session` or a plain `DbConnection` here, depending on your preference).
+
+[source,C#,indent=0]
+----
+include::src/SQLServerToCouchbase/SQLServerToCouchbase.Migrate/ShoppingCartMigrator.cs[tag=ShoppingCartMigratorTop]
+include::src/SQLServerToCouchbase/SQLServerToCouchbase.Migrate/ShoppingCartMigrator.cs[tag=ShoppingCartMigratorBottom]
+----
+
+With those objects in place, I created a `Go` method to perform the migration, and a `Cleanup` method to delete any documents created in the migration, should I choose to.
+
+For the `Go` method, I let Entity Framework do the hard work of the joins, and loop through every shopping cart.
+
+[source,C#,indent=0]
+----
+include::src/SQLServerToCouchbase/SQLServerToCouchbase.Migrate/ShoppingCartMigrator.cs[tag=ShoppingCartMigratorGo]
+----
+
+I chose to abort the migration if there's even one error. You may not want to do that. You may want to log to a file instead, and address all the records that cause errors at once.
+
+For the cleanup, I elected to delete every document that has a type of "ShoppingCart".
+
+[source,C#,indent=0]
+----
+include::src/SQLServerToCouchbase/SQLServerToCouchbase.Migrate/ShoppingCartMigrator.cs[tag=ShoppingCartMigratorRollback]
+----
+
+This is the simplest approach. A more complex approach could involve putting a temporary "fingerprint" marker field onto certain documents, and then deleting documents with a certain fingerprint in the cleanup. (E.g. `DELETE FROM sqltocb WHERE fingerprint = '999cfbc3-186e-4219-ab5d-18ad130a9dc6'`). Or vice versa: fingerprint the problematic data for later analysis and delete the rest. Just make sure to cleanup these temporary fields when the migration is completed successfully.
+
+When you try this out yourself, you may want to run the console application twice, just to see the cleanup in action. The second attempt will result in errors because it will be attempting to create documents with duplicate keys.
+
+== What about the other features of SQL Server?
+
+Not everything in SQL Server has a direct counterpart in Couchbase. In some cases, it won't ever have a counterpart. In some cases, there will be a rough equivalent. Some features will arrive in the future, as Couchbase is under fast-paced, active, open-source development, and new features are being added when appropriate.
+
+Also keep in mind that document databases and NoSQL databases often force business logic out of the database to a larger extent than relational databases. As nice as it would be if Couchbase Server had every feature under the sun, there are always tradeoffs. Some are technical in nature, some are product design decisions. Tradeoffs could be made to add relational-style features, but at some point in that journey, Couchbase stops being a fast, scalable database and starts being "just another" relational database. There is certainly a lot of convergence in both relational and non-relational databases, and a lot of change happening every year.
+
+With that in mind, stay tuned for the final blog post in the series. This will cover the changes to application coding that come with using Couchbase, including:
+
+* SQL/N1QL
+* Stored Procedures
+* Service tiers
+* Triggers
+* Views
+* Serialization
+* Security
+* Concurrency
+* Autonumber
+* OR/Ms and ODMs
+* Transactions
+
+== Summary
+
+This blog post compared and contrasted the data features available in Couchbase Server with SQL Server. If you are currently using SQL Server and are considering adding a document database to your project or starting a new project, I am here to help.
+
+Check out the link:https://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase developer portal] for more details.
+
+Please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com], ask a question on link:https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[the Couchbase Forums], or ping me on https://twitter.com/mgroves[Twitter @mgroves].
