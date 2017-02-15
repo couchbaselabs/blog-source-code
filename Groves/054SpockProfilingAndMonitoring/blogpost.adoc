@@ -10,7 +10,7 @@ _As always, keep in mind that I'm writing this blog post on early builds, and so
 
 == What is profiling and monitoring for?
 
-When I'm writing N1QL queries, I need to be able to understand how well (or how badly) my query is performing in order to make improvements and diagnose issues.
+When I'm writing N1QL queries, I need to be able to understand how well (or how badly) my query (and my cluster) is performing in order to make improvements and diagnose issues.
 
 With this latest developer version of Couchbase Server 5.0, some new tools have been added to your N1QL-writing toolbox.
 
@@ -30,7 +30,7 @@ There are two link:https://developer.couchbase.com/documentation/server/current/
 * *system:active_request* - This catalog lists all the currently executing active requests or queries. You can execute the N1QL query `SELECT * FROM system:active_requests;` and it will list all those results.
 * *system:completed_requests* - This catalog lists all the recent completed requests (that have run longer than some threshold of time, default of 1 second). You can execute `SELECT * FROM system:completed_requests;` and it will list these queries.
 
-== New to N1QL: meta().plan
+== New to N1QL: META().plan
 
 Before 5.0, both active_requests and completed_requests return not only the the N1QL query text, but also related information: request time, request id, execution time, scan consistency, and so on. This can be useful information. Here's an example that looks at a simple query (`select * from `travel-sample``) while it's running by executing `select * from system:active_requests;`
 
@@ -65,39 +65,43 @@ Before 5.0, both active_requests and completed_requests return not only the the 
 }
 ----
 
-With the new `META().plan`, I can get more information about the query plan. This time, I'll execute `select *, meta().plan from system:active_requests`;
+First, I want to point out that *phaseTimes* is a new addition to the results. It's a quick and dirty way to get a sense of the query cost without looking at the whole profile. It gives you the overall cost of each request phase without going into detail of each operator. In the above example, for instance, you can see that `parse` took 500µs and `primaryScan` took 107.3891ms. This might enough information for you to go on without diving into `META().plan`.
+
+However, with the new `META().plan`, you can get very detailed information about the query plan. This time, I'll execute `SELECT *, META().plan FROM system:active_requests`;
 
 [source,JavaScript]
 ----
-{
+[
+  {
     "active_requests": {
-      "clientContextID": "5294308a-f7df-49db-a569-0a03932a36cc",
-      "elapsedTime": "66.5074ms",
-      "executionTime": "66.5074ms",
+      "clientContextID": "75f0f401-6e87-48ae-bca8-d7f39a6d029f",
+      "elapsedTime": "1.4232754s",
+      "executionTime": "1.4232754s",
       "node": "10.0.75.1",
       "phaseCounts": {
-        "primaryScan": 2
+        "fetch": 12816,
+        "primaryScan": 13231
       },
       "phaseOperators": {
         "fetch": 1,
         "primaryScan": 1
       },
       "phaseTimes": {
-        "authorize": "998.2µs",
-        "parse": "1.0026ms",
-        "primaryScan": "64.5066ms"
+        "authorize": "998.7µs",
+        "fetch": "620.704ms",
+        "primaryScan": "48.0042ms"
       },
-      "requestId": "00f2201c-22c3-49ad-be94-86e654114cf1",
-      "requestTime": "2017-02-10 09:10:14.6294106 -0500 EST",
+      "requestId": "42f50724-6893-479a-bac0-98ebb1595380",
+      "requestTime": "2017-02-15 14:44:23.8560282 -0500 EST",
       "scanConsistency": "unbounded",
       "state": "running",
-      "statement": "select *, meta().plan from system:active_requests;"
+      "statement": "select * from `travel-sample`;"
     },
     "plan": {
       "#operator": "Sequence",
       "#stats": {
         "#phaseSwitches": 1,
-        "kernTime": "65.5048ms",
+        "kernTime": "1.4232754s",
         "state": "kernel"
       },
       "~children": [
@@ -105,75 +109,83 @@ With the new `META().plan`, I can get more information about the query plan. Thi
           "#operator": "Authorize",
           "#stats": {
             "#phaseSwitches": 3,
-            "kernTime": "64.5066ms",
-            "servTime": "998.2µs",
+            "kernTime": "1.4222767s",
+            "servTime": "998.7µs",
             "state": "kernel"
           },
           "privileges": {
-            "#system:active_requests": 4
+            "default:travel-sample": 1
           },
           "~child": {
             "#operator": "Sequence",
             "#stats": {
               "#phaseSwitches": 1,
-              "kernTime": "64.5066ms",
+              "kernTime": "1.4222767s",
               "state": "kernel"
             },
             "~children": [
               {
                 "#operator": "PrimaryScan",
                 "#stats": {
-                  "#itemsOut": 2,
-                  "#phaseSwitches": 11,
-                  "execTime": "31.9987ms",
-                  "servTime": "32.5079ms"
+                  "#itemsOut": 13329,
+                  "#phaseSwitches": 53319,
+                  "execTime": "26.0024ms",
+                  "kernTime": "1.3742725s",
+                  "servTime": "22.0018ms",
+                  "state": "kernel"
                 },
-                "index": "#primary",
-                "keyspace": "active_requests",
-                "namespace": "#system",
-                "using": "system"
+                "index": "def_primary",
+                "keyspace": "travel-sample",
+                "namespace": "default",
+                "using": "gsi"
               },
               {
                 "#operator": "Fetch",
                 "#stats": {
-                  "#itemsIn": 2,
-                  "#phaseSwitches": 9,
-                  "kernTime": "64.5066ms",
+                  "#itemsIn": 12817,
+                  "#itemsOut": 12304,
+                  "#phaseSwitches": 50293,
+                  "execTime": "18.5117ms",
+                  "kernTime": "787.9722ms",
+                  "servTime": "615.7928ms",
                   "state": "services"
                 },
-                "keyspace": "active_requests",
-                "namespace": "#system"
+                "keyspace": "travel-sample",
+                "namespace": "default"
               },
               {
                 "#operator": "Sequence",
                 "#stats": {
                   "#phaseSwitches": 1,
-                  "kernTime": "64.5066ms",
+                  "kernTime": "1.4222767s",
                   "state": "kernel"
                 },
                 "~children": [
                   {
                     "#operator": "InitialProject",
                     "#stats": {
-                      "#phaseSwitches": 1,
-                      "kernTime": "64.5066ms",
+                      "#itemsIn": 11849,
+                      "#itemsOut": 11848,
+                      "#phaseSwitches": 47395,
+                      "execTime": "5.4964ms",
+                      "kernTime": "1.4167803s",
                       "state": "kernel"
                     },
                     "result_terms": [
                       {
                         "expr": "self",
                         "star": true
-                      },
-                      {
-                        "expr": "(meta(`active_requests`).`plan`)"
                       }
                     ]
                   },
                   {
                     "#operator": "FinalProject",
                     "#stats": {
-                      "#phaseSwitches": 1,
-                      "kernTime": "64.5066ms",
+                      "#itemsIn": 11336,
+                      "#itemsOut": 11335,
+                      "#phaseSwitches": 45343,
+                      "execTime": "6.5002ms",
+                      "kernTime": "1.4157765s",
                       "state": "kernel"
                     }
                   }
@@ -185,21 +197,30 @@ With the new `META().plan`, I can get more information about the query plan. Thi
         {
           "#operator": "Stream",
           "#stats": {
-            "#phaseSwitches": 1,
-            "kernTime": "65.5048ms",
+            "#itemsIn": 10824,
+            "#itemsOut": 10823,
+            "#phaseSwitches": 21649,
+            "kernTime": "1.4232754s",
             "state": "kernel"
           }
         }
       ]
     }
-}
+  }, ...
+]
 ----
+
+The above output comes from the Query Workbench.
 
 Note the new "plan" part. It contains a tree of operators that combine to execute the N1QL query. The root operator is a Sequence, which itself has a collection of child operators like Authorize, PrimaryScan, Fetch, and possibly even more Sequences.
 
-I got the above output using the Query Workbench. The Query Workbench will automatically turn on profiling and timings, so you'll always be able to get those results.
+To get them when using cbq or the REST API, you'll need to turn on the "profile" feature. 
 
-To get them when using cbq or the REST API, you'll need to turn on the "profile" feature. Make a POST request to http://localhost:8093/admin/settings, using Basic authentication, and a JSON body like:
+You can do this in `cbq` by entering `set -profile timings;` and then running your query.
+
+You can also do this with the REST API on a per request basis (using the `/query/service` endpoint and passing a querystring parameter of `profile=timings`, for instance).
+
+You can turn on the setting for the entire node by making a POST request to http://localhost:8093/admin/settings, using Basic authentication, and a JSON body like:
 
 [source,JavaScript]
 ----
@@ -226,9 +247,13 @@ To get them when using cbq or the REST API, you'll need to turn on the "profile"
 
 Notice the *profile* setting. It was previously set to off, but I set it to "timings".
 
+You may not want to do that, especially on nodes being used by other people and programs, because it will affect other queries running on the node. It's better to do this on a per-request basis.
+
+It's also what Query Workbench does by default.
+
 == Using the Query Workbench
 
-There's a lot of information in `meta().id` about how the plan is executed. Personally, I prefer to look at a simplified graphical version of it in Query Workbench by clicking the "Plan" icon (which I briefly mentioned in a link:https://blog.couchbase.com/2017/january/a-tour-of-the-new-couchbase-web-console[previous post about the new Couchbase Web Console] UI). 
+There's a lot of information in `META().plan` about how the plan is executed. Personally, I prefer to look at a simplified graphical version of it in Query Workbench by clicking the "Plan" icon (which I briefly mentioned in a link:https://blog.couchbase.com/2017/january/a-tour-of-the-new-couchbase-web-console[previous post about the new Couchbase Web Console] UI). 
 
 image:054_01_Plan_Query_Workbench.jpg[Query Workbench plan results]
 
@@ -256,7 +281,7 @@ image:054_03_Plan_2.jpg[Query Workbench plan part 2]
 
 Looking at that plan, it seems like the costliest parts of the query are the *Filter* and the *Join*. `JOIN` operations work on keys, so they should normally be very quick. But it looks like there are a _lot_ of documents being joined.
 
-The Filter (the `WHERE` part of the query) is also taking a lot of time. It's looking at the `sourceairport` and `destinationairport` fields. Looking elsewhere in the plan, I see that there is a *PrimaryScan*. This should be a red flag when you are trying to write performant queries. PrimaryScan means that the query couldn't find an index other than the primary index. This is roughly the equivalent of a "table scan" in relational database term. (You may want to drop the primary index so that these issues get bubbled-up faster, but that's a topic for another time).
+The Filter (the `WHERE` part of the query) is also taking a lot of time. It's looking at the `sourceairport` and `destinationairport` fields. Looking elsewhere in the plan, I see that there is a *PrimaryScan*. This should be a red flag when you are trying to write performant queries. PrimaryScan means that the query couldn't find an index other than the primary index. This is roughly the equivalent of a "table scan" in relational database terms. (You may want to drop the primary index so that these issues get bubbled-up faster, but that's a topic for another time).
 
 Let's add an index on the `sourceairport` field and see if that helps.
 
@@ -273,11 +298,41 @@ image:054_05_Plan_improved_2.jpg[Query Workbench improved plan part 2]
 
 This query took ~100ms (on my single-node local machine) which is much more acceptible. The *Filter* and the *Join* still take up a large percentage of the time, but thanks to the *IndexScan* replacing the *PrimaryScan*, there are many fewer documents that those operators have to deal with. Perhaps the query could be improved even more with an additional index on the `destinationairport` field.
 
+== Beyond Tweaking Queries
+
+The answer to performance problems is not always in tweaking queries. Sometimes you might need to add more nodes to your cluster to address the underlying problem.
+
+Look at the `PrimaryScan` information in `META().plan`. Here's a snippet:
+
+[source,JavaScript]
+----
+"~children": [
+  {
+    "#operator": "PrimaryScan",
+    "#stats": {
+      "#itemsOut": 13329,
+      "#phaseSwitches": 53319,
+      "execTime": "26.0024ms",
+      "kernTime": "1.3742725s",
+      "servTime": "22.0018ms",
+      "state": "kernel"
+    },
+    "index": "def_primary",
+    "keyspace": "travel-sample",
+    "namespace": "default",
+    "using": "gsi"
+  }, ... ]
+----
+
+The `servTime` value indicates how much time is spent by the Query service to wait on the Key/Value data storage. If the `servTime` is very high, but there is a small number of documents being processed, that indicates that the indexer (or the key/value service) can't keep up. Perhaps they have too much load coming from somewhere else. So this means that something weird is running someplace else *or* that your cluster is trying to handle too much load. Might be time to add some more nodes.
+
+Similarly, the `kernTime` is how much time is spent waiting on other N1QL routines. This might mean that something else downstream in the query plan has a problem, or that the query node is overrun with request and are having to wait a lot.
+
 == We want your feedback!
 
 The new `META().plan` functionality and the new Plan UI combine in Couchbase Server 5.0 to improve the N1QL writing and profiling process.
 
-Stay tuned to the link:http://blog.couchbase.com[Couchbase Blog] for information about what's coming in the new UI in the next developer build.
+Stay tuned to the link:http://blog.couchbase.com[Couchbase Blog] for information about what's coming in the next developer build.
 
 Interested in trying out some of these new features? link:https://couchbase.com/download[Download Couchbase Server 5.0] today!
 
