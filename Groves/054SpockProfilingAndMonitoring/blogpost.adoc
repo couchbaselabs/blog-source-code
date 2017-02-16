@@ -1,6 +1,6 @@
 :imagesdir: images
 
-= New Profiling and Monitoring for Couchbase Server
+= New Profiling and Monitoring in Couchbase Server 5.0 Preview
 
 February's developer preview release of Couchbase Server 5.0.0 is chock full of goodness. In this blog post, I'm going to show you the N1QL query monitoring and profiling tools and some of the new features in this latest developer preview release.
 
