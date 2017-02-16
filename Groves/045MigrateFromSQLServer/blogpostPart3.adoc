@@ -7,7 +7,7 @@ In this series of blog posts, I'm going to lay out the considerations when movin
 In three parts, I'm going to cover:
 
 * link:https://blog.couchbase.com/2017/february/moving-from-sql-server-to-couchbase-part-1-data-modeling[Data modeling]
-* link://[The data itself]
+* link:https://blog.couchbase.com/sql-server-couchbase-data-migration/[Data migration]
 * Applications using the data (this blog post)
 
 The goal is to lay down some general guidelines that you can apply to your application planning and design.
@@ -16,36 +16,48 @@ If you would like to follow along, I've created an application that demonstrates
 
 == Migrate vs Rewrite
 
-Couchbase Server can supplement SQL Server in your existing web application. It can be a session store or a cache store. You don't have to replace your RDMBS to benefit from Couchbase Server.
+If you're building a new web app, then Couchbase Server is a good choice to use as your *system of record*. Flexible data modeling, fast data access, ease of scaling all make it a good choice.
 
-If you're building a new web app, then Couchbase Server is a good choice to use as your "database of record". Flexible data modeling, fast data access, ease of scaling all make it a good choice.
+Couchbase Server can supplement SQL Server in your existing web application. It can be a session store or a cache store. You don't have to replace your RDMBS to benefit from Couchbase Server. You can use it as your *system of engagment*.
 
-However, if you're considering making a document database your "database of record" for an existing app, then you need to plan what to do about that application (assuming you've already come up with a data modeling and data migration plan as covered in the earlier parts of this blog series). There are really two options:
+However, if you're considering making a document database your "system of record" for an existing app, then you need to plan what to do about that application (assuming you've already come up with a data modeling and data migration plan as covered in the earlier parts of this blog series). There are really two options:
 
 * *Replace your data/service layer*. If you've built your app in a way that decouples it from the underlying persistence, that's going to benefit you tremendously when switching from SQL Server to Couchbase. If you are using an SOA, for instance, then you might not have to make very many changes to the web application.
 
 * *Rebuild your application*. If you don't have a decoupled architecture, then you'll likely have to bite the bullet and rewrite/refactor large portions of your application. This can be a significant cost that you'll have to factor in when deciding whether or not to switch to a document database. I wish I could say it would be easier, that there was some magic potion you could use. But remember, even if the cost of a rebuild is too great, you can still use Couchbase Server in 
 tandem with SQL Server.
 
-The rest of this blog post will be tips and guidelines that apply in both scenarios.
+The pieces of your stack that you might need to rebuild or replace include:
+
+* *ADO.NET* - If you are using plain ADO.NET or a micro-OR/M like Dapper, these can be replaced by the Couchbase .NET SDK.
+* *OR/M* - Entity framework, NHibernate, Linq2SQL, etc. These can be replaced by Linq2Couchbase
+* *Any code that uses those directly* - Any code that touches ADO.NET, OR/Ms, or other SQL Server code will need to be replaced to use Couchbase (and/or rewritten to introduce another layer of abstraction).
+
+The rest of this blog post will be tips and guidelines that apply for rewriting, refactoring, or starting a new project.
 
 == What's going to be covered
 
 Document databases force business logic out of the database to a larger extent than relational databases. As nice as it would be if Couchbase Server had every feature under the sun, there are always tradeoffs.
 
-In this blog post, we will cover the changes to application coding that come with using Couchbase, including:
+In this blog post, we will cover the changes to application coding that come with using Couchbase. At a high level, here is what will be covered in this blog post. On the left, a SQL Server feature; on the right, the closest equivalent when using Couchbase Server.
 
-* SQL/N1QL
-* Stored Procedures
-* Service tiers
-* Triggers
-* Views
+[options="header"]
+|=======
+| SQL Server | Couchbase Server
+| tSQL | N1QL
+| Stored Procedures | Service tier
+| Triggers | Service tier
+| Views | Map/Reduce Views
+| Autonumber | Counter
+| OR/M (Object/relational mapper) | ODM (Object data model)
+| ACID | Single-document ACID
+|=======
+
+In addition, we'll also be covering these important topics:
+
 * Serialization
 * Security
 * Concurrency
-* Autonumber
-* OR/Ms and ODMs
-* Transactions
 
 == Using N1QL
 
@@ -63,7 +75,7 @@ Here are a few examples to show the link:https://developer.couchbase.com/documen
 | DELETE FROM [table] WHERE val1 = 'foo' | DELETE FROM \`bucket` WHERE val1 = 'foo'
 |====================
 
-Thanks to link:https://www.couchbase.com/n1ql[N1QL], migrating your SQL queries should be less difficult than other document databases. Your data model probably changed, and not every function in tSQL is (yet) available in N1QL. But for the most part, your existing tSQL-writing expertise can be applied.
+Thanks to link:https://www.couchbase.com/n1ql[N1QL], migrating your SQL queries should be less difficult than other document databases. Your data model will be different, and not every function in tSQL is (yet) available in N1QL. But for the most part, your existing tSQL-writing expertise can be applied.
 
 Back to the shopping cart, here's an example of a simple tSQL query that would get shopping cart information for a given user:
 
@@ -85,17 +97,15 @@ WHERE c.type = 'ShoppingCart'
 AND c.`user` = 'mschuster';
 ----
 
-(You could `UNNEST` the Items collection if you want to filter or sort individual items).
+Notice that while N1QL has `JOIN` functionality, no `JOIN` is necessary in this shopping cart query. All the shopping cart data is in a single document, instead of being spread out amongst multiple tables and rows.
+
+The results aren't _exactly_ the same: the N1QL query returns a more hierarchical result. But the query _could_ be modified with an link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/from.html#concept_rnt_zfk_np__unnest[`UNNEST`] to flatten out the results if necessary. `UNNEST` is an _intra-document join_, which is a feature that's necessary when writing SQL for JSON.
 
 In many document databases other than Couchbase, you would likely have to learn an API for creating queries, and you would not be able to apply your tSQL experience to help ramp up. I'm not saying that translation is always going to be a walk in the park, but it's going to be relatively easy compared to the alternatives. If you're starting a *new* project, then you'll be happy to know that your SQL-writing skills will continue to be put to good use!
-
-I'm not going to dive into the link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[N1QL query language] any more than this, because it is such a deep topic. But you can link:https://www.couchbase.com/n1ql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[check out the basics of N1QL] and link:https://www.couchbase.com/get-started-developing-nosql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[get started with the N1QL guide].
 
 When writing C# to interact with N1QL, there are a couple key concepts that are important to know.
 
 *Scan Consistency*. When executing a N1QL query, there are several scan consistency options. Scan consistency defines how your N1QL query should behave towards indexing. The default behavior is "Not Bounded", and it provides the best performance. At the other end of the spectrum is "RequestPlus", and it provides the best consistency. There is also "AtPlus", which is a good middle-ground, but takes a little more work. I link:https://blog.couchbase.com/2016/june/new-to-couchbase-4.5-atplus[blogged about Scan Consistency] back in June, and it's worth reviewing before you start writing N1QL in .NET.
-
-Here's an example of Scan Consistency used in C#:
 
 *Parameterization*. If you are creating N1QL queries, it's important to link:https://developer.couchbase.com/documentation/server/4.5/sdk/dotnet/n1ql-queries-with-sdk.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[use parameterization] to avoid SQL injection. There are two options with N1QL: positional (numbered) parameters and named parameters.
 
@@ -106,17 +116,27 @@ Here's an example of both Scan Consistency and Parameterization used in C#:
 include::src/SQLServerToCouchbase/CouchbaseServerDataAccess/CouchbaseSocialMediaRepository.cs[tag=ScanConsistencyAndParameters]
 ----
 
+I'm not going to dive into the link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[N1QL query language] any more than this, because it is such a deep topic. But you can link:https://www.couchbase.com/n1ql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[check out the basics of N1QL] and link:http://query.pub.couchbase.com/tutorial/#1[get started with the interactive N1QL tutorial].
+
 == SQL Stored Procedures
 
-There is no equivalent of sprocs in Couchbase. If you don't already have a service tier, and you are using sprocs to share some logic across domains, I recommend that you create a service tier and move the logic there.
+There is no equivalent of stored procedures (sprocs) in Couchbase. If you don't already have a service tier, and you are using sprocs to share some logic across domains, I recommend that you create a service tier and move the logic there.
+
+In fact, I wasn't sure whether sprocs belonged in part 2 or part 3 of this blog series. 
 
 An example of typical tiers in an enterprise application:
 
 * Web tier (UI - Angular/React/Traditional ASP.NET MVC)
-* Service tier (ASP.NET WebApi) *<- sproc logic goes here*
+* Service tier (ASP.NET WebApi)
 * Database
 
-If you already have a service tier, move the sproc logic into that. If you don't have a service tier, create one. This will live between the database and the UI.
+Sprocs live in the database, but they contain logic. The service tier also contains business logic. So do they count as data or functionality?
+
+I took a Twitter straw poll to decide.
+
+image:047_01_twitter_sproc_poll.png[Twitter straw poll on Stored Procedures]
+
+But my recommendation is that if you already have a service tier, move the sproc logic into that. If you don't have a service tier, create one. This will live between the database and the UI.
 
 In the source code for this series, I've created a single stored procedure.
 
@@ -127,10 +147,12 @@ include::src/SQLServerToCouchbase/SQLServerDataAccess/Scripts/05Sproc.sql[]
 
 This sproc can be executed from Entity Framework as follows:
  
-[source,C#]
+[source,C#,indent=0]
 ----
 include::src/SQLServerToCouchbase/SQLServerDataAccess/SqlShoppingCartRepository.cs[tag=Sproc]
 ----
+
+_By the way, that Entity Framework sproc code is ugly. Maybe I did it wrong? I'm not trying to slander EF, but generally, I haven't used OR/Ms and sprocs together much in my career. Certainly a piece of ADO.NET or Dapper code would be shorter and cleaner._
 
 This is a very simple sproc, but it introduces a basic search functionality. The benefits to such a sproc:
 
@@ -207,8 +229,6 @@ foo3	{"age":35,"name":"Teresa Johns"}
 
 Then the results of the view would look like:
 
-
-.Results
 [width="100%",options="header"]
 |====================
 | Key | Value  
@@ -250,9 +270,11 @@ There are some more robust changes and improvements coming to the Couchbase RBAC
 
 Concurrency is something that you often have to deal with, especially in a web application. Multiple users could be taking actions that result in the same document being changed at the same time.
 
-Couchbase offers two options to deal with concurrency: optimistic and pessimistic.
+SQL Server uses pessimistic locking by default. This means that SQL Server expects rows to be in contention, and so it acts defensively. This is a sensible default for relational databases because denormalized data is spread across multiple tables and multiple rows. SQL Server does have the ability to use optimistic locking as well, through a variety of link:https://msdn.microsoft.com/en-us/library/ms173763.aspx[transaction levels].
 
-*Optimisitic*. This is called "optimistic" because it works best when it's unlikely that a document will be in contention very often. You are making an optimistic assumption. On Couchbase, this is done with link:https://developer.couchbase.com/documentation/server/current/sdk/concurrent-mutations-cluster.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[CAS (Compare And Swap)]. When you retrieve a document, it comes with meta data, including a CAS value (just a number). When you go to update that document, you can supply the CAS value. If the values match, then your optimism paid off, and the changes are saved. If they don't match, then the operation fails, and you'll have to handle it (a merge, an error message, etc).
+Couchbase also offers two options to deal with concurrency: optimistic and pessimistic.
+
+*Optimisitic*. This is called "optimistic" because it works best when it's unlikely that a document will be in contention very often. You are making an optimistic assumption. On Couchbase, this is done with link:https://developer.couchbase.com/documentation/server/current/sdk/concurrent-mutations-cluster.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[CAS (Compare And Swap)]. When you retrieve a document, it comes with meta data, including a CAS value (which is just a number). When you go to update that document, you can supply the CAS value. If the values match, then your optimism paid off, and the changes are saved. If they don't match, then the operation fails, and you'll have to handle it (a merge, an error message, etc). _If you don't supply a CAS value, then the changes will be saved no matter what._
 
 *Pessimistic*. This is called "pessimistic" because it works best when you know a document is going to be mutated a lot. You are making a pessimistic assumption, and are forcibly locking the document. If you use `GetAndLock` in the .NET SDK, the document will be locked, which means it can't be modified. Documents are locked for a maximum of 15 seconds. You can set a lower value. You can also explicitly unlock a document, but you must keep track of the CAS value to do so.
 
@@ -304,22 +326,13 @@ Beyond being a great Linq provider, Linq2Couchbase also has an experimental chan
 
 I've already covered pessimistic and optimistic locking for transactions on a single document. Because of those, we can say that Couchbase supports ACID transactions on a per-document level. Couchbase does not, at this time, support ACID transactions among multiple documents.
 
-Thinking back to the link://[first blog post on data modeling], the need for multi-document transactions is reduced as compared to a relational model. A concept (like shopping cart) may require rows in multiple tables in a relational model, but a single document model in Couchbase.
+Thinking back to the link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/[first blog post on data modeling], the need for multi-document transactions is often reduced or eliminated, compared to a relational model. A concept (like shopping cart) may require rows in multiple tables in a relational model, but a single document model in Couchbase.
 
-If you are following a referential model, as in the social media example from the link://[first blog post], you might be concerned about the lack of transactions. This highlights the importance of thinking about your use cases while creating your data model. If transactions are vital to your use case, the data model can often be structured to accomodate. link:https://forums.couchbase.com/[We are happy to help you through this, just ask!]
+If you are following a referential model, as in the social media example from the link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/[first blog post], you might be concerned about the lack of transactions. This highlights the importance of thinking about your use cases while creating your data model. If transactions are vital to your use case, the data model can often be structured to accomodate. link:https://forums.couchbase.com/[We are happy to help you through this, just ask!]
 
-However, there may be some times where you absolutely need a multi-document transaction. Couchbase doesn't support this, but as with stored procedures and triggers, the answer is to move it up into the service layer.
+Multi-document transaction support may come in the future if enough Couchbase developers and customers ask for it or need it. So, if you go through the exercise of designing a document database data model, and transactions are _still_ a vital part of your project, then Couchbase may not be the best "system of record" for at least part of your project. Couchbase may still be the best "system of engagement", able to help with scaling, caching, performance, and flexibility where needed.
 
-There are two design patterns that I can think of that might help, depending on your use case.
-
-* *Event Sourcing*: The link:https://martinfowler.com/eaaDev/EventSourcing.html[event sourcing pattern] can be a good fit when you can store data as a sequence of events. The current state can be calculated using the history.
-* *Two-phase commit*: The link:https://en.wikipedia.org/wiki/Two-phase_commit_protocol[two-phase commit pattern] can be used to provide a commit/rollback to multi-document transactions.
-
-It also may be worth checking out the link:https://ndescribe.atlassian.net/wiki/display/DOC/Transactional+Documents[NDescribe project], as it includes an SDK that works on top of the Couchbase SDK and provides a transaction system. It does this by adding its own meta-data in the body of the document and creating a transaction document. It's a generic implementation of the two-phase commit. (Note that this is not an officially supported tool).
-
-_Note: if you're concerned about document size from these patterns affecting performance, link:https://developer.couchbase.com/documentation/server/current/sdk/subdocument-operations.html[sub-document access] was added in Couchbase 4.5. This means you don't have to read/write entire documents when you're just interested in small parts of them._
-
-Ultimately, if you go through the exercise of designing a document database data model, and transactions are _still_ a vital part of your project, then a NoSQL document database may not be the best "database of record" for at least part of your project. Couchbase may still be able to help with scaling, caching, performance, and flexibility where needed.
+_As a side note, it may be worth checking out the link:https://ndescribe.atlassian.net/wiki/display/DOC/Transactional+Documents[NDescribe project], as it includes an SDK that works on top of the Couchbase SDK and provides a transaction system. (Note that this is not an officially supported tool)._
 
 == Summary
 
