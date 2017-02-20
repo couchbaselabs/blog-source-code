@@ -2,7 +2,7 @@
 
 = New Profiling and Monitoring in Couchbase Server 5.0 Preview
 
-February's developer preview release of Couchbase Server 5.0.0 is chock full of goodness. In this blog post, I'm going to show you the N1QL query monitoring and profiling tools and some of the new features in this latest developer preview release.
+N1QL query monitoring and profiling updates are just some of goodness you can find in February's developer preview release of Couchbase Server 5.0.0.
 
 Go link:https://couchbase.com/downloads[download the February 5.0.0 developer release of Couchbase Server] today, click the "Developer" tab, and check it out. You still have time to give us some feedback before the official release.
 
@@ -14,7 +14,9 @@ When I'm writing N1QL queries, I need to be able to understand how well (or how 
 
 With this latest developer version of Couchbase Server 5.0, some new tools have been added to your N1QL-writing toolbox.
 
-First, some review. 
+== N1QL Writing Review
+
+First, some review.
 
 There are multiple ways for a developer to execute N1QL queries.
 
@@ -32,7 +34,7 @@ There are two link:https://developer.couchbase.com/documentation/server/current/
 
 == New to N1QL: META().plan
 
-Before 5.0, both active_requests and completed_requests return not only the the N1QL query text, but also related information: request time, request id, execution time, scan consistency, and so on. This can be useful information. Here's an example that looks at a simple query (`select * from `travel-sample``) while it's running by executing `select * from system:active_requests;`
+Both `active_requests` and `completed_requests` return not only the original N1QL query text, but also related information: request time, request id, execution time, scan consistency, and so on. This can be useful information. Here's an example that looks at a simple query (`select * from `travel-sample``) while it's running by executing `select * from system:active_requests;`
 
 [source,JavaScript]
 ----
@@ -65,7 +67,7 @@ Before 5.0, both active_requests and completed_requests return not only the the 
 }
 ----
 
-First, I want to point out that *phaseTimes* is a new addition to the results. It's a quick and dirty way to get a sense of the query cost without looking at the whole profile. It gives you the overall cost of each request phase without going into detail of each operator. In the above example, for instance, you can see that `parse` took 500µs and `primaryScan` took 107.3891ms. This might enough information for you to go on without diving into `META().plan`.
+First, I want to point out that *phaseTimes* is a new addition to the results. It's a quick and dirty way to get a sense of the query cost without looking at the whole profile. It gives you the overall cost of each request phase without going into detail of each operator. In the above example, for instance, you can see that `parse` took 500µs and `primaryScan` took 107.3891ms. This might be enough information for you to go on without diving into `META().plan`.
 
 However, with the new `META().plan`, you can get very detailed information about the query plan. This time, I'll execute `SELECT *, META().plan FROM system:active_requests`;
 
@@ -214,7 +216,9 @@ The above output comes from the Query Workbench.
 
 Note the new "plan" part. It contains a tree of operators that combine to execute the N1QL query. The root operator is a Sequence, which itself has a collection of child operators like Authorize, PrimaryScan, Fetch, and possibly even more Sequences.
 
-To get them when using cbq or the REST API, you'll need to turn on the "profile" feature. 
+== Enabling the profile feature
+
+To get this information when using cbq or the REST API, you'll need to turn on the "profile" feature. 
 
 You can do this in `cbq` by entering `set -profile timings;` and then running your query.
 
@@ -326,7 +330,7 @@ Look at the `PrimaryScan` information in `META().plan`. Here's a snippet:
 
 The `servTime` value indicates how much time is spent by the Query service to wait on the Key/Value data storage. If the `servTime` is very high, but there is a small number of documents being processed, that indicates that the indexer (or the key/value service) can't keep up. Perhaps they have too much load coming from somewhere else. So this means that something weird is running someplace else *or* that your cluster is trying to handle too much load. Might be time to add some more nodes.
 
-Similarly, the `kernTime` is how much time is spent waiting on other N1QL routines. This might mean that something else downstream in the query plan has a problem, or that the query node is overrun with request and are having to wait a lot.
+Similarly, the `kernTime` is how much time is spent waiting on other N1QL routines. This might mean that something else downstream in the query plan has a problem, or that the query node is overrun with requests and are having to wait a lot.
 
 == We want your feedback!
 
@@ -338,7 +342,7 @@ Interested in trying out some of these new features? link:https://couchbase.com/
 
 We want feedback! Developer releases are coming every month, so you have a chance to make a difference in what we are building.
 
-*Bugs*: If you find a bug (something that is broken or doesn't work how you'd expect), please file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers high-five me every time I submit a good bug).
+*Bugs*: If you find a bug (something that is broken or doesn't work how you'd expect), please file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com] or submit a question on the link:https://forums.couchbase.com[Couchbase Forums]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers high-five me every time I submit a good bug).
 
 *Feedback*: Let me know what you think. Something you don't like? Something you really like? Something missing? Now you can give feedback directly from within the Couchbase Web Console. Look for the image:054_06_feedback_icon.png[feedback icon] icon at the bottom right of the screen.
 
