@@ -340,4 +340,4 @@ We've covered data modeling, data migration, and application migration through t
 
 The link:https://developer.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Developer Portal] contains more details and information about every aspect of Couchbase Server.
 
-I want to hear from you about what Couchbase can do to make your transition easier, whether you're migrating or starting fresh. Did I miss something? Do you have a tool or system that you recommend? Email me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com] or find me on link:https://twitter.com/mgroves[Twitter @mgroves].
+I want to hear from you about what Couchbase can do to make your transition easier, whether you're migrating or starting fresh. Did I miss something? Do you have a tool or system that you recommend? Have questions? Check out the link:https://forums.couchbase.com[Couchbase Forums], email me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com] or find me on link:https://twitter.com/mgroves[Twitter @mgroves].
