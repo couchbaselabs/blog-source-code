@@ -58,6 +58,7 @@ In addition, we'll also be covering these important topics:
 * Serialization
 * Security
 * Concurrency
+* SSIS, SSRS, SSAS
 
 == Using N1QL
 
@@ -122,9 +123,7 @@ I'm not going to dive into the link:https://developer.couchbase.com/documentatio
 
 There is no equivalent of stored procedures (sprocs) in Couchbase. If you don't already have a service tier, and you are using sprocs to share some logic across domains, I recommend that you create a service tier and move the logic there.
 
-In fact, I wasn't sure whether sprocs belonged in part 2 or part 3 of this blog series. 
-
-An example of typical tiers in an enterprise application:
+In fact, I wasn't sure whether sprocs belonged in part 2 or part 3 of this blog series.  Typical tiers in an enterprise application:
 
 * Web tier (UI - Angular/React/Traditional ASP.NET MVC)
 * Service tier (ASP.NET WebApi)
@@ -256,7 +255,7 @@ Alternatively, you could create N1QL queries instead of using Views. In many cas
 
 Whether you're using N1QL, Views, or key/value operations, it's important to consider how JSON is serialized and deserialized.
 
-The .NET SDK uses link:http://www.newtonsoft.com/json[Newtonson JSON.NET]. If you are familiar with that tool (and who among .NET developers isn't), then remember that you can use the same attributes (like link:http://www.newtonsoft.com/json/help/html/SerializationAttributes.htm[JsonProperty, JsonConverter], etc). In some edge cases, it might be useful to create your own custom serializer, which is possible with the .NET SDK. Check out the link:https://developer.couchbase.com/documentation/server/current/sdk/nonjson.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[documentation on serialization and non-JSON documents] for more information. 
+The .NET SDK uses link:http://www.newtonsoft.com/json[Newtonson JSON.NET]. If you are familiar with that tool (and who among .NET developers isn't), then remember that you can use the same attributes (like link:http://www.newtonsoft.com/json/help/html/SerializationAttributes.htm[JsonProperty, JsonConverter], etc). In some edge cases, it might be useful to create your own custom serializer, which is possible with the Couchbase .NET SDK. Check out the link:https://developer.couchbase.com/documentation/server/current/sdk/nonjson.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[documentation on serialization and non-JSON documents] for more information. 
 
 == Security
 
@@ -316,7 +315,7 @@ I also used Linq2Couchbase in the sample code for this blog series. Here's an ex
 include::src/SQLServerToCouchbase/CouchbaseServerDataAccess/CouchbaseShoppingCartRepository.cs[tag=Linq2CouchbaseExample]
 ----
 
-Beyond being a great Linq provider, Linq2Couchbase also has an experimental change tracking feature. It's definitely worth checking out. Brant Burnett is one of the key contributes to the project, and he's also a link:https://developer.couchbase.com/experts-and-champions?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Expert]. He presented a session at Couchbase Connect 2016 called link:https://connect.couchbase.com/watch-connect2016-ondemand?utm_source=blogs&utm_medium=link&utm_campaign=blogs[LINQing to data: Easing the transition from SQL].
+Beyond being a great Linq provider, Linq2Couchbase also has an experimental change tracking feature. It's definitely worth checking out. Brant Burnett is one of the key contributers to the project, and he's also a link:https://developer.couchbase.com/experts-and-champions?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Expert]. He presented a session at Couchbase Connect 2016 called link:https://connect.couchbase.com/watch-connect2016-ondemand?utm_source=blogs&utm_medium=link&utm_campaign=blogs[LINQing to data: Easing the transition from SQL].
 
 +++
 <iframe width="560" height="315" src="https://www.youtube.com/embed/X__mC2FArp4" frameborder="0" allowfullscreen></iframe>
@@ -333,6 +332,22 @@ If you are following a referential model, as in the social media example from th
 Multi-document transaction support may come in the future if enough Couchbase developers and customers ask for it or need it. So, if you go through the exercise of designing a document database data model, and transactions are _still_ a vital part of your project, then Couchbase may not be the best "system of record" for at least part of your project. Couchbase may still be the best "system of engagement", able to help with scaling, caching, performance, and flexibility where needed.
 
 _As a side note, it may be worth checking out the link:https://ndescribe.atlassian.net/wiki/display/DOC/Transactional+Documents[NDescribe project], as it includes an SDK that works on top of the Couchbase SDK and provides a transaction system. (Note that this is not an officially supported tool)._
+
+== SSIS, SSAS, SSRS
+
+Not everyone uses SQL Server Integration Services (SSIS), SQL Server Analysis Services (SSAS), and SQL Server Reporting Services (SSRS), but these are powerful features that SQL Server has for integration, reporting, and analysis.
+
+I can't give you a blanket "use X instead of Y" for these, because it depends very much on your use case. I can point you in the direction of some of the tools available for Couchbase that revolve around data processing, data transformation, reporting, and analysis.
+
+* *Kafka* is an open source data streaming tool. Some of the link:http://kafka.apache.org/uses[popular use cases for Kafka] include messaging, website activity tracking, metrics, and more. 
+
+* *Spark* is a data procesessing engine, intended for large-scale data processing and ETL.
+
+* *Hadoop* is a big data framework for distributed storage and processing.
+
+link:https://www.couchbase.com/bigdata[Couchbase has connectors] that support each of these three popular tools.
+
+Finally, link:https://developer.couchbase.com/documentation/server/4.5/analytics/introduction.html[*Couchbase Analytics* is currently in developer preview]. It is intended as a data management engine that runs parallel to Couchbase Server. It's a developer preview, and is not yet recommended to be used in production, but you can link:https://www.couchbase.com/downloads[download Couchbase Analytics and Kafka, Spark, Hadoop extensions (click the Extensions tab) and try them out].
 
 == Summary
 
