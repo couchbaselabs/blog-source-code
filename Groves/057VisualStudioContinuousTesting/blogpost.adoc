@@ -1,0 +1,109 @@
+:imagesdir: images
+:meta-description: Visual Studio 2017 comes with a lot of new, great stuff, but one of my favorite new features is built-in Visual Studio Live Unit Testing
+:title: Visual Studio Live Unit Testing: New to Visual Studio 2017
+:slug: Visual-Studio-Live-Unit-Testing-2017
+
+= Visual Studio Live Unit Testing: New to Visual Studio 2017
+
+link:https://www.visualstudio.com/en-us/news/releasenotes/vs2017-relnotes[Visual Studio 2017] was just officially released. It comes with a lot of new, great stuff, but one of my favorite new features is built-in Visual Studio Live Unit Testing (available in Visual Studio 2017 Enterprise, not yet available for .NET Core projects).
+
+In this post, I'm going to show you how Visual Studio Live Unit Testing works, as well as some thoughts around using unit tests vs integration tests. You can follow along by getting the full source code for this Live Unit Testing example on GitHub.
+
+== Visual Studio Live Unit Testing with NUnit
+
+NUnit is perhaps the most popular testing tool for C#/.NET developers. Visual Studio Live Unit Testing can also work with xUnit and MSTest, but for this post I'm going to just cover NUnit.
+
+To use NUnit, you add it with NuGet, just as normal. To use Visual Studio Live Testing, you'll also need to add the link:https://www.nuget.org/packages/NUnit3TestAdapter[NUnit Test Adapter] (`Install-Package NUnite3TestAdapter`).
+
+Next, start Live Testing by clicking Test -> Live Unit Testing -> Start.
+
+image:057_01_EnableLiveUnitTesting.gif[Start Visual Studio Live Unit Testing]
+
+== Writing a Unit Test
+
+We'll need some unit tests to demonstrate. We could just do `Assert.That(1, Is.EqualTo(1))`, but where's the fun in that? Let's create a shopping cart class.
+
+[source,C#,indent=0]
+----
+include::src/LiveUnitTesting/LiveUnitTesting/ShoppingCart.cs[tag=ShoppingCart]
+----
+
+This shopping cart has a couple properties, and a collection of items in it. Notice the `Total` property. Astute readers may already notice some problems with it, but let's start with a single, simple unit test to make sure it calculates a total.
+
+[source,C#,indent=0]
+----
+include::src/LiveUnitTesting/LiveUnitTesting/Tests/MyTests.cs[tag=ShoppingCart_Total_Should_Sum_Up_the_Item_Prices]
+----
+
+If Live Unit Testing is turned on, then the test is being automatically run in the background by Visual Studio. You should see some green checkmarks appear.
+
+image:057_02_LiveUnitTest.gif[Visual Studio Live Unit Testing in action]
+
+The green checkmarks will also appear wherever the code that is under test is covered.
+
+image:057_03_CodeUnderTest.png[Visual Studio Live Unit Testing code under test]
+
+With Visual Studio Live Unit Testing, you don't have to stop to run the tests. As you are coding, the tests will run, and give you immediate feedback on whether your code is making tests fail (or whether you've written enough code to make your test pass).
+
+Most of all, this will encourage you to write more tests.
+
+== What are Integration Tests?
+
+When writing unit tests, you are meant to test a small piece of code on its own. For code that interacts with some external service (a web service, a database, a file system, etc), you often mock those pieces out, so that you can focus on the unit.
+
+You may also write integration tests with NUnit. Integration tests that are meant to go beyond testing a single unit of code, and test that systems work together. Let's write a method that writes a record to Couchbase Server. This test will use a real database, therefore we can consider it an integration test.
+
+[source,C#,indent=0]
+----
+include::src/LiveUnitTesting/LiveUnitTesting/CouchbaseRepository.cs[tag=SaveShoppingCart]
+----
+
+This method should save a shopping cart to a document in Couchbase Server. To make sure it's working, we can write an NUnit test.
+
+----
+include::src/LiveUnitTesting/LiveUnitTesting/Tests/MyTests.cs[tag=IntegrationTest]
+----
+
+_Note: To keep this post simple, I omitted some of the repository details, and test setup. You can view all of this in the GitHub repository._
+
+== Integration Test with Visual Studio Live Unit Testing
+
+Visual Studio Live Unit Testing will happily run this unit test. You may not want these types of tests to be running the background automatically because:
+
+1. If you don't have Couchbase Server installed, or a bucket created and indexed, then they will fail.
+2. If you have a lot of tests that rely on external components, they could slow down the tests (reading/writing documents in Couchbase is very fast, but setting up a `Cluster` object for each test or test fixture is not).
+3. These tests could add a lot of unnecessary junk test data to your database.
+
+== Excluding Integration Tests from Visual Studio Live Unit Testing
+
+To exclude tests from Live Unit Testing, you can simply right-click on the test file.
+
+image:057_04_ExcludeFromLiveUnitTest.gif[Exclude from Live Unit Testing]
+
+After this, none of the tests in that file will be executed by Live Unit Testing. You can also exclude an entire project. So, if you organize unit tests and integration tests into separate projects, then you are all set.
+
+If you _don't_ organize them into separate projects, then this process could be a bit tedious. Further, the Include/Exclude information is a local setting that can't (as of the time I'm writing this, and to the best of my knowledge) be committed to source control.
+
+So, after asking about Live Testing exclusion on StackOverflow, I created an attribute that you can place on tests to exclude them from Live Testing.
+
+[source,c#,indent=0]
+----
+include::src/LiveUnitTesting/LiveUnitTesting/Tests/IgnoreForLiveTesting.cs[tag=IgnoreForLiveTesting]
+----
+
+This attribute implements the `ITestAction` interface (which is kinda like Aspect-Oriented Programming/AOP for NUnit, but that's a topic for a whole other blog post). It will check to see if it's being run by a `LiveUnitTesting` process. If it is, it instructs NUnit to ignore the test.
+
+Furthermore, I added an optional `ignoreReason` to the constructor, so that you can add a helpful note to other people on your team to explain why this test should not be run with Live Unit Testing. You can use it on an integration test like so:
+
+[source,c#,indent=0]
+----
+include::src/LiveUnitTesting/LiveUnitTesting/Tests/MyTests.cs[tag=IgnoreAttributeUsage]
+----
+
+== Summary
+
+I'm not terribly pleased with this method, as it's NUnit specific, and it's not quite exactly what I was hoping for with Visual Studio Live Unit Testing. But right now I think "the juice is worth the squeeze". Live Unit Testing is such a great feature for writing code, especially Test-Driven Development (TDD), that it's worth it to have to write and use a special NUnit attribute.
+
+By all means, if you know of a better way to achieve this, I want to know about. Please leave a comment below or ping me on Twitter @mgroves.
+
+If you have questions about the Couchbase code you saw in this post, I'd be happy to help. Or, you can check out the responsive and knowledgeable community on the link:https://forums.couchbase.com/c/net-sdk[Couchbase .NET SDK forum]. If you want to learn more about Couchbase, check out the link:https://developer.couchbase.com/[Couchbase Developer Portal].
