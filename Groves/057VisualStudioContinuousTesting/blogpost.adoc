@@ -7,7 +7,7 @@
 
 link:https://www.visualstudio.com/en-us/news/releasenotes/vs2017-relnotes[Visual Studio 2017] was just officially released. It comes with a lot of new, great stuff, but one of my favorite new features is built-in Visual Studio Live Unit Testing (available in Visual Studio 2017 Enterprise, not yet available for .NET Core projects).
 
-In this post, I'm going to show you how Visual Studio Live Unit Testing works, as well as some thoughts around using unit tests vs integration tests. You can follow along by getting the full source code for this Live Unit Testing example on GitHub.
+In this post, I'm going to show you how Visual Studio Live Unit Testing works, as well as some thoughts around using unit tests vs integration tests. You can follow along by getting the full source code for this link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/057VisualStudioContinuousTesting/src/LiveUnitTesting[Live Unit Testing example on GitHub].
 
 == Visual Studio Live Unit Testing with NUnit
 
@@ -64,7 +64,7 @@ This method should save a shopping cart to a document in Couchbase Server. To ma
 include::src/LiveUnitTesting/LiveUnitTesting/Tests/MyTests.cs[tag=IntegrationTest]
 ----
 
-_Note: To keep this post simple, I omitted some of the repository details, and test setup. You can view all of this in the GitHub repository._
+_Note: To keep this post simple, I omitted some of the repository details, and test setup. You can view all of this in link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/057VisualStudioContinuousTesting/src/LiveUnitTesting[the GitHub repository]._
 
 == Integration Test with Visual Studio Live Unit Testing
 
