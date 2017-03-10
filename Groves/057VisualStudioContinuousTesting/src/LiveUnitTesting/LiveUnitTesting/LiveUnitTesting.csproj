@@ -59,8 +59,8 @@
     <Compile Include="Item.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShoppingCart.cs" />
-    <Compile Include="Tests\CouchbaseRepositoryTests.cs" />
     <Compile Include="Tests\IgnoreForLiveTesting.cs" />
+    <Compile Include="Tests\MyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

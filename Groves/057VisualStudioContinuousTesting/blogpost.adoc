@@ -2,6 +2,10 @@
 :meta-description: Visual Studio 2017 comes with a lot of new, great stuff, but one of my favorite new features is built-in Visual Studio Live Unit Testing
 :title: Visual Studio Live Unit Testing: New to Visual Studio 2017
 :slug: Visual-Studio-Live-Unit-Testing-2017
+:focus-keyword: visual studio live unit testing
+:categories: .NET, Couchbase Server
+:tags: .NET, Couchbase Server, testing, unit testing, integration testing, visual studio, visual studio live unit testing
+:heroimage: Creative Commons https://pixabay.com/en/test-testing-exam-sat-act-mcat-986769/
 
 = Visual Studio Live Unit Testing: New to Visual Studio 2017
 
@@ -60,15 +64,16 @@ include::src/LiveUnitTesting/LiveUnitTesting/CouchbaseRepository.cs[tag=SaveShop
 
 This method should save a shopping cart to a document in Couchbase Server. To make sure it's working, we can write an NUnit test.
 
+[source,C#,indent=0]
 ----
 include::src/LiveUnitTesting/LiveUnitTesting/Tests/MyTests.cs[tag=IntegrationTest]
 ----
 
 _Note: To keep this post simple, I omitted some of the repository details, and test setup. You can view all of this in link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/057VisualStudioContinuousTesting/src/LiveUnitTesting[the GitHub repository]._
 
-== Integration Test with Visual Studio Live Unit Testing
+== Integration Tests with Visual Studio Live Unit Testing
 
-Visual Studio Live Unit Testing will happily run this unit test. You may not want these types of tests to be running the background automatically because:
+Visual Studio Live Unit Testing will happily run this unit test. You may not want these types of tests to be running in the background automatically because:
 
 1. If you don't have Couchbase Server installed, or a bucket created and indexed, then they will fail.
 2. If you have a lot of tests that rely on external components, they could slow down the tests (reading/writing documents in Couchbase is very fast, but setting up a `Cluster` object for each test or test fixture is not).
@@ -76,7 +81,7 @@ Visual Studio Live Unit Testing will happily run this unit test. You may not wan
 
 == Excluding Integration Tests from Visual Studio Live Unit Testing
 
-To exclude tests from Live Unit Testing, you can simply right-click on the test file.
+To exclude tests from Live Unit Testing, you can simply right-click on the test file and select "Exclude" from the context menu.
 
 image:057_04_ExcludeFromLiveUnitTest.gif[Exclude from Live Unit Testing]
 
@@ -84,7 +89,7 @@ After this, none of the tests in that file will be executed by Live Unit Testing
 
 If you _don't_ organize them into separate projects, then this process could be a bit tedious. Further, the Include/Exclude information is a local setting that can't (as of the time I'm writing this, and to the best of my knowledge) be committed to source control.
 
-So, after asking about Live Testing exclusion on StackOverflow, I created an attribute that you can place on tests to exclude them from Live Testing.
+So, after asking about link:http://stackoverflow.com/questions/42657226/visual-studio-2017-live-testing-exclusions[Live Testing exclusion on StackOverflow], I created an attribute that you can place on tests to exclude them from Live Testing.
 
 [source,c#,indent=0]
 ----
@@ -104,6 +109,6 @@ include::src/LiveUnitTesting/LiveUnitTesting/Tests/MyTests.cs[tag=IgnoreAttribut
 
 I'm not terribly pleased with this method, as it's NUnit specific, and it's not quite exactly what I was hoping for with Visual Studio Live Unit Testing. But right now I think "the juice is worth the squeeze". Live Unit Testing is such a great feature for writing code, especially Test-Driven Development (TDD), that it's worth it to have to write and use a special NUnit attribute.
 
-By all means, if you know of a better way to achieve this, I want to know about. Please leave a comment below or ping me on Twitter @mgroves.
+By all means, if you know of a better way to achieve this, I want to know about it. Please leave a comment below or ping me on link:http://twitter.com/mgroves[Twitter @mgroves].
 
 If you have questions about the Couchbase code you saw in this post, I'd be happy to help. Or, you can check out the responsive and knowledgeable community on the link:https://forums.couchbase.com/c/net-sdk[Couchbase .NET SDK forum]. If you want to learn more about Couchbase, check out the link:https://developer.couchbase.com/[Couchbase Developer Portal].
