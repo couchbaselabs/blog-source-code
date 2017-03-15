@@ -1,0 +1,85 @@
+:imagesdir: images
+:meta-description: In March's developer build, there are some more updates for N1QL query monitoring and profiling. The Query Plan is now more visual.
+:title: Profiling and Monitoring in Couchbase Server 5.0 Preview (Update)
+:slug: Profiling-Monitoring-Update
+:focus-keyword: profiling
+:categories: Couchbase Server, N1QL
+:tags: Couchbase Server, testing, profiling, monitoring, N1QL, performance
+:heroimage: same as 54
+
+= Profiling and Monitoring in Couchbase Server 5.0 Preview (Update)
+
+In March's developer build, there are some more updates for N1QL query monitoring and profiling.
+
+Go link:https://couchbase.com/downloads[download the March 5.0.0 developer release of Couchbase Server] today. Make sure to click the "Developer" tab to get the developer build (DB), and check it out. You still have time to give us some feedback before the official release.
+
+In case you missed it, check out the link:https://blog.couchbase.com/new-profiling-monitoring-couchbase-server-4-6/[post I wrote in February] about the New Profiling and Monitoring in Couchbase Server 5.0 Preview, as this post very much builds on that.
+
+_As before, keep in mind that I'm writing this blog post on early builds, and some things may change in minor ways by the time you get the release._
+
+== Query Workbench
+
+Once again, I'll be focusing on link:https://developer.couchbase.com/documentation/server/current/tools/query-workbench.html[Query Workbench] for this blog post. The updates for March are mainly visual changes to the "Plan" view in Query Results.
+
+But just to review, there are other options for running N1QL queries:
+
+* Use the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/n1ql-queries-with-sdk.html[SDK of your choice].
+* link:https://developer.couchbase.com/documentation/server/current/cli/cbq-tool.html[cbq command line tool].
+* link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-rest-api/index.html[REST API N1QL endpoints]
+
+Personally, I find the Query Workbench easiest to use, as it more visually presents the profiling.
+
+== Profiling complex queries
+
+Let's look at the `travel-sample` data again, just like I did in last month's post. I'm using the travel-sample bucket, but I have removed one of the indexes (`DROP INDEX `travel-sample`.`def_sourceairport`;`).
+
+I then execute a N1QL query to find routes between two cities. Let's use Columbus, Ohio and Denver, Colorado this time.
+
+[source,SQL]
+----
+SELECT r.id, a.name, s.flight, s.utc, r.sourceairport, r.destinationairport, r.equipment
+FROM `travel-sample` r
+UNNEST r.schedule s
+JOIN `travel-sample` a ON KEYS r.airlineid
+WHERE r.sourceairport = 'CMH'
+AND r.destinationairport = 'DEN'
+AND s.day = 0
+ORDER BY a.name;
+----
+
+Executing this query (on my single-node local machine) took about 8 seconds this time (as expected), which is too slow. 
+
+== Visual Breakdown of Profiling
+
+Let's look at the plan to see what the problem might be (I broke it into two lines so the screenshots will fit in the blog post).
+
+image:058-01-Profiling-Execution-Plan-Part-1.png[Visual profiling part 1]
+
+image:058-02-Profiling-Execution-Plan-Part-2.png[Visual profiling part 2]
+
+So, as before, the costliest parts of the query plan are the Filter and the Join. We could tell before by looking at the raw numbers and/or the percentages. But in this March release, we have a more visual way to tell: color. The parts of the plan go from gray to tan to gold based on percentages and defined thresholds.
+
+Right now, the thresholds are based on the fraction of the total query time taken by an operation:
+
+* Gray – less than 1% of total time
+* Tan/Some gold – 1% - 5%
+* Tan/More gold – 5% - 20%
+* All gold - > 20%
+
+The purpose of this visual profiling is to quickly draw your eye to expensive operations. Then, if you care to know the exact numbers, you can read it in the details (in the diagram or even in the `META().plan` information).
+
+== We still want your feedback!
+
+Stay tuned to the link:http://blog.couchbase.com[Couchbase Blog] for information about what's coming in the next developer build.
+
+Interested in trying out some of these new features? link:https://couchbase.com/download[Download Couchbase Server 5.0] today!
+
+We want feedback! Developer releases are coming every month, so you have a chance to make a difference in what we are building.
+
+Do you like this new use of color to help you profile your queries? Now you can give feedback directly from within the Couchbase Web Console. Look for the feedback icon] icon at the bottom right of the screen.
+
+image:058-03-Feedback-Form.gif[Send feedback from within Couchbase]
+
+Is something not working right? Please file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com] or submit a question on the link:https://forums.couchbase.com[Couchbase Forums]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers let me have a free Kit-Kat for each good bug I submit).
+
+If you have questions, the best way to contact me is either link:https://twitter.com/mgroves[Twitter @mgroves] or email me matthew.groves@couchbase.com.
