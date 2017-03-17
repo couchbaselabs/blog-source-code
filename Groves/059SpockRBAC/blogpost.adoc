@@ -1,80 +1,97 @@
 :imagesdir: images
-:meta-description: In March's developer build, you can start to see some major changes to Role Based Access Control (RBAC) coming to Couchbase Server.
-:title: Role Based Access Control (RBAC) Enhancements
-:slug: Role-Based-Access-Control-RBAC-Enhancements
+:meta-description: In March's developer build, you can start to see some major changes to authentication and authorization within RBAC coming to Couchbase Server.
+:title: Authentication and Authorization with RBAC
+:slug: Authentication-Authorization-RBAC
 :focus-keyword: authentication
 :categories: Security, Couchbase Server
 :tags: Couchbase Server, authentication, authorization, security
-:heroimage: TBD
+:heroimage: 059-Hero-Key-Locks-Security-Authentication-Authorization.jpg
 
-In March's developer build, you can start to see some major changes to Role Based Access Control (RBAC) coming to Couchbase Server. These changes are a work in progress: the developer build is essentially a nightly build that gets released to the public. But there's some good stuff in RBAC that's worth getting excited about!
+In March's developer build, you can start to see some major changes to authentication and authorization within Role Based Access Control (RBAC) coming to Couchbase Server. These changes are a work in progress: the developer build is essentially a nightly build that gets released to the public. But there's some good stuff in RBAC that's worth getting excited about!
 
 Go link:https://couchbase.com/downloads[download the March 5.0.0 developer release of Couchbase Server] today. Make sure to click the "Developer" tab to get the developer build (DB), and check it out. You still have time to give us some feedback before the official release.
 
-_Because this is a nightly release, keep in mind that I'm writing this blog post on early builds, and some things may change in minor ways by the time you get the release, and some things may still be buggy._
+_Keep in mind that I'm writing this blog post on early builds, and some things may change in minor ways by the time you get the release, and some things may still be buggy._
 
 == Authentication and Authorization
 
+Just a quick reminder of the difference between authentication and authorization:
+
+* *Authentication* is the process of identifying that a user is who they say they are.
+* *Authorization* is the process of making sure the user has permission to do what they are trying to do.
+
 If you've used Couchbase before, you're familiar with the login to what we sometimes call the "Admin Web Console".
 
-image:05901-Couchbase-Web-Console[Couchbase Web Console login]
+image:05901-Couchbase-Web-Console.png[Couchbase authentication screen]
 
-However, the Web Console is really not just for admins, it's developers too. But until now, you didn't really have a lot of control built-in to Couchbase about who can log in and (more importantly) what they're allowed to do.
+However, the Web Console is really not just for admins, it's for developers too. But until now, you didn't really have a lot of control built-in to Couchbase about who can log in and (more importantly) what they're allowed to do.
 
-So, I'd like to introduce you to a new first-class user feature.
+So, I'd like to introduce you to Couchbase's new first-class user feature.
 
 == Users
 
-There's still a full administrator user. This is the login that you create when you first install Couchbase. This is the user who is unrestricted, and can do anything, including creating new users. For instance, a full administrator can see the "Security" link in the navigation, while other users can't.
+There's still a full administrator user. This is the login that you create when you first install Couchbase. This is the user who is unrestricted, and can do anything, including creating new users. So, for instance, a full administrator can see the "Security" link in the navigation, while other users can't.
 
-image:05902-Security-Link-Web-Console.gif[Security link in Web Console]
+image:05902-Security-Link-Web-Console.gif[Security link to manage authentication and authorization]
 
-Once on this security page, you can add, edit, and delete users.
+Now, once on this security page, you can add, edit, and delete users.
 
-A *user* can identify a person, but it can also identify some service or process. For instance, if you're writing an ASP.NET application, you may want to create a user with a limited set of permissions called "web-service". The credentials for that user would be used by the ASP.NET application.
+A *user* can identify a person, but it can also identify some service or process. For instance, if you're writing an ASP.NET application, you may want to create a user with a limited set of permissions called "web-service". Therefore, the credentials for that "user" would not be for a person, but for an ASP.NET application.
 
-Try adding a new Couchbase user. I'm going to create a user called "fts_admin", with a name of "Full Text Search Admin", a password, and a single role: FTS Admin of the travel-sample bucket (FTS = Full Text Search).
+Next, try adding a new Couchbase user by clicking "+ Add User". I'm going to create a user called "fts_admin", with a name of "Full Text Search Admin", a password, and a single role: FTS Admin of the travel-sample bucket (FTS = Full Text Search).
 
 == Adding a new User
 
 Here's an animation of adding that user:
 
-image:05903-Add-New-User.gif[Add a new Couchbase user]
+image:05903-Add-New-User.gif[Add a new user with Couchbase authentication]
 
 Some notes about the above animation:
 
-* I selected "Couchbase" instead of "External". External is meant for LDAP integration. Note that "Couchbase" will likely become the default in future releases.
+* I selected "Couchbase" instead of "External". External is meant for LDAP integration. Note that "Couchbase" (internal authentication) will likely become the default in future releases.
 * FTS Admin gives the user permission to do everything with Full Text Searches: create, modify, delete, and execute them.
-* I granted FTS Admin only for travel-sample bucket. If I selected "all", that would grant permission to all buckets, even ones created in the future.
-* FTS Searcher only has access to execute searches, not modify or create them.
+* I granted FTS Admin only for the travel-sample bucket. If I selected "all", that would grant permission to all buckets, even ones created in the future.
+* Users with the FTS Searcher role only have access to execute searches, not modify or create them.
 
 More on the difference between FTS Admin and FTS Searcher later.
 
 == Logging in as a new user
 
-Now that this user is created, I can login as fts_admin.
+Now that this user is created, I can login as fts_admin. This user's authentication is handled within Couchbase.
 
-image:05904-Login-as-new-user.gif[Add a new Couchbase user]
+image:05904-Login-as-new-user.gif[Login with Couchbase authentication]
 
-In the above animation, note that the fts_admin user has a much more limited set of options compared to the full admin user.
+First, in the above animation, note that the fts_admin user has a much more limited set of options compared to the full admin user.
 
-It's also worth pointing out that users can reset their password:
+Next, it's worth pointing out that users can reset their password:
 
 image:05905-Reset-password.png[Reset password]
 
 == Creating an FTS index
 
-I've already created an fts_admin user with the FTS Admin role. I'll create another user called fts_searcher that only has the searcher role for the travel-sample bucket.
+Since I've already created an fts_admin user with the *FTS Admin* role, I'll create another user called fts_searcher that only has the *FTS Searcher* role for the travel-sample bucket.
 
 image:05906-List-of-users.png[List of users]
 
-I'm going to use the REST API to demonstrate that these users are limited by the roles I've given them. Let's start by creating a new Full Text Search (FTS) index. I'll do this via Postman, but you can use curl or Fiddler or whatever REST tool you prefer.
+=== Using the REST API for FTS
 
-To create an index with the REST API, I need to make a PUT request to the /api/index/<indexname> endpoint. I'll create an index for the 'hotel' type in the travel-sample bucket. I need to specify credentials for basic authentication. Also remember that you're posting to port 8094. So, the URL for the PUT request should look something like this:
+I'm going to use the REST API to demonstrate that these users are limited by the roles I've given them. _If you need a refresher on the REST API, you can refer to the link:https://developer.couchbase.com/documentation/server/current/rest-api/rest-fts.html[documentation of the Full Text Search API]. Also note that I'm using the REST API because there are some bugs in the UI as I'm writing this._
+
+Let's start by creating a new Full Text Search (FTS) index. I'll do this via link:https://www.getpostman.com/[Postman], but you can use link:https://curl.haxx.se/[curl] or link:http://www.telerik.com/fiddler[Fiddler] or whatever REST tool you prefer.
+
+=== Create an FTS index
+
+To create an index with the REST API, I need to make a PUT request to the `/api/index/<indexname>` endpoint.
+
+* First, I'll create an index for the 'hotel' type in the travel-sample bucket, so I'll PUT to `/api/index/hotels`
+* Also, credentials can be put in the URL to use basic authentication
+* Furthermore, the REST endpoints are available on port 8094
+
+Finally, the URL for the PUT request should look something like this:
 
 `http://fts_searcher:password@192.168.1.10:8094/api/index/hotels`
 
-The body of the PUT is a big JSON object. Below is part of it. You can find the link://[full version on GitHub] to try for yourself.
+The body of the PUT is a big JSON object. Below is part of it. You can find the link:https://github.com/couchbaselabs/blog-source-code/blob/master/Groves/059SpockRBAC/src/newsearchindex.json[full version on GitHub] to try for yourself.
 
 [source,JavaScript,indent=0]
 ----
@@ -85,9 +102,11 @@ include::src/newsearchindex.json[lines=1..5]
 include::src/newsearchindex.json[lines=54]
 ----
 
-Normally, you can create this via the UI instead of having to create JSON by hand.
+Normally, you can create this via the UI instead of having to create JSON by hand. I'm not going to go into FTS in much detail in this post, because my goal is to demonstrate the new authentication and authorization features, not FTS itself.
 
-I'm using fts_searcher as the user. I know that fts_searcher shouldn't have permission to create indexes, so I would expect a 403. And that's just what I get.
+=== Trying to create an index without authorization
+
+Notice that I'm using fts_searcher as the user. I know that fts_searcher shouldn't have permission to create indexes, so I would expect a 403. And that's just what I get.
 
 [source,JavaScript]
 ----
@@ -99,11 +118,15 @@ I'm using fts_searcher as the user. I know that fts_searcher shouldn't have perm
 }
 ----
 
+So, while the authentication worked, that user doesn't have the necessary authorization.
+
+=== Creating an index with authorization
+
 I'll try again with fts_admin:
 
 `http://fts_admin:password@192.168.1.10:8094/api/index/hotels`
 
-And assuming an index named 'hotels doesn't already exist, you'll get a 200, and this in the response:
+And assuming an index named 'hotels' doesn't already exist, you'll get a 200, and this in the body of response:
 
 [source,JavaScript]
 ----
@@ -114,9 +137,9 @@ And assuming an index named 'hotels doesn't already exist, you'll get a 200, and
 
 == Using the FTS index
 
-Both users should be able to execute a search using that index. Let's again use the REST API to search the index for the word 'breakfast'.
+Next, let's use the REST API to search the index for the word 'breakfast'.
 
-Make a POST to the `/api/index/hotels/query` endpoint, again with the proper credentials and port number.
+First, make a POST to the `/api/index/hotels/query` endpoint, again with the proper credentials and port number.
 
 `http://fts_admin:password@192.168.1.10:8094/api/index/hotels/query`
 
@@ -124,7 +147,9 @@ or
 
 `http://fts_searcher:password@192.168.1.10:8094/api/index/hotels/query`
 
-In the body of the POST should be a simple JSON object. Again, you don't normally have to create this by hand -- your SDK of choice or the Web Console UI can do this for you.
+Both users should be able to execute a search using that index.
+
+Next, in the body of the POST should be a simple JSON object. Again, you don't normally have to create this by hand -- your SDK of choice or the Web Console UI can do this for you.
 
 [source,JavaScript]
 ----
@@ -140,7 +165,7 @@ In the body of the POST should be a simple JSON object. Again, you don't normall
 }
 ----
 
-The result of such a search request will be a large JSON response. Look within the "hits" sub-document for "fragments" to verify that the search worked. Here's a snippet of my search for "breakfast". Again, the link://[full result is on Github].
+Finally, the result of this search request will be a large JSON response. Look within the "hits" sub-document for "fragments" to verify that the search worked. Here's a snippet of my search for "breakfast". Again, the link:https://github.com/couchbaselabs/blog-source-code/blob/master/Groves/059SpockRBAC/src/searchresults.json[full result is on Github].
 
 [source,JavaScript,indent=0]
 ----
@@ -153,12 +178,12 @@ include::src/searchresults.json[lines=145..148]
 
 == This is a preview, expect some bugs!
 
-This is a preview, so there are some bugs and some incomplete features.
+There are some bugs and some incomplete features.
 
 * I've shown FTS roles here on purpose. This is because the other roles are not yet fully formed. Please try them out, let us know what you think, but remember they are not in their final form. FTS is closest to ready.
 
-* I've seen some issues when logging in as a non-admin user causes the web console to behave badly. This is why I showed the REST example above instead of relying on the UI.
+* I've seen some issues when logging in as a non-admin user causes the web console to behave badly. Because of this, I showed the REST example above instead of relying on the UI.
 
-* There might be other bugs that we don't know about yet. Please let us know! You can file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com] or submit a question on the link:https://forums.couchbase.com[Couchbase Forums]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers send me a cake pop when I submit a good bug).
+* Finally, there might be other bugs that we don't know about yet. Please let us know! You can file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com] or submit a question on the link:https://forums.couchbase.com[Couchbase Forums]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers send me a cake pop when I submit a good bug).
 
 If you have questions, the best way to contact me is either link:https://twitter.com/mgroves[Twitter @mgroves] or email me matthew.groves@couchbase.com.
