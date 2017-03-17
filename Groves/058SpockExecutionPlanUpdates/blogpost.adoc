@@ -61,12 +61,14 @@ So, as before, the costliest parts of the query plan are the Filter and the Join
 
 Right now, the thresholds are based on the fraction of the total query time taken by an operation:
 
-* Gray – less than 1% of total time
-* Tan/Some gold – 1% - 5%
-* Tan/More gold – 5% - 20%
-* All gold - > 20%
+* Gray: less than 1% of total time
+* Tan/Some gold: – 1% - 5%
+* Tan/More gold: 5% - 20%
+* All gold: 20%
 
 The purpose of this visual profiling is to quickly draw your eye to expensive operations. Then, if you care to know the exact numbers, you can read it in the details (in the diagram or even in the `META().plan` information).
+
+I'm not going to go through the index creation part again; it's the same as it was in the last blog post (just recreating the index that I removed for demonstration purposes).
 
 == We still want your feedback!
 
