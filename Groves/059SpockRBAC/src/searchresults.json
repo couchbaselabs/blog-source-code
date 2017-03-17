@@ -1,0 +1,1435 @@
+{
+  "status": {
+    "total": 6,
+    "failed": 0,
+    "successful": 6
+  },
+  "request": {
+    "query": {
+      "query": "breakfast"
+    },
+    "size": 10,
+    "from": 0,
+    "highlight": {
+      "style": null,
+      "fields": null
+    },
+    "fields": [
+      "*"
+    ],
+    "facets": null,
+    "explain": true,
+    "sort": [
+      "-_score"
+    ],
+    "includeLocations": false
+  },
+  "hits": [
+    {
+      "index": "hotels_434f58fb1208d378_6ddbfb54",
+      "id": "hotel_25160",
+      "score": 0.5753053906096077,
+      "explanation": {
+        "value": 0.5753053906096077,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.5753053906096077,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.5753053906096077,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.5753053906096077,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.5753053906096077,
+                        "message": "fieldWeight(_all:breakfast in hotel_25160), product of:",
+                        "children": [
+                          {
+                            "value": 2.6457513110645907,
+                            "message": "tf(termFreq(_all:breakfast)=7"
+                          },
+                          {
+                            "value": 0.04372694715857506,
+                            "message": "fieldNorm(field=_all, doc=hotel_25160)"
+                          },
+                          {
+                            "value": 4.972791674492328,
+                            "message": "idf(docFreq=97, maxDocs=5207)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "reviews.content": {
+          "breakfast": [
+            {
+              "pos": 326,
+              "start": 1512,
+              "end": 1521,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 342,
+              "start": 1598,
+              "end": 1607,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 354,
+              "start": 1675,
+              "end": 1684,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 368,
+              "start": 1748,
+              "end": 1757,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 393,
+              "start": 1881,
+              "end": 1890,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 485,
+              "start": 2357,
+              "end": 2366,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 564,
+              "start": 2757,
+              "end": 2766,
+              "array_positions": [
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "reviews.content": [
+          "… to watch TV. <mark>Breakfast</mark> was served every morning along with a copy of the Times-Picayune. I took my <mark>breakfast</mark> downstairs in the patio, the coffee was very good. The continental <mark>breakfast</mark> is nothing to…"
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "530 Broadway",
+        "checkin": "3PM",
+        "checkout": "Noon",
+        "city": "San Diego",
+        "country": "United States",
+        "description": "A unique 245-room hotel where timeless charm is blended seamlessly with sophisticated comfort of modern guest accommodations. Ideal location in the Gaslamp Quarter.",
+        "fax": "+1 619 446-3011",
+        "free_breakfast": false,
+        "free_internet": false,
+        "free_parking": false,
+        "geo.accuracy": "RANGE_INTERPOLATED",
+        "geo.lat": 32.7159,
+        "geo.lon": -117.15944,
+        "id": 25160,
+        "name": "Courtyard by Marriott San Diego Downtown",
+        "pets_ok": true,
+        "phone": "+1 619 446-3000",
+        "price": "$169-249",
+        "public_likes": [
+          "Zachariah Williamson",
+          "Isabell Von",
+          "Domenico Swaniawski",
+          "Noel Langosh"
+        ],
+        "reviews.author": "Alverta Mueller",
+        "reviews.content": "This writer is a native of the French Quarter, so when I tell you that the hotel is in a great location I know what I am writing about. You really cannot get a better location in the French Quarter that is convenient to all of the major attractions and the Frenchman St. Marigny clubs as well; you can easily walk to every club you want to go to. I was on a trip home to visit family and chose this hotel to stay at for my visit. The room I had was typical for a hotel of that age in the FQ as far as size goes; in other words my room was not spacious, but again, rooms in any other FQ hotel of the same age are not spacious either. If you want a large room stay in one of the tower monstrosities that have sprung up on Canal St. in the past 20 years. But why would you want to stay at one of those, you can stay at one of those in your own home town, so if that is what you prefer stay home. One of the things I like about the hotel is the scale of it. It's only two stories tall, so no elevator, one can move around in the hotel very easily. One flight of stairs and you are on the street, or in the pool, no long walks. I once stayed at the Bellagio in Las Vegas and hated it because it took at least 20 mins to get from my room to the street. A hotel can be too large. The room was clean and had a nice shower, no tub, but I do not use a tub and was glad that I did not have to step into a tub to take a shower. The TV was on the small side, with a minimum of channels, but I wasn't on vacation to watch TV. Breakfast was served every morning along with a copy of the Times-Picayune. I took my breakfast downstairs in the patio, the coffee was very good. The continental breakfast is nothing to rave about, but I have yet to have a continental breakfast in a U.S. hotel that is worth raving about, in that regard the Europeans are way ahead. But really, who cares, if you want breakfast you are in the FQ, just walk down the street, there are plenty of restaurants around. The best quality about the hotel is the staff. If you come to New Orleans remember this, people here will talk to you; its the norm, and if you speak to them you will get to know them and that makes all the difference in the world when staying in a small hotel where you will see the same staff day after day. Remember this too, nothing says hello like money. When you are served breakfast give a tip, when you go out leave a tip for the maid cleaning the room. Tipping is part of the culture in New Orleans; we tip everyone, and everyone expects a tip, and people will respond in kind. In New Orleans it is customary to give someone a little something extra, we even have our own word for it; lagniappe. I was traveling alone on my visit home, I left $2 for the maid, and $2 for breakfast everyday, that's $4 a day, not much at all, but it makes a difference to the staff. It also makes a difference to say \"good morning\" or respond in kind when someone says it to you. Treat the staff as your peers and with courtesy and you will have a pleasant stay I promise you. Parking: the hotel has offsite valet parking. I never used it because I flew into New Orleans and did not rent a car. No need for a car if one is staying in the FQ. But for those who drive to New Orleans or rent a car all I can tell you is that during my stay at the hotel I never heard anyone complain about waiting for their car to arrive once it was summoned. The bottom line is this, would I stay at this hotel again; yes. There are only four hotels in the FQ that I will stay in, and this is one of the four.",
+        "reviews.date": "2013-03-07 18:47:48 +0300",
+        "reviews.ratings.Cleanliness": 5,
+        "reviews.ratings.Overall": 5,
+        "reviews.ratings.Service": 5,
+        "reviews.ratings.Sleep Quality": 5,
+        "reviews.ratings.Value": 5,
+        "state": "California",
+        "title": "San Diego/Downtown",
+        "type": "hotel",
+        "url": "http://www.sandiegocy.com/",
+        "vacancy": false
+      }
+    },
+    {
+      "index": "hotels_434f58fb1208d378_6ddbfb54",
+      "id": "hotel_16443",
+      "score": 0.48703731807442496,
+      "explanation": {
+        "value": 0.48703731807442496,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.48703731807442496,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.48703731807442496,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.48703731807442496,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.48703731807442496,
+                        "message": "fieldWeight(_all:breakfast in hotel_16443), product of:",
+                        "children": [
+                          {
+                            "value": 2,
+                            "message": "tf(termFreq(_all:breakfast)=4"
+                          },
+                          {
+                            "value": 0.048970211297273636,
+                            "message": "fieldNorm(field=_all, doc=hotel_16443)"
+                          },
+                          {
+                            "value": 4.972791674492328,
+                            "message": "idf(docFreq=97, maxDocs=5207)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "description": {
+          "breakfast": [
+            {
+              "pos": 18,
+              "start": 91,
+              "end": 100,
+              "array_positions": null
+            }
+          ]
+        },
+        "reviews.content": {
+          "breakfast": [
+            {
+              "pos": 18,
+              "start": 93,
+              "end": 102,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 48,
+              "start": 263,
+              "end": 272,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 23,
+              "start": 116,
+              "end": 125,
+              "array_positions": [
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "description": [
+          "…ad, they have 45 rooms ranging from singles to quads. <mark>Breakfast</mark> is included, some rooms en suite. There is a TV lounge, a 24-hour concierge, and the staff is friendly and helpful. It is clean and the …"
+        ],
+        "reviews.content": [
+          "…y I liked their <mark>breakfast</mark>. there werent hot stuff but its totally enough. Ham,cheese, delisious bread, cookies, it was so good. I defenitely chose this hotel, if i go bak to rome again. <mark>breakfast</mark>, so …"
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "23-25 Penywern Rd, SW5 9TT",
+        "city": "London",
+        "country": "United Kingdom",
+        "description": "One of the best hotels on Penywern Road, they have 45 rooms ranging from singles to quads. Breakfast is included, some rooms en suite. There is a TV lounge, a 24-hour concierge, and the staff is friendly and helpful. It is clean and the shared bathrooms are not bad at all.",
+        "directions": "tube: Earl's Court",
+        "email": "LJH@lgh-hotels.com",
+        "fax": "+44 20 7373-8919",
+        "free_breakfast": true,
+        "free_internet": true,
+        "free_parking": false,
+        "geo.accuracy": "APPROXIMATE",
+        "geo.lat": 51.4906,
+        "geo.lon": -0.1938,
+        "id": 16443,
+        "name": "The Lord Jim Hotel",
+        "pets_ok": true,
+        "phone": "+44 20 7370-6071",
+        "price": "Online booking £37 for the booking itself, between £17-33 per person single",
+        "public_likes": [
+          "Lexi Jacobs",
+          "Arlie Graham",
+          "Gaetano Schulist Jr.",
+          "Sid Yundt MD",
+          "Sherwood Stoltenberg",
+          "Toney Tillman MD",
+          "Daron Hartmann V"
+        ],
+        "reviews.author": [
+          "Rickey Lueilwitz",
+          "Kavon Kuhic"
+        ],
+        "reviews.content": [
+          "I stayed two night at this hotel but this hotel was really amazing. especially I liked their breakfast. there werent hot stuff but its totally enough. Ham,cheese, delisious bread, cookies, it was so good. I defenitely chose this hotel, if i go bak to rome again. breakfast, so good.",
+          "Quite simply, you would be hard pressed to find a better value. Modern, well run, on site parking (for a fee) great breakfast, and perfect location. We walked everywhere."
+        ],
+        "reviews.date": [
+          "2013-08-24 15:21:41 +0300",
+          "2015-08-12 12:23:07 +0300"
+        ],
+        "reviews.ratings.Cleanliness": [
+          5,
+          5
+        ],
+        "reviews.ratings.Location": [
+          5,
+          5
+        ],
+        "reviews.ratings.Overall": [
+          4,
+          5
+        ],
+        "reviews.ratings.Rooms": [
+          5,
+          5
+        ],
+        "reviews.ratings.Service": [
+          5,
+          5
+        ],
+        "reviews.ratings.Sleep Quality": 5,
+        "reviews.ratings.Value": [
+          4,
+          5
+        ],
+        "title": "London/South Kensington-Chelsea",
+        "type": "hotel",
+        "url": "http://www.lgh-hotels.com/lordjim/",
+        "vacancy": true
+      }
+    },
+    {
+      "index": "hotels_434f58fb1208d378_54820232",
+      "id": "hotel_25793",
+      "score": 0.48174087550473815,
+      "explanation": {
+        "value": 0.48174087550473815,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.48174087550473815,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.48174087550473815,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.48174087550473815,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.48174087550473815,
+                        "message": "fieldWeight(_all:breakfast in hotel_25793), product of:",
+                        "children": [
+                          {
+                            "value": 1,
+                            "message": "tf(termFreq(_all:breakfast)=1"
+                          },
+                          {
+                            "value": 0.09578263014554977,
+                            "message": "fieldNorm(field=_all, doc=hotel_25793)"
+                          },
+                          {
+                            "value": 5.029522312894231,
+                            "message": "idf(docFreq=93, maxDocs=5286)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "description": {
+          "breakfast": [
+            {
+              "pos": 22,
+              "start": 128,
+              "end": 137,
+              "array_positions": null
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "description": [
+          "This hotel is ideally located less than a block from the green expanses of the Presidio. They offer a complimentary continental <mark>breakfast</mark> and limited free parking."
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "2707 Lombard St",
+        "checkin": "1PM",
+        "checkout": "11AM",
+        "city": "San Francisco",
+        "country": "United States",
+        "description": "This hotel is ideally located less than a block from the green expanses of the Presidio. They offer a complimentary continental breakfast and limited free parking.",
+        "directions": "at Baker St",
+        "email": "sanfrancisco@countryhearth.com",
+        "fax": "+1 415 567-8222",
+        "free_breakfast": true,
+        "free_internet": true,
+        "free_parking": true,
+        "geo.accuracy": "APPROXIMATE",
+        "geo.lat": 37.7983,
+        "geo.lon": -122.4463,
+        "id": 25793,
+        "name": "Country Hearth Inn",
+        "pets_ok": false,
+        "phone": "+1 415 567-2425",
+        "price": "$75-$110",
+        "public_likes": [
+          "Solon Weber",
+          "Mireya Berge",
+          "Loy Zboncak"
+        ],
+        "state": "California",
+        "title": "San Francisco/Golden Gate",
+        "type": "hotel",
+        "url": "http://www.goldengatebi.com/",
+        "vacancy": false
+      }
+    },
+    {
+      "index": "hotels_434f58fb1208d378_13aa53f3",
+      "id": "hotel_27741",
+      "score": 0.47992527752997133,
+      "explanation": {
+        "value": 0.47992527752997133,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.47992527752997133,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.47992527752997133,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.47992527752997133,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.47992527752997133,
+                        "message": "fieldWeight(_all:breakfast in hotel_27741), product of:",
+                        "children": [
+                          {
+                            "value": 1,
+                            "message": "tf(termFreq(_all:breakfast)=1"
+                          },
+                          {
+                            "value": 0.0980580672621727,
+                            "message": "fieldNorm(field=_all, doc=hotel_27741)"
+                          },
+                          {
+                            "value": 4.8942967257025405,
+                            "message": "idf(docFreq=106, maxDocs=5256)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "description": {
+          "breakfast": [
+            {
+              "pos": 20,
+              "start": 96,
+              "end": 105,
+              "array_positions": null
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "description": [
+          "A family-run inn. The owners live on-site and see to the upkeep of the hotel's amazing gardens. <mark>Breakfast</mark> is served in the main building."
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "293 Alisal Road",
+        "city": "Solvang",
+        "country": "United States",
+        "description": "A family-run inn. The owners live on-site and see to the upkeep of the hotel's amazing gardens. Breakfast is served in the main building.",
+        "directions": "2 blocks from downtown",
+        "email": "info@solvanggardens.com",
+        "free_breakfast": true,
+        "free_internet": false,
+        "free_parking": false,
+        "geo.accuracy": "APPROXIMATE",
+        "geo.lat": 34.593889,
+        "geo.lon": -120.139722,
+        "id": 27741,
+        "name": "Solvang Gardens Lodge",
+        "pets_ok": false,
+        "phone": "+1 805 688-4404",
+        "public_likes": [
+          "Dr. Elna Lakin",
+          "Mrs. Lionel Russel",
+          "Armando Homenick"
+        ],
+        "state": "California",
+        "title": "Solvang",
+        "tollfree": "+1 888 688-4404",
+        "type": "hotel",
+        "url": "http://www.solvanggardens.com/",
+        "vacancy": false
+      }
+    },
+    {
+      "index": "hotels_434f58fb1208d378_13aa53f3",
+      "id": "hotel_4668",
+      "score": 0.4768780983437477,
+      "explanation": {
+        "value": 0.4768780983437477,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.4768780983437477,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.4768780983437477,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.4768780983437477,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.4768780983437477,
+                        "message": "fieldWeight(_all:breakfast in hotel_4668), product of:",
+                        "children": [
+                          {
+                            "value": 2.449489742783178,
+                            "message": "tf(termFreq(_all:breakfast)=6"
+                          },
+                          {
+                            "value": 0.03977786377072334,
+                            "message": "fieldNorm(field=_all, doc=hotel_4668)"
+                          },
+                          {
+                            "value": 4.8942967257025405,
+                            "message": "idf(docFreq=106, maxDocs=5256)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "description": {
+          "breakfast": [
+            {
+              "pos": 16,
+              "start": 90,
+              "end": 99,
+              "array_positions": null
+            }
+          ]
+        },
+        "reviews.content": {
+          "breakfast": [
+            {
+              "pos": 112,
+              "start": 595,
+              "end": 604,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 124,
+              "start": 666,
+              "end": 675,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 135,
+              "start": 737,
+              "end": 746,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 31,
+              "start": 187,
+              "end": 196,
+              "array_positions": [
+                1
+              ]
+            },
+            {
+              "pos": 36,
+              "start": 206,
+              "end": 215,
+              "array_positions": [
+                2
+              ]
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "description": [
+          "High quality B&B with two rooms. Ensuite bathrooms, Free WiFi,access to garden, deliciuos <mark>breakfast</mark>. 18th century estate."
+        ],
+        "reviews.content": [
+          "…ay be much quieter. The <mark>breakfast</mark> provided was typical of many hotels. We ate shotly after the <mark>breakfast</mark> room opened (7:00 am) and found everything satisfactory. The <mark>breakfast</mark> was as advertised. There…"
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "1 Route de Verson",
+        "city": "Bretteville-sur-Odon",
+        "country": "France",
+        "description": "High quality B&B with two rooms. Ensuite bathrooms, Free WiFi,access to garden, deliciuos breakfast. 18th century estate.",
+        "directions": "On the west side of the perifirique.",
+        "email": "lebas.manoir@hotmail.fr",
+        "free_breakfast": true,
+        "free_internet": true,
+        "free_parking": false,
+        "geo.accuracy": "RANGE_INTERPOLATED",
+        "geo.lat": 49.16096,
+        "geo.lon": -0.42509,
+        "id": 4668,
+        "name": "Le Bas Manoir",
+        "pets_ok": false,
+        "phone": "+33 6 07 86 65 25",
+        "price": "€110",
+        "reviews.author": [
+          "Barbara D'Amore",
+          "Dr. Alford Zboncak",
+          "Angel Paucek"
+        ],
+        "reviews.content": [
+          "New York City: Comfort Inn Midtown Date: Sept. 26 - 30, 2006 Reviewer: Trip Advisor Member, Burlington,Canada This hotel provides very good value for the money. The room was $162 per night. The staff were friendly and helpful. The room was plenty large enough for 2 people. We did not spend a lot of time in the room. Most of our waking hours were spent sight seeing. The room was very clean. The only drawback was that the room faced 46th street and thus was quite noisey. My wife and I are fairly sound sleepers so this did not really bother us that much. Other rooms may be much quieter. The breakfast provided was typical of many hotels. We ate shotly after the breakfast room opened (7:00 am) and found everything satisfactory. The breakfast was as advertised. There was only on small elevator. We did not experience any long waits. We were on the 3rd floor and often walked down the stairs. The location is great. There are many restaurants nearby. Times Square is less than a block away. You can walk to many attractions such as Grand Central Station, Rockefeller Center, many theaters, Times Square and the bus tours (hop on/ hop off). This is a great place to stay. We would stay here again.",
+          "Just came back from a long week-end in NYC. I agree with everybody. Almost everything was perfect about this hotel (location, cleanliness, friendly staff, small but workable room, decent breakfast, storage room). We got there at lunch time and our room was ready. Perfect! The only, but very important, problem is that I could hardly sleep in our room. The cause: the rooms are not soundproofed at all. We could hear the TV and the children speak in the room next to ours and everything that was going on in the hallway (a family was sharing multiple rooms and was constantly going from one room to the others, screaming, laughing and slamming doors; it was awfulâ€¦). In addition, itâ€™s New York City; people were coming in and out at all hours, slamming doors and screaming in the small hallway. I had problems falling asleep because of all the noise and was constantly waken up afterwards. In the middle of the night, after 3 or 4, I was finally able to sleep. If you are like me a light sleeper, you better select another hotel. Since we are more experienced with the subway system now, next time we plan to stay away from Times Square. For about the same price, we will get a much better hotel. We may even be ready to pay a bit more to get a good night sleep.",
+          "While not the swankiest hotel in the midtown area the Comfort Inn Midtown was reasonably priced (for NYC), with reasonably sized rooms (for NYC ) with friendly staff. The rooms and lobby were clean and the breakfast was adequate. However, the room was never at the right temperature and the air conditioner was very loud. Overall it was a positive stay and I would stay there again."
+        ],
+        "reviews.date": [
+          "2012-07-21 16:45:44 +0300",
+          "2015-11-25 09:06:13 +0300",
+          "2012-06-06 14:58:16 +0300"
+        ],
+        "reviews.ratings.Business service (e.g., internet access)": 4,
+        "reviews.ratings.Check in / front desk": 4,
+        "reviews.ratings.Cleanliness": [
+          4,
+          4
+        ],
+        "reviews.ratings.Location": 5,
+        "reviews.ratings.Overall": [
+          4,
+          3,
+          4
+        ],
+        "reviews.ratings.Rooms": [
+          4,
+          2
+        ],
+        "reviews.ratings.Service": [
+          4,
+          4
+        ],
+        "reviews.ratings.Value": [
+          5,
+          2
+        ],
+        "state": "Basse-Normandie",
+        "title": "Caen",
+        "type": "hotel",
+        "url": "http://www.lebasmanoir.sitew.fr/",
+        "vacancy": false
+      }
+    },
+    {
+      "index": "hotels_434f58fb1208d378_6ddbfb54",
+      "id": "hotel_25967",
+      "score": 0.46371522686961997,
+      "explanation": {
+        "value": 0.46371522686961997,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.46371522686961997,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.46371522686961997,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.46371522686961997,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.46371522686961997,
+                        "message": "fieldWeight(_all:breakfast in hotel_25967), product of:",
+                        "children": [
+                          {
+                            "value": 1,
+                            "message": "tf(termFreq(_all:breakfast)=1"
+                          },
+                          {
+                            "value": 0.09325048327445984,
+                            "message": "fieldNorm(field=_all, doc=hotel_25967)"
+                          },
+                          {
+                            "value": 4.972791674492328,
+                            "message": "idf(docFreq=97, maxDocs=5207)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "description": {
+          "breakfast": [
+            {
+              "pos": 22,
+              "start": 138,
+              "end": 147,
+              "array_positions": null
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "description": [
+          "A French provincial style inn. Cozy parlor with fireplace, afternoon wine and hors d'oeuvres. Many of the 26 guestrooms offer fireplaces. <mark>Breakfast</mark> buffet each morning."
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "863 Bush Street",
+        "city": "San Francisco",
+        "country": "United States",
+        "description": "A French provincial style inn. Cozy parlor with fireplace, afternoon wine and hors d'oeuvres. Many of the 26 guestrooms offer fireplaces. Breakfast buffet each morning.",
+        "directions": "between Taylor and Mason",
+        "fax": "+1 415 673-7214",
+        "free_breakfast": false,
+        "free_internet": false,
+        "free_parking": false,
+        "geo.accuracy": "ROOFTOP",
+        "geo.lat": 37.7896,
+        "geo.lon": -122.4114,
+        "id": 25967,
+        "name": "Petite Auberge",
+        "pets_ok": false,
+        "phone": "+1 415 928-6000",
+        "public_likes": [
+          "Kaia Rempel DVM",
+          "Damaris Schulist",
+          "Dulce Schumm",
+          "Dana Hartmann II",
+          "Shea Hammes"
+        ],
+        "state": "California",
+        "title": "San Francisco/Nob Hill-Russian Hill",
+        "type": "hotel",
+        "url": "http://www.jdvhotels.com/petite_auberge",
+        "vacancy": true
+      }
+    },
+    {
+      "index": "hotels_434f58fb1208d378_18572d87",
+      "id": "hotel_30016",
+      "score": 0.45598984956198,
+      "explanation": {
+        "value": 0.45598984956198,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.45598984956198,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.45598984956198,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.45598984956198,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.45598984956198,
+                        "message": "fieldWeight(_all:breakfast in hotel_30016), product of:",
+                        "children": [
+                          {
+                            "value": 1,
+                            "message": "tf(termFreq(_all:breakfast)=1"
+                          },
+                          {
+                            "value": 0.09325048327445984,
+                            "message": "fieldNorm(field=_all, doc=hotel_30016)"
+                          },
+                          {
+                            "value": 4.8899462345936175,
+                            "message": "idf(docFreq=108, maxDocs=5331)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "price": {
+          "breakfast": [
+            {
+              "pos": 5,
+              "start": 25,
+              "end": 34,
+              "array_positions": null
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "price": [
+          "£50 to £165 (including <mark>breakfast</mark>)"
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "The Esplanade",
+        "city": "Tenby",
+        "country": "United Kingdom",
+        "description": "Based on the Esplanade overlooking South Beach. A few minutes walk from the walled town of Tenby. 60 rooms (Standard, Premier and Deluxe). Restaurant and 'The Cwtch' Bar. Small car park at rear of the hotel.",
+        "email": "enquiries@giltar-hotel.co.uk",
+        "free_breakfast": true,
+        "free_internet": false,
+        "free_parking": true,
+        "geo.accuracy": "RANGE_INTERPOLATED",
+        "geo.lat": 51.66888,
+        "geo.lon": -4.70095,
+        "id": 30016,
+        "name": "Giltar Hotel",
+        "pets_ok": true,
+        "phone": "+44 1834 842507",
+        "price": "£50 to £165 (including breakfast)",
+        "public_likes": [
+          "Lessie Sauer",
+          "Maritza Nolan II",
+          "Mercedes Howell",
+          "Karson Dach V",
+          "Deven Williamson",
+          "Miss Rubie O'Kon",
+          "Devin Bechtelar"
+        ],
+        "title": "Tenby",
+        "type": "hotel",
+        "url": "http://www.giltar-hotel.co.uk",
+        "vacancy": false
+      }
+    },
+    {
+      "index": "hotels_434f58fb1208d378_f4e0a48a",
+      "id": "hotel_27819",
+      "score": 0.45125890198300395,
+      "explanation": {
+        "value": 0.45125890198300395,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.45125890198300395,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.45125890198300395,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.45125890198300395,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.45125890198300395,
+                        "message": "fieldWeight(_all:breakfast in hotel_27819), product of:",
+                        "children": [
+                          {
+                            "value": 1.4142135623730951,
+                            "message": "tf(termFreq(_all:breakfast)=2"
+                          },
+                          {
+                            "value": 0.06454972177743912,
+                            "message": "fieldNorm(field=_all, doc=hotel_27819)"
+                          },
+                          {
+                            "value": 4.943293648315967,
+                            "message": "idf(docFreq=101, maxDocs=5262)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "description": {
+          "breakfast": [
+            {
+              "pos": 27,
+              "start": 141,
+              "end": 150,
+              "array_positions": null
+            }
+          ]
+        },
+        "reviews.content": {
+          "breakfast": [
+            {
+              "pos": 9,
+              "start": 43,
+              "end": 52,
+              "array_positions": [
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "description": [
+          "…Best Western. A few blocks from Sonoma Plaza, this hotel is pet friendly and has a pool, jacuzzi rooms and free <mark>breakfast</mark>. Free wifi and laundry facilities you can use. Expensive for a Best Western - …"
+        ],
+        "reviews.content": [
+          "…ily friendly. A good <mark>breakfast</mark> was served daily; the staff was very friendly, professional and helpful. Staff responded to issues promptly. The location was close to main attractions and the airport. …"
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "550 2nd St West",
+        "city": "Sonoma",
+        "country": "United States",
+        "description": "A locally owned and operated Best Western. A few blocks from Sonoma Plaza, this hotel is pet friendly and has a pool, jacuzzi rooms and free breakfast. Free wifi and laundry facilities you can use. Expensive for a Best Western - but not your typical, either.",
+        "email": "info@sonomavalleyinn.com",
+        "fax": "+1 707-938-0935",
+        "free_breakfast": true,
+        "free_internet": true,
+        "free_parking": false,
+        "geo.accuracy": "RANGE_INTERPOLATED",
+        "geo.lat": 38.28992,
+        "geo.lon": -122.46147,
+        "id": 27819,
+        "name": "Best Western Sonoma Valley Inn",
+        "pets_ok": false,
+        "phone": "+1 707 938-9200",
+        "price": "$128-$250",
+        "public_likes": [
+          "Janae Schamberger",
+          "Loyce Nienow",
+          "Jaycee Lockman",
+          "Cortney Conroy"
+        ],
+        "reviews.author": [
+          "Sam Schulist",
+          "Libbie Osinski I"
+        ],
+        "reviews.content": [
+          "Well. the rooms where ok, but you could hear your next door neighbor visit the bathroom. The Staff was ok. Not too friendly but just ok. the GOOD things about this place is, that DADELAND MALL is near. A nice MALL for great shopping!",
+          "The hotel was very family friendly. A good breakfast was served daily; the staff was very friendly, professional and helpful. Staff responded to issues promptly. The location was close to main attractions and the airport. I would recommend this hotel to anyone. There was also a gated entrance to the parking lot."
+        ],
+        "reviews.date": [
+          "2013-06-17 19:24:05 +0300",
+          "2013-07-18 06:40:33 +0300"
+        ],
+        "reviews.ratings.Cleanliness": 5,
+        "reviews.ratings.Overall": [
+          3,
+          4
+        ],
+        "state": "California",
+        "title": "Sonoma",
+        "tollfree": "+1-800-334-5784",
+        "type": "hotel",
+        "url": "http://www.sonomavalleyinn.com/",
+        "vacancy": false
+      }
+    },
+    {
+      "index": "hotels_434f58fb1208d378_f4e0a48a",
+      "id": "hotel_17600",
+      "score": 0.43864636266378604,
+      "explanation": {
+        "value": 0.43864636266378604,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.43864636266378604,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.43864636266378604,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.43864636266378604,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.43864636266378604,
+                        "message": "fieldWeight(_all:breakfast in hotel_17600), product of:",
+                        "children": [
+                          {
+                            "value": 1,
+                            "message": "tf(termFreq(_all:breakfast)=1"
+                          },
+                          {
+                            "value": 0.08873564749956131,
+                            "message": "fieldNorm(field=_all, doc=hotel_17600)"
+                          },
+                          {
+                            "value": 4.943293648315967,
+                            "message": "idf(docFreq=101, maxDocs=5262)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "description": {
+          "breakfast": [
+            {
+              "pos": 10,
+              "start": 76,
+              "end": 85,
+              "array_positions": null
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "description": [
+          "…oms, including 36 suites. Amenities include: complimentary continental <mark>breakfast</mark> each day, free high-speed wireless Internet, outdoor heated pool, exercise room, interior courtyard, covered/secure par…"
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "737 Washington Blvd",
+        "city": "Marina del Rey",
+        "country": "United States",
+        "description": "68 rooms, including 36 suites. Amenities include: complimentary continental breakfast each day, free high-speed wireless Internet, outdoor heated pool, exercise room, interior courtyard, covered/secure parking.",
+        "email": "info@innatmarinadelrey.com",
+        "fax": "+1-310-821-8098",
+        "free_breakfast": true,
+        "free_internet": true,
+        "free_parking": false,
+        "geo.accuracy": "ROOFTOP",
+        "geo.lat": 33.98703,
+        "geo.lon": -118.45407,
+        "id": 17600,
+        "name": "Inn at Marina del Rey",
+        "pets_ok": false,
+        "phone": "+1-310-821-4455",
+        "public_likes": [
+          "Christopher Smith",
+          "Miss Daphne Rogahn",
+          "Luella Goyette",
+          "Bennett Treutel",
+          "Kurt Mertz",
+          "Alexandre Donnelly"
+        ],
+        "state": "California",
+        "title": "Marina del Rey",
+        "tollfree": "+1-000-821-8277",
+        "type": "hotel",
+        "url": "http://www.innatmarinadelrey.com/index.php",
+        "vacancy": true
+      }
+    },
+    {
+      "index": "hotels_434f58fb1208d378_18572d87",
+      "id": "hotel_9085",
+      "score": 0.4348920431767666,
+      "explanation": {
+        "value": 0.4348920431767666,
+        "message": "product of:",
+        "children": [
+          {
+            "value": 0.4348920431767666,
+            "message": "sum of:",
+            "children": [
+              {
+                "value": 0.4348920431767666,
+                "message": "product of:",
+                "children": [
+                  {
+                    "value": 0.4348920431767666,
+                    "message": "sum of:",
+                    "children": [
+                      {
+                        "value": 0.4348920431767666,
+                        "message": "fieldWeight(_all:breakfast in hotel_9085), product of:",
+                        "children": [
+                          {
+                            "value": 2.6457513110645907,
+                            "message": "tf(termFreq(_all:breakfast)=7"
+                          },
+                          {
+                            "value": 0.033614631742239,
+                            "message": "fieldNorm(field=_all, doc=hotel_9085)"
+                          },
+                          {
+                            "value": 4.8899462345936175,
+                            "message": "idf(docFreq=108, maxDocs=5331)"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": 1,
+                    "message": "coord(1/1)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "value": 1,
+            "message": "coord(1/1)"
+          }
+        ]
+      },
+      "locations": {
+        "reviews.content": {
+          "breakfast": [
+            {
+              "pos": 260,
+              "start": 1392,
+              "end": 1401,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 312,
+              "start": 1675,
+              "end": 1684,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 340,
+              "start": 1821,
+              "end": 1830,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 381,
+              "start": 2043,
+              "end": 2052,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 446,
+              "start": 2398,
+              "end": 2407,
+              "array_positions": [
+                0
+              ]
+            },
+            {
+              "pos": 44,
+              "start": 235,
+              "end": 244,
+              "array_positions": [
+                2
+              ]
+            },
+            {
+              "pos": 60,
+              "start": 320,
+              "end": 329,
+              "array_positions": [
+                2
+              ]
+            }
+          ]
+        }
+      },
+      "fragments": {
+        "reviews.content": [
+          "…her toiletries or even a hair dryer, they have them for you at the office. The room comes with <mark>breakfast</mark> which consists of good coffee, hot water for tea and tea bags, Yoplait yoghurt in the fridge an…"
+        ]
+      },
+      "sort": [
+        "_score"
+      ],
+      "fields": {
+        "address": "Pinehurst Road",
+        "city": "Farnborough",
+        "country": "United Kingdom",
+        "description": "IQ Farnborough business park",
+        "free_breakfast": false,
+        "free_internet": true,
+        "free_parking": true,
+        "geo.accuracy": "APPROXIMATE",
+        "geo.lat": 51.287098,
+        "geo.lon": -0.759841,
+        "id": 9085,
+        "name": "Village Hotel",
+        "pets_ok": false,
+        "phone": "+44 871 222 4590",
+        "public_likes": [
+          "Reta Grimes",
+          "Clark Harvey",
+          "Katarina Wilderman",
+          "Theodore Ward",
+          "Theresia Kozey",
+          "Keara Wisozk",
+          "Miss Whitney Purdy",
+          "Stanton Pollich",
+          "Ms. Manuela Abernathy"
+        ],
+        "reviews.author": [
+          "Julianne Macejkovic",
+          "Carmel Prosacco DDS",
+          "Verlie Pollich III",
+          "Miguel Kutch Jr."
+        ],
+        "reviews.content": [
+          "My brother and sister-in-law recommended this basic motel very near Shelter Island and just across the street from the harbor where they leave on their yearly deep sea fishing trips. We were greeted by a very helpful, congenial fellow, Jeb who throughout our 3 night visit made it more memorable than the motel itself. Actually the motel was memorable in its simplicity, making you realize just what you do and don't need in your 'home away from home\" when traveling. The rooms are just big enough for a very comfortable bed, a folding chair, a big flat screen TV on the wall, a couple of small bedside tables with lamps, a small closet (no light which was a tad annoying to me) and your basic tiny bathroom, shower no tub but great water pressure (always a plus for my husband). There is a room AC which is fairly noisy when on. If you just want outside air and leave your window open, there is both street, other vacationers and sometimes airport noise. WiFi is free but my husband had trouble at times connecting his iPad. The folks at the desk at one point generously gave him the use of their laptop! You won't find all kinds of specialty bath items in the bathroom, such as lotions, shoe shine stuff etc. BUT if you forgot your toothpaste or run out (as I did) or need a straight razor or other toiletries or even a hair dryer, they have them for you at the office. The room comes with breakfast which consists of good coffee, hot water for tea and tea bags, Yoplait yoghurt in the fridge and when we were there, daily muffins - big and for me overly sweet. Since my husband and I are trying to watch our carbohydrate intake, we tried to find other places close by for breakfast, the closest being the one on Rosecrans connected to the Holiday Inn, I think it was. I think it was called the Point Loma Cafe. We had breakfast there 2 of our three mornings. It was adequate, a sort of glorified Denny's, not cheap but you could find all kinds of egg dishes and the portions were huge. The last morning we decided to find another place for breakfast which I would recommend highly. The Living Room Coffeehouse, 1018 Rosecrans. I think you could walk there but we drove. I will write a special review of this place because I want to give it 5 stars for the delicious food at an incredibly reasonable price. All this said, we went by the Ramada Inn next door to compare prices - twice as much, no breakfast whatsoever and probably pretty much the same type of rooms although we didn't look. We've spent many a day in San Diego mostly in the downtown area so this area was new to us. We enjoyed it and will think about staying there next time we go.",
+          "It was Comicon weekend in San Diego & had a very hard time finding a hotel. We happened upon Dolphin because of trip advisor reviews. We agree with all the reviews. this is a very clean & quaint motel right across from a fishing harbor. The staff was very helpful & friendly. We enjoyed this little motel very much. If there is anything to be said on the negative side it would be that the rooms are VERY small & pretty much no frills. Make sure to bring your own hair dryer & shampoo as they are not provided. No in-room coffee pots either. Not a big deal, but the tv seems to be set on some kind of timer as it shut itself off in the middle of a movie we were watching. Same thing happened the next day.",
+          "The staff is very friendly and very helpfull. The restaurants they recommend are very good. The rate is very low. The room is very basic and white. BUT the room is very clean and has everything you need. Free internet and parking. The breakfast is a choice between 2 kinds of muffins. But the muffins are very good. The breakfast is served outside on the patio. If you are ok with a basic room and look for an attractive rate, than this is the place to be. I would remcommend this place.",
+          "This is not a fancy place but it was perfect for a friend and I that needed a safe clean place to stay on a budget. The morning was topped off with a few tables and chairs to sit outside in the courtyard in the beautiful weather and eat our muffin and drink our juice the hotel provided. Overall this place was just what we needed! The owner said they may be getting some bikes for patrons to take out for the day too so I will be back :-)"
+        ],
+        "reviews.date": [
+          "2014-12-19 16:26:50 +0300",
+          "2015-09-23 21:20:15 +0300",
+          "2015-05-03 03:20:26 +0300",
+          "2013-02-09 09:12:49 +0300"
+        ],
+        "reviews.ratings.Cleanliness": [
+          5,
+          5,
+          5
+        ],
+        "reviews.ratings.Location": [
+          4,
+          5
+        ],
+        "reviews.ratings.Overall": [
+          4,
+          3,
+          4,
+          5
+        ],
+        "reviews.ratings.Rooms": [
+          3,
+          5
+        ],
+        "reviews.ratings.Service": [
+          5,
+          4,
+          5,
+          5
+        ],
+        "reviews.ratings.Sleep Quality": [
+          3,
+          4,
+          5
+        ],
+        "reviews.ratings.Value": [
+          5,
+          3,
+          4,
+          5
+        ],
+        "title": "Farnborough",
+        "type": "hotel",
+        "url": "http://www.village-hotels.co.uk/hotels/farnborough/welcome",
+        "vacancy": true
+      }
+    }
+  ],
+  "total_hits": 607,
+  "max_score": 0.5753053906096077,
+  "took": 9391200,
+  "facets": {}
+}
