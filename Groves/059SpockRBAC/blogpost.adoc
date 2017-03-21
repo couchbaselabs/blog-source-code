@@ -4,7 +4,7 @@
 :slug: Authentication-Authorization-RBAC
 :focus-keyword: authentication
 :categories: Security, Couchbase Server
-:tags: Couchbase Server, authentication, authorization, security
+:tags: Couchbase Server, authentication, authorization, security, RBAC
 :heroimage: 059-Hero-Key-Locks-Security-Authentication-Authorization.jpg
 
 In March's developer build, you can start to see some major changes to authentication and authorization within Role Based Access Control (RBAC) coming to Couchbase Server. These changes are a work in progress: the developer build is essentially a nightly build that gets released to the public. But there's some good stuff in RBAC that's worth getting excited about!
