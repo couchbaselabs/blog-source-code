@@ -1,0 +1,82 @@
+:imagesdir: images
+:meta-description: A guide for how to install Ubuntu Linux or any Linux in a virtual machine on Windows with Hyper-V.
+:title: Hyper-V: How to run Ubuntu (or any Linux) on Windows
+:slug: Hyper-V-run-Ubuntu-Linux-Windows
+:focus-keyword: hyper-v
+:categories: Couchbase Server
+:tags: Couchbase Server, Ubuntu, Linux, Windows, Hyper-V
+:heroimage: 060-hero-hyper-v-hyperspace.jpg https://www.flickr.com/photos/jedimentat/7557276684 by Jedimentat44 Creative Commons
+
+I recently needed to install a Linux distro (Ubuntu being my favorite) in Hyper-V on Windows 10. I needed to do this because some internal builds of Couchbase were temporarily broken on Windows, but I still needed to use the latest builds. I'd never used Hyper-V to do this before, but it wasn't that difficult. And the best part is that it comes with Windows: I don't have to install VirtualBox or VMWare or anything like that.
+
+== Download Ubuntu
+
+There are lots of great Linux distros out there, and Couchbase Server can be run on a variety of them. However, Ubuntu Desktop is my go-to.
+
+The first thing I did was to download an Ubuntu Desktop ISO. I know that link:https://issues.couchbase.com/browse/MB-19272[Couchbase support for Ubuntu 16 is coming], but for now I want to stick to Ubuntu 14. So, I downloaded an link:http://releases.ubuntu.com/14.04/[ISO of 14.04.5 (aka Trusty Tahr)].
+
+== Make sure Hyper-V is enabled
+
+Check to make sure that you have Hyper-V enabled on Windows.
+
+First, open Control Panel. Next, go to Programs. Then, click "Turn Windows features on or off". Finally, locate Hyper-V and click the checkbox (if it isn't already checked).
+
+image:06001-Enable-Hyper-V-feature-in-Windows.gif[Enable Hyper-V feature in Windows]
+
+You may also need to enable virtualization in the BIOS settings on your computer. The computer I'm using has it turned on by default. I wish I could give you instructions on how to do this, but it's going to vary based on your BIOS.
+
+== Create a Hyper-V Virtual Switch
+
+When connecting the virtual machine to a network, you'll need to select a virtual switch. If you haven't done this before, you'll need to create one.
+
+First, click "Virtual Switch Manager", then select "External". Click "Create Virtual Switch". Finally, give the switch a name. (You also need to choose an external network; in my case I only have one). Hit "Apply".
+
+image:06002-Create-Hyper-V-virtual-switch.gif[Create Hyper-V virtual switch]
+
+I wanted my machine to be connected to my home network, so I chose External. If you use External, it will connect to your network as a separate machine. After I create the machine (in the next section) it will appear on my router as it's own machine:
+
+image:06006-Hyper-V-machine-attached-to-network.png[Hyper-V machine attached to my network]
+
+== Create a new Hyper-V Virtual Machine
+
+Now you're ready to create the virtual machine that will be running Ubuntu.
+
+First, open the Hyper-V Manager from the Start menu. Then, click "New" and then "Virtual Machine". This will start a wizard.
+
+First, give your machine a name (like "UbuntuForCouchbase"). Optionally, you can choose where to store this machine, or use the default directory.
+
+Next, you must choose Generation 1 or Generation 2. I used Generation 1, but link:https://technet.microsoft.com/windows-server-docs/compute/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v[Ubuntu 14+ should work on Generation 2] as well.
+
+After that, specify how much memory to allocate to the machine. I have a lot of RAM on my desktop, so I gave it 8192mb.
+
+Next, select the switch that was created in the previous section.
+
+Then, setup the virtual hard disk to your liking. You can choose the location and size of the disk. I don't need very much, so I went with 60gb.
+
+Finally, you need to select an operating system. I'll choose "Install an operating system from a bootable CD/DVD-ROM", and then "Image file", and find the Ubuntu ISO that I downloaded.
+
+Click "Next", view the summary, and click "Finish".
+
+image:06004-Create-Ubuntu-virtual-machine-in-Hyper-V.gif[Create Ubuntu Virtual Machine in Hyper-V]
+
+== Start the machine and install Couchbase
+
+Now that you've created a machine, you must start it. Right-click on the machine and select "Start" (or there's a "Start" button in the actions menu to the right).
+
+This starts the machine, but you can't actually see the machine yet. You have to "Connect" to the machine to see what it's doing. Right-click and select "Connect" (or again, there's a "Connect" button in the actions menu to the right).
+
+image:06003-Ubuntu-in-Hyper-V.png[Ubuntu in Hyper-V]
+
+I won't go through the installation process, since Ubuntu's installation is pretty easy and self-explanatory (and well-documented).
+
+At the end of the Ubuntu installation, installing Couchbase Server is also pretty easy and self-explanatory. Just go to link:http://couchbase.com/downloads[the Couchbase downloads page] and select the Ubuntu 14 version of Couchbase.
+
+image:06005-Download-Couchbase-for-Ubuntu.png[Download Couchbase for Ubuntu]
+
+== Summary
+
+I normally use the Windows version of Couchbase, but sometimes I need to use Ubuntu (or other Linux distros). Hyper-V on Windows is a convenient way for me to spin up virtual machines.
+
+If you have any questions about Couchbase, please ask away in the link:http://forums.couchbase.com[Couchbase Forums] or check out the link:http://developer.couchbase.com[Couchbase Developer Portal].
+
+You can also contact me at link:https://twitter.com/mgroves[Twitter @mgroves].
