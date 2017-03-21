@@ -5,7 +5,7 @@
 :focus-keyword: hyper-v
 :categories: Couchbase Server
 :tags: Couchbase Server, Ubuntu, Linux, Windows, Hyper-V
-:heroimage: 060-hero-hyper-v-hyperspace.jpg https://www.flickr.com/photos/jedimentat/7557276684 by Jedimentat44 Creative Commons
+:heroimage: star wars cockpit hyperspace by Jedimentat44 licensed through Creative Commons https://www.flickr.com/photos/jedimentat/7557276684
 
 I recently needed to install a Linux distro (Ubuntu being my favorite) in Hyper-V on Windows 10. I needed to do this because some internal builds of Couchbase were temporarily broken on Windows, but I still needed to use the latest builds. I'd never used Hyper-V to do this before, but it wasn't that difficult. And the best part is that it comes with Windows: I don't have to install VirtualBox or VMWare or anything like that.
 
