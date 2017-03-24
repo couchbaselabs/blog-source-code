@@ -1,0 +1,115 @@
+Today I'm going show you how to use data structures that are backed by Couchbase.
+
+I'll be using .NET Core, but these structures are also available with other SDKs.
+
+I'm going to cover List, Queue, and Dictionary today. It's a friday, and that means
+it's pizza night at the Groves house, so I've got some pizza-related code samples for you today.
+
+----
+
+Let's start by reviewing .NET Lists.
+
+List is a collection of objects of a certain type. Here is a list of pizza places.
+I can add objects to it, which I'm showing here. I can also remove objects from it, access objects by index, which I'm not showing.
+
+If I run this app, you'll see that two pizza places are added to the list, I loop through the list,
+display them to console, and then add another item and loop through again.
+
+[run console]
+
+[show code examples]
+
+By adding the Couchbase .NET SDK, I can create a CouchbaseList object. When instantiating,
+you must specify a couchbase bucket, and a key.
+
+[run console]
+
+Note that CouchbaseList implements IList, ICollection, IEnumerable, so you can treat it like a list
+in the same way. Add items, remove items,
+access items by index. The items in the list will be serialized to JSON and stored in a JSON array
+in a Couchbase document
+
+[switch to Couchbase console]
+
+Here's the document that corresponds to the list. It's a JSON array of JSON objects.
+That list is in a single document, and it has a key of List_PizzaPlaces, which is what I specified when
+I instantiated it.
+
+Note that if you use CouchbaseList class, it will create the document if necessary, and it will
+use existing document with that key if it exists.
+
+----
+
+Next, let's review Queues. Queues are similar to lists, but the semantics are different. 
+Order matters, and the operations are different.
+
+Instead of "Add", I use "Enqueue". To get the object that's first in line on the queue, I use "Dequeue".
+
+[show code example]
+
+In this example, I'm queueing up two pizza orders. Then I dequeue the first order in line. Print it to console.
+Then I queue up another order. So I'll run this, I would expect to see Matt's order written to console first.
+
+[run console]
+
+Switch this over to a CouchbaseQueue. Run it again.
+
+[run console]
+
+The same behavior happens, but this time it's backed by a Couchbase document.
+
+[switch to Couchbase console]
+
+Here's the document that corresponds to the queue. It's a JSON array of JSON objects.
+So it looks exactly like a List: the difference is only in how the .NET SDK treats it.
+
+queue implements ICollection and IEnumerable, so it works similar to a plain .NET queue
+
+----
+
+Finally, let's look at Dictionary. Hopefully you're seeing the pattern.
+
+A .NET Dictionary object is a collection of keys and values. In this case the key is a string
+and the value is a PizzaEmployee object.
+
+I'll add two employees to the dictionary.
+
+Then I can loop through the dictionary by key, and print out the employees.
+
+Next, I add another employee.
+
+Each key in the dictionary must be unique. So If I try to add "Matt" again, I'll get an ArgumentException.
+
+And finally, I'll print out the dictionary again, which should show 3 employees this time.
+
+[run console]
+
+switch this over to CouchbaseDictionary. Run it again. Like before, it creates a document in Couchbase.
+
+This document looks different: the JSON is structured how you might expect. The key is a JSON key, and 
+it has a value that is a JSON object, serialized from PizzaEmployee objects.
+
+dictionary implements IDictionary<K,V>, ICollection<KeyValuePair<K,V>, IEnumerable and so on
+
+----
+
+CouchbaseList, CouchbaseQueue and CouchbaseDictionary all use the Couchbase subdocument API.
+
+The subdocument API allows the .NET SDK to access and modify PARTS of a document so you don't have to send the
+entire thing over the wire if you don't need to.
+
+This means that,
+when possible, the entire document that holds the collection is not retrieved or mutated, but only the
+relvant part of the document. This is done behind the scenes to improve performance and efficiency as much
+as possible.
+
+But it's not always possible: for instance if doing a foreach loop, it will
+need to fetch the entire document. If Couchbase operations are added later to improve that, you won't need to
+worry about that as a developer, because you're already using a data structure abstraction.
+
+That's all on data structures for now.
+
+The source code for this example is available on Github, just check the video description for the link.
+
+If you have a question, please leave a comment or contact me on twitter
+at @mgroves. Thanks for watching!
