@@ -1,0 +1,26 @@
+:imagesdir: images
+:meta-description: How to use data structures in .NET and .NET Core that are backed by Couchbase. This video covers List, Queue, and Dictionary.
+:title: Data structures with Couchbase and .NET (video)
+:slug: Data-structures-Couchbase-NET-video
+:focus-keyword: data structures
+:categories: Couchbase Server, .NET
+:tags: Couchbase Server, .NET, .NET Core, C#, data structures, dictionary, queue, liste
+:heroimage: 061-hero-ancient-tablet.jpg (public domain: https://commons.wikimedia.org/wiki/File:The_monuments_and_the_Old_Testament_-_evidence_from_ancient_records_(1900)_(14803349433).jpg)
+
+In February, I wrote a blog about using data structures with .NET (and .NET Core): link:https://blog.couchbase.com/net-core-list-queue-and-dictionary-data-structures-backed-by-couchbase/[List, Queue, and Dictionary].
+
+Now, I've created a video to show the same concepts in action.
+
+== How to use Couchbase Data Structures with .NET
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jZg9Q6GxJSA" frameborder="0" allowfullscreen></iframe>
++++
+
+link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/061DataStructuresDotNetVideo/src/DataStructures[The source code used in this video is available on GitHub]. Note that the source code uses .NET Core, but this should work just the same in .NET.
+
+== Thanks for watching!
+
+If you have any questions about Couchbase and .NET, please ask away in the link:https://forums.couchbase.com/c/net-sdk[Couchbase .NET Forums]. Also check out the link:http://developer.couchbase.com[Couchbase Developer Portal] for more information on the .NET SDK and Couchbase in general.
+
+You can also contact me at link:https://twitter.com/mgroves[Twitter @mgroves].
