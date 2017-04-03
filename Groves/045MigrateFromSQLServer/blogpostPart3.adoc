@@ -12,7 +12,7 @@ In three parts, I'm going to cover:
 
 The goal is to lay down some general guidelines that you can apply to your application planning and design.
 
-If you would like to follow along, I've created an application that demonstrates Couchbase and SQL Server side-by-side. link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer1/src[Get the source code from GitHub], and make sure to link:https://couchbase.com/downloads?utm_source=blogs&utm_medium=link&utm_campaign=blogs[download a developer preview of Couchbase Server].
+If you would like to follow along, I've created an application that demonstrates Couchbase and SQL Server side-by-side. link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer/src/SQLServerToCouchbase[Get the source code from GitHub], and make sure to link:https://couchbase.com/downloads?utm_source=blogs&utm_medium=link&utm_campaign=blogs[download a developer preview of Couchbase Server].
 
 == Migrate vs Rewrite
 
