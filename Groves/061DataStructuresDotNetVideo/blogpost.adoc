@@ -4,7 +4,7 @@
 :slug: Data-structures-Couchbase-NET-video
 :focus-keyword: data structures
 :categories: Couchbase Server, .NET
-:tags: Couchbase Server, .NET, .NET Core, C#, data structures, dictionary, queue, liste
+:tags: Couchbase Server, .NET, .NET Core, C#, data structures, dictionary, queue, list
 :heroimage: 061-hero-ancient-tablet.jpg (public domain: https://commons.wikimedia.org/wiki/File:The_monuments_and_the_Old_Testament_-_evidence_from_ancient_records_(1900)_(14803349433).jpg)
 
 In February, I wrote a blog about using data structures with .NET (and .NET Core): link:https://blog.couchbase.com/net-core-list-queue-and-dictionary-data-structures-backed-by-couchbase/[List, Queue, and Dictionary].

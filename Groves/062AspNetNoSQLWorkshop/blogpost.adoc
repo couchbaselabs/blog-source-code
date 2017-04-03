@@ -1,0 +1,27 @@
+:imagesdir: images
+:meta-description: Materials and instructions for an ASP.NET and ASP.NET Core with NoSQL (Couchbase) workshop.
+:title: ASP.NET with NoSQL Workshop
+:slug: ASP.NET-NoSQL-Workshop
+:focus-keyword: asp.net
+:categories: Couchbase Server, .NET
+:tags: Couchbase Server, .NET, .NET Core, C#, ASP.NET, ASP.NET Core
+:heroimage: 062-hero-workshop.jpg (public domain - http://www.publicdomainpictures.net/view-image.php?image=112813&picture=medieval-workshop)
+
+I delivered an ASP.NET with NoSQL workshop at the recent link:https://indycode.amegala.com/[Indy.Code() conference in Indianapolis]. I had a lot of fun at this conference, and I recommend you go next year. If you were unable to attend, don't worry, because I've got the next best thing for you: all the material that I used in my workshop.
+
+== ASP.NET Workshop in 4 parts
+
+This workshop contained four main parts:
+
+* Install a NoSQL database (Couchbase Server)
+* Interact with Couchbase Server (using both the link:https://blog.couchbase.com/a-tour-of-the-new-couchbase-web-console-video/[Web Console] and the link:https://blog.couchbase.com/introducing-couchbase-net-2-4-0-net-core-ga/[.NET (or .NET Core) SDK])
+* Create a RESTful API using ASP.NET (or ASP.NET Core) WebAPI
+* Consume the RESTful API with an Angular frontend
+
+== Try it yourself
+
+If you'd like to try it yourself, the link:https://github.com/couchbaselabs/aspnet-nosql-workshop[ASP.NET with NoSQL Workshop materials] are available on GitHub. Each part of the workshop contains a PPT and PDF file for you to follow along. Also, the "completed" version of each workshop is available.
+
+If you get stuck or have any questions, please ask away in the link:https://forums.couchbase.com/c/net-sdk[Couchbase .NET Forums]. Also check out the link:http://developer.couchbase.com[Couchbase Developer Portal] for more information on the .NET SDK and Couchbase in general.
+
+You can also contact me at link:https://twitter.com/mgroves[Twitter @mgroves].
