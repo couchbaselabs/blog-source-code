@@ -1,0 +1,112 @@
+:imagesdir: images
+:meta-description: TBD
+:title: C# Tuples: New to C# 7
+:slug: csharp-tuples-new-to-csharp-7
+:focus-keyword: c# tuples
+:categories: Couchbase Server, .NET
+:tags: Couchbase Server, .NET, .NET Core, C#
+:heroimage: TBD
+
+C# tuples are a new feature of C# 7. I'm going to show you the basics of how C# tuples work. I'm also going to mix in a little Couchbase to show tuples in action. However, if you don't want to link:https://couchbase.com/downloads[install Couchbase] just to play around with tuples, don't worry, you will still be able to follow along.
+
+The link://[source code that I use for this blog post is available on GitHub] for you to try out if you'd like.
+
+_Note: If you've been using C# for a while, you might remember the link:https://msdn.microsoft.com/en-us/library/system.tuple(v=vs.110).aspx[Tuple Class that was introduced in .NET 4]. That class still exists, but it is not the same thing as the new tuple feature of C#._
+
+== What are C# tuples?
+
+A "tuple" is a name for a mathematical concept that is just a list of elements. In the LISP family of languages, coding is built almost entirely around the idea that everything is a list. C# once again borrows the kernel of an idea from the functional programming world and integrates it into a non-functional language. So, we get C# tuples (check out the link:https://github.com/dotnet/roslyn/issues/347[original C# tuple proposal by Mads Torgersen] for more details and background).
+
+=== Remember anonymous types?
+
+But, to make it simple, let's consider something you may already be familiar with in C#, an anonymous type. To review, you can instantiate a new object without specifying a type:
+
+[source,C#]
+----
+var myObject = new { Foo = "bar", Baz = 123 };
+----
+
+Behind the scenes, there actually _is_ a type that inherits from the base `Object` type, but generally speaking, we only deal with the object, not its type.
+
+Additionally, I can't return an anonymous type from a method, or pass an anonymous type as a parameter without losing the type information in the process.
+
+[source,C#]
+----
+private object GetAnonymousObject()
+{
+    return new {Foo = "bar", Baz = 123};
+}
+
+private void AnotherMethod()
+{
+    var obj = GetAnonymousObject();
+    Console.WriteLine(obj.Foo); // compiler error :(
+}
+----
+
+They are useful, certainly, but I generally refer to these as anonymous _objects_ as I use them, for these reasons.
+
+=== What's this got to do with C# tuples?
+
+I think of C# tuples as richer anonymous types. They are a way to create a "class" on the fly without actually defining a class. The syntax for tuples is to simply put parenthesis around a comma separated list of types and names. A tuple literal is just a comma separated list of literals also surrounded by parenthesis. For instance:
+
+[source,C#]
+----
+(string FirstName, string LastName) myTuple = ("Matt", "Groves");
+
+Console.WriteLine(myTuple.FirstName); // no compiler error :)
+Console.WriteLine(myTuple.LastName);  // no compiler error :)
+----
+
+_Note: Right now I'm preferring PascalCase for tuple properties. I don't know if that's the official guideline or not, but it "feels" right to me._
+
+== C# tuples in action
+
+I put tuples to work in a simple console app that interacts with Couchbase.
+
+I created a `BucketHelper` class that is a very simple facade over the normal Couchbase `IBucket`. This class has two methods: one to get a document by key and return a tuple, and one to insert a tuple as a document.
+
+[source,C#,indent=0]
+----
+include::tuples-example/tuples-example/BucketHelper.cs[tag=BucketHelper]
+----
+
+To instantiate this helper, you just need to pass an `IBucket` into the constructor.
+
+=== Tuple as a return type
+
+You can then use the `GetTuple` method to get a document out of Couchbase as a tuple. 
+
+[source,C#,indent=0]
+----
+include::tuples-example/tuples-example/Program.cs[tag=GetTuple]
+----
+
+The tuple will consist of a string (the document key) and an object of whatever type you specify. The document content is JSON and will be serialized to a C# object by the .NET SDK.
+
+Also, notice that the name of the tuple properties don't have to match. I used `obj` in `BucketHelper` but I used `film` when I called `GetTuple<Film>`. The types do have to match, of course.
+
+=== Tuple as a parameter type
+
+I can also go the other way and pass a tuple as a parameter to `InsertTuple`.
+
+[source,C#,indent=0]
+----
+include::tuples-example/tuples-example/Program.cs[tag=InsertTuple]
+----
+
+The `GenerateRandomFilm` method returns a `Film` object with some random-ish values (check out the link://[GitHub source] for details). A tuple of `(string, Film)` is passed to `InsertTuple`. The Couchbase .NET SDK takes it from there and inserts a document with the appropriate key/value.
+
+Running the console app, you should get an output that looks something like this:
+
+image:06301-csharp-tuples-console-output.png[C# tuples sample console output]
+
+_Note that the Couchbase .NET SDK at this time doesn't have any direct tuple support, and it may not ever need it. This code is simply to help demonstrate C# tuples. I would not recommend using the BucketHelper as-is in production._
+
+== TUH-ple or TOO-ple?
+
+I seem to remember my professor(s) pronouncing it as "TOO-ple", so that's what I use. Like the hard-G / soft-G debate of "GIF", I'm sure there are those who think this debate is of the utmost importance and are convinced their pronunciation is the one true way. But, link:http://english.stackexchange.com/questions/12980/how-to-pronounce-tuple[both are acceptable].
+
+If you have questions about tuples, I'd be happy to help. You can also contact me at link:https://twitter.com/mgroves[Twitter @mgroves] or email me matthew.groves@couchbase.com.
+
+If you have questions about the Couchbase .NET SDK that I used in this post, please ask away in the link:https://forums.couchbase.com/c/net-sdk[Couchbase .NET Forums]. Also check out the link:http://developer.couchbase.com[Couchbase Developer Portal] for more information on the .NET SDK and Couchbase in general.
