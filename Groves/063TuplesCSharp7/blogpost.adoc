@@ -1,15 +1,15 @@
 :imagesdir: images
-:meta-description: TBD
-:title: C# Tuples: New to C# 7
-:slug: csharp-tuples-new-to-csharp-7
+:meta-description: C# tuples are a new feature of C# 7. I'm going to show you the basics of how C# tuples work, with some Couchbase mixed in to show tuples in action.
+:title: C# Tuples: New C# 7 language feature
+:slug: csharp-tuples-new-csharp-7-feature
 :focus-keyword: c# tuples
 :categories: Couchbase Server, .NET
 :tags: Couchbase Server, .NET, .NET Core, C#
-:heroimage: TBD
+:heroimage: 063-hero-infinite-mirror.jpg (CC0 license - http://maxpixel.freegreatpicture.com/Blonde-Walk-Color-Woman-Female-Infinite-Mirror-510976)
 
 C# tuples are a new feature of C# 7. I'm going to show you the basics of how C# tuples work. I'm also going to mix in a little Couchbase to show tuples in action. However, if you don't want to link:https://couchbase.com/downloads[install Couchbase] just to play around with tuples, don't worry, you will still be able to follow along.
 
-The link://[source code that I use for this blog post is available on GitHub] for you to try out if you'd like.
+The link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/063TuplesCSharp7/tuples-example[source code that I use for this blog post is available on GitHub] for you to try out if you'd like.
 
 _Note: If you've been using C# for a while, you might remember the link:https://msdn.microsoft.com/en-us/library/system.tuple(v=vs.110).aspx[Tuple Class that was introduced in .NET 4]. That class still exists, but it is not the same thing as the new tuple feature of C#._
 
@@ -95,7 +95,7 @@ I can also go the other way and pass a tuple as a parameter to `InsertTuple`.
 include::tuples-example/tuples-example/Program.cs[tag=InsertTuple]
 ----
 
-The `GenerateRandomFilm` method returns a `Film` object with some random-ish values (check out the link://[GitHub source] for details). A tuple of `(string, Film)` is passed to `InsertTuple`. The Couchbase .NET SDK takes it from there and inserts a document with the appropriate key/value.
+The `GenerateRandomFilm` method returns a `Film` object with some random-ish values (check out the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/063TuplesCSharp7/tuples-example[GitHub source] for details). A tuple of `(string, Film)` is passed to `InsertTuple`. The Couchbase .NET SDK takes it from there and inserts a document with the appropriate key/value.
 
 Running the console app, you should get an output that looks something like this:
 
