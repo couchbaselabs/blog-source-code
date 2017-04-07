@@ -1,13 +1,13 @@
 :imagesdir: images
-:meta-description: TBD
-:title: Thinking about SQL and JSON Data Modeling with Hackolade
-:slug: JSON-Data-Modeling-with-Hackolade
+:meta-description: Walkthrough of a very simple SQL to JSON data modeling exercise and show how IntegrIT's Hackolade can help.
+:title: SQL to JSON Data Modeling with Hackolade
+:slug: SQL-to-JSON-Data-Modeling-Hackolade
 :focus-keyword: sql to json data modeling
 :categories: Couchbase Server, Data Modeling
 :tags: Couchbase Server, SQL Server, SQL, JSON
 :heroimage: TBD
 
-SQL and JSON data modeling is something I touched on in the first part of my link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/["Moving from SQL Server to Couchbase" series]. Since that blog post, some new tooling has come to my attention called link:http://hackolade.com/[Hackolade], who have added first-class Couchbase support to their tool.
+SQL to JSON data modeling is something I touched on in the first part of my link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/["Moving from SQL Server to Couchbase" series]. Since that blog post, some new tooling has come to my attention called link:http://hackolade.com/[Hackolade], who have added first-class Couchbase support to their tool.
 
 In this post, I'm going to walk you through very simple modeling exercise I did by hand, and show how IntegrIT's Hackolade can help.
 
@@ -42,7 +42,7 @@ image:06402-sql-generate-scripts.gif[Generate DDL script from SQL Management Stu
 
 Finally, you will have a SQL file generated at the path you specified.
 
-This will be a text file with a series of `CREATE` and `ALTER` statements in it (at least). Here's a brief excerpt of what I created (you can find the full version on link://[Github]).
+This will be a text file with a series of `CREATE` and `ALTER` statements in it (at least). Here's a brief excerpt of what I created (you can find the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/064DataModelingWithHackolade/src[full version on Github]).
 
 [source,SQL,indent=0]
 ----
@@ -84,21 +84,21 @@ We already have a relational model and a SQL Server DDL file, so let's see what 
 
 In Hackolade, go to Tools -> Reverse Engineer -> Data Definition Language file. You will be prompted to select a database type and a DDL file location. I'll select "MS SQL Server" and the "script.sql" file from earlier. Finally, I'll hit "Ok" to let Hackolade do its magic.
 
-image:06404-reverse-engineer-sql-ddl-hackolade.gif[Reverse Engineer MS SQL Server DDL with Hackolade]
+image:06404-reverse-engineer-sql-ddl-hackolade.gif[SQL to JSON data modeling reverse engineering with Hackolade]
 
 Hackolade will process the 5 tables into 5 different kinds of documents. So, what you end up with is very much like a _literal_ translation.
 
-image:06405-reverse-engineer-diagram.png[Reverse Engineer MS SQL Server DDL with Hackolade result]
+image:06405-reverse-engineer-diagram.png[SQL to JSON data modeling reverse engineering with Hackolade result]
 
 This diagram gives you a view of your model. But now you can think of it as a canvas to construct your ultimate JSON model. Hackolade gives you some tools to help.
 
 === Denormalization
 
-For instance, Hackolade can make suggestions about denormalization. Go to Tools->Suggest denormalization. You'll see a list of document kinds in "Table selection". Try selecting "shoppingcart" and "shoppingcartitems". Then, in the "Parameters" section, choose "Array in parent".
+For instance, Hackolade can make suggestions about denormalization when doing SQL to JSON data modeling. Go to Tools->Suggest denormalization. You'll see a list of document kinds in "Table selection". Try selecting "shoppingcart" and "shoppingcartitems". Then, in the "Parameters" section, choose "Array in parent".
 
 image:06406-suggest-denormalization-hackolade.png[Suggest denormalization in Hackolade]
 
-After you do this, you will see that the diagram looks different. The items are now embedded into an array in shoppingcart, and there are dashed lines going to shoppingcartitems. At this point, we can remove shoppingcartitems from the model (in some cases you may want to leave it, that's why Hackolade doesn't remove it automatically).
+After you do this, you will see that the diagram looks different. Now, the items are embedded into an array in shoppingcart, and there are dashed lines going to shoppingcartitems. At this point, we can remove shoppingcartitems from the model (in some cases you may want to leave it, that's why Hackolade doesn't remove it automatically when doing SQL to JSON data modeling).
 
 image:06407-remove-table-hackolade.gif[Remove excess table in Hackolade]
 
@@ -133,6 +133,6 @@ Go to File -> Generate Documentation -> HTML/PDF. You can choose what components
 
 == Summary
 
-Hackolade is a NoSQL modeling tool created by the IntegrIT company. It's useful not only in building models from scratch, but also in reverse engineer models from relational databases. There are many other features about Hackolade that I didn't cover in this post. I encourage you to link:http://hackolade.com/[download a free trial of Hackolade today]. You can also find link:https://twitter.com/hackolade[Hackolade on Twitter @hackolade].
+Hackolade is a NoSQL modeling tool created by the IntegrIT company. It's useful not only in building models from scratch, but also in reverse engineering from SQL to JSON data modeling. There are many other features about Hackolade that I didn't cover in this post. I encourage you to link:http://hackolade.com/[download a free trial of Hackolade today]. You can also find link:https://twitter.com/hackolade[Hackolade on Twitter @hackolade].
 
 If you have questions about Couchbase Server, please ask away in the link:https://forums.couchbase.com/[Couchbase Forums]. Also check out the link:http://developer.couchbase.com[Couchbase Developer Portal] for more information on the .NET SDK and Couchbase in general. Always feel free to link:https://twitter.com/mgroves[contact me on Twitter @mgroves].
