@@ -1,0 +1,586 @@
+{
+    "GUID": "4a9ad210-1bcf-11e7-a68f-032f4c898e9d",
+    "lastModifTS": "2017-04-07T20:19:13.278Z",
+    "persistenceSchemaVersion": "1",
+    "description": "",
+    "comments": "",
+    "author": "",
+    "version": "",
+    "collections": [
+        {
+            "GUID": "04809234-1bcd-11e7-a68f-032f4c898e9d",
+            "type": "object",
+            "description": "",
+            "comments": "",
+            "$schema": "",
+            "additionalProperties": false,
+            "properties": [
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": 1,
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "id",
+                    "required": true,
+                    "GUID": "0480b940-1bcd-11e7-a68f-032f4c898e9d"
+                },
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": "",
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "posteddate",
+                    "required": true,
+                    "GUID": "0480b941-1bcd-11e7-a68f-032f4c898e9d"
+                },
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": 256,
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "body",
+                    "required": true,
+                    "GUID": "0480b942-1bcd-11e7-a68f-032f4c898e9d"
+                },
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": 1,
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "Foreign Key",
+                    "parentRelationship": "04809230-1bcd-11e7-a68f-032f4c898e9d",
+                    "childRelationships": [],
+                    "foreignCollection": "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+                    "foreignField": [
+                        "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+                        "0480b946-1bcd-11e7-a68f-032f4c898e9d"
+                    ],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "userid",
+                    "required": true,
+                    "GUID": "0480b943-1bcd-11e7-a68f-032f4c898e9d"
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "04809235-1bcd-11e7-a68f-032f4c898e9d"
+            },
+            "collectionName": "friendbookupdates"
+        },
+        {
+            "GUID": "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+            "type": "object",
+            "description": "",
+            "comments": "",
+            "$schema": "",
+            "additionalProperties": false,
+            "properties": [
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": 1,
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [
+                        "04809230-1bcd-11e7-a68f-032f4c898e9d",
+                        "04809231-1bcd-11e7-a68f-032f4c898e9d",
+                        "04809232-1bcd-11e7-a68f-032f4c898e9d"
+                    ],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "id",
+                    "required": true,
+                    "GUID": "0480b946-1bcd-11e7-a68f-032f4c898e9d"
+                },
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": 50,
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "name",
+                    "required": true,
+                    "GUID": "0480b947-1bcd-11e7-a68f-032f4c898e9d"
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "0480b945-1bcd-11e7-a68f-032f4c898e9d"
+            },
+            "collectionName": "friendbookusers"
+        },
+        {
+            "GUID": "0480b948-1bcd-11e7-a68f-032f4c898e9d",
+            "type": "object",
+            "description": "",
+            "comments": "",
+            "$schema": "",
+            "additionalProperties": false,
+            "properties": [
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": 1,
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "Foreign Key",
+                    "parentRelationship": "04809231-1bcd-11e7-a68f-032f4c898e9d",
+                    "childRelationships": [],
+                    "foreignCollection": "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+                    "foreignField": [
+                        "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+                        "0480b946-1bcd-11e7-a68f-032f4c898e9d"
+                    ],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "userid",
+                    "required": true,
+                    "GUID": "0480b94a-1bcd-11e7-a68f-032f4c898e9d"
+                },
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": 1,
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "frienduserid",
+                    "required": true,
+                    "GUID": "0480b94b-1bcd-11e7-a68f-032f4c898e9d"
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "0480b949-1bcd-11e7-a68f-032f4c898e9d"
+            },
+            "collectionName": "friendbookusersfriends"
+        },
+        {
+            "GUID": "0480b94c-1bcd-11e7-a68f-032f4c898e9d",
+            "type": "object",
+            "description": "",
+            "comments": "",
+            "$schema": "",
+            "additionalProperties": false,
+            "properties": [
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": 1,
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "id",
+                    "required": true,
+                    "GUID": "0480b94e-1bcd-11e7-a68f-032f4c898e9d"
+                },
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": 50,
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "user",
+                    "required": true,
+                    "GUID": "0480e050-1bcd-11e7-a68f-032f4c898e9d"
+                },
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": "",
+                    "pattern": "",
+                    "format": "",
+                    "default": "",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "name": "datecreated",
+                    "required": true,
+                    "GUID": "0480e051-1bcd-11e7-a68f-032f4c898e9d"
+                },
+                {
+                    "type": "array",
+                    "properties": [
+                        {
+                            "type": "document",
+                            "primaryKey": false,
+                            "relationshipType": "",
+                            "parentRelationship": "",
+                            "childRelationships": [],
+                            "foreignCollection": "",
+                            "foreignField": [],
+                            "properties": [
+                                {
+                                    "type": "string",
+                                    "minLength": "",
+                                    "maxLength": 50,
+                                    "pattern": "",
+                                    "format": "",
+                                    "default": "",
+                                    "primaryKey": false,
+                                    "relationshipType": "",
+                                    "parentRelationship": "",
+                                    "childRelationships": [],
+                                    "foreignCollection": "",
+                                    "foreignField": [],
+                                    "enum": [],
+                                    "sample": "",
+                                    "key": false,
+                                    "documentKind": false,
+                                    "name": "name",
+                                    "required": true,
+                                    "GUID": "a09965b2-1bce-11e7-a68f-032f4c898e9d"
+                                },
+                                {
+                                    "type": "numeric",
+                                    "mode": "",
+                                    "unit": "",
+                                    "minimum": "",
+                                    "exclusiveMinimum": false,
+                                    "maximum": "",
+                                    "exclusiveMaximum": false,
+                                    "multipleOf": "",
+                                    "divisibleBy": "",
+                                    "default": "",
+                                    "primaryKey": false,
+                                    "relationshipType": "",
+                                    "parentRelationship": "",
+                                    "childRelationships": [],
+                                    "foreignCollection": "",
+                                    "foreignField": [],
+                                    "enum": [],
+                                    "sample": "",
+                                    "name": "price",
+                                    "required": true,
+                                    "childType": "number",
+                                    "GUID": "a09965b3-1bce-11e7-a68f-032f4c898e9d"
+                                },
+                                {
+                                    "type": "numeric",
+                                    "mode": "",
+                                    "unit": "",
+                                    "minimum": "",
+                                    "exclusiveMinimum": false,
+                                    "maximum": "",
+                                    "exclusiveMaximum": false,
+                                    "multipleOf": "",
+                                    "divisibleBy": "",
+                                    "default": "",
+                                    "primaryKey": false,
+                                    "relationshipType": "",
+                                    "parentRelationship": "",
+                                    "childRelationships": [],
+                                    "foreignCollection": "",
+                                    "foreignField": [],
+                                    "enum": [],
+                                    "sample": "",
+                                    "name": "quantity",
+                                    "required": true,
+                                    "childType": "number",
+                                    "GUID": "a09965b4-1bce-11e7-a68f-032f4c898e9d"
+                                }
+                            ],
+                            "minProperties": "",
+                            "maxProperties": "",
+                            "additionalProperties": false,
+                            "enum": [],
+                            "GUID": "a09965b0-1bce-11e7-a68f-032f4c898e9d",
+                            "description": "",
+                            "comments": "",
+                            "required": false,
+                            "id": "",
+                            "arrayItem": true
+                        }
+                    ],
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "additionalItems": true,
+                    "minItems": "",
+                    "maxItems": "",
+                    "uniqueItems": false,
+                    "enum": [],
+                    "GUID": "a098f080-1bce-11e7-a68f-032f4c898e9d",
+                    "name": "items",
+                    "required": false
+                },
+                {
+                    "type": "string",
+                    "minLength": "",
+                    "maxLength": "",
+                    "pattern": "",
+                    "format": "",
+                    "default": "shoppingcart",
+                    "primaryKey": false,
+                    "relationshipType": "",
+                    "parentRelationship": "",
+                    "childRelationships": [],
+                    "foreignCollection": "",
+                    "foreignField": [],
+                    "enum": [],
+                    "sample": "",
+                    "key": false,
+                    "documentKind": false,
+                    "GUID": "5555b530-1bcf-11e7-a68f-032f4c898e9d",
+                    "description": "",
+                    "comments": "",
+                    "dependencies": [],
+                    "required": false,
+                    "id": "",
+                    "name": "type",
+                    "error": {}
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "0480b94d-1bcd-11e7-a68f-032f4c898e9d"
+            },
+            "collectionName": "shoppingcart"
+        }
+    ],
+    "buckets": [],
+    "views": [],
+    "relationships": [
+        {
+            "GUID": "04809231-1bcd-11e7-a68f-032f4c898e9d",
+            "relationshipType": "Foreign Key",
+            "parentField": [
+                "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+                "0480b946-1bcd-11e7-a68f-032f4c898e9d"
+            ],
+            "parentCardinality": "1",
+            "childField": [
+                "0480b948-1bcd-11e7-a68f-032f4c898e9d",
+                "0480b94a-1bcd-11e7-a68f-032f4c898e9d"
+            ],
+            "childCardinality": "0..n",
+            "name": "fk_friendbookusersfriends_friendbookusers",
+            "description": "",
+            "comments": "",
+            "parentCollection": "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+            "childCollection": "0480b948-1bcd-11e7-a68f-032f4c898e9d"
+        },
+        {
+            "GUID": "04809232-1bcd-11e7-a68f-032f4c898e9d",
+            "relationshipType": "Foreign Key",
+            "parentField": [
+                "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+                "0480b946-1bcd-11e7-a68f-032f4c898e9d"
+            ],
+            "parentCardinality": "1",
+            "childField": [
+                "0480b948-1bcd-11e7-a68f-032f4c898e9d",
+                "0480b94a-1bcd-11e7-a68f-032f4c898e9d"
+            ],
+            "childCardinality": "0..n",
+            "name": "fk_friendbookusersfriends_friendbookusers1",
+            "description": "",
+            "comments": "",
+            "parentCollection": "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+            "childCollection": "0480b948-1bcd-11e7-a68f-032f4c898e9d"
+        }
+    ],
+    "users": [],
+    "idToNameHashTable": {
+        "0480b940-1bcd-11e7-a68f-032f4c898e9d": "id",
+        "0480b941-1bcd-11e7-a68f-032f4c898e9d": "posteddate",
+        "0480b942-1bcd-11e7-a68f-032f4c898e9d": "body",
+        "0480b943-1bcd-11e7-a68f-032f4c898e9d": "userid",
+        "04809234-1bcd-11e7-a68f-032f4c898e9d": "friendbookupdates",
+        "0480b946-1bcd-11e7-a68f-032f4c898e9d": "id",
+        "0480b947-1bcd-11e7-a68f-032f4c898e9d": "name",
+        "0480b944-1bcd-11e7-a68f-032f4c898e9d": "friendbookusers",
+        "0480b94a-1bcd-11e7-a68f-032f4c898e9d": "userid",
+        "0480b94b-1bcd-11e7-a68f-032f4c898e9d": "frienduserid",
+        "0480b948-1bcd-11e7-a68f-032f4c898e9d": "friendbookusersfriends",
+        "0480b94e-1bcd-11e7-a68f-032f4c898e9d": "id",
+        "0480e050-1bcd-11e7-a68f-032f4c898e9d": "user",
+        "0480e051-1bcd-11e7-a68f-032f4c898e9d": "datecreated",
+        "0480b94c-1bcd-11e7-a68f-032f4c898e9d": "shoppingcart",
+        "a098f080-1bce-11e7-a68f-032f4c898e9d": "items",
+        "a09965b2-1bce-11e7-a68f-032f4c898e9d": "name",
+        "a09965b3-1bce-11e7-a68f-032f4c898e9d": "price",
+        "a09965b4-1bce-11e7-a68f-032f4c898e9d": "quantity",
+        "5555b530-1bcf-11e7-a68f-032f4c898e9d": "type"
+    },
+    "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "a2848621-1bc9-11e7-a68f-032f4c898e9d"
+    },
+    "databaseName": "script",
+    "dbVendor": "Couchbase",
+    "dbVersion": "v4.6",
+    "appTarget": "COUCHBASE",
+    "creationTS": "2017-04-07T19:37:28.706Z",
+    "settings": {
+        "centralPane": {
+            "dbLevel": {
+                "erd": [
+                    {
+                        "GUID": "04809234-1bcd-11e7-a68f-032f4c898e9d",
+                        "x": 426,
+                        "y": 553,
+                        "width": 197,
+                        "height": 85
+                    },
+                    {
+                        "GUID": "0480b944-1bcd-11e7-a68f-032f4c898e9d",
+                        "x": 74,
+                        "y": 560,
+                        "width": 193,
+                        "height": 57
+                    },
+                    {
+                        "GUID": "0480b948-1bcd-11e7-a68f-032f4c898e9d",
+                        "x": 76,
+                        "y": 716,
+                        "width": 214,
+                        "height": 57
+                    },
+                    {
+                        "GUID": "0480b94c-1bcd-11e7-a68f-032f4c898e9d",
+                        "x": 158,
+                        "y": 194,
+                        "width": 258,
+                        "height": 199
+                    }
+                ],
+                "buckets": [
+                    {
+                        "x": 40,
+                        "y": 40,
+                        "GUID": "a283e9e0-1bc9-11e7-a68f-032f4c898e9d"
+                    },
+                    {
+                        "GUID": ""
+                    }
+                ],
+                "collapsedNodes": [],
+                "activeRelationship": "",
+                "activeRelationshipFields": {
+                    "childField": [],
+                    "parentField": []
+                },
+                "selectedCollections": [],
+                "displayColorPicker": false
+            },
+            "collectionLevel": {},
+            "changed": false
+        },
+        "dtDiagram": {
+            "nodes": [],
+            "details": true
+        }
+    }
+}
