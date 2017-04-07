@@ -5,7 +5,7 @@
 :focus-keyword: sql to json data modeling
 :categories: Couchbase Server, Data Modeling
 :tags: Couchbase Server, SQL Server, SQL, JSON
-:heroimage: TBD
+:heroimage: Glass ochem by Purpy Pupple, licensed through Creative Commons https://commons.wikimedia.org/wiki/File:Glass_ochem.png
 
 SQL to JSON data modeling is something I touched on in the first part of my link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/["Moving from SQL Server to Couchbase" series]. Since that blog post, some new tooling has come to my attention called link:http://hackolade.com/[Hackolade], who have added first-class Couchbase support to their tool.
 
