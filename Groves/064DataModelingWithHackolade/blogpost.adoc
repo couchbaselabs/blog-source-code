@@ -7,7 +7,7 @@
 :tags: Couchbase Server, SQL Server, SQL, JSON
 :heroimage: Glass ochem by Purpy Pupple, licensed through Creative Commons https://commons.wikimedia.org/wiki/File:Glass_ochem.png
 
-SQL to JSON data modeling is something I touched on in the first part of my link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/["Moving from SQL Server to Couchbase" series]. Since that blog post, some new tooling has come to my attention called link:http://hackolade.com/[Hackolade], who have added first-class Couchbase support to their tool.
+SQL to JSON data modeling is something I touched on in the first part of my link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/["Moving from SQL Server to Couchbase" series]. Since that blog post, some new tooling has come to my attention from link:http://hackolade.com/[Hackolade], who have recently added first-class Couchbase support to their tool.
 
 In this post, I'm going to walk you through very simple modeling exercise I did by hand, and show how IntegrIT's Hackolade can help.
 
@@ -104,10 +104,10 @@ image:06407-remove-table-hackolade.gif[Remove excess table in Hackolade]
 
 Notice that there are other options here too:
 
-* *Two-way referencing* - TBD
-* *Embedding Sub-document in child* - If you want to model the opposite way (e.g. store the shopping cart within the shopping cart item).
 * *Embedding Array in parent* - This is what was demonstrated above.
+* *Embedding Sub-document in child* - If you want to model the opposite way (e.g. store the shopping cart within the shopping cart item).
 * *Embedding Both* - Both array in parent and sub-document approach.
+* *Two-way referencing* - This is one way to represent a many-to-many relationship. In relational tables, this is typically done with a "junction table" or "mapping table"
 
 Also note *cascading*. This is to prevent N+1 problems and circular referencing where there can be a parent, child, grandchild, and so on. You select how far you want to cascade.
 
