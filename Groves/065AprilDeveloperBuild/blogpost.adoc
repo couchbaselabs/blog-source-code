@@ -1,0 +1,112 @@
+:imagesdir: images
+:meta-description: The April 2017 Developer Build has a ton of bug fixes and feature enhancements, and we are one step closer to the stable release of Couchbase 5.0.
+:title: Couchbase 5.0 April 2017 Developer Build Features & Enhancements
+:slug: couchbase-5-0-april-2017-developer-build
+:focus-keyword: April 2017 developer build
+:categories: Couchbase Server
+:tags: Couchbase Server
+:heroimage: TBD
+
+April showers bring May Flowers, but until then it's time for the April 2017 developer build.
+
+The April 2017 Developer Build has a ton of bug fixes and feature enhancements, and we are one step closer to the stable release of Couchbase 5.0.
+
+You can get the April 2017 developer build from the link:https://www.couchbase.com/downloads[Couchbase downloads page] in the developer tab.
+
+image:06501-april-2017-developer-build-tab.png[April 2017 Developer Build]
+
+== New platforms in April 2017 Developer Build
+
+Based on the feedback we have received, here are some additional platforms that we would like introduce starting with the April Developer Build. We hope you try out the April Developer Build on these platforms and give us your feedback!
+
+* Oracle Linux 7 
+* Ubuntu Ubuntu 16.04
+* Windows Server 2016 
+
+_Note that Ubuntu 12 is EOL this month, so future Couchbase releases will likely not support Ubuntu 12._
+
+== Bugs 
+
+Here is a list of the critical and major bugs that were fixed in the April 2017 Developer Build.
+
+Thank you for you feedback and helping us to identify and fix bugs for Couchbase Server 5.0. We're still looking for your help.
+
+|======
+| Issue # | Description
+| link:https://issues.couchbase.com/browse/MB-23102[MB-23102] | [Ephemeral]: Fix the potential regression due to extra memory usage for sequential links in Stored Value
+| link:https://issues.couchbase.com/browse/MB-23562[MB-23562] | Ephemeral buckets: item count goes to -1
+| link:https://issues.couchbase.com/browse/MB-23664[MB-23664] | XDCR between ephemeral buckets gets stuck
+| link:https://issues.couchbase.com/browse/MB-23055[MB-23055] | [FTS] RBAC: Unable to create alias on an index created by the same user on sasl bucket
+| link:https://issues.couchbase.com/browse/MB-23139[MB-23139] | [FTS] moss compaction unit test assumes one particular segment impl
+| link:https://issues.couchbase.com/browse/MB-23349[MB-23349] | [FTS] up to 10x performance degradation when using large "query size" (limit) setting
+| link:https://issues.couchbase.com/browse/MB-22870[MB-22870] | [FTS] ephemeral: Docs not getting indexed when multiple indexes are present on an ephemeral bucket
+| link:https://issues.couchbase.com/browse/MB-22871[MB-22871] | [FTS] ephemeral: No docs indexed to a memory-only-index from ephemeral bucket
+| link:https://issues.couchbase.com/browse/MB-23561[MB-23561] | [FTS] moss store files are not deleted after compaction
+| link:https://issues.couchbase.com/browse/MB-23674[MB-23674] | [FTS] race detected in cbft
+| link:https://issues.couchbase.com/browse/MB-21785[MB-21785] | [FTS] UI: stats: the "items remaining" graph shows wrong data when KV mutations are in progress
+| link:https://issues.couchbase.com/browse/MB-21783[MB-21783] | [FTS] UI: stats: The "queries/sec" graph shows wrong data in FTS multi-node cluster setup
+| link:https://issues.couchbase.com/browse/MB-21645[MB-21645] | [FTS] slow query log conflicts with requirement to not log user data
+| link:https://issues.couchbase.com/browse/MB-23227[MB-23227] | couchbase server install fails on centos 6 machines
+| link:https://issues.couchbase.com/browse/MB-23579[MB-23579] | Windows Docker Container : service-stop.bat shuts down the container
+| link:https://issues.couchbase.com/browse/MB-23517[MB-23517] | Set -> Remove -> Set sequence of KV operations using the same key blocks the client connection
+| link:https://issues.couchbase.com/browse/MB-23429[MB-23429] | Auth failure with mem client for LDAP user
+| link:https://issues.couchbase.com/browse/MB-23269[MB-23269] | Memcached crashes when trying to write an audit event to a file with wrong permissions
+| link:https://issues.couchbase.com/browse/MB-22691[MB-22691] | ability to upsert the xattr key with any names depends on the keys already set in xattrs
+| link:https://issues.couchbase.com/browse/MB-23347[MB-23347] | Very low rate of insert operations due to lock contention
+| link:https://issues.couchbase.com/browse/MB-23479[MB-23479] | Query-select - can query any bucket
+| link:https://issues.couchbase.com/browse/MB-23197[MB-23197] | Addition of new node fails due to "Join completion call failed. Failed to start ns_server cluster processes back."
+| link:https://issues.couchbase.com/browse/MB-22759[MB-22759] | N1QL insert/delete/update operations incorrectly authorized
+| link:https://issues.couchbase.com/browse/MB-23758[MB-23758] | Eliminate GO_DEFAULT_VERSION
+| link:https://issues.couchbase.com/browse/MB-23372[MB-23372] | Gap in covering array indexes
+| link:https://issues.couchbase.com/browse/MB-23222[MB-23222] | YCSB workload e with wrong n1ql syntax 100% memory is consumed
+| link:https://issues.couchbase.com/browse/MB-23203[MB-23203] | Index join chooses the wrong index and doesn't choose the right index consistently.
+| link:https://issues.couchbase.com/browse/MB-23186[MB-23186] | Index Collation checks can't use the API setting.
+| link:https://issues.couchbase.com/browse/MB-23057[MB-23057] | Scan is covered avoid IntersectScan
+| link:https://issues.couchbase.com/browse/MB-23361[MB-23361] | [N1QL] test_order_by_alias_aggr_fn functional test is failing
+| link:https://issues.couchbase.com/browse/MB-23236[MB-23236] | [N1QL RBAC]Incorrect message displayed when indexer storage mode is not set
+| link:https://issues.couchbase.com/browse/MB-23179[MB-23179] | [IndexAPI2] cbq engine panics with create index desc
+| link:https://issues.couchbase.com/browse/MB-23049[MB-23049] | cbq-engine constantly re-validates empty credentials
+| link:https://issues.couchbase.com/browse/MB-23277[MB-23277] | [n1ql rbac] The builtin user is getting updated when specifying a new role on a different bucket
+| link:https://issues.couchbase.com/browse/MB-23245[MB-23245] | [N1QL][CURL] Occasionally setting the connect-timeout option results in a panic
+| link:https://issues.couchbase.com/browse/MB-23165[MB-23165] | [N1QL] test_indexcountscan fails
+| link:https://issues.couchbase.com/browse/MB-23132[MB-23132] | CURL : Remove max-redirs option
+| link:https://issues.couchbase.com/browse/MB-23101[MB-23101] | Restrict the limit pushdown on IntersectScan(s)
+| link:https://issues.couchbase.com/browse/MB-23219[MB-23219] | investigate query logging if there is a parser crash.
+| link:https://issues.couchbase.com/browse/MB-23134[MB-23134] | CURL - Disable all other protocols except HTTP/HTTPS
+| link:https://issues.couchbase.com/browse/MB-22994[MB-22994] | [N1QL]Query with predicates on 3 different fields with OR clause does not use UnionScan
+| link:https://issues.couchbase.com/browse/MB-23610[MB-23610] | [N1QL][Monitoring] Cannot delete/filter system:completed_requests by node
+| link:https://issues.couchbase.com/browse/MB-23723[MB-23723] | request_plus range queries with LIMIT are slow
+| link:https://issues.couchbase.com/browse/MB-23716[MB-23716] | N1QL: test_array_index_regexp_covering fails,query with regular expression times out on centos and windows,panic seen in query.log
+| link:https://issues.couchbase.com/browse/MB-21971[MB-21971] | Expose meta().cas and meta().expiration to N1QL
+| link:https://issues.couchbase.com/browse/MB-22874[MB-22874] | jdbc-json driver throws nullpointer exception with YCSB workload
+| link:https://issues.couchbase.com/browse/MB-23106[MB-23106] | panic found in indexer 
+| link:https://issues.couchbase.com/browse/MB-22920[MB-22920] | Intermittent failure:"Index scan timed out”
+| link:https://issues.couchbase.com/browse/MB-22879[MB-22879] | Throughput of composite queries with TOKENS() dropped from ~24K to ~4K queries/sec
+| link:https://issues.couchbase.com/browse/MB-23729[MB-23729] | Initial indexing of 200M items increased from 6 minutes to 1 hour
+| link:https://issues.couchbase.com/browse/MB-23657[MB-23657] | Q2, Q3, and YCSB Workload E throughput dropped to 400 queries/sec
+| link:https://issues.couchbase.com/browse/MB-22982[MB-22982] | Tree form query output fails to print in query workbench
+| link:https://issues.couchbase.com/browse/MB-23311[MB-23311] | cbbackupmgr crashes with "fatal error: concurrent map read and map write"
+| link:https://issues.couchbase.com/browse/MB-23490[MB-23490] | Changing the password of user from a particular session should invalidate other sessions
+| link:https://issues.couchbase.com/browse/MB-23280[MB-23280] | [UI]Authentication Source is not selected for a ldap user
+| link:https://issues.couchbase.com/browse/MB-23016[MB-23016] | [FTS UI] Rebalance progress indicator doesn't show granular level progress
+| link:https://issues.couchbase.com/browse/MB-23437[MB-23437] | [UI] Not able to set Index Storage settings on the Index Node at setup time
+| link:https://issues.couchbase.com/browse/MB-23085[MB-23085] | View Engine not detecting meta.id if doc has xattrs
+| link:https://issues.couchbase.com/browse/MB-23423[MB-23423] | Memcached connection closed for no apparent reason after a couple minutes
+| link:https://issues.couchbase.com/browse/MB-22997[MB-22997] | Fix deadlock issue in when closing upr stream
+| link:https://issues.couchbase.com/browse/MB-23228[MB-23228] | Avoid frequent replication restart when node is removed from target cluster
+| link:https://issues.couchbase.com/browse/MB-23728[MB-23728] | Remote cluster ref cannot rotate on target nodes when target is elastic search
+|======
+
+== We still want your feedback!
+
+Stay tuned to the link:http://blog.couchbase.com[Couchbase Blog] for information about what's coming in the next developer build.
+
+Interested in trying out some of these new features? link:https://couchbase.com/download[Download Couchbase Server 5.0 April 2017 Developer Build] today!
+
+The 5.0 release is fast approaching, but we still want your feedback! 
+
+*Bugs*: If you find a bug (something that is broken or doesn't work how you'd expect), please file an issue in our link:https://issues.couchbase.com[JIRA system at issues.couchbase.com] or submit a question on the link:https://forums.couchbase.com[Couchbase Forums]. Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you (my Couchbase handlers let me take selfies on our cartoonishly big couch when I submit good bugs).
+
+*Feedback*: Let me know what you think. Something you don't like? Something you really like? Something missing? Now you can give feedback directly from within the Couchbase Web Console. Look for the image:06502-feedback-icon.png[feedback icon] icon at the bottom right of the screen.
+
+In some cases, it may be tricky to decide if your feedback is a bug or a suggestion. Use your best judgement, or again, feel free to contact me for help. I want to hear from you. The best way to contact me is either link:https://twitter.com/mgroves[Twitter @mgroves] or email me matthew.groves@couchbase.com.
