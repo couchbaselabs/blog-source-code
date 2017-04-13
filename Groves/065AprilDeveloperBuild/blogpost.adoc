@@ -5,11 +5,11 @@
 :focus-keyword: April 2017 developer build
 :categories: Couchbase Server
 :tags: Couchbase Server
-:heroimage: TBD
+:heroimage: 065-hero-announcement.jpg (public domain)
 
-April showers bring May Flowers, but until then it's time for the April 2017 developer build.
+April showers bring May flowers, but until then it's time for the April 2017 developer build.
 
-The April 2017 Developer Build has a ton of bug fixes and feature enhancements, and we are one step closer to the stable release of Couchbase 5.0.
+The April 2017 Developer Build has a ton of bug fixes and feature enhancements, and we are one step closer to the stable release of Couchbase Server 5.0.
 
 You can get the April 2017 developer build from the link:https://www.couchbase.com/downloads[Couchbase downloads page] in the developer tab.
 
@@ -17,19 +17,17 @@ image:06501-april-2017-developer-build-tab.png[April 2017 Developer Build]
 
 == New platforms in April 2017 Developer Build
 
-Based on the feedback we have received, here are some additional platforms that we would like introduce starting with the April Developer Build. We hope you try out the April Developer Build on these platforms and give us your feedback!
+Based on the feedback we have received, here are some additional platforms that we are introducing starting with the April 2017 Developer Build. We hope you try out the April 2017 Developer Build on these platforms and give us your feedback!
 
 * Oracle Linux 7 
-* Ubuntu Ubuntu 16.04
+* Ubuntu 16.04
 * Windows Server 2016 
 
 _Note that Ubuntu 12 is EOL this month, so future Couchbase releases will likely not support Ubuntu 12._
 
 == Bugs 
 
-Here is a list of the critical and major bugs that were fixed in the April 2017 Developer Build.
-
-Thank you for you feedback and helping us to identify and fix bugs for Couchbase Server 5.0. We're still looking for your help.
+Thank you for you feedback and helping us to identify and fix bugs for Couchbase Server 5.0. Here is a list of the critical and major bugs that were fixed in the April 2017 Developer Build.
 
 |======
 | Issue # | Description
