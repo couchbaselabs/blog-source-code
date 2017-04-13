@@ -9,7 +9,7 @@
 
 SQL to JSON data modeling is something I touched on in the first part of my link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/["Moving from SQL Server to Couchbase" series]. Since that blog post, some new tooling has come to my attention from link:http://hackolade.com/[Hackolade], who have recently added first-class Couchbase support to their tool.
 
-In this post, I'm going to walk you through very simple modeling exercise I did by hand, and show how IntegrIT's Hackolade can help.
+In this post, I'm going to review the very simple modeling exercise I did by hand, and show how IntegrIT's Hackolade can help.
 
 I'm using the same SQL schema that I used in the previous blog post series; you can find it on link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer/src/SQLServerToCouchbase[GitHub (in the SQLServerDataAccess/Scripts folder)].
 
@@ -22,13 +22,13 @@ When looking at modeling in JSON, there are two main ways to represent relations
 * *Referential* - Concepts are given their own documents, but reference other document(s) using document keys.
 * *Denormalization* - Instead of splitting data between documents using keys, group the concepts into a single document.
 
-I started with a relation model of shopping carts and social media users.
+I started with a relational model of shopping carts and social media users.
 
 image:06401-relational-model.png[Relational model of SQL before moving to JSON]
 
-In my example, I said that a Shopping Cart <-> Shopping Cart Items relationship in a relational database would probably be better represented in JSON by a single Shopping Cart document (which contains Items). This is the "denormalization" path. Then, I suggested that a Social Media User <-> Social Media User Update relationship would be best represented in JSON with a referential relationship: updates live in their own documents, separate from the user.
+In my example, I said that a Shopping Cart - to - Shopping Cart Items relationship in a relational database would probably be better represented in JSON by a single Shopping Cart document (which contains Items). This is the "denormalization" path. Then, I suggested that a Social Media User - to - Social Media User Update relationship would be best represented in JSON with a referential relationship: updates live in their own documents, separate from the user.
 
-This was an entirely manual process. For that simple example, it was not difficult. But with larger models, it would be helpful to have some tooling to assist in the SQL to JSON data modeling. It still won't be completely automatic: there's still some art to it.
+This was an entirely manual process. For that simple example, it was not difficult. But with larger models, it would be helpful to have some tooling to assist in the SQL to JSON data modeling. It won't be completely automatic: there's still some art to it, but the tooling can do a lot of the work for us.
 
 == Starting with a SQL Server DDL
 
@@ -64,7 +64,7 @@ GO
 
 By the way, this should also work with SQL Azure databases.
 
-_Note: Hackolade works with other types of DDLs too, not just SQL Server, but Oracle and MySQL too._
+_Note: Hackolade works with other types of DDLs too, not just SQL Server, but also Oracle and MySQL._
 
 == Enter Hackolade
 
@@ -72,7 +72,7 @@ This next part assumes that you have downloaded and installed Hackolade. This fe
 
 Once you have a DDL file created, you can open Hackolade.
 
-In Hackolade, you will creating/editing models that correspond to JSON models: Couchbase (of course) as well as DynamoDB and MongoDB. For this example, I'm going to create a new Couchbase model.
+In Hackolade, you will be creating/editing models that correspond to JSON models: Couchbase (of course) as well as DynamoDB and MongoDB. For this example, I'm going to create a new Couchbase model.
 
 image:06403-new-couchbase-model-hackolade.gif[Create a new Couchbase model in Hackolade]
 
@@ -107,15 +107,15 @@ Notice that there are other options here too:
 * *Embedding Array in parent* - This is what was demonstrated above.
 * *Embedding Sub-document in child* - If you want to model the opposite way (e.g. store the shopping cart within the shopping cart item).
 * *Embedding Both* - Both array in parent and sub-document approach.
-* *Two-way referencing* - This is one way to represent a many-to-many relationship. In relational tables, this is typically done with a "junction table" or "mapping table"
+* *Two-way referencing* - Represent a many-to-many relationship. In relational tables, this is typically done with a "junction table" or "mapping table"
 
-Also note *cascading*. This is to prevent N+1 problems and circular referencing where there can be a parent, child, grandchild, and so on. You select how far you want to cascade.
+Also note *cascading*. This is to prevent circular referencing where there can be a parent, child, grandchild, and so on. You select how far you want to cascade.
 
 === More cleanup
 
 There are a couple of other things that I can do to clean up this model.
 
-* *Add a 'type' field*. In Couchbase, we might need to distinguish shoppingcart documents from other documents. One way to do this is to add a 'type' field. I can give it a "default" value in Hackolade of "shoppingcart".
+* *Add a 'type' field*. In Couchbase, we might need to distinguish shoppingcart documents from other documents. One way to do this is to add a "discriminator" field, usually called 'type' (but you can call it whatever you like). I can give it a "default" value in Hackolade of "shoppingcart".
 
 * *Remove the 'id' field from the embedded array*. The SQL table needed this field for a foreign key relationship. Since it's all embedded into a single document, we no longer need this field.
 
@@ -127,12 +127,12 @@ image:06408-clean-up-json-data-model.png[Clean up JSON data model in Hackolade]
 
 A model like this can be a living document that your team works on. Hackolade models are themselves stored as JSON documents. You can share with team members, check them into source control, and so on.
 
-You can also use Hackolade to generate static documentation about the model.
+You can also use Hackolade to generate static documentation about the model. This documentation can then be used to guide the development and architecture of your application.
 
 Go to File -> Generate Documentation -> HTML/PDF. You can choose what components to include in your documentation.
 
 == Summary
 
-Hackolade is a NoSQL modeling tool created by the IntegrIT company. It's useful not only in building models from scratch, but also in reverse engineering from SQL to JSON data modeling. There are many other features about Hackolade that I didn't cover in this post. I encourage you to link:http://hackolade.com/[download a free trial of Hackolade today]. You can also find link:https://twitter.com/hackolade[Hackolade on Twitter @hackolade].
+Hackolade is a NoSQL modeling tool created by the IntegrIT company. It's useful not only in building models from scratch, but also in reverse engineering for SQL to JSON data modeling. There are many other features about Hackolade that I didn't cover in this post. I encourage you to link:http://hackolade.com/[download a free trial of Hackolade today]. You can also find link:https://twitter.com/hackolade[Hackolade on Twitter @hackolade].
 
-If you have questions about Couchbase Server, please ask away in the link:https://forums.couchbase.com/[Couchbase Forums]. Also check out the link:http://developer.couchbase.com[Couchbase Developer Portal] for more information on the .NET SDK and Couchbase in general. Always feel free to link:https://twitter.com/mgroves[contact me on Twitter @mgroves].
+If you have questions about Couchbase Server, please ask away in the link:https://forums.couchbase.com/[Couchbase Forums]. Also check out the link:http://developer.couchbase.com[Couchbase Developer Portal] for more information on Couchbase for developers. Always feel free to link:https://twitter.com/mgroves[contact me on Twitter @mgroves].
