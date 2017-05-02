@@ -1,0 +1,28 @@
+= Microsoft Azure and Couchbase Hands on Lab (Detroit)
+
+Microsoft Azure and Couchbase are presenting a free hands-on lab "Lunch & Learn" on using NoSQL with Docker Containers.
+
+* *When*: Wednesday, March 8th, 2017 - 11:00am - 2:00pm
+* *Where*: Microsoft Technology Center
+1000 Town Center, Suite 250, Room MPR3
+Southfield, MI 48075
+
+link:https://www.eventbrite.com/e/microsoft-azure-and-couchbase-lunchlearn-couchbase-and-docker-in-the-cloud-tickets-32075725358[Sign up today to reserve your seat].
+
+== Event details
+
+On Wednesday March 8th, Microsoft and Couchbase are holding a joint Lunch & Learn  from 11:00 am to 2:00 pm to introduce you to the fundamentals of today's quickly maturing NoSQL technology. Specifically we will show you have easy it is to add Couchbase to the Azure Cloud or Hybrid Cloud environment.
+
+Whether you are new to NoSQL technologies or have had experience with Couchbase, we hope you can join this informative session showcasing how the world's leading companies are utilizing Couchbase's NoSQL solutions to power their mission-critical applications on Azure.
+
+During our Lunch & Learn, we’ll discuss:
+
+* *The basics of using Couchbase NoSQL* for Azure cloud or hybrid cloud environments 
+* *Using Containers* - Couchbase Server on Azure 
+* *Why leading organizations* are using Azure & Couchbase with their modern web and mobile applications
+* *Provisioning VMs in Azure* and setting up Couchbase 
+* *Good general practices for Couchbase Server on Azure*
+
+Register Now to reserve your seat, and please share this invitation with your coworkers or anyone else who might be interested. If you have any questions, please leave a comment, email me at matthew.groves@couchbase.com, or contact me on link:https://twitter.com/mgroves[Twitter @mgroves].
+
+You may want to try out Couchbase on Azure before you come to the lab: you can find the link:https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-server-40-enterprise[latest Couchbase Server 4.6.0 release] in the Azure marketplace.
