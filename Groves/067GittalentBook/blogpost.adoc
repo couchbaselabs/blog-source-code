@@ -1,0 +1,36 @@
+:imagesdir: images
+:meta-description: Couchbase Connect 2016 featured a sample application in the keynote. The source code and instruction manual is now available.
+:title: Sample Application with Spring and Angular: GitTalent
+:slug: Sample-Application-Spring-Angular
+:focus-keyword: sample application
+:categories: Application Design, Couchbase Server, N1QL/Query
+:tags: Couchbase Server, git, N1QL, Spring, Spring Data, Angular
+:heroimage: 067-sampler-hero.jpg
+
+One of the first big projects I was involved in after I started at Couchbase last year was helping to create a sample application that would be demonstrated at link:https://connect.couchbase.com/us/connect-silicon-valley-2016[Couchbase Connect 2016].
+
+== Sample application
+
+It was an enormous team effort to create something that would be simple enough to show in a keynote demo, while being complex enough to show off the powerful new features of Couchbase Server.
+
+I think the demo went really well, but you don't have to take my word for it. You can watch the demo in action below (the demo starts about 26 minutes in).
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Bq8zkcbnRac" frameborder="0" allowfullscreen></iframe>
++++
+
+_By the way, all the link:https://connect.couchbase.com/us/connect-silicon-valley-2016[sessions from Couchbase Connect 2016] were recorded are are available for you to watch._
+
+Our goal was to create a tool that we could use to empathize with users (aka link:https://en.wikipedia.org/wiki/Eating_your_own_dog_food[dog fooding]), engage potential customers with a comprehensive sample application to help get them comfortable with Couchbase, and, ultimately, to show off Couchbase at our signature conference.
+
+== GitTalent sample application resources
+
+The lead on the project (link:https://blog.couchbase.com/author/laurent-doguin/[Laurent Doguin]) has since left Couchbase (just after I finally learned to spell his name correctly!), but one of the last things he did was make a publicly available copy of the GitTalent sample application and write an incredible, detailed book about its design and code.
+
+I use the word "book" because what he wrote is exactly that. It's far too long to do it justice in a single blog post. So instead, here's a link to the link:https://github.com/couchbaselabs/GitTalent/blob/master/GitTalent.asciidoc[GitTalent book]. It's in AsciiDoc format, but GitHub does a pretty good job of rendering it.
+
+Note that this demo was carried out completely live on stage. The specific repo used in the demo is private (for security reasons), but here's a screenshot of the commit from the demo:
+
+image:06701-gittalent-live-commit.png[Live git commit to sample application during presentation]
+
+The entire project is available on GitHub in the link:https://github.com/couchbaselabs/GitTalent[GitTalent repository]. My contributions were mostly in writing Angular, but I also wrote some Java (believe it or not!). So if you have any questions about the project, I'll do my best to help. Please leave a comment below, or ask on the link:https://forums.couchbase.com[Couchbase Forums].
