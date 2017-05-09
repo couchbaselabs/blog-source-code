@@ -1,0 +1,24 @@
+:imagesdir: images
+:meta-description: Examples of using the .NET SDK with the new authentication and authorization features of Couchbase Server 5.0
+:title: Authorization and Authentication with RBAC in .NET
+:slug: Authentication-Authorization-RBAC-NET
+:focus-keyword: authentication
+:categories: Security, Couchbase Server, .NET
+:tags: Couchbase Server, authentication, authorization, security, RBAC, .NET
+:heroimage: 059-Hero-Key-Locks-Security-Authentication-Authorization.jpg
+
+Authentication and authorization are vastly improved in Couchbase Server 5.0. We've been blogging about the new RBAC features in the developer preview for a while.
+
+* link:https://blog.couchbase.com/authentication-authorization-rbac/[Authentication and Authorization with RBAC] - introduction / part 1
+* link:https://blog.couchbase.com/authentication-authorization-rbac-part-2/[Authentication and Authorization with RBAC (Part 2)] - managing users
+* link:https://blog.couchbase.com/new-sdk-authentication/[Improved SDK Authentication Methods - Couchbase 5.0] - an introduction featuring Python, Java, PHP, and .NET
+
+Now that Couchbase Server 5.0 is released, I'm writing a more in-depth blog post about how to use the Couchbase .NET SDK along with these new features.
+
+_The full code samples used in this blog post are link://[available for you on Github]._
+
+== Authentication using the .NET SDK
+
+As I mentioned in the previous posts, the days of buckets with passwords are gone. The future belongs to users--users that have specific permission(s) to specific bucket(s).
+
+Then, before we can do anything, we need to create a user. You might want to create a user with the UI, but you can also create a user with the SDK.
