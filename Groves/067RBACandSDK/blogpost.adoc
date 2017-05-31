@@ -15,7 +15,7 @@ Authentication and authorization are vastly improved in Couchbase Server 5.0. We
 
 Now that Couchbase Server 5.0 is released, I'm writing a more in-depth blog post about how to use the Couchbase .NET SDK along with these new features.
 
-_The full code samples used in this blog post are link://[available for you on Github]._
+_The full code samples used in this blog post are link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/067RBACandSDK/src/rbacsdk[available for you on Github]._
 
 == Create a bucket
 
