@@ -1,6 +1,6 @@
 :imagesdir: images
-:meta-description: Examples of using the .NET SDK with the new authentication and authorization features of Couchbase Server 5.0
-:title: Authorization and Authentication with RBAC in .NET
+:meta-description: Examples of using the Couchbase .NET SDK with the new authentication and authorization features of Couchbase Server 5.0
+:title: Authentication and Authorization with RBAC in .NET
 :slug: Authentication-Authorization-RBAC-NET
 :focus-keyword: authentication
 :categories: Security, Couchbase Server, .NET
@@ -17,8 +17,87 @@ Now that Couchbase Server 5.0 is released, I'm writing a more in-depth blog post
 
 _The full code samples used in this blog post are link://[available for you on Github]._
 
-== Authentication using the .NET SDK
+== Create a bucket
 
 As I mentioned in the previous posts, the days of buckets with passwords are gone. The future belongs to users--users that have specific permission(s) to specific bucket(s).
 
-Then, before we can do anything, we need to create a user. You might want to create a user with the UI, but you can also create a user with the SDK.
+Let's start by creating a bucket. In the Couchbase UI, login as the Administrator that you created when you installed Couchbase. Go to "Buckets" and click "ADD BUCKET" (top right). You will see the "Add Data Bucket" dialog. Notice that there is no longer a "password" field (not even in "Advanced bucket settings").
+
+image:06701-add-new-bucket.png[Add new bucket - no authentication options anymore]
+
+Give the bucket a name and some amount of memory, and click "Add Bucket". Now you have a bucket. But, other than an Administrator in the UI, no one can access this bucket yet.
+
+== Create a user
+
+In order to get access to this bucket, you must create a user. In Couchbase 5.0, "users" are an entirely new feature, bringing richer authentication and authorization features to Couchbase Server.
+
+While still logged in as an administrator, go to "Security" to see a list of users. Click "ADD USER" (top right).
+
+image:06702-add-new-user-for-authentication.png[Adding a new user for authentication and authorization]
+
+Create a user with whatever name and password you'd like. You can choose which roles the user has, and for which buckets (when applicable). Let's give this user Data Writer and Data Reader roles, for the bucket that was just created (e.g. "mybucket"), but NOT any Query roles.
+
+image:06703-add-data-roles.png[Adding authorization for data read and data write]
+
+Once the user is added, you can hover over the roles to get a description of what the role means.
+
+image:06704-tool-tip-authorization.gif[Authorization tool tip]
+
+== Authentication and authorization with the Couchbase .NET SDK
+
+Now that we have a bucket and a user, let's see how to use them with the .NET SDK.
+
+Start by creating a `Cluster` object.
+
+[source,C#,indent=0]
+----
+include::src/rbacsdk/Program.cs[tag=createcluster]
+----
+
+You have a cluster, but your program has not been authenticated yet. Use a `PasswordAuthenticator` object to specify the credentials. Then, use that object with the cluster's `Authenticate` method. In this example below, I'm using incorrect credentials.
+
+[source,C#,indent=0]
+----
+include::src/rbacsdk/Program.cs[tag=incorrectcreds]
+----
+
+Now, if I try to perform an operation like `OpenBucket` on the cluster, an exception is thrown.
+
+[source,C#,indent=0]
+----
+include::src/rbacsdk/Program.cs[tag=authexception]
+----
+
+image:06705-authentication-error.png[Error in authentication]
+
+Now, let's try it again using the correct credentials. Authentication will work. But let's talk about authorization next.
+
+Remember that I only gave this user Data Writer and Data Reader roles (for mybucket). So, if I authenticate and insert a document now, it works.
+
+[source,C#,indent=0]
+----
+include::src/rbacsdk/Program.cs[tag=authandinsert]
+----
+
+image:06706-console-output-authorization.png[Console output when authentication and authorization are valid]
+
+But if I tried to, for instance, execute a link:https://www.couchbase.com/products/n1ql[N1QL (SQL for JSON) query], then it would fail. This is because that user is not authorized to execute queries.
+
+[source,C#,indent=0]
+----
+include::src/rbacsdk/Program.cs[tag=noauthforn1ql]
+----
+
+I'm just doing a simple `COUNT(1)` aggregation query. Since that user is not authorized, here's what's displayed:
+
+image:06707-authorization-query.png[No authorization for running a query]
+
+== One more thing
+
+If you are worried about the effect this will have on upgrading from Couchbase Server 4.x to Couchbase Server 5.0, then here's a tip. If you create a user with the same name as the bucket (e.g. a bucket called "foo" and a user named "foo"), then the older Couchbase .NET APIs that still expect a bucket password will work as before. Just give that user a "Cluster Admin" role for now. This is a good temporary fix until you can re-engineer your system to use a regimented approach to role.
+
+== Summary
+
+Couchbase Server 5.0 is out now in beta! These role-based authentication (RBAC) features make Couchbase a leader in document database security, and I'm personally very pleased that Couchbase is going in this direction. Security is important, but too often overlooked by developers.
+
+If you have any questions, please link:https://forums.couchbase.com[ask away in the Couchbase Forums], leave a comment below, or link:https://twitter.com/mgroves[ping me on Twitter @mgroves].

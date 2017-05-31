@@ -11,38 +11,71 @@ namespace rbacsdk
     {
         static void Main(string[] args)
         {
+            ShowAuthenticationFail();
+
+            Console.WriteLine();
+            Console.WriteLine("--------------");
+            Console.WriteLine();
+
+            ShowAuthorizationFail();
+
+            Console.WriteLine();
+            Console.WriteLine("Press a key to continue...");
+            Console.ReadKey();
+        }
+
+        private static void ShowAuthorizationFail()
+        {
+            // authenticate and get a bucket
+            // tag::authandinsert[]
             var cluster = new Cluster(new ClientConfiguration
             {
-                Servers = new List<Uri> {  new Uri("http://localhost:8091")},
-                UseSsl = false
+                Servers = new List<Uri> { new Uri("http://localhost:8091") }
             });
-
-            var clusterManager = cluster.CreateManager("Administrator", "password"); // cluster admin credentials
-
-            // create bucket
-            var resp = clusterManager.CreateBucket("testbucket", replicaNumber: 0);
-            Console.WriteLine(resp.Success);
-            Console.WriteLine(resp.Message);
-            Console.WriteLine(resp.Exception?.Message);
-
-            // create a user with only a data reader role
-            var result = clusterManager.UpsertUser("matt", "mattspassword", "Matthew Groves", new Role { Name = "admin"});
-            Console.WriteLine(result.Success);
-            Console.WriteLine(result.Message);
-            Console.WriteLine(result.Exception?.Message);
-
-            // authenticate with that user
-            var authenticator = new PasswordAuthenticator("matt", "mattspassword");
+            var authenticator = new PasswordAuthenticator("myuser", "password");
             cluster.Authenticate(authenticator);
+            var bucket = cluster.OpenBucket("mybucket");
 
-            // get a bucket and try to write a document to it
-            var bucket = cluster.OpenBucket("testbucket");
+            // insert a document, this should be allowed
+            var result = bucket.Insert(Guid.NewGuid().ToString(), new {foo = "bar"});
+            Console.WriteLine("Insert was successful: " + result.Success);
+            // end::authandinsert[]
 
-            var response = bucket.Insert(Guid.NewGuid().ToString(), new {foo = "barr"});
+            // execute a query, this should not be allowed
+            // tag::noauthforn1ql[]
+            var queryResult = bucket.Query<int>("SELECT COUNT(1) FROM `" + bucket.Name + "`");
+            Console.WriteLine("Query was successful: " + queryResult.Success);
+            queryResult.Errors.ForEach(e => Console.WriteLine("Error: " + e.Message));
+            // end::noauthforn1ql[]
+        }
 
-            Console.WriteLine(response.Success);
-            Console.WriteLine(response.Message);
-            Console.WriteLine(response.Exception?.Message);
+        private static void ShowAuthenticationFail()
+        {
+            // tag::createcluster[]
+            var cluster = new Cluster(new ClientConfiguration
+            {
+                Servers = new List<Uri> { new Uri("http://localhost:8091") }
+            });
+            // end::createcluster[]
+
+            // use an incorrect password
+            // tag::incorrectcreds[]
+            var authenticator = new PasswordAuthenticator("myuser", "wrongpassword");
+            cluster.Authenticate(authenticator);
+            // end::incorrectcreds[]
+
+            // try to get a bucket
+            // tag::authexception[]
+            try
+            {
+                var bucket = cluster.OpenBucket("mybucket");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error getting bucket.");
+                Console.WriteLine(ex.Message);
+            }
+            // end::authexception[]
         }
     }
 }
