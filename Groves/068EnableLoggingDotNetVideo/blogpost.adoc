@@ -1,0 +1,9 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Logging with Log4Net and Common Logging
+:slug: Logging-with-Log4Net and Common Logging
+:focus-keyword: logging
+:categories: .NET, Couchbase Server
+:tags: .NET, Couchbase Server, C#, logging
+:heroimage: TBD
+

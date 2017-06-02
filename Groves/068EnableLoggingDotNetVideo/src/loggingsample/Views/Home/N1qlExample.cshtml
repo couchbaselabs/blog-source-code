@@ -1,0 +1,15 @@
+﻿@model List<loggingsample.Models.FooBar>
+@{
+    ViewBag.Title = "N1QL Example";
+}
+
+<h2>N1QL</h2>
+
+@if (!Model.Any())
+{
+    <p>No documents yet.</p>
+}
+@foreach (var foobar in Model)
+{
+    <p>Foo: @foobar.Foo ; Bar: @foobar.Bar</p>
+}

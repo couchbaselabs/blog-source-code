@@ -1,0 +1,107 @@
+Hi everyone, today I'm going to show you how to use Common Logging and log4net together with the Couchbase .NET SDK.
+
+Logging isn't terribly exciting, but when you run into problems and need help, it's important to be able to turn on logging and gather as much information as possible.
+
+If you've not used a logging framework before, it can be a bit overwhelming.
+
+Just go to NuGet.org or dotnetlogging.com and search logging and you'll be presented with a lot of choices.
+
+Should I use Loupe, NLog, Log4net, Enterprise Library, and so on?
+
+Fortunately, there's another project called "Common Logging" that aims to create a common interface
+between popular logging frameworks
+http://net-commons.github.io/common-logging/
+
+The Couchbase .NET SDK support common logging, which means you can plug in the logger of your choice
+
+I'm going to show you an example of using log4net, but other logging tools will be similar
+
+---
+
+First, I whipped up an ASP.NET application. It exercises the Couchbase .NET SDK with both key/value
+operations and N1QL queries.
+
+All this code is available for you on Github, see the link in the video notes.
+
+If I click "Key/Value" it will do two things: an operation to create a new document, and an operation
+to get that document back out (for display). [demonstrate] If I refresh the page, it will keep doing that.
+
+Now, if I go over to N1QL, it will run a SELECT query to display all the documents I've created. [demonstrate]
+
+---
+
+That's all this app does. Let's enable logging so we can see what the Couchbase SDK is doing.
+
+The first thing to notice is that CouchbaseNetClient has a dependency on Common.Logging.
+So when I installed CouchbaseNetClient with NuGet, I got Common.Logging with it.
+
+The next thing to do is install a Common.Logging adapter for log4net.
+I chose Common.Logging.Log4Net.Universal. When I installed this, it also installed log4net as
+a dependency.
+
+---
+
+Now, let's go to Web.Config.
+
+Let's start with configSections. I need a sectionGroup for common logging, which can just be called "logging".
+Then I need a section for log4net, called log4net.
+
+Down in the "common" section, I'll configure the Log4NetFactoryAdapter. If you are using NuGet, this part
+is probably already done for you.
+
+Finally, I need to configure log4net. Log4net has a rich configuration system, which is covered by
+their documentation, so I won't go into it too much here. I'm just going to have it append to a text file.
+so I set the "File" value to a LogFileLocation property. More on that in a bit.
+
+The other thing to point out of the conversionPattern in layout. This is a template of what log4net
+is going to write out to a file. I put an extra newline on here just to make it read nicer
+
+---
+
+Okay, last step is to go over to Global.asax.cs
+
+First thing right inside of Application_Start, I need to enable Log4Net
+by saying log4net.Config.XmlConfigurator.Configure();
+you can also do this in the AssemblyInfo.cs
+
+Another thing I want to do is actually define a value for the LogFileLocation token I used
+in web.config.
+I can do that by saying log4net.GlobalContext...
+I'm going to set it to a text file in the Logs folder of my ASP.NET application
+probably not a great place for it, but that's where I want it for this demo
+
+Once I've done all these things, I'll run the website.
+
+If I go to the "Logs" tab, it's just writing out the contents of that text file to a web page.
+There's a bunch of Couchbase setup stuff going on here. Configuration, bootstrapping, getting a vbucket map,
+and so on.
+
+Now let's go over to the key/value page. Let's refresh a few times to generate some documents.
+
+Next, I'll go over to the N1QL page. Refresh a few times to get a list.
+
+Now, let's go back and view the log file and see what's there.
+
+I'll scroll down near the bottom and look for "Sending Add" and "Sending Get"
+These indicate the key/value operations.
+
+Scrolling further, I'll look for "Sending query" and "Received query", indicating the N1QL
+query was sent to the server.
+
+---
+
+It's as easy as that. The next time you have a problem with Couchbase or anything else that uses
+Common Logging, you can just hook up log4net or your favorite logging tool and see what might
+be going wrong behind the scenes.
+
+Thanks for watching, be sure to check out blog.couchbase.com for more great .NET content. Thank you.
+
+----
+
+Video notes:
+
+How to use Common.Logging with a logging tool like log4net to log and help debug Couchbase .NET SDK activity.
+
+- github
+- https://blog.couchbase.com
+- 
