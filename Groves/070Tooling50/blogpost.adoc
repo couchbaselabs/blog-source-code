@@ -1,0 +1,88 @@
+:imagesdir: images
+:meta-description: Tooling improvements have come to Couchbase 5.0. This post covers visual query plans, query monitoring, improved UX/UI, and import/export tools.
+:title: Tooling Improvements in Couchbase 5.0 Beta
+:slug: Tooling-Improvements-Couchbase-5-Beta
+:focus-keyword: tooling
+:categories: Couchbase Server, N1QL / Query
+:tags: Couchbase Server, tooling, N1QL, performance, monitoring, import, export
+:heroimage: TBD
+
+Tooling improvements have come to link:https://www.couchbase.com/downloads[Couchbase Server 5.0 Beta]. In this blog post, I'm going to show you some of the tooling improvements in:
+
+* Query plan visualization - to better understand how a query is going to execute
+* Query monitoring - to see how a query is actually executing
+* Improved UX - highlighting the new Couchbase Web Console
+* Import/export - the new cbimport and cbexport tooling to import/export data
+
+Some of these topics have been covered in earlier blog posts for the developer builds (but not the Beta). For your reference:
+
+* link:https://blog.couchbase.com/using-cbimport-to-import-wikibase-data-to-json-documents/[Using cbimport to import Wikibase data to JSON documents]
+* link:https://blog.couchbase.com/a-tour-of-the-new-couchbase-web-console/[A tour of the new Couchbase Web Console]
+* link:https://blog.couchbase.com/a-tour-of-the-new-couchbase-web-console-video/[A tour of the new Couchbase Web Console (video)]
+* link:https://blog.couchbase.com/new-profiling-monitoring-couchbase-server-4-6/[New Profiling and Monitoring in Couchbase Server 5.0 Preview]
+* link:https://blog.couchbase.com/profiling-monitoring-update/[Profiling and Monitoring in Couchbase Server 5.0 Preview (Update)]
+* 
+
+== Query Plan Visualization tooling
+
+In order to help you write efficient queries, the tooling in Couchbase Server 5.0 has been enhanced to give you a Visual Query Plan when writing N1QL queries. If you've ever used the Query Plan feature in SQL Server Management Studio, this will feel very familiar to you.
+
+As a quick example, I'll write a `UNION` query against Couchbase's `travel-sample` bucket (optional sample data that ships with Couchbase Server). I do this by clicking "Query" to bring up the Couchbase Query Workbench and entering a query into the Query Editor.
+
+image:07001-query-editor-tooling.png[Query Editor tooling]
+
+This is a relatively complex query that involves the following steps (and more):
+
+1. Identify and scan the correct index(es)
+2. Fetch the corresponding data
+3. Project the fields named in the `SELECT` clause
+4. Find distinct results
+5. `UNION` the results together
+6. Stream the results back to the web console
+
+In Couchbase Server 4.x, you could use the `EXPLAIN` N1QL command to get an idea of the query plan, but in Couchbase Server 5.0 beta, you can view the plan visually.
+
+image:07002-query-plan-visualization-tooling.gif[Query Plan Visualization tooling]
+
+This tooling shows you, at a glance, the costliest parts of the query, which can help you identify improvements.
+
+== Query monitoring
+
+It's important to have tooling to actually monitor your queries as well. Couchbase Server 5.0 beta has tooling to monitor active, completed, and prepared queries. In additional, you have the ability to cancel queries that are in progress.
+
+Start by clicking "Query" on Web Console menu, and then click "Query Monitor". You'll see the "Active", "Completed", and "Prepared" options at the top of the page.
+
+Let's look at the "Completed" queries page. The query text and other information about the query is displayed in a table.
+
+image:07003-query-monitor.png[Query Monitor of completed queries]
+
+You can sort the table to see which query took the longest to run (duration), return the most results (result count), and so on. If you click "edit", you'll be taken to the Query Workbench with the text of that query.
+
+== New Couchbase Web Console
+
+If you've been following along, you've probably already noticed the new Couchbase Web Console. The UI has been given an overhaul in Couchbase Server 5.0. The goal is to improve navigation and optimize the UI.
+
+image:07004-couchbase-web-console-design.png[New Couchbase Web Console]
+
+This new design maximizes usability of existing features from Server 4.x, while leaving room to expand the feature set of 5.0 and beyond.
+
+== CBImport and CBExport
+
+Cbimport and cbexport are new pieces of command line tooling for moving data around.
+
+*cbimport* supports importing both CSV and JSON data. The link:https://developer.couchbase.com/documentation/server/current/tools/cbimport.html[documentation on cbimport] should tell you all you want to know, but I want to highlight a couple things:
+
+* You can load data from a URI by using the `-d,--dataset <uri>` flags
+* You can generate keys according to a template by using the `-g,--generate-key <key_expr>` flags. This gives you a powerful way to generate unique keys that fit your data model and access patterns
+* You can specify a variety of JSON formats when importing: JSON per line (`lines`), JSON list/array (`list`), JSON ZIP file/folder containing multiple files (`sample`). So no matter what format you receive JSON in, cbimport can handle it.
+
+*cbexport* exports data from Couchbase to file. Currently, only export to JSON format is supported. Again, the link:https://developer.couchbase.com/documentation/server/current/tools/cbexport.html[documentation on cbexport] will tell you what you want to know. A couple things to point out:
+
+* You can include the document key in your export by using the `--include-key <key>` flag.
+* You can export to either the lines or list format (see above) with cbexport.
+
+== Summary
+
+The tooling on link:https://www.couchbase.com/downloads[Couchbase Server 5.0 beta] is designed to make your life easier. Whether you're writing queries, integrating with data, monitoring, or performing administrative tasks, the UI has been improved for you.
+
+We're always looking for feedback. Inside of the Web Console, there is a feedback icon at the bottom right of the screen. You can click that to send us feedback about the tooling directly. Or, feel free to leave a comment below, or link:https://twitter.com/mgroves[reach out to me on Twitter @mgroves].
