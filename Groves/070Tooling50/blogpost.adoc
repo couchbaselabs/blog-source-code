@@ -5,7 +5,7 @@
 :focus-keyword: tooling
 :categories: Couchbase Server, N1QL / Query
 :tags: Couchbase Server, tooling, N1QL, performance, monitoring, import, export
-:heroimage: TBD
+:heroimage: 070-hero-tooling.jpg (public domain - https://pixabay.com/en/tool-devices-work-craft-allen-379595/)
 
 Tooling improvements have come to link:https://www.couchbase.com/downloads[Couchbase Server 5.0 Beta]. In this blog post, I'm going to show you some of the tooling improvements in:
 
