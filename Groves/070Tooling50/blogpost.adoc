@@ -21,7 +21,6 @@ Some of these topics have been covered in earlier blog posts for the developer b
 * link:https://blog.couchbase.com/a-tour-of-the-new-couchbase-web-console-video/[A tour of the new Couchbase Web Console (video)]
 * link:https://blog.couchbase.com/new-profiling-monitoring-couchbase-server-4-6/[New Profiling and Monitoring in Couchbase Server 5.0 Preview]
 * link:https://blog.couchbase.com/profiling-monitoring-update/[Profiling and Monitoring in Couchbase Server 5.0 Preview (Update)]
-* 
 
 == Query Plan Visualization tooling
 
