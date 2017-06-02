@@ -4636,3 +4636,2955 @@
 
 2017-06-02 10:40:43,575 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
 
+2017-06-02 10:40:53,588 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:40:53,588 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:40:53,588 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:40:53,589 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:40:53,589 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:40:53,589 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:40:53,589 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:40:53,589 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:40:53,589 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:41:03,589 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:41:03,589 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:41:03,589 [106] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:41:03,590 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:41:03,590 [106] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:41:03,590 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:41:03,590 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:41:03,590 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:41:03,590 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:41:13,590 [102] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:41:13,590 [102] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:41:13,590 [102] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:41:13,590 [102] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:41:13,591 [102] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:41:13,591 [102] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:41:13,591 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:41:13,591 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:41:13,591 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:41:23,591 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:41:23,591 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:41:23,591 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:41:23,591 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:41:23,591 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:41:23,591 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:41:23,591 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:41:23,591 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:41:23,591 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:41:33,605 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:41:33,605 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:41:33,605 [106] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:41:33,606 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:41:33,606 [106] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:41:33,606 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:41:33,606 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:41:33,606 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:41:33,606 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:41:43,620 [107] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:41:43,620 [107] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:41:43,620 [107] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:41:43,620 [107] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:41:43,620 [107] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:41:43,620 [107] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:41:43,620 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:41:43,620 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:41:43,620 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:41:53,621 [93] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:41:53,621 [93] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:41:53,621 [93] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:41:53,621 [93] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:41:53,621 [93] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:41:53,621 [93] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:41:53,621 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:41:53,621 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:41:53,621 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:42:03,635 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:42:03,635 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:42:03,635 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:42:03,636 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:42:03,636 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:42:03,636 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:42:03,636 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:42:03,636 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:42:03,636 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:42:13,638 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:42:13,638 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:42:13,638 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:42:13,638 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:42:13,638 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:42:13,638 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:42:13,638 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:42:13,639 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:42:13,639 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:42:23,638 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:42:23,638 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:42:23,638 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:42:23,639 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:42:23,639 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:42:23,639 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:42:23,639 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:42:23,639 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:42:23,639 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:42:33,650 [93] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:42:33,650 [93] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:42:33,650 [93] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:42:33,650 [93] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:42:33,650 [93] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:42:33,650 [93] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:42:33,650 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:42:33,651 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:42:33,651 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:42:43,650 [107] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:42:43,650 [107] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:42:43,650 [107] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:42:43,651 [107] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:42:43,651 [107] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:42:43,651 [107] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:42:43,651 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:42:43,651 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:42:43,651 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:42:53,652 [101] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:42:53,652 [101] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:42:53,652 [101] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:42:53,653 [101] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:42:53,653 [101] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:42:53,653 [101] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:42:53,653 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:42:53,653 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:42:53,653 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:43:03,669 [107] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:43:03,669 [107] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:43:03,669 [107] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:43:03,669 [107] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:43:03,669 [107] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:43:03,669 [107] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:43:03,669 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:43:03,669 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:43:03,669 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:43:13,681 [101] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:43:13,681 [101] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:43:13,681 [101] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:43:13,682 [101] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:43:13,682 [101] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:43:13,682 [101] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:43:13,682 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:43:13,682 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:43:13,682 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:43:23,683 [102] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:43:23,683 [102] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:43:23,683 [102] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:43:23,684 [102] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:43:23,684 [102] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:43:23,684 [102] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:43:23,684 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:43:23,684 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:43:23,684 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:43:33,697 [109] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:43:33,697 [109] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:43:33,697 [109] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:43:33,698 [109] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:43:33,698 [109] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:43:33,698 [109] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:43:33,698 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:43:33,698 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:43:33,698 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:43:43,697 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:43:43,697 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:43:43,697 [106] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:43:43,698 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:43:43,698 [106] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:43:43,698 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:43:43,698 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:43:43,698 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:43:43,698 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:43:53,698 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:43:53,698 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:43:53,698 [106] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:43:53,698 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:43:53,698 [106] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:43:53,698 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:43:53,698 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:43:53,699 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:43:53,699 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:44:03,699 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:44:03,699 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:44:03,699 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:44:03,700 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:44:03,700 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:44:03,700 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:44:03,700 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:44:03,700 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:44:03,700 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:44:13,714 [101] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:44:13,714 [101] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:44:13,714 [101] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:44:13,714 [101] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:44:13,715 [101] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:44:13,715 [101] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:44:13,715 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:44:13,715 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:44:13,715 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:44:23,715 [107] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:44:23,715 [107] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:44:23,715 [107] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:44:23,716 [107] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:44:23,716 [107] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:44:23,716 [107] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:44:23,716 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:44:23,716 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:44:23,716 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:44:33,729 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:44:33,729 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:44:33,729 [112] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:44:33,730 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:44:33,730 [112] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:44:33,730 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:44:33,730 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:44:33,730 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:44:33,730 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:44:43,744 [109] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:44:43,744 [109] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:44:43,744 [109] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:44:43,745 [109] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:44:43,745 [109] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:44:43,745 [109] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:44:43,745 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:44:43,745 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:44:43,745 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:44:53,746 [111] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:44:53,746 [111] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:44:53,746 [111] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:44:53,747 [111] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:44:53,747 [111] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:44:53,747 [111] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:44:53,747 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:44:53,747 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:44:53,747 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:45:03,761 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:45:03,761 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:45:03,761 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:45:03,762 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:45:03,762 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:45:03,762 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:45:03,762 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:45:03,762 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:45:03,762 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:45:13,763 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:45:13,763 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:45:13,763 [112] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:45:13,763 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:45:13,763 [112] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:45:13,763 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:45:13,763 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:45:13,763 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:45:13,764 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:45:23,764 [111] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:45:23,764 [111] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:45:23,764 [111] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:45:23,764 [111] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:45:23,764 [111] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:45:23,764 [111] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:45:23,765 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:45:23,765 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:45:23,765 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:45:33,776 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:45:33,776 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:45:33,776 [106] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:45:33,776 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:45:33,776 [106] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:45:33,776 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:45:33,776 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:45:33,777 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:45:33,777 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:45:43,777 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:45:43,777 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:45:43,777 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:45:43,778 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:45:43,778 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:45:43,778 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:45:43,778 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:45:43,778 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:45:43,778 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:45:53,778 [113] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:45:53,778 [113] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:45:53,778 [113] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:45:53,779 [113] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:45:53,779 [113] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:45:53,779 [113] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:45:53,779 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:45:53,779 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:45:53,779 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:46:03,791 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:46:03,791 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:46:03,791 [112] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:46:03,792 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:46:03,792 [112] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:46:03,792 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:46:03,792 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:46:03,792 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:46:03,792 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:46:13,792 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:46:13,792 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:46:13,792 [115] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:46:13,793 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:46:13,793 [115] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:46:13,793 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:46:13,793 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:46:13,793 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:46:13,793 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:46:23,807 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:46:23,807 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:46:23,807 [106] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:46:23,808 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:46:23,808 [106] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:46:23,808 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:46:23,808 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:46:23,808 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:46:23,808 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:46:33,808 [113] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:46:33,808 [113] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:46:33,808 [113] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:46:33,809 [113] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:46:33,809 [113] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:46:33,809 [113] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:46:33,809 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:46:33,809 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:46:33,809 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:46:43,822 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:46:43,822 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:46:43,822 [115] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:46:43,822 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:46:43,822 [115] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:46:43,823 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:46:43,823 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:46:43,823 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:46:43,823 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:46:53,823 [116] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:46:53,823 [116] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:46:53,823 [116] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:46:53,823 [116] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:46:53,824 [116] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:46:53,824 [116] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:46:53,824 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:46:53,824 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:46:53,824 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:47:03,824 [109] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:47:03,824 [109] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:47:03,824 [109] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:47:03,825 [109] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:47:03,825 [109] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:47:03,825 [109] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:47:03,825 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:47:03,825 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:47:03,825 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:47:13,837 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:47:13,837 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:47:13,837 [112] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:47:13,838 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:47:13,838 [112] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:47:13,838 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:47:13,838 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:47:13,838 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:47:13,838 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:47:23,838 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:47:23,838 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:47:23,838 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:47:23,839 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:47:23,839 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:47:23,839 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:47:23,839 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:47:23,839 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:47:23,839 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:47:33,854 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:47:33,854 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:47:33,854 [112] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:47:33,855 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:47:33,855 [112] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:47:33,855 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:47:33,855 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:47:33,855 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:47:33,855 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:47:43,856 [117] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:47:43,856 [117] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:47:43,856 [117] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:47:43,857 [117] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:47:43,857 [117] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:47:43,857 [117] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:47:43,857 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:47:43,857 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:47:43,857 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:47:53,857 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:47:53,857 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:47:53,857 [106] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:47:53,858 [106] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:47:53,858 [106] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:47:53,858 [106] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:47:53,858 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:47:53,858 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:47:53,858 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:48:03,870 [117] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:48:03,870 [117] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:48:03,870 [117] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:48:03,871 [117] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:48:03,871 [117] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:48:03,871 [117] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:48:03,871 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:48:03,871 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:48:03,871 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:48:13,871 [117] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:48:13,871 [117] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:48:13,871 [117] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:48:13,871 [117] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:48:13,871 [117] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:48:13,871 [117] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:48:13,872 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:48:13,872 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:48:13,872 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:48:23,873 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:48:23,873 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:48:23,873 [112] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:48:23,873 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:48:23,873 [112] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:48:23,873 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:48:23,873 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:48:23,873 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:48:23,874 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:48:33,886 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:48:33,886 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:48:33,886 [115] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:48:33,886 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:48:33,886 [115] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:48:33,886 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:48:33,887 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:48:33,887 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:48:33,887 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:48:43,903 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:48:43,903 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:48:43,903 [112] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:48:43,904 [112] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:48:43,904 [112] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:48:43,904 [112] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:48:43,904 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:48:43,904 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:48:43,904 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:48:53,916 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:48:53,916 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:48:53,916 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:48:53,917 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:48:53,917 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:48:53,917 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:48:53,917 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:48:53,917 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:48:53,917 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:49:03,917 [118] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:49:03,917 [118] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:49:03,917 [118] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:49:03,918 [118] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:49:03,918 [118] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:49:03,918 [118] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:49:03,918 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:49:03,918 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:49:03,918 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:49:13,918 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:49:13,918 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:49:13,918 [115] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:49:13,919 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:49:13,919 [115] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:49:13,919 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:49:13,919 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:49:13,919 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:49:13,919 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:49:23,919 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:49:23,919 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:49:23,919 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:49:23,921 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:49:23,921 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:49:23,921 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:49:23,921 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:49:23,921 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:49:23,921 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:49:33,932 [119] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:49:33,932 [119] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:49:33,932 [119] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:49:33,933 [119] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:49:33,933 [119] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:49:33,933 [119] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:49:33,933 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:49:33,933 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:49:33,933 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:49:43,948 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:49:43,948 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:49:43,948 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:49:43,949 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:49:43,949 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:49:43,949 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:49:43,949 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:49:43,949 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:49:43,949 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:49:53,950 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:49:53,950 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:49:53,950 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:49:53,951 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:49:53,951 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:49:53,951 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:49:53,951 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:49:53,951 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:49:53,951 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:50:03,962 [120] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:50:03,962 [120] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:50:03,962 [120] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:50:03,962 [120] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:50:03,962 [120] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:50:03,963 [120] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:50:03,963 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:50:03,963 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:50:03,963 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:50:13,978 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:50:13,978 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:50:13,978 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:50:13,979 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:50:13,979 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:50:13,979 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:50:13,979 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:50:13,979 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:50:13,979 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:50:23,980 [119] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:50:23,980 [119] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:50:23,980 [119] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:50:23,980 [119] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:50:23,980 [119] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:50:23,980 [119] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:50:23,980 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:50:23,980 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:50:23,980 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:50:33,981 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:50:33,981 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:50:33,981 [115] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:50:33,982 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:50:33,982 [115] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:50:33,982 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:50:33,982 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:50:33,982 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:50:33,982 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:50:43,997 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:50:43,997 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:50:43,997 [122] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:50:43,997 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:50:43,997 [122] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:50:43,997 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:50:43,997 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:50:43,998 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:50:43,998 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:50:54,011 [119] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:50:54,011 [119] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:50:54,011 [119] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:50:54,011 [119] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:50:54,011 [119] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:50:54,011 [119] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:50:54,011 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:50:54,011 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:50:54,011 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:51:04,012 [119] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:51:04,012 [119] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:51:04,012 [119] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:51:04,012 [119] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:51:04,012 [119] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:51:04,012 [119] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:51:04,012 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:51:04,012 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:51:04,012 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:51:14,025 [120] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:51:14,025 [120] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:51:14,025 [120] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:51:14,025 [120] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:51:14,025 [120] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:51:14,025 [120] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:51:14,025 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:51:14,025 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:51:14,025 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:51:24,027 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:51:24,027 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:51:24,027 [115] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:51:24,028 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:51:24,028 [115] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:51:24,028 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:51:24,028 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:51:24,028 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:51:24,028 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:51:34,041 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:51:34,041 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:51:34,041 [115] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:51:34,042 [115] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:51:34,042 [115] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:51:34,042 [115] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:51:34,042 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:51:34,042 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:51:34,042 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:51:44,043 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:51:44,043 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:51:44,043 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:51:44,043 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:51:44,043 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:51:44,043 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:51:44,043 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:51:44,043 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:51:44,043 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:51:54,057 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:51:54,057 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:51:54,057 [98] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:51:54,058 [98] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:51:54,058 [98] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:51:54,058 [98] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:51:54,058 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:51:54,058 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:51:54,058 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:52:04,072 [123] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:52:04,072 [123] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:52:04,072 [123] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:52:04,072 [123] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:52:04,072 [123] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:52:04,072 [123] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:52:04,073 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:52:04,073 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:52:04,073 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:52:14,072 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:52:14,072 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:52:14,072 [121] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:52:14,072 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:52:14,072 [121] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:52:14,072 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:52:14,072 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:52:14,072 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:52:14,072 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:52:24,088 [120] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:52:24,088 [120] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:52:24,088 [120] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:52:24,089 [120] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:52:24,089 [120] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:52:24,089 [120] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:52:24,089 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:52:24,089 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:52:24,089 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:52:34,103 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:52:34,103 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:52:34,103 [125] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:52:34,104 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:52:34,104 [125] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:52:34,104 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:52:34,104 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:52:34,104 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:52:34,104 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:52:44,105 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:52:44,105 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:52:44,105 [121] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:52:44,106 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:52:44,106 [121] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:52:44,106 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:52:44,106 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:52:44,106 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:52:44,106 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:52:54,106 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:52:54,106 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:52:54,106 [122] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:52:54,106 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:52:54,107 [122] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:52:54,107 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:52:54,107 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:52:54,107 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:52:54,107 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:53:04,119 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:53:04,119 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:53:04,119 [126] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:53:04,120 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:53:04,120 [126] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:53:04,120 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:53:04,120 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:53:04,120 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:53:04,120 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:53:14,121 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:53:14,121 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:53:14,121 [127] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:53:14,122 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:53:14,122 [127] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:53:14,122 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:53:14,122 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:53:14,122 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:53:14,122 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:53:24,138 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:53:24,138 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:53:24,138 [122] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:53:24,138 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:53:24,139 [122] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:53:24,139 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:53:24,139 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:53:24,139 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:53:24,139 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:53:34,151 [120] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:53:34,151 [120] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:53:34,151 [120] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:53:34,152 [120] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:53:34,152 [120] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:53:34,152 [120] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:53:34,152 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:53:34,152 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:53:34,152 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:53:44,152 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:53:44,152 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:53:44,152 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:53:44,153 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:53:44,153 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:53:44,153 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:53:44,153 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:53:44,153 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:53:44,153 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:53:54,166 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:53:54,166 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:53:54,166 [127] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:53:54,167 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:53:54,167 [127] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:53:54,167 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:53:54,167 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:53:54,167 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:53:54,167 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:54:04,167 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:54:04,167 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:54:04,167 [122] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:54:04,168 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:54:04,168 [122] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:54:04,168 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:54:04,168 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:54:04,168 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:54:04,168 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:54:14,169 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:54:14,169 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:54:14,169 [125] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:54:14,169 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:54:14,170 [125] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:54:14,170 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:54:14,170 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:54:14,170 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:54:14,170 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:54:24,181 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:54:24,181 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:54:24,181 [122] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:54:24,181 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:54:24,181 [122] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:54:24,181 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:54:24,181 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:54:24,181 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:54:24,181 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:54:34,182 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:54:34,182 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:54:34,182 [125] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:54:34,183 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:54:34,183 [125] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:54:34,183 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:54:34,183 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:54:34,183 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:54:34,183 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:54:44,199 [82] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:54:44,199 [82] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:54:44,199 [82] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:54:44,199 [82] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:54:44,199 [82] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:54:44,199 [82] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:54:44,200 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:54:44,200 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:54:44,200 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:54:54,215 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:54:54,215 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:54:54,215 [126] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:54:54,215 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:54:54,215 [126] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:54:54,215 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:54:54,215 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:54:54,215 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:54:54,215 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:55:04,215 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:55:04,215 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:55:04,215 [122] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:55:04,216 [122] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:55:04,216 [122] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:55:04,216 [122] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:55:04,216 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:55:04,216 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:55:04,216 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:55:14,229 [130] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:55:14,229 [130] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:55:14,229 [130] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:55:14,229 [130] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:55:14,229 [130] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:55:14,229 [130] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:55:14,229 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:55:14,229 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:55:14,229 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:55:24,245 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:55:24,245 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:55:24,245 [131] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:55:24,245 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:55:24,245 [131] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:55:24,245 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:55:24,246 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:55:24,246 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:55:24,246 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:55:34,259 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:55:34,259 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:55:34,259 [127] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:55:34,259 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:55:34,259 [127] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:55:34,259 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:55:34,260 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:55:34,260 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:55:34,260 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:55:44,261 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:55:44,261 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:55:44,261 [126] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:55:44,262 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:55:44,262 [126] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:55:44,262 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:55:44,262 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:55:44,262 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:55:44,262 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:55:54,264 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:55:54,264 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:55:54,264 [121] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:55:54,265 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:55:54,265 [121] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:55:54,265 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:55:54,265 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:55:54,265 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:55:54,265 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:56:04,276 [134] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:56:04,276 [134] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:56:04,276 [134] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:56:04,276 [134] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:56:04,276 [134] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:56:04,276 [134] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:56:04,276 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:56:04,276 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:56:04,276 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:56:14,277 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:56:14,277 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:56:14,277 [121] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:56:14,277 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:56:14,277 [121] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:56:14,277 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:56:14,278 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:56:14,278 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:56:14,278 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:56:24,290 [130] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:56:24,290 [130] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:56:24,290 [130] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:56:24,290 [130] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:56:24,290 [130] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:56:24,290 [130] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:56:24,291 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:56:24,291 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:56:24,291 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:56:34,292 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:56:34,292 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:56:34,292 [125] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:56:34,292 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:56:34,292 [125] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:56:34,292 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:56:34,292 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:56:34,292 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:56:34,292 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:56:44,307 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:56:44,307 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:56:44,307 [131] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:56:44,307 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:56:44,308 [131] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:56:44,308 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:56:44,308 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:56:44,308 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:56:44,308 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:56:54,324 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:56:54,324 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:56:54,324 [126] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:56:54,325 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:56:54,325 [126] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:56:54,325 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:56:54,325 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:56:54,325 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:56:54,325 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:57:04,325 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:57:04,325 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:57:04,325 [131] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:57:04,325 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:57:04,325 [131] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:57:04,325 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:57:04,325 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:57:04,325 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:57:04,325 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:57:14,338 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:57:14,338 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:57:14,338 [127] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:57:14,338 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:57:14,338 [127] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:57:14,338 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:57:14,338 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:57:14,338 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:57:14,338 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:57:24,353 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:57:24,353 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:57:24,353 [136] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:57:24,353 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:57:24,353 [136] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:57:24,354 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:57:24,354 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:57:24,354 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:57:24,354 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:57:34,355 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:57:34,355 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:57:34,355 [125] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:57:34,356 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:57:34,356 [125] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:57:34,356 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:57:34,356 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:57:34,356 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:57:34,356 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:57:44,356 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:57:44,356 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:57:44,356 [126] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:57:44,356 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:57:44,356 [126] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:57:44,357 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:57:44,357 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:57:44,357 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:57:44,357 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:57:54,369 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:57:54,369 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:57:54,369 [133] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:57:54,370 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:57:54,370 [133] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:57:54,370 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:57:54,370 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:57:54,370 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:57:54,370 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:58:04,371 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:58:04,371 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:58:04,371 [136] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:58:04,371 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:58:04,371 [136] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:58:04,371 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:58:04,371 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:58:04,371 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:58:04,371 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:58:14,385 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:58:14,385 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:58:14,385 [136] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:58:14,386 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:58:14,386 [136] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:58:14,386 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:58:14,386 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:58:14,386 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:58:14,386 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:58:24,386 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:58:24,386 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:58:24,386 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:58:24,387 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:58:24,387 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:58:24,387 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:58:24,387 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:58:24,387 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:58:24,387 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:58:34,387 [134] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:58:34,387 [134] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:58:34,387 [134] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:58:34,388 [134] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:58:34,388 [134] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:58:34,388 [134] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:58:34,388 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:58:34,388 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:58:34,388 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:58:44,402 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:58:44,402 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:58:44,402 [138] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:58:44,403 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:58:44,403 [138] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:58:44,403 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:58:44,403 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:58:44,403 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:58:44,403 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:58:54,404 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:58:54,404 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:58:54,404 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:58:54,404 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:58:54,404 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:58:54,404 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:58:54,405 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:58:54,405 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:58:54,405 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:59:04,404 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:59:04,404 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:59:04,404 [129] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:59:04,404 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:59:04,404 [129] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:59:04,404 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:59:04,405 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:59:04,405 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:59:04,405 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:59:14,417 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:59:14,417 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:59:14,417 [136] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:59:14,418 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:59:14,418 [136] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:59:14,418 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:59:14,418 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:59:14,418 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:59:14,418 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:59:24,432 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:59:24,432 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:59:24,432 [138] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:59:24,433 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:59:24,433 [138] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:59:24,433 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:59:24,433 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:59:24,433 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:59:24,433 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:59:34,449 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:59:34,449 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:59:34,449 [138] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:59:34,450 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:59:34,450 [138] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:59:34,450 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:59:34,450 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:59:34,450 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:59:34,450 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:59:44,450 [137] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:59:44,450 [137] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:59:44,450 [137] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:59:44,450 [137] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:59:44,450 [137] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:59:44,450 [137] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:59:44,450 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:59:44,450 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:59:44,450 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 10:59:54,464 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 10:59:54,464 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 10:59:54,464 [125] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 10:59:54,464 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 10:59:54,464 [125] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 10:59:54,464 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 10:59:54,464 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 10:59:54,464 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 10:59:54,464 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:00:04,464 [140] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:00:04,464 [140] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:00:04,464 [140] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:00:04,465 [140] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:00:04,465 [140] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:00:04,465 [140] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:00:04,465 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:00:04,465 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:00:04,465 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:00:14,465 [139] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:00:14,465 [139] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:00:14,465 [139] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:00:14,466 [139] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:00:14,466 [139] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:00:14,466 [139] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:00:14,466 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:00:14,466 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:00:14,466 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:00:24,466 [139] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:00:24,466 [139] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:00:24,466 [139] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:00:24,466 [139] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:00:24,466 [139] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:00:24,467 [139] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:00:24,467 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:00:24,467 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:00:24,467 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:00:34,468 [139] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:00:34,468 [139] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:00:34,468 [139] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:00:34,468 [139] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:00:34,468 [139] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:00:34,468 [139] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:00:34,468 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:00:34,468 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:00:34,468 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:00:44,482 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:00:44,482 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:00:44,482 [132] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:00:44,483 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:00:44,483 [132] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:00:44,483 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:00:44,483 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:00:44,483 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:00:44,483 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:00:54,494 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:00:54,494 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:00:54,494 [127] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:00:54,495 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:00:54,495 [127] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:00:54,495 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:00:54,495 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:00:54,495 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:00:54,495 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:01:04,495 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:01:04,495 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:01:04,495 [126] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:01:04,496 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:01:04,496 [126] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:01:04,496 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:01:04,496 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:01:04,496 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:01:04,496 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:01:14,510 [140] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:01:14,510 [140] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:01:14,510 [140] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:01:14,511 [140] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:01:14,511 [140] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:01:14,511 [140] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:01:14,511 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:01:14,511 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:01:14,511 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:01:24,511 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:01:24,511 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:01:24,511 [132] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:01:24,512 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:01:24,512 [132] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:01:24,512 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:01:24,512 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:01:24,512 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:01:24,512 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:01:34,513 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:01:34,513 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:01:34,513 [132] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:01:34,514 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:01:34,514 [132] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:01:34,514 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:01:34,514 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:01:34,514 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:01:34,514 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:01:44,528 [140] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:01:44,528 [140] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:01:44,528 [140] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:01:44,528 [140] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:01:44,528 [140] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:01:44,528 [140] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:01:44,528 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:01:44,528 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:01:44,528 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:01:54,528 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:01:54,528 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:01:54,528 [138] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:01:54,529 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:01:54,529 [138] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:01:54,529 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:01:54,529 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:01:54,529 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:01:54,529 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:02:04,543 [130] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:02:04,543 [130] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:02:04,543 [130] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:02:04,544 [130] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:02:04,544 [130] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:02:04,544 [130] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:02:04,544 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:02:04,544 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:02:04,544 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:02:14,559 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:02:14,559 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:02:14,559 [138] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:02:14,560 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:02:14,560 [138] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:02:14,560 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:02:14,560 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:02:14,560 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:02:14,560 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:02:24,561 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:02:24,561 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:02:24,561 [133] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:02:24,562 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:02:24,562 [133] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:02:24,562 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:02:24,562 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:02:24,562 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:02:24,562 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:02:34,573 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:02:34,573 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:02:34,573 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:02:34,574 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:02:34,574 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:02:34,574 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:02:34,574 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:02:34,574 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:02:34,574 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:02:44,589 [134] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:02:44,589 [134] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:02:44,589 [134] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:02:44,590 [134] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:02:44,590 [134] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:02:44,590 [134] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:02:44,590 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:02:44,590 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:02:44,590 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:02:54,590 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:02:54,590 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:02:54,590 [132] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:02:54,591 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:02:54,591 [132] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:02:54,591 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:02:54,591 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:02:54,591 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:02:54,591 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:03:04,591 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:03:04,591 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:03:04,591 [126] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:03:04,592 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:03:04,592 [126] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:03:04,592 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:03:04,592 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:03:04,592 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:03:04,592 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:03:14,603 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:03:14,603 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:03:14,603 [138] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:03:14,604 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:03:14,604 [138] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:03:14,604 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:03:14,604 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:03:14,604 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:03:14,604 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:03:24,604 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:03:24,604 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:03:24,604 [127] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:03:24,605 [127] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:03:24,605 [127] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:03:24,605 [127] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:03:24,605 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:03:24,605 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:03:24,605 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:03:34,606 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:03:34,606 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:03:34,606 [136] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:03:34,606 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:03:34,606 [136] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:03:34,606 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:03:34,606 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:03:34,606 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:03:34,606 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:03:44,620 [137] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:03:44,620 [137] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:03:44,620 [137] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:03:44,621 [137] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:03:44,621 [137] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:03:44,621 [137] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:03:44,621 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:03:44,621 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:03:44,621 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:03:54,622 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:03:54,622 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:03:54,622 [131] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:03:54,622 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:03:54,622 [131] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:03:54,622 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:03:54,623 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:03:54,623 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:03:54,623 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:04:04,621 [134] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:04:04,621 [134] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:04:04,621 [134] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:04:04,622 [134] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:04:04,622 [134] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:04:04,622 [134] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:04:04,622 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:04:04,622 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:04:04,622 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:04:14,635 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:04:14,635 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:04:14,635 [126] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:04:14,636 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:04:14,636 [126] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:04:14,636 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:04:14,636 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:04:14,636 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:04:14,636 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:04:24,637 [82] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:04:24,637 [82] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:04:24,637 [82] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:04:24,637 [82] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:04:24,637 [82] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:04:24,637 [82] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:04:24,637 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:04:24,637 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:04:24,637 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:04:34,638 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:04:34,638 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:04:34,638 [138] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:04:34,638 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:04:34,638 [138] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:04:34,638 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:04:34,638 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:04:34,639 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:04:34,639 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:04:44,652 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:04:44,652 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:04:44,652 [129] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:04:44,652 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:04:44,652 [129] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:04:44,652 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:04:44,653 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:04:44,653 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:04:44,653 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:04:54,666 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:04:54,666 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:04:54,666 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:04:54,667 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:04:54,667 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:04:54,667 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:04:54,667 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:04:54,667 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:04:54,667 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:05:04,668 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:05:04,668 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:05:04,668 [129] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:05:04,668 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:05:04,668 [129] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:05:04,668 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:05:04,668 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:05:04,668 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:05:04,668 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:05:14,670 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:05:14,670 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:05:14,670 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:05:14,671 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:05:14,671 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:05:14,671 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:05:14,671 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:05:14,671 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:05:14,671 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:05:24,681 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:05:24,681 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:05:24,681 [133] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:05:24,681 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:05:24,681 [133] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:05:24,682 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:05:24,682 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:05:24,682 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:05:24,682 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:05:34,683 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:05:34,683 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:05:34,683 [133] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:05:34,684 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:05:34,684 [133] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:05:34,684 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:05:34,684 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:05:34,684 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:05:34,684 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:05:44,686 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:05:44,686 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:05:44,686 [132] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:05:44,686 [132] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:05:44,686 [132] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:05:44,686 [132] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:05:44,687 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:05:44,687 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:05:44,687 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:05:54,699 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:05:54,699 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:05:54,699 [125] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:05:54,700 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:05:54,700 [125] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:05:54,700 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:05:54,700 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:05:54,700 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:05:54,700 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:06:04,700 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:06:04,700 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:06:04,700 [129] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:06:04,700 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:06:04,700 [129] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:06:04,700 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:06:04,700 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:06:04,700 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:06:04,700 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:06:14,713 [82] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:06:14,713 [82] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:06:14,713 [82] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:06:14,713 [82] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:06:14,714 [82] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:06:14,714 [82] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:06:14,714 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:06:14,714 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:06:14,714 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:06:24,715 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:06:24,715 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:06:24,715 [125] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:06:24,715 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:06:24,715 [125] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:06:24,715 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:06:24,716 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:06:24,716 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:06:24,716 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:06:34,729 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:06:34,729 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:06:34,729 [121] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:06:34,730 [121] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:06:34,730 [121] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:06:34,730 [121] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:06:34,730 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:06:34,730 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:06:34,730 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:06:44,731 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:06:44,731 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:06:44,731 [129] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:06:44,731 [129] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:06:44,731 [129] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:06:44,731 [129] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:06:44,731 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:06:44,731 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:06:44,731 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:06:54,746 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:06:54,746 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:06:54,746 [126] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:06:54,746 [126] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:06:54,746 [126] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:06:54,746 [126] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:06:54,746 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:06:54,746 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:06:54,746 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:07:04,746 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:07:04,746 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:07:04,746 [87] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:07:04,746 [87] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:07:04,746 [87] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:07:04,746 [87] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:07:04,746 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:07:04,746 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:07:04,746 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:07:14,761 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:07:14,761 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:07:14,761 [138] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:07:14,761 [138] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:07:14,761 [138] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:07:14,761 [138] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:07:14,761 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:07:14,761 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:07:14,761 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:07:24,761 [82] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:07:24,761 [82] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:07:24,761 [82] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:07:24,761 [82] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:07:24,762 [82] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:07:24,762 [82] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:07:24,762 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:07:24,762 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:07:24,762 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:07:34,776 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:07:34,776 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:07:34,776 [136] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:07:34,777 [136] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:07:34,777 [136] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:07:34,777 [136] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:07:34,777 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:07:34,777 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:07:34,777 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:07:44,792 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:07:44,792 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:07:44,792 [131] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:07:44,793 [131] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:07:44,793 [131] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:07:44,793 [131] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:07:44,793 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:07:44,793 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:07:44,793 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:07:54,809 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:07:54,809 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:07:54,809 [125] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:07:54,810 [125] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:07:54,810 [125] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:07:54,810 [125] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:07:54,810 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:07:54,810 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:07:54,810 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
+2017-06-02 11:08:04,824 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking configs...
+
+2017-06-02 11:08:04,824 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Using index 0 - server Couchbase.Core.Server
+
+2017-06-02 11:08:04,824 [133] DEBUG Couchbase.Core.Server - Sending Config with key  using server 127.0.0.1:11210
+
+2017-06-02 11:08:04,825 [133] INFO Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Checking config with revision #29
+
+2017-06-02 11:08:04,825 [133] DEBUG Couchbase.Core.ClusterController - Queueing config rev#29 for [mybucket].
+
+2017-06-02 11:08:04,825 [133] DEBUG Couchbase.Configuration.Server.Monitoring.ConfigMonitor - Waiting to check configs...
+
+2017-06-02 11:08:04,825 [CT] DEBUG Couchbase.Core.ClusterController - Processing config rev#29
+
+2017-06-02 11:08:04,825 [CT] DEBUG Couchbase.Configuration.Server.Providers.ConfigProviderBase - 1. Checking config with rev#29 on thread 37
+
+2017-06-02 11:08:04,825 [CT] INFO Couchbase.Configuration.Server.Providers.ConfigProviderBase - Ignoring config with rev#29
+
