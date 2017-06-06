@@ -1,13 +1,13 @@
 :imagesdir: images
-:meta-description: TBD
-:title: Authentication and Authorization with RBAC (Part 2)
+:meta-description: Authentication and authorization are important to Couchbase. I'd like to go into more detail now that the April Couchbase 5.0 Developer Build is available.
+:title: Authorization and Authentication with RBAC (Part 2)
 :slug: Authentication-Authorization-RBAC-part-2
 :focus-keyword: authorization
 :categories: Security, Couchbase Server
 :tags: Couchbase Server, authentication, authorization, security, RBAC
 :heroimage: 059-Hero-Key-Locks-Security-Authentication-Authorization.jpg
 
-Authentication and authorization are important to Couchbase. In March, link:https://blog.couchbase.com/authentication-authorization-rbac/[I blogged about some of the new Role Based Access Control (RBAC)] that we are showing in the Couchbase Server 5.0 Developer Builds. This month, I'd like to go into a little more detail now that the link:https://www.couchbase.com/downloads[April Couchbase Server 5.0 Developer Build is available] (make sure to click the "Developer" tab).
+Authorization and authentication are important to Couchbase. In March, link:https://blog.couchbase.com/authentication-authorization-rbac/[I blogged about some of the new Role Based Access Control (RBAC)] that we are showing in the Couchbase Server 5.0 Developer Builds. This month, I'd like to go into a little more detail now that the link:https://www.couchbase.com/downloads[April Couchbase Server 5.0 Developer Build is available] (make sure to click the "Developer" tab).
 
 == Authentication and authorization
 
@@ -98,7 +98,7 @@ image:06605-create-new-user-with-rest.png[Create a new user with a REST command]
 
 The RBAC system is far too rich to cover in a single blog post, and full documentation is on its way. In the meantime, here are some details that might help you get started with the preview:
 
-* You may have noticed the `all` option in the screenshots above. You can give a user roles on a bucket-by-bucket basis, or you can give permission to *all* buckets (even buckets that haven't been created yet.
+* You may have noticed the `all` option in the screenshots above. You can give a user roles on a bucket-by-bucket basis, or you can give permission to *all* buckets (even buckets that haven't been created yet).
 * I covered FTS permissions in the previous blog post, but there are permissions that cover just about everything: views, bucket administration, backup, monitoring, DCP, indexes, etc.
 * You can't create buckets with a password anymore. The equivalent is to instead create a user with the name as the bucket, and give it authorization to a role called "Bucket Full Access". This will be useful for upgrading and transitioning purposes.
 

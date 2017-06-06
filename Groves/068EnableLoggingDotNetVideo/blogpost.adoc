@@ -1,0 +1,20 @@
+:imagesdir: images
+:meta-description: How to use Common.Logging with a logging tool like log4net to log and help debug Couchbase .NET SDK activity.
+:title: Logging with Log4Net and Common Logging
+:slug: Logging-Log4Net-Common-Logging
+:focus-keyword: logging
+:categories: .NET, Couchbase Server
+:tags: .NET, Couchbase Server, C#, logging
+:heroimage: 068-hero-image-archive-logging-storage.jpg [Licensed from Aude through Creative Commons - https://commons.wikimedia.org/wiki/File:Archives_of_American_Art_storage.jpg]
+
+Logging with Common.Logging, log4net, and the Couchbase .NET SDK is demonstrated in this video.
+
+The link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/068EnableLoggingDotNetVideo/src[source code for the logging example] used in this video is available on Github.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pi-X8dhaIaQ" frameborder="0" allowfullscreen></iframe>
++++
+
+For more information about logging, check out the link:https://developer.couchbase.com/documentation/server/5.0/sdk/dotnet/collecting-information-and-logging.html[logging documentation] on the developer portal.
+
+If you have questions or feedback, please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com], or on link:https://twitter.com/mgroves[@mgroves at Twitter], or just leave a comment below.
