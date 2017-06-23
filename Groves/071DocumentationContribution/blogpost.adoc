@@ -1,0 +1,73 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Automating Couchbase's Documentation and Contribution
+:slug: Automating-Couchbase-Documentation-Contribution
+:focus-keyword: documentation
+:categories: Couchbase Server
+:tags: Couchbase Server, documentaiton, git, github
+:heroimage: 071-hero-documentation-shelves.jpg (https://commons.wikimedia.org/wiki/File:UNOG_Library_UN_General_Assembly_Documents.JPG creative commons)
+
+[summary]
+
+three problems: build process, content review, backporting, Contribution
+
+Matt Carabine
+
+== Contribution
+
+where do I look to make a change?
+What file do I change?
+what file maps to the doc page I'm looking at?
+How do I change it?
+
+[animated gif showing "Edit on Github" link]
+
+click 'edit on github'
+make a change
+commit
+create pull request
+runs through a build process
+content goes up for review, a link is generated in the PR
+the content is reviewable as rendered, instead of having to look at XML directly
+
+* https://github.com/couchbase/docs-cb4/pull/1725
+* https://github.com/couchbase/docs-cb4/pull/1696
+* https://github.com/couchbase/docs-cb4/pull/1632
+* https://github.com/couchbase/docs-cb4/pull/1585
+* https://github.com/couchbase/docs-cb4/pull/1366
+* https://github.com/couchbase/docs-cb4/pull/1414
+* https://github.com/couchbase/docs-cb4/pull/1457
+* https://github.com/couchbase/docs-cb4/pull/1365
+* https://github.com/couchbase/docs-cb4/pull/1180
+
+https://github.com/couchbase/docs-cb4/blob/master/CONTRIBUTING.md
+
+== Improvements to get here
+
+to make contribution easier, the build process had to be improved
+previously it involved a bunch of manual steps: pull, build, zip, FTP, run a couple of slow jenkins tasks manually (one to staging, one to production)
+
+reviewing content was also improved
+previously it went to only one place (slow jenkins process), no simultaneous review without merging - only one set at a time
+so there's "verbal locking"
+
+backporting was also a problem: when documentation needs to apply to older documentation (5.x, 4.x, 3.x of Couchbase Server)
+the documentation is stored in separate branches for each version
+if an issue is raised and fixed in 4.x, it may also apply to 3.x and 5.x branch, but that's a very manual process
+ended up in situations where documentation is inconsistent
+on github, use @cb-docs-robot backport to 4.5, which creates another pull request in the backport branch
+
+== Future
+
+Add a automated link checker for broken links
+Improve backporting even more with a unified structure, versino tagging
+
+documentation is/was written in "Dita", an XML markup language
+so Oxygen XML editor in-browser
+
+but more people are familiar with markdown than ditto
+reviewing pull requests is tough: markdown is rendered in github but not ditto
+
+== Summary
+
+improvements help us improve both internally and externally
