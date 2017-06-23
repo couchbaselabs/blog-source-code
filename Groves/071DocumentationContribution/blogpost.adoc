@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: Documentation is being improved. The build process, backporting, review improvements are all working to make it easier to contribute to documentation in the process.
 :title: Automating Couchbase's Documentation and Contribution
 :slug: Automating-Couchbase-Documentation-Contribution
 :focus-keyword: documentation
@@ -7,67 +7,80 @@
 :tags: Couchbase Server, documentaiton, git, github
 :heroimage: 071-hero-documentation-shelves.jpg (https://commons.wikimedia.org/wiki/File:UNOG_Library_UN_General_Assembly_Documents.JPG creative commons)
 
-[summary]
+Documentation is undergoing some changes for the better at Couchbase. Matt Carabine and the documentation team have been working to improve the build process, backporting, and review. And, they have made it easier to contribute to documentation in the process.
 
-three problems: build process, content review, backporting, Contribution
+== Contributing to the documentation
 
-Matt Carabine
+Couchbase documentation is open source, but until recently, there were a number of problems. If you were looking to make a substantial change or maybe just fix a quick typo, you were faced with one or more of these questions:
 
-== Contribution
+* Where do I look to make a change?
+* What file do I change?
+* What file maps to the doc page I'm looking at?
+* How do I change it?
 
-where do I look to make a change?
-What file do I change?
-what file maps to the doc page I'm looking at?
-How do I change it?
+It was not always clear how to go from a documentation URL to a specific file in the Github repository.
 
-[animated gif showing "Edit on Github" link]
+Now, that's changed. If you visit a page in the documentation, you will notice an "Edit on GitHub" link on each page. Click this link and you'll be taken to GitHub to edit the file directly (your first time, you will be prompted to create a fork).
 
-click 'edit on github'
-make a change
-commit
-create pull request
-runs through a build process
-content goes up for review, a link is generated in the PR
-the content is reviewable as rendered, instead of having to look at XML directly
+== Example
 
-* https://github.com/couchbase/docs-cb4/pull/1725
-* https://github.com/couchbase/docs-cb4/pull/1696
-* https://github.com/couchbase/docs-cb4/pull/1632
-* https://github.com/couchbase/docs-cb4/pull/1585
-* https://github.com/couchbase/docs-cb4/pull/1366
-* https://github.com/couchbase/docs-cb4/pull/1414
-* https://github.com/couchbase/docs-cb4/pull/1457
-* https://github.com/couchbase/docs-cb4/pull/1365
-* https://github.com/couchbase/docs-cb4/pull/1180
+First, visit the link:https://developer.couchbase.com/documentation/server/4.6/clustersetup/setup-failover-graceful.html[Using Graceful Failover] page in the documentation.
 
-https://github.com/couchbase/docs-cb4/blob/master/CONTRIBUTING.md
+Next, click the "Edit on GitHub" link.
 
-== Improvements to get here
+image:071001-documentation-edit-on-github-link.gif[Documentation edit on GitHub link]
 
-to make contribution easier, the build process had to be improved
-previously it involved a bunch of manual steps: pull, build, zip, FTP, run a couple of slow jenkins tasks manually (one to staging, one to production)
+At this point, you're on GitHub. Assuming you've used Git/GitHub before, the rest of this process should be familiar.
 
-reviewing content was also improved
-previously it went to only one place (slow jenkins process), no simultaneous review without merging - only one set at a time
-so there's "verbal locking"
+If you've not already created a fork, you will be prompted to do so.
 
-backporting was also a problem: when documentation needs to apply to older documentation (5.x, 4.x, 3.x of Couchbase Server)
-the documentation is stored in separate branches for each version
-if an issue is raised and fixed in 4.x, it may also apply to 3.x and 5.x branch, but that's a very manual process
-ended up in situations where documentation is inconsistent
-on github, use @cb-docs-robot backport to 4.5, which creates another pull request in the backport branch
+After that, you will see an edit screen where you can make your change.
 
-== Future
+Once you've made a change, click the "Propose file change". You'll see a diff, and you'll be able to create a pull request.
 
-Add a automated link checker for broken links
-Improve backporting even more with a unified structure, versino tagging
+== Contibution guide
 
-documentation is/was written in "Dita", an XML markup language
-so Oxygen XML editor in-browser
+That's a crash course on contributing to the documentation. There's a link:https://github.com/couchbase/docs-cb4/blob/master/CONTRIBUTING.md[full guide on how to contribute to Couchbase Service Documentation].
 
-but more people are familiar with markdown than ditto
-reviewing pull requests is tough: markdown is rendered in github but not ditto
+Note that while that guide is written in Markdown, Couchbase Server documentation is written in the link:https://docs.oasis-open.org/dita/v1.2/cs01/spec/archSpec/ditamarkup.html[Darwin Information Typing Architecture (DITA) markup language].
+
+For simple typo corrections, you may not need to know much about DITA, but for deeper edits, you will need to familiarize yourself with the syntax and/or an editing tool like link:https://www.oxygenxml.com/xml_author.html[Oxygen].
+
+== Documentation contributions
+
+Thank you to those in the community who have already contributed! This new system has only been going for a few couple months, but we've already gotten some great contributions. So I tip my hat to: 
+
+* eunosm3 for link:https://github.com/couchbase/docs-cb4/pull/1180[#1180 - better shortdesc for manage caching layer architecture]
+* atom992 for link:https://github.com/couchbase/docs-cb4/pull/1365[#1365 - correcting a flag for cbexport]
+* Sir4ur0n for link:https://github.com/couchbase/docs-cb4/pull/1366[#1366 - fixing a N1QL typo]
+* ptorsson for link:https://github.com/couchbase/docs-cb4/pull/1414[#1414 - correcting some Go SDK examples]
+* MarkTickner for link:https://github.com/couchbase/docs-cb4/pull/1457[#1457 - adding documentation for the REST API services parameter]
+* ecejnj42 for link:https://github.com/couchbase/docs-cb4/pull/1585[#1585 - fixing misplaced options in durability area]
+* rabdill for link:https://github.com/couchbase/docs-cb4/pull/1632[#1632 - fixing a typo in Go N1QL examples]
+* GauthamBanasandra for link:https://github.com/couchbase/docs-cb4/pull/1696[#1696 - fixing some grammer in the subdocuments area]
+* oxyrax for link:https://github.com/couchbase/docs-cb4/pull/1725[#1725 - correcting a setting for cbbackupmgr]
+
+It astounds me that we had such great contributions from so many people so quickly! Thank you, everyone, for helping to make the documentation better.
+
+== How did we get here
+
+To make contribution easier, the build process had to be improved. Previously, it involved a bunch of manual steps: pull source, build locally, zip up the results, FTP them to a server, run one or more slow build server tasks manually. Now you'll see that the build step happens much more quickly in the pull request, and previews are generated quickly.
+
+The reviewing of content was also improved. Previously, previews were only possible on a single location. There was no simultaneous reviewing possible. This, combined with the slow, manual builds, was frustrating, and made it difficult to review all changes, let alone external ones.
+
+Finally, backporting to other versions of Couchbase Server documenation was also a problem. The documentation is stored in separate branches for each version, so if an issue is raised and fixed in 4.6, it may also apply to 4.5, and so on. That's a very manual process, but a @cb-docs-robot was created to automate the backporting (which you'll see in many of the above examples).
+
+== The Future of Documentation
+
+There's some more improvements coming in the future:
+
+* An automated link checker for broken links, to bring them to our attention more quickly and reliably.
+* Improve backporting with a unified structure and version tagging
+* An Oxygen XML editor in-browser, to make it easier to read/write DITA
 
 == Summary
 
-improvements help us improve both internally and externally
+These documentation improvements help us both internally and externally. We hope that it will make your experience with the documentation less frustrating and more enjoyable. We welcome your feedback! Please check out the link:https://github.com/couchbase/docs-cb4[Couchbase documentation] on GitHub.
+
+
+
