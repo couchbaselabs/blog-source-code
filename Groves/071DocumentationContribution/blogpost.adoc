@@ -48,7 +48,7 @@ For simple typo corrections, you may not need to know much about DITA, but for d
 
 == Documentation contributions
 
-Thank you to those in the community who have already contributed! This new system has only been going for a few couple months, but we've already gotten some great contributions. So I tip my hat to: 
+Thank you to those in the community who have already contributed! This new system has only been going for a few months, but we've already gotten some great contributions. So I tip my hat to: 
 
 * eunosm3 for link:https://github.com/couchbase/docs-cb4/pull/1180[#1180 - better shortdesc for manage caching layer architecture]
 * atom992 for link:https://github.com/couchbase/docs-cb4/pull/1365[#1365 - correcting a flag for cbexport]
