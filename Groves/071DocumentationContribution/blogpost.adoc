@@ -38,7 +38,7 @@ After that, you will see an edit screen where you can make your change.
 
 Once you've made a change, click the "Propose file change". You'll see a diff, and you'll be able to create a pull request.
 
-== Contibution guide
+== Contribution guide
 
 That's a crash course on contributing to the documentation. There's a link:https://github.com/couchbase/docs-cb4/blob/master/CONTRIBUTING.md[full guide on how to contribute to Couchbase Server docs].
 
