@@ -1,7 +1,7 @@
 :imagesdir: images
-:meta-description: Documentation is being improved. The build process, backporting, review improvements are all working to make it easier to contribute to documentation in the process.
-:title: Automating Couchbase's Documentation and Contribution
-:slug: Automating-Couchbase-Documentation-Contribution
+:meta-description: Documentation is being improved. The build process, backporting, review improvements are making it easier to contribute to documentation in the process.
+:title: Documentation Contribution and Improvements
+:slug: Documentation-Contribution-Improvements
 :focus-keyword: documentation
 :categories: Couchbase Server
 :tags: Couchbase Server, documentaiton, git, github
@@ -28,7 +28,7 @@ First, visit the link:https://developer.couchbase.com/documentation/server/4.6/c
 
 Next, click the "Edit on GitHub" link.
 
-image:071001-documentation-edit-on-github-link.gif[Documentation edit on GitHub link]
+image:07101-documentation-edit-on-github-link.gif[Documentation edit on GitHub link]
 
 At this point, you're on GitHub. Assuming you've used Git/GitHub before, the rest of this process should be familiar.
 
@@ -40,7 +40,7 @@ Once you've made a change, click the "Propose file change". You'll see a diff, a
 
 == Contibution guide
 
-That's a crash course on contributing to the documentation. There's a link:https://github.com/couchbase/docs-cb4/blob/master/CONTRIBUTING.md[full guide on how to contribute to Couchbase Service Documentation].
+That's a crash course on contributing to the documentation. There's a link:https://github.com/couchbase/docs-cb4/blob/master/CONTRIBUTING.md[full guide on how to contribute to Couchbase Server docs].
 
 Note that while that guide is written in Markdown, Couchbase Server documentation is written in the link:https://docs.oasis-open.org/dita/v1.2/cs01/spec/archSpec/ditamarkup.html[Darwin Information Typing Architecture (DITA) markup language].
 
@@ -54,7 +54,7 @@ Thank you to those in the community who have already contributed! This new syste
 * atom992 for link:https://github.com/couchbase/docs-cb4/pull/1365[#1365 - correcting a flag for cbexport]
 * Sir4ur0n for link:https://github.com/couchbase/docs-cb4/pull/1366[#1366 - fixing a N1QL typo]
 * ptorsson for link:https://github.com/couchbase/docs-cb4/pull/1414[#1414 - correcting some Go SDK examples]
-* MarkTickner for link:https://github.com/couchbase/docs-cb4/pull/1457[#1457 - adding documentation for the REST API services parameter]
+* MarkTickner for link:https://github.com/couchbase/docs-cb4/pull/1457[#1457 - adding docs for the REST API services parameter]
 * ecejnj42 for link:https://github.com/couchbase/docs-cb4/pull/1585[#1585 - fixing misplaced options in durability area]
 * rabdill for link:https://github.com/couchbase/docs-cb4/pull/1632[#1632 - fixing a typo in Go N1QL examples]
 * GauthamBanasandra for link:https://github.com/couchbase/docs-cb4/pull/1696[#1696 - fixing some grammer in the subdocuments area]
@@ -62,7 +62,7 @@ Thank you to those in the community who have already contributed! This new syste
 
 It astounds me that we had such great contributions from so many people so quickly! Thank you, everyone, for helping to make the documentation better.
 
-== How did we get here
+== How did we get here?
 
 To make contribution easier, the build process had to be improved. Previously, it involved a bunch of manual steps: pull source, build locally, zip up the results, FTP them to a server, run one or more slow build server tasks manually. Now you'll see that the build step happens much more quickly in the pull request, and previews are generated quickly.
 
@@ -70,17 +70,17 @@ The reviewing of content was also improved. Previously, previews were only possi
 
 Finally, backporting to other versions of Couchbase Server documenation was also a problem. The documentation is stored in separate branches for each version, so if an issue is raised and fixed in 4.6, it may also apply to 4.5, and so on. That's a very manual process, but a @cb-docs-robot was created to automate the backporting (which you'll see in many of the above examples).
 
-== The Future of Documentation
+== How are we doing?
 
-There's some more improvements coming in the future:
+Another thing we've added is the ability to give us feedback on the documentation right from your browser.
 
-* An automated link checker for broken links, to bring them to our attention more quickly and reliably.
-* Improve backporting with a unified structure and version tagging
-* An Oxygen XML editor in-browser, to make it easier to read/write DITA
+image:07102-documentation-feedback.gif[Documentation feedback]
+
+Simply find the *"Feedback On This Page"* button at the bottom right of your browser, click it, and write feedback.
 
 == Summary
 
-These documentation improvements help us both internally and externally. We hope that it will make your experience with the documentation less frustrating and more enjoyable. We welcome your feedback! Please check out the link:https://github.com/couchbase/docs-cb4[Couchbase documentation] on GitHub.
+These documentation improvements help us both internally and externally. We hope that it will make your experience with the documentation less frustrating and more enjoyable. We welcome your feedback! Please check out the link:https://github.com/couchbase/docs-cb4[Couchbase docs] on GitHub.
 
 
 
