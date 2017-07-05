@@ -81,6 +81,3 @@ Simply find the *"Feedback On This Page"* button at the bottom right of your bro
 == Summary
 
 These documentation improvements help us both internally and externally. We hope that it will make your experience with the documentation less frustrating and more enjoyable. We welcome your feedback! Please check out the link:https://github.com/couchbase/docs-cb4[Couchbase docs] on GitHub.
-
-
-
