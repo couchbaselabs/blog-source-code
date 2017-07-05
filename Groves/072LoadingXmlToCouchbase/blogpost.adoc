@@ -1,0 +1,97 @@
+:imagesdir: images
+:meta-description: Convert XML to JSON, using Newtonsoft's Json.NET, and store it in Couchbase Server.
+:title: XML to JSON conversion with .NET
+:slug: XML-JSON-conversion-dotnet
+:focus-keyword: xml
+:categories: Couchbase Server, .NET
+:tags: Couchbase Server, XML, Json, .NET, C#
+:heroimage: 072-hero-xml.png (https://commons.wikimedia.org/wiki/File:XML_icon.svg)
+
+XML data can be converted to JSON, which can be loaded into Couchbase. Depending on the source of the data, you might be able to use a tool like link:https://developer.couchbase.com/documentation/server/current/connectors/talend/talend.html[Talend]. But you may also want to write a simple C# .NET application with link:http://www.newtonsoft.com/json[Newtonsoft's Json.NET] to do it.
+
+== XML data
+
+For the purposes of this tutorial, I'm going to use a very simple XML example. If your XML is more complex (multiple attributes, for instance), then your approach will also have to be more complex. (Json.NET can handle all XML to Json conversions, but it follows a specific set of link:http://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm[conversion rules]). Here's a sample piece of data in XML format:
+
+[source,C#,indent=0]
+----
+include::LoadingXml/LoadingXml/Program.cs[tag=xml]
+----
+
+Notice that I've got this XML as a hardcoded string in C#. In a real-life situation, you would likely be pulling XML from a database, a REST API, XML files, etc.
+
+Once you have the raw XML, you can create an `XmlDocument` object (`XmlDocument` lives in the `System.Xml` namespace).
+
+[source,C#,indent=0]
+----
+include::LoadingXml/LoadingXml/Program.cs[tag=xmldocument]
+----
+
+== XML conversion with Json.NET
+
+Once you have an `XmlDocument` object, you can use Json.NET to convert that object into a Json representation.
+
+[source,C#,indent=0]
+----
+include::LoadingXml/LoadingXml/Program.cs[tag=jsonconvert]
+----
+
+In this example, I'm asking Json.NET to serialize an XML node:
+
+* I used `Formatting.None`. If I wanted to display the actual Json, it might be better to use `Formatting.Indented`
+* The last `true` specifies if I want to omit the root object. In the XML above, you can think of `<Invoice></Invoice>` as the root object. I just want the values of the Invoice object. If I didn't omit the root node, the resultant Json would look like: `{"Invoice":{"Timestamp":"1/1/2017 00:01","CustNumber":"12345","AcctNumber":"54321"}}`
+
+== Saving the Json result
+
+Finally, let's put the Json into Couchbase. The easiest way to do this would be to again call on `JsonConvert` to deserialize the Json into a C# `object`. That object would then be used with Couchbase's `bucket.Insert(...)` method.
+
+[source,C#,indent=0]
+----
+include::LoadingXml/LoadingXml/Program.cs[tag=insertobject]
+----
+
+With this method, the Json would be stored in Couchbase like so:
+
+[source,JavaScript,indent=0]
+----
+{
+  "Timestamp": "1/1/2017 00:01",
+  "CustNumber": "12345",
+  "AcctNumber": "54321"
+}
+----
+
+That might be fine, but often times you're going to want more control of the format. With Json.NET, we can serialize to a given class, instead of just `object`. Let's create an `Invoice` class like so:
+
+[source,C#,indent=0]
+----
+include::LoadingXml/LoadingXml/Program.cs[tag=invoiceclass]
+----
+
+Notice that there is some type information now. The Timestamp is a `DateTime` and the AcctNumber is an integer. The conversion will still work, but the result will be different, according to link:http://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm[Json.NET's conversion rules]. (Also check out the link:http://www.newtonsoft.com/json/help/html/Introduction.htm[full Json.NET documentation] if you aren't familiar with it already).
+
+[source,C#,indent=0]
+----
+include::LoadingXml/LoadingXml/Program.cs[tag=insertobject2]
+----
+
+The result of that insert will look like:
+
+[source,JavaScript,indent=0]
+----
+{
+  "timestamp": "2017-01-01T00:01:00",
+  "custNumber": "12345",
+  "acctNumber": 54321
+}
+----
+
+* Notice that the timestamp field is different: it's stored in a more standardized way.
+* The acctNumber field value is not in quotes, indicating that it's being stored as a number.
+* Finally, notice that the field names are different. This is due to the way Json.NET names Json fields by default. You can specify different names if you need to using the `JsonProperty` attribute.
+
+== That's it
+
+One more minor thing to point out: I used `Guid.NewGuid.ToString()` to create arbitrary keys for the documents. If you have a value in the XML data that you want to use for a key, you could/should use that value instead.
+
+This blog post was inspired by an email conversation with a Couchbase user. If you have any suggestions on tools, tips, or tricks to make this process easier, please let me know. You can link:mailto:matthew.groves@couchbase.com[email me] or link:https://twitter.com/mgroves[contact me @mgroves on Twitter].
