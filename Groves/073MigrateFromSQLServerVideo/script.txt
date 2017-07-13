@@ -1,0 +1,170 @@
+reset: GetTenLatestShoppingCarts in CouchbaseShoppingCartRepository
+
+Hi everyone! Today I'm going to compare and contrast SQL Server and Couchbase Server
+within an ASP.NET Web application.
+
+# first slide
+
+The example code in this video shows an either/or situation
+It's all SQL or it's all Couchbase
+
+But in real projects, SQL and Couchbase can work side by side
+
+Use or keep SQL as your system of record, while still benefiting from Couchbase by using it as a system of engagement
+
+Couchbase can be used as a system of record too, but it might make more sense to your project to keep SQL,
+Deal with the flat, rigid data, keep the existing integrations and then…
+…use Couchbase when it makes sense to for other parts of the system. As a cache, session provider, profile storage, full text search,
+or other places where you need schema flexibility, scaling flexibility, etc
+
+But in this session, to keep things simple, it's going to be an either/or: all couchbase or all SQL server
+
+---
+
+# web app
+
+Switching to the browser, let's take a look at the ASP.NET site I've created for this demo.
+This demo application has two features:
+
+A shopping cart: 
+  You can create/edit shopping carts
+  Add multiple lines to the cart.
+  Search for shopping carts by username
+
+Social media:
+  Create new users
+  Post messages
+  Add friends
+
+---
+
+# switch to schema slides
+
+If you're like me, then you've already pictured the relational schema for this database.
+- This is a screenshot from SQL Server Management Studio
+- There's a shopping cart table, and a shopping cart items table, with a 1-to-n relationship between them.
+- For social media, there's a user table, a many-to-many table to represent friends, and an updates table
+  with a 1-to-n relationship to users.
+- In Couchbase, we could represent the data in a similar way, using 5 different document types
+
+But this doesn't really take advantage of the full capabilities that a JSON model affords.
+[switch to next slide]
+- Here's a screenshot from a data modeling tool called Hackolade.
+- There's no schema defined in Couchbase itself, because Couchbase does not enforce schema.
+- It's still useful to create and define a schema, even if you expect it to change later.
+- Instead of 5 tables, we have 3 document types.
+- The shopping cart and shopping cart items collapse into one document.
+  - The items are stored in an array within the shopping cart.
+  - There's no longer a need for an id field, because it's no longer foreign, it's a domestic array
+  - Also notice I've added a "type" field to the document, that will indicate that it's a shopping cart document
+  - The "type" field is arbitrary, not enforced by Couchbase, but useful
+- For social media, I've decided to keep updates as separate documents
+  - I anticipate the number of updates being large, so that's why I've kept them separate
+  - Each update points to the user who made the update via the 'userid'
+  - Hackolade calls this a FK, and it might be useful to think of it that way, but it is not enforced by Couchbase
+    in the same way that a FK in a relational database is
+  - But I have collapsed the 'friends' data into an array within the user document
+  - Again, I've added "type" fields to these documents
+    - this is not required, there are other ways to achieve similar results
+    - it's just the way I've decided to do it
+
+---
+
+# Modeling slides
+
+Take you through this visually so you can understand my thought process.
+
+I'm starting with the SQL schema on the top left, and I want to end up with
+the Couchbase-oriented schema at the bottom right.
+
+---
+
+# visual studio
+
+Switch over to visual studio
+To show you how I've implemented this system
+My solution has 5 projects
+- Web - this is the ASP.NET MVC UI
+- Core
+  - this contains the C# classes that correspond to the data models I just showed you
+  - it also contains interfaces consisting of the methods that the web project needs to interact with the data
+- SQLServerDataAccess - this contains SQL implementations of the interfaces
+  - I've decided to use Entity Framework so this project contains all the mappings in addition to repository
+  - It also contains all the DDL files you need to create the schema in SQL Server
+- CouchbaseServerDataAccess - this contains Couchbase implementation of the interfaces
+  - There is no impendence mismatch so we don't need an OR/M like Entity Framework
+  - I have elected to include the Linq2Couchbase Linq provider which gives me the
+    ability to generate SQL queries for Couchbase in the same way that EF does for SQL Server
+
+The way I switch between these projects is by changing the web.config file.
+  - I set "WhichDatabase" to either SQLServer or CouchbaseServer
+  - Then, in the controller, I have an IF statement to instantiate the correct repository
+    based on that web.config setting
+  - I already showed you the app in SQL Server mode
+  - So now I'm going to switch to Couchbase mode
+
+---
+
+# Couchbase mode
+
+A shopping cart: 
+  You can create/edit shopping carts
+  Add multiple lines to the cart.
+  Search for shopping carts by username
+
+Social media:
+  Create new users
+  Post messages
+  Add friends
+
+---
+
+# Let's look at the code for SQL Server
+
+sql server
+- Peek at IShoppingCartRepository and go over the 5 members
+- entity framework
+- getting a single item requires SQL
+	- because everything requires sql
+	- and because we're assembly an object from multiple tables
+- mapping classes
+- linq ef provider
+- sproc with ef, benefits: reusability (multiple apps), abstraction (implementation details can be changed)
+
+couchbase
+- .net sdk and linq2couchbase
+- base URL, more on what I'm doing with this later
+  - but this code is getting the URL of the current ASP.NET site
+  - I wouldn't recommend you do this in your app, but it makes my demo easier
+- getting a single document is a get operation
+  - no impedence mismatch
+  - this is how they started with "nosql" buzzword
+- N1QL
+  - we can't always get away with using ONLY key-based operations
+  - Couchbase's SQL for JSON
+  - this is where the 'type' field comes into play
+  - Couchbase .NET SDK executes the query and returns results
+- Linq2Couchbase
+  - could use a Linq provider instead
+  - it generates N1QL for you
+  - being explicit about 'type' is optional
+- AddItemToCart
+  - one thing you might be wondering about is instead of dealing with a bunch of rows
+    we're dealing with one big document
+  - as it gets bigger, that could take longer to send over a network
+  - but couchbase has a subdocument API to deal with this
+  - you can choose to select or mutate just a part of the document without sending the whole thing over the wire
+- no sproc, instead use a web service
+  - move sproc logic up the stack
+  - reusability (multiple apps), abstraction (implementation details can be changed)
+  - I'm working on an ASP.NET application now
+  - but I could create another separate ASP.NET service, implement the logic there, and call that service from one or more applications
+  
+---
+
+That's it for this video. You can find the source code for the video at this URL.
+
+You can also learn more about SQL Server and Couchbase in a 3 part series of blog posts
+I wrote at blog.couchbase.com
+
+Thanks for watching!
