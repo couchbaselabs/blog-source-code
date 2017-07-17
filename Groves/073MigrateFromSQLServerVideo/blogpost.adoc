@@ -5,7 +5,7 @@
 :focus-keyword: SQL Server
 :categories: .NET, Couchbase Server
 :tags: .NET, Couchbase Server, C#, SQL Server
-:heroimage: TBD
+:heroimage: 073-hero-compare-contrast-sql-couchbase.png (public domain - https://commons.wikimedia.org/wiki/File:Venn0001.svg)
 
 SQL Server is compared (and contrasted) with Couchbase Server in this video.
 
