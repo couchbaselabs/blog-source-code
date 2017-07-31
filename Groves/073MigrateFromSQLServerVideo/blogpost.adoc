@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: SQL Server and Couchbase Server compared and contrasted within an ASP.NET MVC web application.
+:meta-description: SQL Server and Couchbase Server compared and contrasted within an ASP.NET MVC web application. Entity Framework and Linq2Couchbase are also used.
 :title: SQL Server and Couchbase side-by-side (video)
 :slug: SQL-Server-Couchbase-side-side-video
 :focus-keyword: SQL Server
