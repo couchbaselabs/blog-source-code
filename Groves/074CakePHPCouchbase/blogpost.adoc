@@ -1,2 +1,68 @@
-old: https://github.com/sixthpoint/cakephp-couchbase
+:imagesdir: images
+:meta-description: TBD
+:title: CakePHP with Couchbase
+:slug: CakePHP-Couchbase
+:focus-keyword: CakePHP
+:categories: Couchbase Server
+:tags: PHP, CakePHP, Couchbase Server
+:heroimage: TBD
+
+CakePHP was my framework of choice when I would write PHP. It's been a long time though: I last used CakePHP when 1.x was the stable release. So, when link:https://blog.couchbase.com/author/nic-raboy/[Nic Raboy started writing about using various PHP frameworks] with Couchbase, I volunteered to take on CakePHP. My experience greatly favors C# and .NET developer, but there will always be a soft spot in my heart for PHP and especially CakePHP.
+
+Enough mushy stuff. I'm going to cut a piece of CakePHP, try to use Couchbase with it, and see how rusty I am.
+
+== Couchbase PHP SDK
+
+The PHP development experience on Windows, hasn't improved all that much since the days I worked on it. Some things are better: Composer is terrific, and it's a tool that I'm going to use in this blog post. Installing PHP extensions is still a little annoying. But thankfully, Couchbase has some good documentation on link:https://developer.couchbase.com/documentation/server/current/sdk/php/start-using-sdk.html[getting started with the Couchbase PHP SDK].
+
+If you are on Linux or Mac, your PHP life is much easier. But for the Windows PHP developers (both of you), here are some tips:
+
+* Don't use long path names (e.g. c:\Program Files\PHP\v5.6\ext\...). I did, and it ended up causing issues with escaping and path names. Install PHP into c:\php\ and you'll be much happier.
+* Use Powershell to parse the `php -i` command. (e.g. `C:\php\php.exe -i 2>$null | findstr -i couchbase` will show you only the `php -i` output related to "couchbase"
+
+Once you have followed the documentation, installed php_couchbase.dll and libcouchbase.dll, run the above Powershell command, and you should hopefully see output like this:
+
+----
+PS C:\> & 'C:\Program Files (x86)\PHP\v5.6\php.exe' -i 2>$null | findstr -i couchbase
+couchbase
+couchbase support => enabled
+libcouchbase runtime version => 2.7.6 (git: e15b267765913f110fd1bbf65749c54b56875ebf)
+libcouchbase headers version => 2.7.6 (git: e15b267765913f110fd1bbf65749c54b56875ebf)
+igbinary transcoder => disabled (install pecl/igbinary and rebuild pecl/couchbase)
+couchbase.decoder.json_arrays => 0 => 0
+couchbase.encoder.compression => off => off
+couchbase.encoder.compression_factor => 0.0 => 0.0
+couchbase.encoder.compression_threshold => 0 => 0
+couchbase.encoder.format => json => json
+couchbase.log_level => WARN => WARN
+PS C:\>
+----
+
+== CakePHP with Composer
+
+I think of Composer like NuGet for PHP. It absolutely changed the way that I managed third party dependencies (for the better). link:https://github.com/composer/windows-setup/releases/[Composer for Windows] can be downloaded from GitHub.
+
+Then, from the command line: `composer create-project --prefer-dist cakephp/app cakephp_and_couchbase`. This is like a "File->New" for creating a CakePHP project. (If you get a message like "the request PHP extension intl is missing from your system" like I did, you'll have to add `extension=php_intl.dll` to your php.ini file).
+
+The first time you run this will take some time, as there are a number of downloads and dependencies. But the next time you do it, they will be cached, so it won't take as long.
+
+== Apache or IIS?
+
+You may elect to use link:https://www.apachefriends.org/index.html[XAMPP from Apache Friends] to get an Apache web server running on your development machine. I chose to use IIS. When using IIS, you'll need to create a Web.config file for CakePHP, since IIS doesn't use .htaccess files. CakePHP has a link:https://book.cakephp.org/3.0/en/installation.html#iis7-windows-hosts[Web.config listed in the official documentation].
+
+Now that you have a web server running and have it pointed to the folder that you created with Composer, you should be able to load that in your browser and see the CakePHP Welcome Page. This page has helpful system checks and links. One thing I want to draw your attention to is the "Database" section of this page:
+
+[TODO: Database image]
+
+In this blog post, I'm only going to use Couchbase. There is no up-to-date CakePHP Couchbase plugin that I know of (as of the time of writing this). If that's something you want to see, I encourage you to create a ticket for Couchbase engineering, link:mailto:matthew.groves@couchbase.com[email me to let me know that you need one], or start your own and make it open source. A Couchbase plugin for CakePHP would certainly help, but the Couchbase PHP SDK is going to get us most of the way there. Furthermore, since Couchbase is a document database, we don't need to rely on an OR/M as much, since there is no impedance mismatch.
+
+If you don't plan on using a combination of Couchbase and some other database, then you can ignore that warning message.
+
+== CakePHP Configuration
+
+== CakePHP Model and Repository
+
+== Controller and Views
+
+== Summary
 
