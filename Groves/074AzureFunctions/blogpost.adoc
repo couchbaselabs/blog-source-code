@@ -1,0 +1,3 @@
+https://www.visualstudio.com/vs/preview/
+
+https://marketplace.visualstudio.com/items?itemName=AndrewBHall-MSFT.AzureFunctionToolsforVisualStudio2017

@@ -1,0 +1,7 @@
+{
+  "Values": {
+    "couchbaseUri": "http://vm0.server-ufzxersfgmt2g.northcentralus.cloudapp.azure.com:8091",
+    "couchbaseBucketName": "azurefunctions",
+    "couchbaseBucketPassword": "Password88!"
+  }
+}
