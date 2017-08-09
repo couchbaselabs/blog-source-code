@@ -1,17 +1,17 @@
 :imagesdir: images
-:meta-description: TBD
-:title: Azure Functions with Couchbase
-:slug: Azure-Functions-Couchbase
+:meta-description: Azure Functions are Microsoft's answer to "serverless". With this post, you'll develop, deploy, and interact with Couchbase with Azure Functions.
+:title: Azure Functions with Couchbase Server
+:slug: Azure-Functions-Couchbase-Server
 :focus-keyword: Azure Functions
 :categories: .NET, Couchbase Server
 :tags: .NET, Couchbase Server, C#
 :heroimage: TBD
 
-Azure Functions are Microsoft's answer to Amazon's Lambdas or Google's Cloud Functions. They give you a way to deploy small pieces of code, and Azure handles the underlying server. It helps me to think of it like deploying a single WebAPI endpoint. I've never used them before, so I thought I would give them a try beyond "Hello, World", by getting them to work with Couchbase Server.
+Azure Functions are Microsoft's answer to Amazon's Lambdas or Google's Cloud Functions (aka "serverless" architecture). They give you a way to deploy small pieces of code, and Azure handles the underlying server. It helps me to think of it like deploying a single WebAPI endpoint. I've never used them before, so I thought I would give them a try beyond "Hello, World", by getting them to work with Couchbase Server.
 
 There are link:https://docs.microsoft.com/en-us/azure/azure-functions/[more options] in Azure Functions beyond simple HTTP events (e.g. Blob triggers, GitHub webhooks, Azure Storage queue triggers, etc). But, for this blog post, I'm going to focus on HTTP events. I'll create simple "Get" and "Set" endpoints that interact with Couchbase Server.
 
-The link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/074AzureFunctions/src/CouchbaseWithAzureFunctions[source code for this blog post] is available on GitHub for you to use as you see fit.
+Before beginning, you can follow along by getting the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/074AzureFunctions/src/CouchbaseWithAzureFunctions[source code for this blog post] on GitHub.
 
 == Getting setup to develop Azure Functions
 
@@ -33,11 +33,11 @@ Once you do this, you'll have an empty looking project with a couple of JSON fil
 
 image:07404-Add-Azure-Function.png[Add Azure Function]
 
-You'll need to select what kind of Azure Function you want to create. I chose "HttpTrigger". I also chose "Anonymous" to keep this post simple, but depending on your use case, you may want to require an authentication token. After you do this, you will get a very simple shell of a function. You can execute this function locally (indeed, that is what the local.settings.json file is for) so you can test it out without deploying to Azure yet.
+Next, you'll need to select what kind of Azure Function you want to create. I chose "HttpTrigger". I also chose "Anonymous" to keep this post simple, but depending on your use case, you may want to require an authentication token. After you do this, you will get a very simple shell of a function. You can execute this function locally (indeed, that is what the local.settings.json file is for) so you can test it out without deploying to Azure yet.
 
 == Writing a "Get" function
 
-I decided that I wanted two Azure Functions: one to "get" a piece of data by ID, and one to "set" a new piece of given data. I started by defining the shape of my data with a simple C# POCO:
+First, I decided that I wanted two Azure Functions: one to "get" a piece of data by ID, and one to "set" a new piece of given data. I started by defining the shape of my data with a simple C# POCO:
 
 [source,C#,indent=0]
 ----
@@ -57,13 +57,13 @@ Some things to note:
 * Parsing the query parameter seems like a lot of extra code. You can alternatively create a "function with parameters"
 * `GetCluster` and `GetBucket` will be discussed later in this post. But the short story is that I want this code to work both locally and deployed to Azure
 
-Run this function locally, and you'll get a console screen that looks similar to this:
+Next, run this function locally, and you'll get a console screen that looks similar to this:
 
 image:07405-Azure-Functions-running-locally.png[Azure Functions running locally]
 
 At the bottom, you'll notice that it tells you the Azure Function URL(s). Assuming I had a document in there (I don't yet), I could create an HTTP request with a tool like Postman to: `http://localhost:7071/api/HttpTriggerCsharpGet?id=123456`
 
-If I do that now, I'll get "null" as a response (since I don't have any validation or error checking code). So let's move on and create a "Set" function.
+Now, if I do that, I'll get "null" as a response (since I don't have any validation or error checking code). So let's move on and create a "Set" function.
 
 == Writing a "Set" function
 
@@ -75,7 +75,8 @@ include::src/CouchbaseWithAzureFunctions/CouchbaseWithAzureFunctions/WriteToCouc
 ----
 
 This function has a similar shape to the Get, but some important things to note:
-* Note that I only have `"post"` in the HttpTrigger attribute.
+
+* There is only `"post"` in the HttpTrigger attribute.
 * Instead of `HttpRequestMessage` as the first parameter, I've decided to use `MyDocument`, and let Azure Functions do the binding for me.
 * Since I don't have `HttpRequestMessage`, I can't call its `CreateResponse` method, so instead I instantiate a new `HttpResponseMessage` directly to return the success message at the end.
 
@@ -90,20 +91,20 @@ To create a request in Postman, I'll use a URL of `http://localhost:7071/api/Htt
 }
 ----
 
-When I POST that to the endpoint, I'll get a response message of "New document inserted with ID f05ea97e-7c2f-4f88-b72d-19756f6a6f35".
+Now, when I POST that to the endpoint, I'll get a response message of "New document inserted with ID f05ea97e-7c2f-4f88-b72d-19756f6a6f35".
 
 == Connecting to Couchbase Server
 
-I have glanced over how these functions connect to Couchbase Server.
+I have glossed over how these functions connect to Couchbase Server.
 
-I have two methods, `GetCluster` and `GetBucket` that will connect to the cluster and bucket, respectively.
+Previously, I mentioned two methods, `GetCluster` and `GetBucket` that will connect to the cluster and bucket, respectively.
 
 [source,C#,indent=0]
 ----
 include::src/CouchbaseWithAzureFunctions/CouchbaseWithAzureFunctions/WriteToCouchbase.cs[tag=Connect]
 ----
 
-Most of this code should be familiar if you've used Couchbase before. I'm connecting to a single node cluster, and then connecting a bucket that has a password set (I'm using Couchbase Server 4.6).
+At this point, most of this code should be familiar if you've used Couchbase Server and the Couchbase .NET SDK before. I'm connecting to a single node cluster, and then connecting a bucket that has a password set (I'm using Couchbase Server 4.6).
 
 But, the important thing to point out here is the use of `Configuration.AppSettings`. In the `local.settings.json` file, I've added these Couchbase settings to the Value section:
 
@@ -149,9 +150,9 @@ Once the cluster is created, find the URL for the first node in the cluster (jus
 
 === Deploying Azure Functions to Azure
 
-Now that Couchbase Server is running, let's deploy the Azure Functions that will interact with it.
+Now, Couchbase Server is running. So let's deploy the Azure Functions that will interact with it.
 
-Start by right-clicking the project in Visual Studio and selecting "publish". You'll need to create a new publish profile the first time you do this, but that's easy.
+To begin, right-click the project in Visual Studio and selecting "publish". You'll need to create a new publish profile the first time you do this, but that's easy.
 
 image:07408-Publish-Azure-Functions.png[Publish Azure functions]
 
