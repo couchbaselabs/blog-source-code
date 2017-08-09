@@ -55,7 +55,6 @@ namespace CouchbaseWithAzureFunctions
 
             using (var cluster = GetCluster())
             {
-                //dynamic doc = await req.Content.ReadAsAsync<dynamic>();
                 using (var bucket = GetBucket(cluster))
                 {
                     await bucket.InsertAsync(id, req);
