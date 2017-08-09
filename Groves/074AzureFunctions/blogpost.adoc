@@ -5,7 +5,7 @@
 :focus-keyword: Azure Functions
 :categories: .NET, Couchbase Server
 :tags: .NET, Couchbase Server, C#
-:heroimage: TBD
+:heroimage: https://pixabay.com/en/sky-cloud-blue-clouds-sky-nature-2410275/ (no attribution required)
 
 Azure Functions are Microsoft's answer to Amazon's Lambdas or Google's Cloud Functions (aka "serverless" architecture). They give you a way to deploy small pieces of code, and let Azure handle the underlying server. I've never used them before, so I thought I would give them a try beyond "Hello, World", by getting them to work with Couchbase Server.
 
@@ -177,7 +177,7 @@ Now, repeat the Postman process mentioned above to try out the Azure functions a
 This is my first time trying out Azure Functions. This blog post shows a simple demo, but there are other factors to consider before you start using this in production:
 
 * Authentication - I used anonymous Azure Functions to keep it simple. Azure Functions can also provide authentication tokens to use that prevent access except to authorized users.
-* App settings - Setting them manually in the portal may not be the best solution. There is probably a way to automate that portion.
+* App settings - Setting them manually in the portal may not be the best solution. There is probably a way to automate that portion, and that's something I'll look into in the future.
 * HTTPS/TLS - You will likely want to have some level of encryption as you are getting and posting data to your Azure Functions. The above example transmits everything in clear text.
 
 Anything I missed? Any more tips or suggestions to share to make this process easier or better? Please leave a comment below or ping me on link:https://twitter.com/mgroves[Twitter @mgroves].
