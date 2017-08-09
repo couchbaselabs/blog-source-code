@@ -15,16 +15,19 @@ using Microsoft.Azure.WebJobs.Host;
 
 namespace CouchbaseWithAzureFunctions
 {
+    // tag::MyDocument[]
     public class MyDocument
     {
         public string Name { get; set; }
         public int ShoeSize { get; set; }
         public decimal Balance { get; set; }
     }
+    // end::MyDocument[]
 
     public static class WriteToCouchbase
     {
         [FunctionName("HttpTriggerCSharpGet")]
+        // tag::Get[]
         public static async Task<HttpResponseMessage> Get([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequestMessage req, TraceWriter log)
         {
             // parse query parameter
@@ -41,8 +44,10 @@ namespace CouchbaseWithAzureFunctions
                 }
             }
         }
+        // end::Get[]
 
         [FunctionName("HttpTriggerCSharpSet")]
+        // tag::Set[]
         public static async Task<HttpResponseMessage> Set([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] MyDocument req, TraceWriter log)
         {
 
@@ -63,15 +68,9 @@ namespace CouchbaseWithAzureFunctions
                 StatusCode = HttpStatusCode.OK
             };
         }
+        // end::Set[]
 
-        private static IBucket GetBucket(Cluster cluster)
-        {
-            var bucketName = ConfigurationManager.AppSettings["couchbaseBucketName"];
-            var bucketPassword = ConfigurationManager.AppSettings["couchbaseBucketPassword"];
-
-            return cluster.OpenBucket(bucketName, bucketPassword);
-        }
-
+        // tag::Connect[]
         private static Cluster GetCluster()
         {
             var uri = ConfigurationManager.AppSettings["couchbaseUri"];
@@ -80,5 +79,16 @@ namespace CouchbaseWithAzureFunctions
                 Servers = new List<Uri> { new Uri(uri) }
             });
         }
+
+        private static IBucket GetBucket(Cluster cluster)
+        {
+            var bucketName = ConfigurationManager.AppSettings["couchbaseBucketName"];
+            var bucketPassword = ConfigurationManager.AppSettings["couchbaseBucketPassword"];
+
+            return cluster.OpenBucket(bucketName, bucketPassword);
+        }
+        // end::Connect[]
+
+
     }
 }
