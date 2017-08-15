@@ -1,0 +1,83 @@
+:imagesdir: images
+:meta-description: Documentation is being improved. The build process, backporting, review improvements are making it easier to contribute to documentation in the process.
+:title: Documentation Contribution and Improvements
+:slug: Documentation-Contribution-Improvements
+:focus-keyword: documentation
+:categories: Couchbase Server
+:tags: Couchbase Server, documentation, git, github
+:heroimage: 071-hero-documentation-shelves.jpg (https://commons.wikimedia.org/wiki/File:UNOG_Library_UN_General_Assembly_Documents.JPG creative commons)
+
+Documentation is undergoing some changes for the better at Couchbase. Matt Carabine and the documentation team have been working to improve the build process, backporting, and review. And, they have made it easier to contribute to documentation in the process.
+
+== Contributing to the documentation
+
+Couchbase documentation is open source, but until recently, there were a number of problems. If you were looking to make a substantial change or maybe just fix a quick typo, you were faced with one or more of these questions:
+
+* Where do I look to make a change?
+* What file do I change?
+* What file maps to the doc page I'm looking at?
+* How do I change it?
+
+It was not always clear how to go from a documentation URL to a specific file in the Github repository.
+
+Now, that's changed. If you visit a page in the documentation, you will notice an "Edit on GitHub" link on each page. Click this link and you'll be taken to GitHub to edit the file directly (your first time, you will be prompted to create a fork).
+
+== Example
+
+First, visit the link:https://developer.couchbase.com/documentation/server/4.6/clustersetup/setup-failover-graceful.html[Using Graceful Failover] page in the documentation.
+
+Next, click the "Edit on GitHub" link.
+
+image:07101-documentation-edit-on-github-link.gif[Documentation edit on GitHub link]
+
+At this point, you're on GitHub. Assuming you've used Git/GitHub before, the rest of this process should be familiar.
+
+If you've not already created a fork, you will be prompted to do so.
+
+After that, you will see an edit screen where you can make your change.
+
+Once you've made a change, click the "Propose file change". You'll see a diff, and you'll be able to create a pull request.
+
+== Contribution guide
+
+That's a crash course on contributing to the documentation. There's a link:https://github.com/couchbase/docs-cb4/blob/master/CONTRIBUTING.md[full guide on how to contribute to Couchbase Server docs].
+
+Note that while that guide is written in Markdown, Couchbase Server documentation is written in the link:https://docs.oasis-open.org/dita/v1.2/cs01/spec/archSpec/ditamarkup.html[Darwin Information Typing Architecture (DITA) markup language].
+
+For simple typo corrections, you may not need to know much about DITA, but for deeper edits, you will need to familiarize yourself with the syntax and/or an editing tool like link:https://www.oxygenxml.com/xml_author.html[Oxygen].
+
+== Documentation contributions
+
+Thank you to those in the community who have already contributed! This new system has only been going for a few months, but we've already gotten some great contributions. So I tip my hat to: 
+
+* eunosm3 for link:https://github.com/couchbase/docs-cb4/pull/1180[#1180 - better shortdesc for manage caching layer architecture]
+* atom992 for link:https://github.com/couchbase/docs-cb4/pull/1365[#1365 - correcting a flag for cbexport]
+* Sir4ur0n for link:https://github.com/couchbase/docs-cb4/pull/1366[#1366 - fixing a N1QL typo]
+* ptorsson for link:https://github.com/couchbase/docs-cb4/pull/1414[#1414 - correcting some Go SDK examples]
+* MarkTickner for link:https://github.com/couchbase/docs-cb4/pull/1457[#1457 - adding docs for the REST API services parameter]
+* ecejnj42 for link:https://github.com/couchbase/docs-cb4/pull/1585[#1585 - fixing misplaced options in durability area]
+* rabdill for link:https://github.com/couchbase/docs-cb4/pull/1632[#1632 - fixing a typo in Go N1QL examples]
+* GauthamBanasandra for link:https://github.com/couchbase/docs-cb4/pull/1696[#1696 - fixing some grammer in the subdocuments area]
+* oxyrax for link:https://github.com/couchbase/docs-cb4/pull/1725[#1725 - correcting a setting for cbbackupmgr]
+
+It astounds me that we had such great contributions from so many people so quickly! Thank you, everyone, for helping to make the documentation better.
+
+== How did we get here?
+
+To make contribution easier, the build process had to be improved. Previously, it involved a bunch of manual steps: pull source, build locally, zip up the results, FTP them to a server, run one or more slow build server tasks manually. Now you'll see that the build step happens much more quickly in the pull request, and previews are generated quickly.
+
+The reviewing of content was also improved. Previously, previews were only possible on a single location. There was no simultaneous reviewing possible. This, combined with the slow, manual builds, was frustrating, and made it difficult to review all changes, let alone external ones.
+
+Finally, backporting to other versions of Couchbase Server documentation was also a problem. The documentation is stored in separate branches for each version, so if an issue is raised and fixed in 4.6, it may also apply to 4.5, and so on. That's a very manual process, but a @cb-docs-robot was created to automate the backporting (which you'll see in many of the above examples).
+
+== How are we doing?
+
+Another thing we've added is the ability to give us feedback on the documentation right from your browser.
+
+image:07102-documentation-feedback.gif[Documentation feedback]
+
+Simply find the *"Feedback On This Page"* button at the bottom right of your browser, click it, and write feedback.
+
+== Summary
+
+These documentation improvements help us both internally and externally. We hope that it will make your experience with the documentation less frustrating and more enjoyable. We welcome your feedback! Please check out the link:https://github.com/couchbase/docs-cb4[Couchbase docs] on GitHub.

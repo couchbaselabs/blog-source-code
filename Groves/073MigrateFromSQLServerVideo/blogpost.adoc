@@ -1,0 +1,24 @@
+:imagesdir: images
+:meta-description: SQL Server and Couchbase Server compared and contrasted within an ASP.NET MVC web application. Entity Framework and Linq2Couchbase are also used.
+:title: SQL Server and Couchbase side-by-side (video)
+:slug: SQL-Server-Couchbase-side-side-video
+:focus-keyword: SQL Server
+:categories: .NET, Couchbase Server
+:tags: .NET, Couchbase Server, C#, SQL Server
+:heroimage: 073-hero-compare-contrast-sql-couchbase.png (public domain - https://commons.wikimedia.org/wiki/File:Venn0001.svg)
+
+SQL Server is compared (and contrasted) with Couchbase Server in this video.
+
+If you are averse to video, you can check out the corresponding blog post series I wrote a few months ago that covers the same material:
+
+* link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/[Part 1 - modeling]
+* link:https://blog.couchbase.com/sql-server-couchbase-data-migration/[Part 2 - data migration]
+* link:https://blog.couchbase.com/moving-sql-server-couchbase-app-migration/[Part 3 - app migration]
+
+The source code demonstrated in this video is link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/045MigrateFromSQLServer/src/SQLServerToCouchbase[available on GitHub].
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-cW3CP-YNng" frameborder="0" allowfullscreen></iframe>
++++
+
+If you have questions or feedback, please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com], or on link:https://twitter.com/mgroves[@mgroves at Twitter], or just leave a comment below.
