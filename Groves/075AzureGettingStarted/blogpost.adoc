@@ -45,7 +45,7 @@ Speaking of money, there are _some_ things you can do in Azure that are link:htt
 
 == Couchbase and Azure: Is $200 enough?
 
-When I first started with Azure, I was very worried that I'd run up a big tab if I wasn't careful. It's years later, and I've never had that problem.
+When I first started with Azure, I was very worried that I'd run up a big tab if I wasn't careful. With the $200 trial, you won't get charged until you explicitly tell Microsoft to do so. But years later, after my initial trial, I've still never had a problem of an unexpectedly high bill.
 
 === Quotas
 
