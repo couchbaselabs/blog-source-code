@@ -1,0 +1,74 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Azure: Getting Started
+:slug: Azure-Getting-Started
+:focus-keyword: Azure
+:categories: Couchbase Server
+:tags: Couchbase Server, Azure, cloud
+:heroimage: https://pixabay.com/en/sky-cloud-blue-clouds-sky-nature-2410275/ (no attribution required)
+
+Azure is where Microsoft is spending a lot of its efforts lately. Microsoft is dedicated to making Azure a success. As someone who started working with Azure a little in the early days, I can say that it's come a long way, and offers a remarkable set of services at good prices.
+
+But not everyone is on board with Azure or even with cloud computing yet. If you haven't yet dipped your toe into Azure, but are curious, this blog post is for you.
+
+== What is cloud computing? What is Azure? 
+
+Cloud computing basically means that instead of running applications in your own data center, you run it in someone else's data center. Why would I do that?
+
+*Running a data center can be difficult and expensive.* You have to purchase hardware, manage upgrades, security, networking, and even stuff like electricity, ventilation, and cooling. For some enterprises, this is either not a big deal or it's worth the hassle. But for many enterprises, the value that you're delivering is not in the hardware or the operating system and so on, but in the domain expertise that goes into the software you're building.
+
+A metaphor that I really like was written up by Albert Barron in a blog post called link:https://www.linkedin.com/pulse/20140730172610-9679881-pizza-as-a-service[Pizza as a Service] (I especially like the diagram). It makes sense for a pizza company to control the whole stack because pizza making is their core competency. But if pizza making isn't your job, it makes sense to take another option, like dining out, so you can instead spend your time focusing on what you do best.
+
+This isn't to say that cloud is always the best solution, but it explains why many companies are choosing to move at least some of their infrastructure to a cloud provider like Microsoft's Azure.
+
+== How do I sign up for Azure?
+
+Signing up for Azure is easy.
+
+To start, you'll need a Microsoft account. If you don't already have one, you can link:https://signup.live.com/[signup here]. It's free, and it can be used in a bunch of other places later, even if you end up not liking Azure. 
+
+image:07501-Create-Microsoft-account.png[Create a Microsoft account]
+
+Next, go to azure.microsoft.com and link:https://azure.microsoft.com/en-us/free/[create a free account]. Signing up with that link will give you $200 in free credit to use on Azure services. You do need to use a credit card to sign up, but it is just for verifying your identity (they don't want a bunch of spammers and bitcoin bots). Microsoft will not charge you until you say so. 
+
+_Side note: If you have an link:https://msdn.microsoft.com/en-us/subscriptions/cc150618.aspx[MSDN/Visual Studio license], are part of the link:https://azure.microsoft.com/en-us/offers/ms-azr-0064p/[BizSpark program] or have an educational grant through link:https://www.microsoftazurepass.com/AzureU[AzureU (ask your professor!)], you may already have some free Azure credit on a monthly basis!_
+
+image:07502-Create-free-azure-account.png[Create Azure account]
+
+Speaking of money, there are _some_ things you can do in Azure that are link:https://azure.microsoft.com/en-us/free/pricing-offers/[absolutely free]. _But_, running Couchbase Server currently requires you to provision link:https://azure.microsoft.com/en-us/services/virtual-machines/[Virtual Machines], so if you want to play with Couchbase, you will be putting that $200 to good use.
+
+== Couchbase and Azure: Is $200 enough?
+
+When I first started with Azure, I was very worried that I'd run up a big tab if I wasn't careful. It's years later, and I've never had that problem because
+
+a) Azure services are very reasonably prices, and
+
+b) Microsoft makes it hard to hop on a runaway train of spending money.
+
+In fact, almost a year ago, I was tasked with provisioning a medium-sized cluster of Couchbase nodes on some very beefy Virtual Machines. Lots of RAM, lots of processor cores, 10 total virtual machines all running Couchbase. I started doing this (manually, to begin with) and discovered that Azure actually has a link:https://docs.microsoft.com/en-us/azure/azure-subscription-service-limits[quota that limits the number of cores you can provision]. If you want to create a huge Couchbase cluster, you'll first need to request an increase in the limit on the number of cores and/or virtual machines that you are allowed to have (this is a manual process, again to avoid abuse/surprises/exploitation/etc).
+
+image:07503-Azure-core-quota.png[Azure core quota]
+
+After I went through this process, I realized that even if I had created a experimental automated script that I accidentally asked to create 100 machines instead of 10, Azure would stop me.
+
+Until you want to build that huge cluster, you probably won't need more than $200 to start with, and you won't need to increase your quota.
+
+As an example, I ran a single-node Couchbase Server on a low-end virtual machine within the last 30 days. I must have provisioned, used it, and tore it down 3 or 4 times. As you can see from the below screenshot of my billing statement, it cost me a grand total of $0.11 for an hour and a half of VM time (and I think there a few pennies for related services, not shown).
+
+image:07504-Azure-costs-by-service.png[Azure costs by service]
+
+_(Some information blurred to protect the innocent)._
+
+Your mileage will vary, but my point is that I think it will be more challenging to use up that $200 credit than you think.
+
+Finally, when you're ready to play around with Couchbase, I encourage you to check out other blog posts about Couchbase Server.
+
+Also, watch this short instruction video on how to provision Couchbase Server clusters automatically. You don't have to provision a Virtual Machine, install Couchbase, do the initial cluster setup, network them together, etc manually. This video (courtesy of Ben Lackey) shows you how to use Couchbase Server from the Azure Marketplace.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/q9mBBu0YqJI" frameborder="0" allowfullscreen></iframe>
++++
+
+== Summary
+
+If you've never used Azure or any cloud computing, now is your chance to get started. I'd love to hear about your experiences with Azure, with Couchbase, and your overall impressions of cloud computing. Please leave a comment below, or talk to me on link:https://twitter.com[Twitter @mgroves].
