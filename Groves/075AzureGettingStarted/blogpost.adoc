@@ -9,19 +9,21 @@
 
 Azure is where Microsoft is spending a lot of its efforts lately. Microsoft is dedicated to making Azure a success. As someone who started working with Azure a little in the early days, I can say that it's come a long way, and offers a remarkable set of services at good prices.
 
-But not everyone is on board with Azure or even with cloud computing yet. If you haven't yet dipped your toe into Azure, but are curious, this blog post is for you.
+But not everyone is on board with Azure or even with cloud computing yet. If you haven't yet dipped your toe into the Azure pool, but are curious, this blog post is for you.
 
 == What is cloud computing? What is Azure? 
 
 Cloud computing basically means that instead of running applications in your own data center, you run it in someone else's data center. Why would I do that?
 
-*Running a data center can be difficult and expensive.* You have to purchase hardware, manage upgrades, security, networking, and even stuff like electricity, ventilation, and cooling. For some enterprises, this is either not a big deal or it's worth the hassle. But for many enterprises, the value that you're delivering is not in the hardware or the operating system and so on, but in the domain expertise that goes into the software you're building.
+*Running a data center can be difficult and expensive.* You have to purchase hardware, manage upgrades, security, networking, and even stuff like electricity, ventilation, and cooling. For some enterprises, this is either not a big deal or it's worth the hassle. But for many enterprises, the value that you're delivering is not in the hardware or the operating system and so on, but in the domain expertise that goes into the software you're building. Then, cloud appeals to enterprises who would rather someone else handle all that other stuff.
 
 A metaphor that I really like was written up by Albert Barron in a blog post called link:https://www.linkedin.com/pulse/20140730172610-9679881-pizza-as-a-service[Pizza as a Service] (I especially like the diagram). It makes sense for a pizza company to control the whole stack because pizza making is their core competency. But if pizza making isn't your job, it makes sense to take another option, like dining out, so you can instead spend your time focusing on what you do best.
 
-This isn't to say that cloud is always the best solution, but it explains why many companies are choosing to move at least some of their infrastructure to a cloud provider like Microsoft's Azure.
+This isn't to say that cloud is always the best solution, but it explains why many companies are choosing to move at least some of their infrastructure and platform to a cloud provider like Microsoft's Azure.
 
 == How do I sign up for Azure?
+
+If you're on the fence, I recommend at least giving it a try, so that you're prepared for the day that your CTO comes to you and asks "so what are we doing about the cloud?"
 
 Signing up for Azure is easy.
 
@@ -41,7 +43,7 @@ Speaking of money, there are _some_ things you can do in Azure that are link:htt
 
 When I first started with Azure, I was very worried that I'd run up a big tab if I wasn't careful. It's years later, and I've never had that problem because
 
-a) Azure services are very reasonably prices, and
+a) Azure services are very reasonably priced, and
 
 b) Microsoft makes it hard to hop on a runaway train of spending money.
 
@@ -49,11 +51,11 @@ In fact, almost a year ago, I was tasked with provisioning a medium-sized cluste
 
 image:07503-Azure-core-quota.png[Azure core quota]
 
-After I went through this process, I realized that even if I had created a experimental automated script that I accidentally asked to create 100 machines instead of 10, Azure would stop me.
+After I went through this process, I realized that even if I had created an experimental automated script that I accidentally asked to create 100 machines instead of 10, Azure would stop me.
 
 Until you want to build that huge cluster, you probably won't need more than $200 to start with, and you won't need to increase your quota.
 
-As an example, I ran a single-node Couchbase Server on a low-end virtual machine within the last 30 days. I must have provisioned, used it, and tore it down 3 or 4 times. As you can see from the below screenshot of my billing statement, it cost me a grand total of $0.11 for an hour and a half of VM time (and I think there a few pennies for related services, not shown).
+As an example, I ran a single-node Couchbase Server on a low-end virtual machine within the last 30 days. I must have provisioned, used it, and tore it down 3 or 4 times. As you can see from the below screenshot of my billing statement, it cost me a grand total of $0.11 for an hour and a half of VM time (and I think there are a few pennies for related services, not shown).
 
 image:07504-Azure-costs-by-service.png[Azure costs by service]
 
@@ -61,9 +63,9 @@ _(Some information blurred to protect the innocent)._
 
 Your mileage will vary, but my point is that I think it will be more challenging to use up that $200 credit than you think.
 
-Finally, when you're ready to play around with Couchbase, I encourage you to check out other blog posts about Couchbase Server.
+Finally, when you're ready to play around with Couchbase, I encourage you to check out other link:https://blog.couchbase.com/category/couchbase-server/[blog posts about Couchbase Server].
 
-Also, watch this short instruction video on how to provision Couchbase Server clusters automatically. You don't have to provision a Virtual Machine, install Couchbase, do the initial cluster setup, network them together, etc manually. This video (courtesy of Ben Lackey) shows you how to use Couchbase Server from the Azure Marketplace.
+Also, watch this short instructional video on how to provision Couchbase Server clusters automatically. You don't have to provision a Virtual Machine, install Couchbase, do the initial cluster setup, network them together, etc manually. This video (courtesy of link:https://github.com/benofben[Ben Lackey] from the link:https://github.com/couchbase-partners[Couchbase Partners team]) shows you how to provision a Couchbase Server cluster from the Azure Marketplace.
 
 +++
 <iframe width="560" height="315" src="https://www.youtube.com/embed/q9mBBu0YqJI" frameborder="0" allowfullscreen></iframe>
