@@ -1,7 +1,7 @@
 :imagesdir: images
-:meta-description: TBD
-:title: Azure: Getting Started
-:slug: Azure-Getting-Started
+:meta-description: Learn how to get started with Azure. It's easy and free. You'll be provisioning Virtual Machines, and running Couchbase Server in no time.
+:title: Azure: Getting Started is Easy and Free
+:slug: Azure-Getting-Started-easy-free
 :focus-keyword: Azure
 :categories: Couchbase Server
 :tags: Couchbase Server, Azure, cloud
@@ -15,7 +15,7 @@ But not everyone is on board with Azure or even with cloud computing yet. If you
 
 Cloud computing basically means that instead of running applications in your own data center, you run it in someone else's data center. Why would I do that?
 
-*Running a data center can be difficult and expensive.* You have to purchase hardware, manage upgrades, security, networking, and even stuff like electricity, ventilation, and cooling. For some enterprises, this is either not a big deal or it's worth the hassle. But for many enterprises, the value that you're delivering is not in the hardware or the operating system and so on, but in the domain expertise that goes into the software you're building. Then, cloud appeals to enterprises who would rather someone else handle all that other stuff.
+*Running a data center is difficult and expensive.* You have to purchase hardware, manage upgrades, security, networking, and even stuff like electricity, ventilation, and cooling. For some enterprises, this is either not a big deal or it's worth the hassle. But for many enterprises, the value that you're delivering is not in the hardware or the operating system and so on, but in the domain expertise that goes into the software you're building. Then, cloud appeals to enterprises who would rather someone else handle all that other stuff.
 
 A metaphor that I really like was written up by Albert Barron in a blog post called link:https://www.linkedin.com/pulse/20140730172610-9679881-pizza-as-a-service[Pizza as a Service] (I especially like the diagram). It makes sense for a pizza company to control the whole stack because pizza making is their core competency. But if pizza making isn't your job, it makes sense to take another option, like dining out, so you can instead spend your time focusing on what you do best.
 
@@ -27,9 +27,13 @@ If you're on the fence, I recommend at least giving it a try, so that you're pre
 
 Signing up for Azure is easy.
 
-To start, you'll need a Microsoft account. If you don't already have one, you can link:https://signup.live.com/[signup here]. It's free, and it can be used in a bunch of other places later, even if you end up not liking Azure. 
+=== Create Microsoft account
+
+To start, you'll need a Microsoft account. If you don't already have one, you can link:https://signup.live.com/[signup here]. It's free, and you can use it in a bunch of other places later, even if you end up not liking Azure. 
 
 image:07501-Create-Microsoft-account.png[Create a Microsoft account]
+
+=== Create Azure account
 
 Next, go to azure.microsoft.com and link:https://azure.microsoft.com/en-us/free/[create a free account]. Signing up with that link will give you $200 in free credit to use on Azure services. You do need to use a credit card to sign up, but it is just for verifying your identity (they don't want a bunch of spammers and bitcoin bots). Microsoft will not charge you until you say so. 
 
@@ -37,11 +41,15 @@ _Side note: If you have an link:https://msdn.microsoft.com/en-us/subscriptions/c
 
 image:07502-Create-free-azure-account.png[Create Azure account]
 
-Speaking of money, there are _some_ things you can do in Azure that are link:https://azure.microsoft.com/en-us/free/pricing-offers/[absolutely free]. _But_, running Couchbase Server currently requires you to provision link:https://azure.microsoft.com/en-us/services/virtual-machines/[Virtual Machines], so if you want to play with Couchbase, you will be putting that $200 to good use.
+Speaking of money, there are _some_ things you can do in Azure that are link:https://azure.microsoft.com/en-us/free/pricing-offers/[absolutely free]. _But_, running Couchbase Server currently requires you to provision link:https://azure.microsoft.com/en-us/services/virtual-machines/[Virtual Machines], so if you want to play with Couchbase, you will put that $200 to good use.
 
 == Couchbase and Azure: Is $200 enough?
 
-When I first started with Azure, I was very worried that I'd run up a big tab if I wasn't careful. It's years later, and I've never had that problem because
+When I first started with Azure, I was very worried that I'd run up a big tab if I wasn't careful. It's years later, and I've never had that problem.
+
+=== Quotas
+
+I've never had this problem because:
 
 a) Azure services are very reasonably priced, and
 
@@ -53,6 +61,8 @@ image:07503-Azure-core-quota.png[Azure core quota]
 
 After I went through this process, I realized that even if I had created an experimental automated script that I accidentally asked to create 100 machines instead of 10, Azure would stop me.
 
+=== It cost how much?
+
 Until you want to build that huge cluster, you probably won't need more than $200 to start with, and you won't need to increase your quota.
 
 As an example, I ran a single-node Couchbase Server on a low-end virtual machine within the last 30 days. I must have provisioned, used it, and tore it down 3 or 4 times. As you can see from the below screenshot of my billing statement, it cost me a grand total of $0.11 for an hour and a half of VM time (and I think there are a few pennies for related services, not shown).
@@ -61,7 +71,9 @@ image:07504-Azure-costs-by-service.png[Azure costs by service]
 
 _(Some information blurred to protect the innocent)._
 
-Your mileage will vary, but my point is that I think it will be more challenging to use up that $200 credit than you think.
+Your mileage will vary, but my point is that I think you will find it more challenging to use up that $200 credit than you think.
+
+=== More than enough to get started with Couchbase
 
 Finally, when you're ready to play around with Couchbase, I encourage you to check out other link:https://blog.couchbase.com/category/couchbase-server/[blog posts about Couchbase Server].
 
