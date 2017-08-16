@@ -59,7 +59,7 @@ In fact, almost a year ago, I was tasked with provisioning a medium-sized cluste
 
 image:07503-Azure-core-quota.png[Azure core quota]
 
-After I went through this process, I realized that even if I had created an experimental automated script that I accidentally asked to create 100 machines instead of 10, Azure would stop me.
+Because of that, I realized that even if I had created an experimental automated script that I accidentally asked to create 100 machines instead of 10, Azure would stop me.
 
 === It cost how much?
 
