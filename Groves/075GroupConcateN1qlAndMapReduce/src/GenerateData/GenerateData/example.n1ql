@@ -1,0 +1,12 @@
+﻿// example for my sample data
+// tag::patients[]
+SELECT p.doctorId AS doctor, ARRAY_AGG(META(p).id) AS patients
+FROM patients p
+group by p.doctorId;
+// end::patients[]
+
+
+// example for N1QL sandbox
+SELECT t.age AS age, ARRAY_AGG(t.email) AS emails
+FROM tutorial t
+group by t.age;
