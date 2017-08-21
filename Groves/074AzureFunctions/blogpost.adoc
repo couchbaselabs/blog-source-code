@@ -4,7 +4,7 @@
 :slug: Azure-Functions-Couchbase-Server
 :focus-keyword: Azure Functions
 :categories: .NET, Couchbase Server
-:tags: .NET, Couchbase Server, C#
+:tags: .NET, Couchbase Server, C#, Azure, Microsoft Azure, cloud, Visual Studio
 :heroimage: https://pixabay.com/en/sky-cloud-blue-clouds-sky-nature-2410275/ (no attribution required)
 
 Azure Functions are Microsoft's answer to Amazon's Lambdas or Google's Cloud Functions (aka "serverless" architecture). They give you a way to deploy small pieces of code, and let Azure handle the underlying server. I've never used them before, so I thought I would give them a try beyond "Hello, World", by getting them to work with Couchbase Server.
