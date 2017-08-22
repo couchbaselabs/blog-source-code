@@ -11,11 +11,11 @@ Aggregate grouping is what I'm titling this blog post, but I don't know if it's 
 
 I'm writing this post because one of our solution engineers was working on this problem for a customer (who will go unnamed). Neither of us could find a blog post like this with the answer, so after we worked together to come up with a solution, I decided I would blog about it for my future self (which is pretty much the main reason I blog anything, really. The other reason is to find out if anyone else knows a better way).
 
-The source code I used to generate the "patient" data used in this post link:[is available on GitHub]. If you aren't .NET savvy, you can just use link:https://developer.couchbase.com/documentation/server/current/tools/cbimport.html[cbimport] on link:[sample data] that I've created. (Or, you can use the N1QL sandbox, more information on that later). The rest of this blog post assumes you have a "patients" bucket with appropriate data in it.
+Before we get started, I've made some material available if you want to follow along. The source code I used to generate the "patient" data used in this post link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/076GroupConcateN1qlAndMapReduce/src[is available on GitHub]. If you aren't .NET savvy, you can just use link:https://developer.couchbase.com/documentation/server/current/tools/cbimport.html[cbimport] on link:https://github.com/couchbaselabs/blog-source-code/blob/master/Groves/076GroupConcateN1qlAndMapReduce/src/GenerateData/GenerateData/patients.json[sample data] that I've created. (Or, you can use the link:http://query.pub.couchbase.com/tutorial/#1[N1QL sandbox], more information on that later). The rest of this blog post assumes you have a "patients" bucket with that sample data in it.
 
-== The data
+== Requirements
 
-Suppose I have a collection of patient documents. Each patient has a single doctor. The patient document refers to a doctor by a field called `doctorId`. There may be other data in the patient document, but we're mainly focused on the patient document's key and the `doctorId` value. Some examples:
+I have a bucket of patient documents. Each patient has a single doctor. The patient document refers to a doctor by a field called `doctorId`. There may be other data in the patient document, but we're mainly focused on the patient document's key and the `doctorId` value. Some examples:
 
 [source,JavaScript,indent=0]
 ----
@@ -24,7 +24,7 @@ include::src/GenerateData/GenerateData/example.js[tag=exampledocs]
 
 Next, we can assume that each doctor can have multiple patients. We can also assume that a doctor document exists, but we don't actually need that for this tutorial, so let's just focus on the patients for now.
 
-Finally, what we want for our application (or report or whatever), is an aggregate grouping of the patients with their doctor. Something like:
+Finally, what we want for our application (or report or whatever), is an aggregate grouping of the patients with their doctor. Each record would identify a doctor and a list/array/collection of patients. Something like:
 
 [options="header"]
 |======
@@ -40,7 +40,7 @@ This might be useful for a dashboard showing all the patients assigned to doctor
 
 link:https://www.couchbase.com/products/n1ql[N1QL] gives us the link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/arrayfun.html[`ARRAY_AGG` function] to make this possible.
 
-Let's start with the query, and then break it down:
+We'll select the doctorId from each patient document, and the key to the patient document. Apply `ARRAY_AGG` to the patient document ID, and group the results by the doctorId.
 
 [source,SQL,indent=0]
 ----
@@ -62,13 +62,13 @@ If you don't want to go through the trouble of creating a bucket and importing s
 include::src/GenerateData/GenerateData/example.n1ql[tag=sandbox]
 ----
 
-Here's a screenshot of some of the results:
+Here's a screenshot of some of the results from the sandbox:
 
 image:07503-n1ql-sandbox.png[N1QL sandbox results]
 
 == Aggregate group with MapReduce
 
-Similar aggregate grouping can also be achieved with a MapReduce index.
+Similar aggregate grouping can also be achieved with a MapReduce View.
 
 Start by creating a new View. From Couchbase Console, go to Indexes, then Views. Select the "patients" bucket. Click "Create Development View". Name a design document (I called mine "$$_$$design/dev_patient". Create a view, I called mine "doctorPatientGroup".
 
@@ -118,7 +118,7 @@ The result of that view should look like this (truncated to look nicer in a blog
 
 == Summary
 
-I think the N1QL method is easier, but there may be other benefits to using MapReduce. In either case, you can accomplish aggregate grouping just as easily (if not easier) as in a relational database.
+I think the N1QL method is easier, but there may be performance benefits to using MapReduce in some cases. In either case, you can accomplish aggregate grouping just as easily (if not more easily) as in a relational database.
 
 Interested in learning more about N1QL? Be sure to check out the link:http://query.pub.couchbase.com/tutorial/#1[complete N1QL tutorial/sandbox]. Interested in MapReduce Views? Check out the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/view-queries-with-sdk.html[MapReduce Views documentation] to get started.
 

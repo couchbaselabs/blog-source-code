@@ -2,7 +2,7 @@
 // tag::patients[]
 SELECT p.doctorId AS doctor, ARRAY_AGG(META(p).id) AS patients
 FROM patients p
-group by p.doctorId;
+GROUP BY p.doctorId;
 // end::patients[]
 
 
