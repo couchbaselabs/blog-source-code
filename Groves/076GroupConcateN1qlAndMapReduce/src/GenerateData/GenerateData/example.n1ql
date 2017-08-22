@@ -7,6 +7,8 @@ group by p.doctorId;
 
 
 // example for N1QL sandbox
+// tag::sandbox[]
 SELECT t.age AS age, ARRAY_AGG(t.email) AS emails
 FROM tutorial t
 group by t.age;
+// end::sandbox[]

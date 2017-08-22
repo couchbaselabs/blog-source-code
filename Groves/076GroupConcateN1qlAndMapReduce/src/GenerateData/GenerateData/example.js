@@ -18,11 +18,7 @@ function reduce(key, values, rereduce) {
 }
 // end::reduce[]
 
-// tag:indexurl[]
-
 // http://127.0.0.1:8092/patients/_design/dev_patients/_view/doctorPatientGroup?connection_timeout=60000&full_set=true&group_level=1&inclusive_end=true&skip=0&stale=false
-
-// end:indexurl[]
 
 
 // example documents

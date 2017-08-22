@@ -7,11 +7,11 @@
 :tags: n1ql, sql, aggregation, grouping, aggregate grouping
 :heroimage: TBD
 
-Aggregate grouping is what I'm titling this blog post, but I don't know if it's the best name. Have you ever used MySQL's link:https://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_group-concat[GROUP_CONCAT function] or the `FOR XML PATH('')` workaround in SQL Server? That's basically what I'm writing about today. With Couchbase Server, the easiest way to do it is with N1QL's `ARRAY_AGG` function, but you can also do it with an old school MapReduce Index.
+Aggregate grouping is what I'm titling this blog post, but I don't know if it's the best name. Have you ever used MySQL's link:https://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_group-concat[GROUP_CONCAT function] or the link:https://stackoverflow.com/questions/451415/simulating-group-concat-mysql-function-in-microsoft-sql-server-2005[`FOR XML PATH('')` workaround in SQL Server]? That's basically what I'm writing about today. With Couchbase Server, the easiest way to do it is with N1QL's `ARRAY_AGG` function, but you can also do it with an old school MapReduce View.
 
-I'm writing this post because one of our solution engineers was working on this problem for a customer (who will go unnamed). Neither of us could find a blog post like this with the answer, so after we worked together to come up with a solution, I decided I would blog about it for my future self (Which is pretty much the main reason I blog anything, really. The other reason is to find out if anyone else knows a better way).
+I'm writing this post because one of our solution engineers was working on this problem for a customer (who will go unnamed). Neither of us could find a blog post like this with the answer, so after we worked together to come up with a solution, I decided I would blog about it for my future self (which is pretty much the main reason I blog anything, really. The other reason is to find out if anyone else knows a better way).
 
-The source code I used to generate the "patient" data link:[is available on GitHub]. If you aren't .NET savvy, you can just use link:https://developer.couchbase.com/documentation/server/current/tools/cbimport.html[cbimport] on sample data that I've created. The rest of this blog post assumes you have a "patients" bucket with appropriate data in it.
+The source code I used to generate the "patient" data used in this post link:[is available on GitHub]. If you aren't .NET savvy, you can just use link:https://developer.couchbase.com/documentation/server/current/tools/cbimport.html[cbimport] on link:[sample data] that I've created. (Or, you can use the N1QL sandbox, more information on that later). The rest of this blog post assumes you have a "patients" bucket with appropriate data in it.
 
 == The data
 
@@ -24,7 +24,7 @@ include::src/GenerateData/GenerateData/example.js[tag=exampledocs]
 
 Next, we can assume that each doctor can have multiple patients. We can also assume that a doctor document exists, but we don't actually need that for this tutorial, so let's just focus on the patients for now.
 
-Finally, what we want for our application or report or whatever, is an aggregate grouping of the patients with their doctor. Something like:
+Finally, what we want for our application (or report or whatever), is an aggregate grouping of the patients with their doctor. Something like:
 
 [options="header"]
 |======
@@ -55,13 +55,24 @@ Here's a snippet of the results on the sample data set I created:
 
 image:07501-aggregate-grouping-n1ql.png[Aggregate grouping results in N1QL]
 
+If you don't want to go through the trouble of creating a bucket and importing sample data, you can also try this in the link:http://query.pub.couchbase.com/tutorial/#1[N1QL tutorial sandbox]. There aren't patient documents in there, so the query will be a little different. I'm going to group up emails by age:
+
+[source,SQL,indent=0]
+----
+include::src/GenerateData/GenerateData/example.n1ql[tag=sandbox]
+----
+
+Here's a screenshot of some of the results:
+
+image:07503-n1ql-sandbox.png[N1QL sandbox results]
+
 == Aggregate group with MapReduce
 
 Similar aggregate grouping can also be achieved with a MapReduce index.
 
-From Couchbase Console, go to Indexes, then Views. Select the "patients" bucket. Click "Create Development View". Name a design document (I called mine "$$_$$design/dev_patient". Create a view, I called mine "doctorPatientGroup".
+Start by creating a new View. From Couchbase Console, go to Indexes, then Views. Select the "patients" bucket. Click "Create Development View". Name a design document (I called mine "$$_$$design/dev_patient". Create a view, I called mine "doctorPatientGroup".
 
-We'll need bot ha Map and a custom Reduce function.
+We'll need both a Map and a custom Reduce function.
 
 First, for the map, we just want the doctorId (in an array, since we'll be using grouping) and the patient's document ID.
 
@@ -107,4 +118,8 @@ The result of that view should look like this (truncated to look nicer in a blog
 
 == Summary
 
-[to do]
+I think the N1QL method is easier, but there may be other benefits to using MapReduce. In either case, you can accomplish aggregate grouping just as easily (if not easier) as in a relational database.
+
+Interested in learning more about N1QL? Be sure to check out the link:http://query.pub.couchbase.com/tutorial/#1[complete N1QL tutorial/sandbox]. Interested in MapReduce Views? Check out the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/view-queries-with-sdk.html[MapReduce Views documentation] to get started.
+
+Did you find this post useful? Have suggestions for improvement? Please leave a comment below, or contact me on link:https://twitter.com/mgroves[Twitter @mgroves].
