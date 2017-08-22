@@ -1,11 +1,11 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: Aggregate grouping (similar to GROUP_CONCAT) can be done in Couchbase Server with N1QL's ARRAY_AGG or with a MapReduce View.
 :title: Aggregate grouping with N1QL or with MapReduce
 :slug: Aggregate-grouping-N1QL-MapReduce
 :focus-keyword: aggregate grouping
 :categories: Application Design, Data Modeling, Couchbase Server
 :tags: n1ql, sql, aggregation, grouping, aggregate grouping
-:heroimage: TBD
+:heroimage: 075-hero-aggregate-grouping.jpg - creative commons https://commons.wikimedia.org/wiki/File:Spices_of_Sa%C3%BAde_flea_market,_S%C3%A3o_Paulo,_Brazil.jpg
 
 Aggregate grouping is what I'm titling this blog post, but I don't know if it's the best name. Have you ever used MySQL's link:https://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_group-concat[GROUP_CONCAT function] or the link:https://stackoverflow.com/questions/451415/simulating-group-concat-mysql-function-in-microsoft-sql-server-2005[`FOR XML PATH('')` workaround in SQL Server]? That's basically what I'm writing about today. With Couchbase Server, the easiest way to do it is with N1QL's `ARRAY_AGG` function, but you can also do it with an old school MapReduce View.
 
@@ -40,7 +40,7 @@ This might be useful for a dashboard showing all the patients assigned to doctor
 
 link:https://www.couchbase.com/products/n1ql[N1QL] gives us the link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/arrayfun.html[`ARRAY_AGG` function] to make this possible.
 
-We'll select the doctorId from each patient document, and the key to the patient document. Apply `ARRAY_AGG` to the patient document ID, and group the results by the doctorId.
+Start by selecting the doctorId from each patient document, and the key to the patient document. Then, apply `ARRAY_AGG` to the patient document ID. Finally, group the results by the doctorId.
 
 [source,SQL,indent=0]
 ----
@@ -55,7 +55,9 @@ Here's a snippet of the results on the sample data set I created:
 
 image:07501-aggregate-grouping-n1ql.png[Aggregate grouping results in N1QL]
 
-If you don't want to go through the trouble of creating a bucket and importing sample data, you can also try this in the link:http://query.pub.couchbase.com/tutorial/#1[N1QL tutorial sandbox]. There aren't patient documents in there, so the query will be a little different. I'm going to group up emails by age:
+If you don't want to go through the trouble of creating a bucket and importing sample data, you can also try this in the link:http://query.pub.couchbase.com/tutorial/#1[N1QL tutorial sandbox]. There aren't patient documents in there, so the query will be a little different.
+
+I'm going to group up emails by age. Start by selecting the age from each document, and the email from each document. Then, apply `ARRAY_AGG` to the email. Finally, group the results by the age.
 
 [source,SQL,indent=0]
 ----
