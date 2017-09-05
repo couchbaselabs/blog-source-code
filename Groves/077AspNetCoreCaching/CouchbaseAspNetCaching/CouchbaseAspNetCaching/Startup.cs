@@ -32,6 +32,8 @@ namespace CouchbaseAspNetCaching
             // Add framework services.
             services.AddMvc();
 
+            services.AddResponseCaching();
+
             services.AddCouchbase(opt =>
             {
                 opt.Servers = new List<Uri>
@@ -58,6 +60,8 @@ namespace CouchbaseAspNetCaching
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseResponseCaching();
 
             app.UseStaticFiles();
 

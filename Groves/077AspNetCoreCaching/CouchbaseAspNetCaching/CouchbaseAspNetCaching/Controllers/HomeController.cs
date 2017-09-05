@@ -11,7 +11,7 @@ namespace CouchbaseAspNetCaching.Controllers
 {
     public class HomeController : Controller
     {
-        private IDistributedCache _cache;
+        private readonly IDistributedCache _cache;
 
         public HomeController(IDistributedCache cache)
         {
@@ -39,16 +39,14 @@ namespace CouchbaseAspNetCaching.Controllers
             _cache.Set<Wingwang>(Path.GetRandomFileName(), new Wingwang { Wahoo = "flurtnurt"},null);
 
             ViewData["Message"] = message;
-            
-
-//            ViewData["Message"] = DateTime.Now + " " + Path.GetRandomFileName();
 
             return View();
         }
 
+        [ResponseCache(Duration = 10)]
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Hello world " + Path.GetRandomFileName();
 
             return View();
         }
