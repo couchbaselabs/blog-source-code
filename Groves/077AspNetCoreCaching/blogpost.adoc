@@ -1,7 +1,7 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: Distributed caching can provide performance and scalability benefits to your ASP.NET Core application. It's easy with Couchbase Server.
 :title: Distributed caching with ASP.NET Core and Couchbase
-:slug: Distributed-caching-ASP-NET-Core-Couchbase
+:slug: Distributed-caching-ASPNET-Couchbase
 :focus-keyword: distributed caching
 :categories: Couchbase Server
 :tags: .net, .net core, caching, extensions
@@ -25,7 +25,9 @@ If you are using Couchbase Server 5.0, you'll also need to create a user with pe
 
 == Distributed Caching with Couchbase.Extensions
 
-The link:https://github.com/couchbaselabs/Couchbase.Extensions[Couchbase.Extensions (GitHub)] project aims to make working with Couchbase Server and .NET Core simpler. You can add it to your ASP.NET Core project with NuGet, via Package Manager: `Install-Package Couchbase.Extensions.Caching -Version 1.0.0-beta2`, or with the UI, or you can use the .NET command line: `dotnet add package Couchbase.Extensions.Caching --version 1.0.0-beta2`.
+The link:https://github.com/couchbaselabs/Couchbase.Extensions[Couchbase.Extensions (GitHub)] project aims to make working with Couchbase Server and .NET Core simpler.
+
+You can add it to your ASP.NET Core project with NuGet, via Package Manager: `Install-Package Couchbase.Extensions.Caching -Version 1.0.0-beta2`, or with the UI, or you can use the .NET command line: `dotnet add package Couchbase.Extensions.Caching --version 1.0.0-beta2`.
 
 image:07701-nuget-couchbase-distributed-caching-extension.png[Couchbase extension for distributed caching available on NuGet]
 
@@ -51,9 +53,11 @@ Finally, put them both together, and your `ConfigureServices` method should look
 include::CouchbaseAspNetCaching/CouchbaseAspNetCaching/Startup.cs[tag=ConfigureServices]
 ----
 
-== Using the distributed cache
+== Using distributed caching
 
-Now that you have a distributed cache setup with Couchbase in your ASP.NET Core project, you can use `IDistributedCache` elsewhere in your project.
+Now that you have distributed caching setup with Couchbase in your ASP.NET Core project, you can use `IDistributedCache` elsewhere in your project.
+
+=== Injecting IDistributedCache
 
 A simple example would be to use it directly in a controller. It will be injected into constructors as you need it:
 
@@ -66,7 +70,7 @@ include::CouchbaseAspNetCaching/CouchbaseAspNetCaching/Controllers/HomeControlle
     }
 ----
 
-A couple examples:
+=== Caching strings
 
 You can use the `GetString` `SetString` methods to retrieve/set a string value in the cache.
 
@@ -79,9 +83,11 @@ This would appear in the "cachebucket" bucket as a binary value (not the JSON yo
 
 image:07702-binary-value-cached.png[String cached in Couchbase]
 
-In the sample code, I simply print out the `ViewData["Message"]` in the Razor view. It should look something like this:
+Lastly, in the sample code, I simply print out the `ViewData["Message"]` in the Razor view. It should look something like this:
 
 image:07703-cached-string-output.png[Cached string output to Razor]
+
+=== Caching objects
 
 You can also use `Set<>` and `Get<>` methods to save and retrieve objects in the cache. I created a very simple POCO (Plain Old CLR Object) to demonstrate:
 
@@ -98,17 +104,17 @@ Next, in the sample, I generate a random string to use as a cache key, and a ran
 include::CouchbaseAspNetCaching/CouchbaseAspNetCaching/Controllers/HomeController.cs[tag=set]
 ----
 
-I print out the key to the Razor view:
+First, I print out the key to the Razor view:
 
 image:07704-cached-poco.png[Cached POCO output to Razor]
 
-You can use this key to look up the value in Couchbase:
+Next, I can use this key to look up the value in Couchbase:
 
 image:07705-cached-poco-couchbase-json.png[Cached POCO in Couchbase]
 
-Notice that it's been serialized to JSON. This not only means that you can read it, but you can also query it with N1QL (if you need to).
+Also, notice that it's been serialized to JSON. This not only means that you can read it, but you can also query it with N1QL (if you need to).
 
-== Distributed cache with expiration
+=== Distributed caching with expiration
 
 If you want the values in the cache to expire after a certain period of time, you can specify that with `DistributedCacheEntryOptions` (only `SlidingExpiration` is supported at this time).
 
@@ -135,9 +141,9 @@ If you view that document (before the 10 seconds runs out) in Couchbase Console,
 
 After 10 seconds, that document will be gone from the bucket, and you'll see an error "not found (Document does not exist)".
 
-== Tearing down the distributed cache
+== Tearing down distributed caching
 
-Don't forget to cleanup the resources used by Couchbase for the distributed cache. One easy way to do this is with the `ApplicationStopped` event. You can wire this up in `Startup`:
+Finally, don't forget to cleanup the resources used by Couchbase for distributed caching. One easy way to do this is with the `ApplicationStopped` event. You can wire this up in `Startup`:
 
 [source,C#,indent=0]
 ----
@@ -148,7 +154,7 @@ _Note that you will have to add `IApplicationLifetime appLifetime` as a paramete
 
 == Summary
 
-Using Couchbase Server as a distributed cache in your ASP.NET Core application is a great way to improve performance and scalability to your application. These kind of "engagement" use cases are what Couchbase Server excels at. To see what else Couchbase customers are doing, check out the link:https://www.couchbase.com/customers[Couchbase Customers] page.
+Using Couchbase Server for distributed caching in your ASP.NET Core application is a great way to improve performance and scalability to your application. These kind of "engagement" use cases are what Couchbase Server excels at. To see what else Couchbase customers are doing, check out the link:https://www.couchbase.com/customers[Couchbase Customers] page.
 
 If you have questions or comments about the Couchbase.Extensions.Caching project, make sure to check out the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/caching.md[GitHub repository] or the link:https://forums.couchbase.com/c/net-sdk[Couchbase .NET SDK forums].
 
