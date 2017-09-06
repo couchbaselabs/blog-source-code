@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Couchbase.Extensions.Caching;
 using Couchbase.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -32,8 +30,6 @@ namespace CouchbaseAspNetCaching
             // Add framework services.
             services.AddMvc();
 
-            services.AddResponseCaching();
-
             services.AddCouchbase(opt =>
             {
                 opt.Servers = new List<Uri>
@@ -60,8 +56,6 @@ namespace CouchbaseAspNetCaching
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            app.UseResponseCaching();
 
             app.UseStaticFiles();
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Couchbase.Extensions.Caching;
+using CouchbaseAspNetCaching.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -23,27 +24,27 @@ namespace CouchbaseAspNetCaching.Controllers
             return View();
         }
 
-        public class Wingwang
-        {
-            public string Wahoo { get; set; }
-        }
-
         public IActionResult About()
         {
-            var message = _cache.GetString("warbl");
+            // cache/retrieve from cache
+            // a string, stored under key "CachedString1"
+            var message = _cache.GetString("CachedString1");
             if (message == null)
             {
                 message = DateTime.Now + " " + Path.GetRandomFileName();
-                _cache.SetString("warbl", message);
+                _cache.SetString("CachedString1", message);
             }
-            _cache.Set<Wingwang>(Path.GetRandomFileName(), new Wingwang { Wahoo = "flurtnurt"},null);
+            ViewData["Message"] = "'CachedString1' is '" + message + "'";
 
-            ViewData["Message"] = message;
+            // cache a generated POCO
+            // store under a random key
+            var pocoKey = Path.GetRandomFileName();
+            _cache.Set(pocoKey, MyPoco.Generate(), null);
+            ViewData["Message2"] = "Cached a POCO in '" + pocoKey + "'";
 
             return View();
         }
 
-        [ResponseCache(Duration = 10)]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Hello world " + Path.GetRandomFileName();

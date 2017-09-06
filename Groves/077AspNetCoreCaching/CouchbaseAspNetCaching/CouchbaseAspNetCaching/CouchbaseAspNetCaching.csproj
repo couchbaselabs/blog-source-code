@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Couchbase.Extensions.Caching" Version="1.0.0-beta2" />
+    <PackageReference Include="Faker.NETCore" Version="1.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
