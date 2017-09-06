@@ -10,6 +10,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace CouchbaseAspNetCaching.Controllers
 {
+    // tag::Injection[]
     public class HomeController : Controller
     {
         private readonly IDistributedCache _cache;
@@ -18,6 +19,7 @@ namespace CouchbaseAspNetCaching.Controllers
         {
             _cache = cache;
         }
+        // end::Injection[]
 
         public IActionResult Index()
         {
@@ -26,6 +28,7 @@ namespace CouchbaseAspNetCaching.Controllers
 
         public IActionResult About()
         {
+            // tag::string[]
             // cache/retrieve from cache
             // a string, stored under key "CachedString1"
             var message = _cache.GetString("CachedString1");
@@ -35,19 +38,31 @@ namespace CouchbaseAspNetCaching.Controllers
                 _cache.SetString("CachedString1", message);
             }
             ViewData["Message"] = "'CachedString1' is '" + message + "'";
+            // end::string[]
 
             // cache a generated POCO
             // store under a random key
+            // tag::set[]
             var pocoKey = Path.GetRandomFileName();
             _cache.Set(pocoKey, MyPoco.Generate(), null);
             ViewData["Message2"] = "Cached a POCO in '" + pocoKey + "'";
+            // end::set[]
+
+            // tag::expiry[]
+            var anotherPocoKey = Path.GetRandomFileName();
+            _cache.Set(anotherPocoKey, MyPoco.Generate(), new DistributedCacheEntryOptions
+            {
+                SlidingExpiration = new TimeSpan(0, 0, 10) // 10 seconds
+            });
+            ViewData["Message3"] = "Cached a POCO in '" + anotherPocoKey + "'";
+            // end::expiry[]
 
             return View();
         }
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Hello world " + Path.GetRandomFileName();
+            ViewData["Message"] = "Hello world";
 
             return View();
         }

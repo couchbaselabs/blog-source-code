@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+// tag::namespaces[]
 using Couchbase.Extensions.Caching;
 using Couchbase.Extensions.DependencyInjection;
+// end::namespaces[]
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,9 +27,9 @@ namespace CouchbaseAspNetCaching
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // tag::ConfigureServices[]
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
             services.AddMvc();
 
             services.AddCouchbase(opt =>
@@ -38,11 +40,12 @@ namespace CouchbaseAspNetCaching
                 };
             });
 
-            services.AddDistributedCouchbaseCache("cachebucket", opt => { });
+            services.AddDistributedCouchbaseCache("cachebucket", "password", opt => { });
         }
+        // end::ConfigureServices[]
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -65,6 +68,13 @@ namespace CouchbaseAspNetCaching
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // tag::cleanup[]
+            appLifetime.ApplicationStopped.Register(() =>
+            {
+                app.ApplicationServices.GetRequiredService<ICouchbaseLifetimeService>().Close();
+            });
+            // end::cleanup[]
         }
     }
 }
