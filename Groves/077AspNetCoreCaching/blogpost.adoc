@@ -3,8 +3,8 @@
 :title: Distributed caching with ASP.NET Core and Couchbase
 :slug: Distributed-caching-ASPNET-Couchbase
 :focus-keyword: distributed caching
-:categories: Couchbase Server
-:tags: .net, .net core, caching, extensions
+:categories: Couchbase Server, .NET
+:tags: .net, .net core, caching, extensions, couchbase, couchbase server, cache, distributed caching, asp.net, asp.net core
 :heroimage: 077-hero-cache-chips.jpg
 
 Distributed caching can help to improve performance of an ASP.NET Core application. This is especially true for an ASP.NET application that's deployed to a server farm or scalable cloud environment. Using Couchbase Server for caching is one of the many features that make it an ideal choice for your link:https://info.couchbase.com/engagement_database_white_paper.html[engagement database needs].
