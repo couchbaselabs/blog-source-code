@@ -52,7 +52,7 @@ namespace CouchbaseDIExample
             // tag::namedbucket[]
             services
                 .AddCouchbase(Configuration.GetSection("Couchbase"))
-                .AddCouchbaseBucket<ITravelSampleBucketProvider>("travel-sample");
+                .AddCouchbaseBucket<ITravelSampleBucketProvider>("travel-sample", "password");
             // end::namedbucket[]
 
             // tag::moredi[]
