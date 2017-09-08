@@ -7,13 +7,17 @@
 :tags: .net, .net core, dependency injection, extensions, couchbase, couchbase server, asp.net, asp.net core
 :heroimage: TBD
 
-Dependency Injection is a design pattern that makes coding easier. It saves you the hassle of instantiating objects with complex dependencies, and it makes it easier for you to write tests. With the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/dependency-injection.md[Couchbase.Extensions.DependencyInjection library (GitHub)], you can use Couchbase clusters and buckets within the built-in ASP.NET Core dependency injection framework.
+Dependency Injection is a design pattern that makes coding easier. It saves you the hassle of instantiating objects with complex dependencies, and it makes it easier for you to write tests. With the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/dependency-injection.md[Couchbase.Extensions.DependencyInjection library (GitHub)], you can use Couchbase clusters and buckets within the ASP.NET Core dependency injection framework.
 
 In my last blog post on link:https://blog.couchbase.com/distributed-caching-aspnet-couchbase/[distributed caching with ASP.NET], I mentioned the DependencyInjection library. Dependency injection will be explored in-depth in this post. Feel free to follow along with the code samples I've created, available on link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/078AspNetCoreDependencyInjection/src/CouchbaseDIExample[GitHub].
 
 == Basic setup of Couchbase
 
-First, you'll need a Couchbase Server cluster running. You can install it link:https://developer.couchbase.com/documentation/server/5.0/install/install-intro.html[on-premise], or link:https://developer.couchbase.com/documentation/server/current/getting-started/do-a-quick-install.html[with Docker], or even link:https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-enterprise[in Azure] if you'd like.
+First, you'll need a Couchbase Server cluster running. You can:
+
+* Install it link:https://developer.couchbase.com/documentation/server/5.0/install/install-intro.html[on-premise]
+* Run in a container link:https://developer.couchbase.com/documentation/server/current/getting-started/do-a-quick-install.html[with Docker]
+* Use a cloud service like link:https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-enterprise[Azure]
 
 Next, you'll need to link:https://developer.couchbase.com/documentation/server/current/clustersetup/create-bucket.html[create a bucket] in Couchbase. This can be the "travel-sample" bucket that comes with Couchbase, or a bucket that you create yourself.
 
@@ -23,7 +27,13 @@ _If you are using Couchbase Server 5.0, you'll also need to create a user. Give 
 
 The link:https://github.com/couchbaselabs/Couchbase.Extensions[Couchbase.Extensions (GitHub)] project aims to make working with Couchbase Server and ASP.NET Core simpler. Dependency Injection is just one of these extensions.
 
-You can add it to your ASP.NET Core project with NuGet, via Package Manager: `Install-Package Couchbase.Extensions.DependencyInjection -Version 1.0.2`, or with the NuGet UI, or you can use the .NET command line: `dotnet add package Couchbase.Extensions.DependencyInjection --version 1.0.2` (version 1.0.2 is the latest version at the time of writing).
+You can add it to your ASP.NET Core project with NuGet:
+
+* By using Package Manager: `Install-Package Couchbase.Extensions.DependencyInjection -Version 1.0.2`
+* With the NuGet UI
+* Use the .NET command line: `dotnet add package Couchbase.Extensions.DependencyInjection --version 1.0.2`
+
+_(Version 1.0.2 is the latest version at the time of writing)._
 
 image:07801-nuget-couchbase-extension-dependency-injection.png[Couchbase extension for dependency injection on NuGet]
 
@@ -66,7 +76,7 @@ include::src/CouchbaseDIExample/CouchbaseDIExample/Controllers/HomeController.cs
     }
 ----
 
-Next, let's do a simple `Get` operation on a well-known document in "travel-sample" just to show dependency injection in action. I'll make a change to the generated `About` action method, and write out the equipment number of the Columbus to Chicago flight for United:
+Next, let's do a simple `Get` operation on a well-known document in "travel-sample". This token usage of the Couchbase .NET SDK will show dependency injection in action. I'll make a change to the generated `About` action method. In that method, it will retrieve a route document and write out the equipment number.
 
 [source,C#,indent=0]
 ----
@@ -83,7 +93,7 @@ _If you aren't using "travel-sample", use a key from your own bucket._
 
 == Named buckets
 
-You can use the dependency injection for a specific bucket instead of having to specify the name each time.
+You can use dependency injection for a single bucket instead of having to specify the name each time.
 
 Start by creating an interface that implements `INamedBucketProvider`. Leave it empty. Here's an example:
 
@@ -99,7 +109,7 @@ Then, back in Startup.cs, map this interface to a bucket using `AddCouchbaseBuck
 include::src/CouchbaseDIExample/CouchbaseDIExample/Startup.cs[tag=namedbucket]
 ----
 
-Now, the `ITravelSampleBucketProvider` can be injected instead of the more general provider.
+Now, the `ITravelSampleBucketProvider` gets injected instead of the more general provider.
 
 [source,C#,indent=0]
 ----
@@ -108,7 +118,7 @@ include::src/CouchbaseDIExample/CouchbaseDIExample/Controllers/HomeController.cs
 
 == More complex dependency injection
 
-Until this point, we've only used dependency injection on Controllers. Dependency injection starts to pay dividends when you have a more complex object graph that goes deeper than the Controller level.
+Until this point, we've only used dependency injection on Controllers. Dependency injection starts to pay dividends with more complex, deeper object graphs.
 
 As an example, imagine a service class that uses a Couchbase bucket, but also uses an email service.
 
@@ -124,7 +134,7 @@ Next, let's use this service in a controller (aka making it a dependency). But n
 include::src/CouchbaseDIExample/CouchbaseDIExample/Controllers/ApproveController.cs[tag=ApproveController]
 ----
 
-If I were to instantiate `ComplexService` manually, I would have to instantiate at least three objects. It would look something like: `new ComplexService(new BucketProvider(), new MyEmailService()`. That's a lot that I have to keep track of, and if any dependencies change, it's a lot of manual maintenance.
+If I were to instantiate `ComplexService` manually, I would have to instantiate at least two other objects. It would look something like: `new ComplexService(new BucketProvider(), new MyEmailService()`. That's a lot that I have to keep track of, and if any dependencies change, it's a lot of manual maintenance.
 
 Instead, I can have ASP.NET Core use dependency injection to do all this for me. Back in `Startup`:
 
@@ -139,9 +149,7 @@ Now, ASP.NET Core knows how to instantiate:
 * `IEmailService` - I told it to use `MyEmailService`
 * `IComplexService` - I told it to use `ComplexService`
 
-And, of course, ASP.NET Core is already able to instantiate controllers like `ApproveController` directly.
-
-Finally, when `ApproveController` is instantiated, ASP.NET Core will know how to create and inject `ComplexService` automatically. The end result:
+Finally, when `ApproveController` is instantiated, ASP.NET Core will know how to do it. It will create `ComplexService` by instantiating `MyEmailService` and `ComplexService`. It will inject `ComplexService` automatically into `ApproveController`'s constructor. The end result:
 
 image:07803-complex-service-in-action.png[Complex service in action using dependency injection]
 
@@ -149,7 +157,7 @@ For the complete example, be sure to check out the link:https://github.com/couch
 
 == Cleaning up
 
-Don't forget to clean up after yourself. If the ASP.NET Core application is stopped, you can gracefully release any resources that the Couchbase .NET SDK is using. In the `Configure` method in Startup, add a parameter of type `IApplicationLifetime`:
+Don't forget to clean up after yourself. When the ASP.NET Core application is stops, release any resources that the Couchbase .NET SDK is using. In the `Configure` method in Startup, add a parameter of type `IApplicationLifetime`:
 
 [source,C#,indent=0]
 ----
@@ -167,7 +175,7 @@ include::src/CouchbaseDIExample/CouchbaseDIExample/Startup.cs[tag=cleanup]
 
 Dependency injection is a rich subject. Entire books have been written about it and its benefits to your application. This blog post just scratched the surface and didn't even cover the testability benefits.
 
-Couchbase.Extensions.DependencyInjection makes it easier for you to pair dependency injection and Couchbase configuration with ASP.NET Core.
+Couchbase.Extensions.DependencyInjection makes it easier to inject Couchbase into ASP.NET Core.
 
 If you have questions or comments, make sure to check out the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/dependency-injection.md[GitHub repository] or the link:https://forums.couchbase.com/c/net-sdk[Couchbase .NET SDK forums].
 
