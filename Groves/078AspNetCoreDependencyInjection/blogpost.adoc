@@ -5,7 +5,7 @@
 :focus-keyword: dependency injection
 :categories: Couchbase Server, .NET, Best Practices and Tutorials, Application Design
 :tags: .net, .net core, dependency injection, extensions, couchbase, couchbase server, asp.net, asp.net core
-:heroimage: TBD
+:heroimage: 078-hero-injection.jpg (public domain - https://pixnio.com/science/medical-science/mass-vaccination-campaigns-using-the-new-vaccine-reached-nearly-20-million-people)
 
 Dependency Injection is a design pattern that makes coding easier. It saves you the hassle of instantiating objects with complex dependencies, and it makes it easier for you to write tests. With the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/dependency-injection.md[Couchbase.Extensions.DependencyInjection library (GitHub)], you can use Couchbase clusters and buckets within the ASP.NET Core dependency injection framework.
 
