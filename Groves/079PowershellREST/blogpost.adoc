@@ -1,0 +1,89 @@
+:imagesdir: images
+:meta-description: Use PowerShell to interact with the Couchbase Server REST API. You can use Invoke-WebRequest like curl to make HTTP requests.
+:title: Powershell with the Couchbase REST API
+:slug: Powershell-Couchbase-REST-API
+:focus-keyword: powershell
+:categories: Couchbase Server
+:tags: powershell, couchbase, couchbase server, rest, api, rest api, curl, fts, full text search
+:heroimage: 079-hero-powershell.png (screenshot I took myself)
+
+PowerShell is a scripting environment / command line that comes with Windows and is also link:https://github.com/powershell/powershell[available for Linux] and within Azure. I use PowerShell as my default command line every day, but I'm still very much a PowerShell neophyte.
+
+Maybe you've used Postman or Fiddler to make HTTP requests. Those are fine, but not necessarily the right tool for automation or scripting.
+
+You may have heard of link:https://curl.haxx.se/[curl] before. It's a command line tool for making HTTP requests. If you're a .NET/Windows developer (like me), maybe you aren't familiar with curl. In this post, I'll show you how you can instead use PowerShell's `Invoke-WebRequest` to make HTTP requests (which you can use within your PowerShell automation scripts if you'd like).
+
+You can check out the PowerShell link://[script I created on GitHub]. _Note: as of the time of writing this post, I'm using PowerShell 5.1 on Windows 10._
+
+== Couchbase REST API
+
+Couchbase Server has a an extensive link:https://developer.couchbase.com/documentation/server/current/rest-api/rest-endpoints-all.html[REST API] that you can use to manage and administrate just about every aspect of Couchbase Server. For this blog post, I'm going to focus on the Full Text Search (FTS) API. I'm going to show this because:
+
+* Creating a FTS index is something you want to automate
+* Couchbase Console already shows you exactly how to do it with curl.
+
+I'm not going to cover FTS in detail: I invite you to check out link:https://blog.couchbase.com/tag/fts[past blog posts on FTS], and link:https://blog.couchbase.com/full-text-search-on-couchase-4-5-video/[this short video demonstrating full text search].
+
+== Full Text Search review
+
+When you initially create a FTS index, you may want to do this with the built-in FTS UI in the Couchbase Console. This is fine when you are doing the initial development, but it's not practical if you want to share this index with your team, automate deployment, or take advantage of source control.
+
+Fortunately, you can use the "Show index definition JSON" feature to see the JSON data that makes up the index definition. You can also have Couchbase Console generate the curl method for you.
+
+image:07901-generate-curl-fts.gif[Generate FTS curl script]
+
+Well, if you're using curl, that's very convenient. You can copy/paste that into a script, and check the script into source control.
+
+== PowerShell version: Invoke-WebRequest
+
+First, create a new PowerShell script. I called mine `createFtsIndex.ps1`. All this PowerShell script is going to do is create a FTS index on an existing bucket.
+
+You can start by pasting the "curl" command into this file. The bulk of this command is the JSON definition, which will be exactly the same.
+
+Let's breakdown the rest of the curl command to see what's happening:
+
+* `-XPUT` - This is telling curl to use the PUT verb with the HTTP request
+* `-H "Content-Type: application/json"` - Use a Content-Type header.
+* `http://localhost:8094/api/index/medical-condition` - This is the URL of the REST endpoint. The "localhost" will vary based on where Couchbase is running, and the "medical-condition" part is just the name of the FTS index.
+* `-d '...json payload...'` - The body of content that will be included in the HTTP request.
+
+PowerShell's `Invoke-WebRequest` can do all this stuff too, but the syntax is a bit different. Let's step through the equivalents:
+
+* `-Method PUT` - This is telling Invoke-WebRequest to use the PUT verb with the HTTP request, so you can replace `-XPUT`
+* `-Header @{ ... }` - Specify headers to use with the request (more on this later)
+* `-Uri http://localhost:8094/api/index/medical-condition"` - You just need to add "-Uri" in front
+* `-Body '...json payload...'` - The body of content is included this way instead of using curl's `-d`
+
+== Headers
+
+PowerShell expects a "dictionary" that contains headers. The syntax for a literal dictionary is:
+
+`@{"key1"="value1"; "key2"="value2"}`
+
+So then, to specify Content-Type:
+
+`-Headers @{"Content-Type"="application/json"}`
+
+One thing that the curl output did _not_ generate is the authentication information that you need to make a request to the API. With curl, you can specify basic authentication by adding the username/password to the URL. It will then translate it into the appropriate Basic Auth headers.
+
+With PowerShell, it appears you have to do that yourself. My local Couchbase Server has credentials "Administrator" and "password" (please don't use those in production). Those need to be encoded into Base64 and added to the headers.
+
+Then the full Headers dictionary looks like this:
+
+`-Headers @{"Authorization" = "Basic "+[System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("Administrator:password")); "Content-Type"="application/json"}`
+
+If you know a cleaner way to do this, I'm dying to know. Please leave a comment.
+
+== Execute the PowerShell script
+
+To execute the script, simply type `.\createFtsIndex.ps1` at the PowerShell command line.
+
+image:07902-execute-powershell-script.png[Execute PowerShell script]
+
+You're now ready to make this a part of your deployment.
+
+== Summary
+
+PowerShell is a handy tool for scripting and automation. It's used by Azure, Octopus Deploy, and anywhere Windows is running. Use PowerShell to automate Couchbase stuff like Full Text Search indexes, and your team will thank you.
+
+Need help? Reach out to me with questions by leaving a comment below or finding me on link:https://twitter.com/mgroves[Twitter @mgroves].
