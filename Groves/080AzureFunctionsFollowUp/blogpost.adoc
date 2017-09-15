@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: A Couchbase cluster is an expensive object to create. You can lazily instantiate and share between Azure Functions calls.
 :title: Azure Functions and Lazy Initialization with Couchbase Server
 :slug: Azure-Functions-Lazy-Initialization-Couchbase-Server
 :focus-keyword: Azure Functions
@@ -9,17 +9,17 @@
 
 Azure Functions are still new to me, and I'm learning as I'm going. I blogged about my foray into Azure Functions with Couchbase link:https://blog.couchbase.com/azure-functions-couchbase-server/[over a month ago]. Right after I posted that, I got some helpful feedback about the way I was instantiating a Couchbase cluster (and bucket).
 
-I had (wrongly) assumed that there was no way to save state between Azure Function calls. This is why I created a `GetCluster()` method that was called each time the function ran. But, initializing a Couchbase `Cluster` object is an expensive operation, and should be done as infrequently as possible.
+I had (wrongly) assumed that there was no way to save state between Azure Function calls. This is why I created a `GetCluster()` method that was called each time the function ran. But, initializing a Couchbase `Cluster` object is an expensive operation. The less often you instantiate it, the better.
 
-_You can follow along with the updated link://[source code for this blog post on Github]._
+_You can follow along with the updated link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/080AzureFunctionsFollowUp/src/CouchbaseWithAzureFunctions[source code for this blog post on Github]._
 
 == Static state
 
-I had a hard time finding documentation on whether I could use a `static` object that was reused between function calls. I suppose I should have just experimented, like link:http://markheath.net/post/sharing-state-between-azure-functions[fellow Microsoft MVP Mark Heath] did. Instead, I link:https://stackoverflow.com/questions/46162151/azure-functions-singleton-for-expensive-object[posed the question to StackOverflow].
+I had a hard time finding documentation on whether I could use a `static` object for reuse between function calls. I suppose I should have experimented, like link:http://markheath.net/post/sharing-state-between-azure-functions[fellow Microsoft MVP Mark Heath] did. Instead, I link:https://stackoverflow.com/questions/46162151/azure-functions-singleton-for-expensive-object[posed the question to StackOverflow].
 
-In short: yes. A `Cluster` can be instantiated and saved to a static member and reused between function calls. According to Mark's post above, there's no guarantee how long this value will be saved. But that's to be expected as a trade-off that you make when going "serverless".
+In short: yes. A `Cluster`, instantiated and saved to a static member, can is reusable between function calls. According to Mark's post above, there's no guarantee how long this value will survive. But that's an expected trade-off that you make when going "serverless".
 
-== Lazy initializing
+== Lazy initializing within Azure Functions
 
 Simply using a static member would work, but it's not thread-safe. There are a few ways to tackle that issue, but an easy way that's built right into the .NET framework is to use link:https://docs.microsoft.com/en-us/dotnet/framework/performance/lazy-initialization[Lazy Initialization] with `Lazy<T>`.
 
