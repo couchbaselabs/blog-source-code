@@ -5,13 +5,13 @@
 :focus-keyword: distributed session
 :categories: Couchbase Server, .NET
 :tags: .net, .net core, caching, extensions, couchbase, couchbase server, session, distributed session, asp.net, asp.net core
-:heroimage: TBD
+:heroimage: 081-hero-congress-session.jpg (public domain)
 
 Distributed session is a way for you to store your session state outside of your ASP.NET Core application. Using Couchbase to store session state can help you when you need to scale your web site, especially if you don't want to use sticky sessions.
 
-You can follow along with the code samples I've created, available on link:[GitHub].
+You can follow along with the code samples I've created, available on link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/081AspNetCoreSession/src/AspNetDistributedSession[GitHub].
 
-_Note that Couchbase.Extension.Session is a beta release at the time of this writing._
+_Note that Couchbase.Extensions.Session is a beta release at the time of this writing._
 
 == Review of session
 
@@ -57,7 +57,7 @@ Before you start writing code, you'll need a Couchbase Server cluster running wi
 
 === Adding Couchbase.Extensions.Session
 
-Now, open up your ASP.NET Core application in Visual Studio. (I created a new ASP.NET Core MVC app, which you can find on GitHub). Next, with NuGet, install the Couchbase.Extensions.Session library:
+Now, open up your ASP.NET Core application in Visual Studio. (I created a new ASP.NET Core MVC app, which link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/081AspNetCoreSession/src/AspNetDistributedSession[you can find on GitHub]). Next, with NuGet, install the Couchbase.Extensions.Session library:
 
 * Use the NuGet UI (see below)
 * `Install-Package Couchbase.Extensions.Session -Version 1.0.0-beta2` with the Package manager
@@ -131,6 +131,12 @@ After you visit the "About" page at least once, go to the "Contact" page. You sh
 image:08104-output-from-distributed-session.png[Output to ASP.NET from distributed session]
 
 That's pretty much it. There are some other relatively self-evident methods available on `Session`. They are also link:https://docs.microsoft.com/en-us/aspnet/core/fundamentals/app-state?tabs=aspnetcore2x[outlined in the ASP.NET Core documentation].
+
+One more thing: I named the cookie (".MyApp.Cookie"). You can view this cookie in the browser of your choice. In Chrome, use Ctrl+Shift+I and navigate to the "Application" tab. You will see the cookie and its value.
+
+image:08105-session-cookie.png[Session cookie]
+
+You generally don't need to know this detail in your day-to-day as an ASP.NET Core developer, but it's good to know how things work just in case.
 
 == Summary
 
