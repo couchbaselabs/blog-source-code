@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: Distributed session stores your session state outside of ASP.NET Core. Using Couchbase for session can help scale your web site and avoid sticky sessions.
 :title: Distributed session with ASP.NET Core and Couchbase
 :slug: Distributed-session-ASPNET-Couchbase
 :focus-keyword: distributed session
