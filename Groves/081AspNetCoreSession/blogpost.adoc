@@ -1,0 +1,141 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Distributed session with ASP.NET Core and Couchbase
+:slug: Distributed-session-ASPNET-Couchbase
+:focus-keyword: distributed session
+:categories: Couchbase Server, .NET
+:tags: .net, .net core, caching, extensions, couchbase, couchbase server, session, distributed session, asp.net, asp.net core
+:heroimage: TBD
+
+Distributed session is a way for you to store your session state outside of your ASP.NET Core application. Using Couchbase to store session state can help you when you need to scale your web site, especially if you don't want to use sticky sessions.
+
+You can follow along with the code samples I've created, available on link:[GitHub].
+
+_Note that Couchbase.Extension.Session is a beta release at the time of this writing._
+
+== Review of session
+
+Session state is simply a way to store data for a particular user. Typically, a token is stored in a user cookie, and that token acts as a key to some set of data on the server side.
+
+If you're familiar with ASP.NET or ASP Classic, this is done using `Session`. All the cookie work is done behind the scenes, so you simply use `Session` as a dictionary to store and retrieve whatever data you want.
+
+[source,C#,indent=0]
+----
+if(Session["IsLoggedIn"] = false)
+    Session["Username"] = "matt";
+----
+
+By default, in ASP.NET and ASP Classic, this information is stored in memory, as part of the web application process.
+
+In ASP.NET Core, you can also opt-in to this by configuring session with `AddSession`.
+
+First, in Startup.cs, in the `Configure` function, tell ASP.NET Core to use session:
+
+[source,C#,indent=0]
+----
+include::src/AspNetDistributedSession/AspNetDistributedSession/Startup.cs[tag=UseSession]
+----
+
+Then, in the `ConfigureServices` function, use `AddSession` to add a session provider service.
+
+[source,C#,indent=0]
+----
+include::src/AspNetDistributedSession/AspNetDistributedSession/Startup.cs[tag=ConfigureSession]
+----
+
+(This will use the default session settings, see the link:https://docs.microsoft.com/en-us/aspnet/core/fundamentals/app-state?tabs=aspnetcore2x[ASP.NET Core documentation] for more information).
+
+== Why distributed session?
+
+However, if you are scaling out your web application with multiple web servers, you'll have to make some decisions about session. If you continue to use in-process session, then you must configure sticky sessions (the first web server that a user hits is the one they will "stick" with for subsequent requests). This has some potential downsides (see link:https://serverfault.com/questions/46307/what-is-the-downside-to-sticky-sessions-with-load-balancers[this thread on ServerFault] and link:https://technet.microsoft.com/en-us/library/2009.06.asp.aspx[this article on Microsoft's TechNet magazine]).
+
+If you don't want to use sticky sessions, then you can't use the in-process session option. You'll instead need to use a distributed session. There are a lot of options for where to put session data, but Couchbase's memory-first architecture and flexible scaling capabilities make it a good choice.
+
+== Using distributed session in ASP.NET Core
+
+Before you start writing code, you'll need a Couchbase Server cluster running with a bucket (I named mine "sessionstore"). You'll also need to create a user with Data Reader and Data Writer permission on the bucket (I also called my user "sessionstore" just to keep things simple).
+
+=== Adding Couchbase.Extensions.Session
+
+Now, open up your ASP.NET Core application in Visual Studio. (I created a new ASP.NET Core MVC app, which you can find on GitHub). Next, with NuGet, install the Couchbase.Extensions.Session library:
+
+* Use the NuGet UI (see below)
+* `Install-Package Couchbase.Extensions.Session -Version 1.0.0-beta2` with the Package manager
+* `dotnet add package Couchbase.Extensions.Session --version 1.0.0-beta2` with the dotnet command line
+
+image:08101-Couchbase-Extensions-with-NuGet.png[Couchbase Extensions with NuGet]
+
+=== Configuring Couchbase
+
+To configure the session provider, you'll be writing some code that looks familiar if you've been following along in this Couchbase.Extensions series. 
+
+The `ConfigureServices` method in Startup.cs is where you'll be adding configuration code.
+
+First, use `AddCouchbase`, which is done with the link:https://blog.couchbase.com/dependency-injection-aspnet-couchbase/[Dependency Injection] extension.
+
+After that, setup the distributed cache for Couchbase with `AddDistributedCouchbaseCache`, which I covered in a blog post on link:https://blog.couchbase.com/distributed-caching-aspnet-couchbase/[distributed caching].
+
+[source,C#,indent=0]
+----
+include::src/AspNetDistributedSession/AspNetDistributedSession/Startup.cs[tag=CouchbaseConfig]
+----
+
+Finally, configure Couchbase as a session store with `AddCouchbaseSession`.
+
+[source,C#,indent=0]
+----
+include::src/AspNetDistributedSession/AspNetDistributedSession/Startup.cs[tag=CouchbaseSession]
+----
+
+You can configure the idle timeout (how long until the session expires after not being used), the cookie name, and more, if you need to. In the above example, I set the timeout to 20 minutes and the cookie name to ".MyApp.Session".
+
+=== Writing to a distributed session
+
+To access Session data, you can use `HttpContext.Session` from within your controller actions.
+
+First, I want to write something to session. In the `About` action, I used the `SetObject` method:
+
+[source,C#,indent=0]
+----
+include::src/AspNetDistributedSession/AspNetDistributedSession/Controllers/HomeController.cs[tag=About]
+----
+
+From this point on, whenever you click to view the "About" page, a new value will be stored in session with the key "sessionkey". If you switch over to Couchbase Console, you can see the data.
+
+image:08102-distributed-session-document-in-couchbase.png[Distributed session document in Couchbase]
+
+Note that a user's session is represented by a single document. So, if I were to insert another session value (as below), that value would be stored in the same document.
+
+[source,C#,indent=0]
+----
+include::src/AspNetDistributedSession/AspNetDistributedSession/Controllers/HomeController.cs[tag=Another]
+----
+
+The resultant document would look like:
+
+images:08103-two-distributed-session-keys.png[Two distributed session keys]
+
+You should be careful not to go crazy with the amount of data you put into session, because Couchbase documents are limited to 20mb.
+
+=== Reading from a distributed session
+
+To get a value out of session, you can use `GetObject` and supply the session key. In the sample code, I did this in the `Contact` action:
+
+[source,C#,indent=0]
+----
+include::src/AspNetDistributedSession/AspNetDistributedSession/Controllers/HomeController.cs[tag=Contact]
+----
+
+After you visit the "About" page at least once, go to the "Contact" page. You should see the session object printed out to the page.
+
+image:08104-output-from-distributed-session.png[Output to ASP.NET from distributed session]
+
+That's pretty much it. There are some other relatively self-evident methods available on `Session`. They are also link:https://docs.microsoft.com/en-us/aspnet/core/fundamentals/app-state?tabs=aspnetcore2x[outlined in the ASP.NET Core documentation].
+
+== Summary
+
+The distributed session extension for Couchbase is another tool in your box for helping to scale your ASP.NET Core applications. These handy .NET extensions help to demonstrate how Couchbase is the link:https://www.couchbase.com/products/data-platform[engagement database] platform that you need.
+
+If you have questions or comments on Couchbase Extensions, make sure to check out the link:https://github.com/couchbaselabs/Couchbase.Extensions[GitHub repository] or the link:https://forums.couchbase.com/c/net-sdk[Couchbase .NET SDK forums].
+
+And please reach out to me with questions on all things .NET and Couchbase by leaving a comment below or finding me on link:https://twitter.com/mgroves[Twitter @mgroves].
