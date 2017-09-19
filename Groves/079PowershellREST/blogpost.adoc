@@ -4,7 +4,7 @@
 :slug: Powershell-Couchbase-REST-API
 :focus-keyword: powershell
 :categories: Couchbase Server
-:tags: powershell, couchbase, couchbase server, rest, api, rest api, curl, fts, full text search
+:tags: powershell, couchbase, couchbase server, rest, api, rest api, curl, fts, full text search, http
 :heroimage: 079-hero-powershell.png (screenshot I took myself)
 
 PowerShell is a scripting environment / command line that comes with Windows and is also link:https://github.com/powershell/powershell[available for Linux] and within Azure.
