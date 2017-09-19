@@ -15,7 +15,7 @@ namespace AspNetDistributedSession.Controllers
                 City = "Lancaster",
                 State = "OH"
             });
-            // tag::Another[]
+            // end::Another[]
 
             return View();
         }

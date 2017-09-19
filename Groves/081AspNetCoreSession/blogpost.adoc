@@ -59,8 +59,8 @@ Before you start writing code, you'll need a Couchbase Server cluster running wi
 
 Now, open up your ASP.NET Core application in Visual Studio. (I created a new ASP.NET Core MVC app, which link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/081AspNetCoreSession/src/AspNetDistributedSession[you can find on GitHub]). Next, with NuGet, install the Couchbase.Extensions.Session library:
 
-* Use the NuGet UI (see below)
-* `Install-Package Couchbase.Extensions.Session -Version 1.0.0-beta2` with the Package manager
+* Use the NuGet UI (see below), or
+* `Install-Package Couchbase.Extensions.Session -Version 1.0.0-beta2` with the Package manager, or
 * `dotnet add package Couchbase.Extensions.Session --version 1.0.0-beta2` with the dotnet command line
 
 image:08101-Couchbase-Extensions-with-NuGet.png[Couchbase Extensions with NuGet]
@@ -87,20 +87,20 @@ Finally, configure Couchbase as a session store with `AddCouchbaseSession`.
 include::src/AspNetDistributedSession/AspNetDistributedSession/Startup.cs[tag=CouchbaseSession]
 ----
 
-You can configure the idle timeout (how long until the session expires after not being used), the cookie name, and more, if you need to. In the above example, I set the timeout to 20 minutes and the cookie name to ".MyApp.Session".
+You can configure the idle timeout (how long until the session expires after not being used), the cookie name, and more, if you need to. In the above example, I set the timeout to 20 minutes and the cookie name to ".MyApp.Cookie".
 
 === Writing to a distributed session
 
-To access Session data, you can use `HttpContext.Session` from within your controller actions.
+To access Session data, you can use `HttpContext.Session`.
 
-First, I want to write something to session. In the `About` action, I used the `SetObject` method:
+First, I want to write something to session. In an `About` controller action, I used the `SetObject` method:
 
 [source,C#,indent=0]
 ----
 include::src/AspNetDistributedSession/AspNetDistributedSession/Controllers/HomeController.cs[tag=About]
 ----
 
-From this point on, whenever you click to view the "About" page, a new value will be stored in session with the key "sessionkey". If you switch over to Couchbase Console, you can see the data.
+From this point on, whenever you click to view the "About" page, a new value will be stored in session with the key "sessionkey". If you switch over to Couchbase Console, you can see the data being stored.
 
 image:08102-distributed-session-document-in-couchbase.png[Distributed session document in Couchbase]
 
@@ -113,7 +113,7 @@ include::src/AspNetDistributedSession/AspNetDistributedSession/Controllers/HomeC
 
 The resultant document would look like:
 
-images:08103-two-distributed-session-keys.png[Two distributed session keys]
+image:08103-two-distributed-session-keys.png[Two distributed session keys]
 
 You should be careful not to go crazy with the amount of data you put into session, because Couchbase documents are limited to 20mb.
 
