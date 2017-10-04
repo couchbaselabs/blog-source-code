@@ -1,7 +1,7 @@
 :imagesdir: images
-:meta-description: Performance testing and load testing will help prepare you better for production. Pillowfight is a command line utility that can help you do stress testing with Couchbase. 
-:title: Performance and Load Testing Couchbase with Pillowfight
-:slug: Performance-Load-Testing-Couchbase-Pillowfight
+:meta-description: Performance testing and load testing will help prepare you for production. Pillowfight is a CLI utility that can help you do stress testing with Couchbase.
+:title: Performance Testing and Load Testing Couchbase with Pillowfight
+:slug: Performance-Testing-Couchbase-Pillowfight
 :focus-keyword: performance testing
 :categories: Couchbase Server
 :tags: Couchbase Server, Azure, cloud
