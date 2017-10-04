@@ -4,7 +4,7 @@
 :slug: Performance-Testing-Couchbase-Pillowfight
 :focus-keyword: performance testing
 :categories: Couchbase Server
-:tags: Couchbase Server, Azure, cloud
+:tags: performance testing, load testing, stress testing, pillowfight
 :heroimage: 083-hero-pillow-fight.jpg Kuba Bożanowski - Creative Commons https://commons.wikimedia.org/wiki/File:Warsaw_Pillow_Fight_2010_(4487959761).jpg
 
 Performance testing and load testing are important processes to help you make sure you are production ready. For testing Couchbase Server clusters, there is an open-source command line utility called "cbc-pillowfight". It's part of link:https://github.com/couchbase/libcouchbase[libcouchbase].
