@@ -1,0 +1,83 @@
+:imagesdir: images
+:meta-description: Performance testing and load testing will help prepare you for production. Pillowfight is a CLI utility that can help you do stress testing with Couchbase.
+:title: Performance Testing and Load Testing Couchbase with Pillowfight
+:slug: Performance-Testing-Couchbase-Pillowfight
+:focus-keyword: performance testing
+:categories: Couchbase Server
+:tags: performance testing, load testing, stress testing, pillowfight
+:heroimage: 083-hero-pillow-fight.jpg Kuba Bożanowski - Creative Commons https://commons.wikimedia.org/wiki/File:Warsaw_Pillow_Fight_2010_(4487959761).jpg
+
+Performance testing and load testing are important processes to help you make sure you are production ready. For testing Couchbase Server clusters, there is an open-source command line utility called "cbc-pillowfight". It's part of link:https://github.com/couchbase/libcouchbase[libcouchbase].
+
+== Before you begin
+
+You'll need a Couchbase Server cluster up and running. You can try it out directly on your local machine (link:https://couchbase.com/downloads[download Couchbase for Linux, Windows, and Mac]) or in a link:https://hub.docker.com/_/couchbase/[Docker container].
+
+If you're just trying out pillowfight, you may want to create a bucket on your cluster just for that purpose. I created a bucket called "pillow".
+
+After you have Couchbase Server installed, you'll need to download and install libcouchbase:
+
+* Mac: `brew install libcouchbase`
+* Windows: link:https://developer.couchbase.com/server/other-products/release-notes-archives/c-sdk[download a zip file] (latest at the time of writing is libcouchbase-2.8.1)
+
+For more information, including Linux instructions, check out the link:https://developer.couchbase.com/server/other-products/release-notes-archives/c-sdk[libcouchbase release notes].
+
+== Pillow fight for Performance Testing
+
+If you used homebrew to install on a Mac, you can type `cbc-pillowfight --help` straight away for the command line help screen.
+
+On Windows, unzip the libcouchbase zip file wherever you'd like. You'll find `cbc-pillowfight.exe` in the `bin` folder.
+
+image:08301-performance-testing-tools.png[Performance testing tools]
+
+The simplest pillowfight you can run is:
+
+`.\cbc-pillowfight.exe -U couchbase://localhost/pillow -u Administrator -P password`
+
+_This is for a Windows Powershell command line, but it will be very similar on other OSes._
+
+A pillow fight will start for the cluster running on your local machine (localhost), with the "Administrator" user that has a password of "password" (your username and password may be different).
+
+image:08302-starting-pillowfight.gif[Starting pillowfight]
+
+You should see a message like "Thread 0 has finished populating".
+
+== What is a pillow fight?
+
+At this point, the pillowfight is going to start creating, updating, and reading documents from the "pillow" bucket. It's going to do all these operations ("ops") according to the command line settings you specify (or fall back to the defaults).
+
+For instance, with the `-I` flag, you can specify how many total documents you want to operate on. The default is 1000. So, if you run the above command, you will soon see 1000 documents show up in the pillow bucket.
+
+It doesn't just create 1000 documents and quit. Pillowfight will keep "getting" and "updating" those documents until you terminate the process. It's called a "pillowfight" because it will put your Couchbase Cluster into battle (with actual exhertion), but it's really more of a battle simulation.
+
+While the fight is happening, you can monitor bucket statistics to see how your cluster is performing under load.
+
+image:08303-performance-testing-monitoring.gif[Performance testing monitoring]
+
+As I type this, the fan on my laptop is whirring to life as I stress test the single node Couchbase cluster that I've installed on it. (I suspect my home desktop would create a much more impressive set of charts, but link:https://blog.couchbase.com/road-couchbase-developer-advocacy/[I am traveling a lot this month]).
+
+There are a lot of statistics available for you to look at on a bucket level. Check out the link:https://developer.couchbase.com/documentation/server/current/monitoring/ui-monitoring-statistics.html[Couchbase Server documentation on Monitoring Statistics] for more details.
+
+== Options for performance testing
+
+The default pillowfight settings may not be optimal for the type of application that you'll be using with Couchbase. There are many ways to adjust your pillow fight to make it better fit your use cases. For the full list of options, type `cbc-pillowfight --help` at the command line.
+
+But here are some notable options you might want to try out:
+
+* `-I` or `--num-items` with a number, to specify how many documents you want to operate on.
+*  `--json` to use JSON payloads in the documents. By default, documents are created with link:https://blog.couchbase.com/using-couchbase-to-store-non-json-data/[non-JSON payloads], but you may want to have real JSON documents in order to test other aspects of performance while the pillow fight is running.
+* `-e` to expire documents after a certain period of time. If you are using Couchbase as a cache or short term storage, you will want to use this setting to monitor the effect of documents expiring.
+* `--subdoc` to use the subdocument API. Not every operation will need to be on an entire document.
+* `-M` or `--max-size` to set a ceiling on the size of the documents. You may want to adjust this to tailor a more realistic document size for your system. There's a corresponding `-m` and `--min-size` too.
+
+Here's another example using the above options:
+
+`.\cbc-pillowfight.exe -U couchbase://localhost/pillow -u Administrator -P password -I 10000 --json -e 10 --subdoc -M 1024`
+
+This will start a pillowfight using 10000 JSON documents, that expire after 10 seconds, uses the sub-document API, and has a max document size of 1024 bytes.
+
+== Summary
+
+Couchbase is committed to performance. We do extensive performance testing to make sure that we are delivering the speed you expect. Check out recent blog posts on our link:https://blog.couchbase.com/plasma-index-performance/[Plasma storage engine] and link:https://blog.couchbase.com/n1ql-performance-feature-enhancements-couchbase-5-0/[N1QL enhancements]. But no one knows your use case and infrastructure better than you. With pillowfight, you have a tool to help you do performance testing, load testing, and stress testing.
+
+Please reach out with questions on Couchbase by leaving a comment below or finding me on link:https://twitter.com/mgroves[Twitter @mgroves].
