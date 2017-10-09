@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  fastfailoverdemo:
+    image: fastfailoverdemo
+    build:
+      context: ./FastFailoverDemo
+      dockerfile: Dockerfile

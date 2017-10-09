@@ -1,0 +1,29 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Fast Failover with Couchbase Server 5.0
+:slug: Fast-Failover-Couchbase-Server-5
+:focus-keyword: fast failover
+:categories: Couchbase Server
+:tags: fast failover, .net, docker
+:heroimage: TBD
+
+Fast failover is one of the many improvements that come with the release of link:https://www.couchbase.com/downloads[Couchbase Server 5.0] (now available for download).
+
+Failover is one of the important concepts to understand when it comes to distributed databases. CAP theorum states that a distributed database can't be both available and consistent all of the time. Couchbase Server's architecture is designed to be always consistent, and highly available. With fast failover, that availability has improved even more.
+
+In this blog post, I'm going to demostrate failover in action. I'll be using Docker to create a cluster of 3 Couchbase nodes on my local machine.
+
+== Fast failover overview
+
+
+
+== .NET Example
+
+== More about failover
+
+== Summary
+
+https://github.com/couchbaselabs/sdk-rfcs/blob/master/rfc/0024-fast-failover.md
+https://issues.couchbase.com/browse/NCBC-1388
+https://issues.couchbase.com/browse/NCBC-1366
+https://developer.couchbase.com/documentation/server/current/clustersetup/automatic-failover.html
