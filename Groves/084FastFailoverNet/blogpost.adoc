@@ -9,19 +9,19 @@
 
 Fast failover is one of the many improvements that come with the release of link:https://www.couchbase.com/downloads[Couchbase Server 5.0] (now available for download).
 
-Failover is one of the important concepts to understand when it comes to distributed databases. link:https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed[The CAP theorem] states that a distributed database can't be both available and consistent all of the time. Couchbase Server's architecture is designed to be always consistent, and highly available. With fast failover, that availability has improved even more.
+Failover is one of the important concepts to understand when it comes to distributed databases. link:https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed[The CAP theorem] states that a distributed database can't be both available _and_ consistent _all_ of the time. Couchbase Server's architecture is designed to be _always_ consistent, and _highly_ available. With fast failover, that availability has improved even more.
 
 In this blog post, I'm going to demonstrate failover in action. I'll be using Docker to create a cluster of 3 Couchbase nodes on my local machine.
 
-_You can follow along with the code sample in this blog post: it is link://[available on GitHub]._
+_You can follow along with the code sample in this blog post: it is link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/084FastFailoverNet/src/FastFailoverDemo[available on GitHub]._
 
 == Fast failover overview
 
 You'll need a bit of setup and preparation.
 
-First, create a 3-node (at least) Couchbase Server cluster. There are a number of ways to do this, including link:https://github.com/couchbaselabs/vagrants[Vagrants], Virtual Machines, actual machines, link:https://blog.couchbase.com/azure-getting-started-easy-free/[Azure], and more. Having at least three nodes will make it possibly to demonstrate fast failover.
+First, create a 3-node (at least) Couchbase Server cluster. There are a number of ways to do this, including link:https://github.com/couchbaselabs/vagrants[Vagrants], Virtual Machines, actual machines, link:https://blog.couchbase.com/azure-getting-started-easy-free/[Azure], and more.
 
-I chose to use Docker. I blogged about how to link:https://blog.couchbase.com/docker-and-asp-net-core-with-couchbase-server/[create a Couchbase Cluster on Docker and access it with a .NET Core application](don't forget the bridge network!). So, I just followed those same instructions again. The only difference is that I used a console application instead of an ASP.NET application (which you can read more about later in this post).
+I chose to use Docker. I blogged about how to link:https://blog.couchbase.com/docker-and-asp-net-core-with-couchbase-server/[create a Couchbase Cluster on Docker and access it with a .NET Core application] (don't forget the bridge network!). So, I just followed those same instructions again. The only difference is that I used a console application instead of an ASP.NET application (which you can read more about later in this post).
 
 image:08401-three-couchbase-nodes.png[Three Couchbase Server nodes]
 
@@ -31,7 +31,7 @@ Next, I created a bucket called "mybucket". Make sure to enable replication of 2
 
 image:08402-bucket.png[Couchbase Server bucket]
 
-After that, create a user (I called mine "myuser" with at least Data Writer and Data Reader permission for "mybucket"). _If you aren't familiar yet with the Couchbase Server Role-based Access Control (RBAC), start with link:https://blog.couchbase.com/authentication-authorization-rbac-net/[this blog post on Authentication with RBAC and .NET.]_
+After that, create a user (I called mine "myuser") with at least Data Writer and Data Reader permission for "mybucket"). _If you aren't familiar yet with the Couchbase Server Role-based Access Control (RBAC), start with link:https://blog.couchbase.com/authentication-authorization-rbac-net/[this blog post on Authentication with RBAC and .NET.]_
 
 image:08403-user.png[Couchbase Server user]
 
@@ -47,7 +47,7 @@ Now that you have a 3-node cluster running inside of your Docker host, it's time
 
 === Connecting to the cluster
 
-After creating a new .NET Core console application, I added the link:https://www.nuget.org/packages/CouchbaseNetClient/[Couchbase .NET SDK (currently version 2.5.1) using NuGet].
+After creating a new .NET Core console application in Visual Studio, I added the link:https://www.nuget.org/packages/CouchbaseNetClient/[Couchbase .NET SDK (currently version 2.5.1) using NuGet].
 
 Then, I created a configuration to connect to the 3-node cluster, authenticate to "myuser", and open up "mybucket".
 
@@ -58,7 +58,7 @@ include::src/FastFailoverDemo/FastFailoverDemo/Program.cs[tag=cluster]
 
 Those IP addresses are the addresses that are _internal_ to the Docker host. This .NET Core application will also be running inside the Docker host, where those IP addresses will resolve. From _outside_ the docker host, only "localhost:8091" will resolve (assuming you are following the link:https://blog.couchbase.com/docker-and-asp-net-core-with-couchbase-server/[tutorial] I linked to earlier). If you are not using Docker, put in the IP addresses of the Azure machines, the VMs, etc, instead.
 
-Next, the PasswordAuthentication is used to ensure bucket access.
+Next, `PasswordAuthentication` is used to ensure bucket access.
 
 Finally, get a bucket object using `OpenBucket`.
 
@@ -71,11 +71,11 @@ For this demonstration, I want to setup a bunch of documents that I will later b
 include::src/FastFailoverDemo/FastFailoverDemo/Program.cs[tag=createdocs]
 ----
 
-Next, in my code, `numDocuments` is set to 50. But if you are following along, feel free to set it to another number and see what happens.
+In my code, `numDocuments` is set to 50. But if you are following along, feel free to set it to another number and see what happens.
 
 === Reading documents
 
-Therefore, there are 50 documents with well-known keys, the rest of the program will be continuously looping. Each loop iteration will attempt to retreive all 50 documents.
+Therefore, there are 50 documents with well-known keys. The rest of the program will be continuously looping. Each loop iteration will attempt to retreive all 50 documents.
 
 [source,C#,indent=0]
 ----
@@ -121,11 +121,15 @@ There is a lot to keep track of at one time, so I've created a short video that 
 +++
 
 What you're seeing in that video is:
+
 1. Normal operation (all "S" for success)
 2. A node being stopped (with Docker)
 3. Couchbase detecting a node being down.
 4. Couchbase initiating fast failover to activate replicas.
 5. During that failover period, it's no longer all "S". There are some "R" for replicas (which are read only) in there too.
+6. When the failover is complete, the results go back to all "S" again.
+
+The goal of fast failover is to reduce the period of time where not all documents are entirely available.
 
 == Summary
 
@@ -133,15 +137,15 @@ Couchbase Server 5.0 has improved failover with a "fast failover" option that ca
 
 This blog post shows off a console app that's meant to demonstrate fast failover. It's not a very useful app outside of that, but you can take the principles and apply them to an ASP.NET or ASP.NET Core website.
 
-Check out Couchbase Server 5.0 today for this, and other great new features.
+Check out link:https://couchbase.com/downloads[Couchbase Server 5.0] today for this and other great new features.
 
-Special thanks to Jeff Morris and the SDK team for helping out with this blog post!
+Special thanks to link:https://blog.couchbase.com/author/jeff-morris-2-2/[Jeff Morris] and the SDK team for helping out with this blog post!
 
 Here are some links for more information on fast failover:
 
 * The link:https://github.com/couchbaselabs/sdk-rfcs/blob/master/rfc/0024-fast-failover.md[SDK RFC] for fast failover. This document covers .NET, but also Java, libcouchbase, and Go.
-* link:https://developer.couchbase.com/documentation/server/current/clustersetup/automatic-failover.html[Automatic failover documentation].
-* link://[Source code for the .NET Core console app] used in this blog post (GitHub)
+* link:https://developer.couchbase.com/documentation/server/current/clustersetup/automatic-failover.html[Automatic failover documentation] for Couchbase Server.
+* link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/084FastFailoverNet/src/FastFailoverDemo[Source code for the .NET Core console app] used in this blog post (GitHub)
 * Two JIRA tickets for .NET fast failover: link:https://issues.couchbase.com/browse/NCBC-1366[NCBC-1366] and link:https://issues.couchbase.com/browse/NCBC-1388[NCBC-1388].
 
 If you have questions or comments on failover, make sure to check out the link:https://forums.couchbase.com/[Couchbase forums].
