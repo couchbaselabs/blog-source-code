@@ -4,7 +4,7 @@
 :slug: Fast-Failover-Couchbase-Server-5
 :focus-keyword: fast failover
 :categories: Couchbase Server
-:tags: fast failover, .net, docker
+:tags: fast failover, .net, docker, .net core
 :heroimage: https://commons.wikimedia.org/wiki/File:Holborn_Tube_Station_Escalator.jpg - Creative Commons - "Holborn Tube Station Escalator" by renaissancechambara
 
 Fast failover is one of the many improvements that come with the release of link:https://www.couchbase.com/downloads[Couchbase Server 5.0] (now available for download).
