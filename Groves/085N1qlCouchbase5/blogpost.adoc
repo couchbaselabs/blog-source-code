@@ -1,0 +1,55 @@
+(intro)
+
+Nic's post: https://blog.couchbase.com/n1ql-performance-feature-enhancements-couchbase-5-0/
+
+https://developer.couchbase.com/documentation/server/5.0/introduction/whats-new.html
+
+https://blog.couchbase.com/learn-n1ql-10-minutes-interactive-online-tutorial/
+
+== grant and revoke
+
+can't really do this in .net program
+rbac n1ql GRANT - https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/grant.html#topic_11_5
+rbac n1ql REVOKE - https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/revoke.html#topic_11_5
+
+system:user_info?
+
+system:applicable_roles?
+
+== curl
+
+within .net program
+https://blog.couchbase.com/curl-comes-n1ql-querying-external-json-data/
+https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/curl.html#topic_8_8
+
+== indexes
+
+intro indexes
+https://blog.couchbase.com/gear-n1ql-era-engagement-databases/
+mention optimizations: https://developer.couchbase.com/documentation/server/5.0/performance/index_pushdowns.html#index_pushdowns
+
+=== adaptive indexes
+
+show in .net program
+adaptive indexes: https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/adaptive-indexing.html#untitled1
+
+=== equivalent indexes
+
+show on a cluster
+equivalent to replicas - https://blog.couchbase.com/transition-index-replicas/ and https://blog.couchbase.com/couchbase-index-replicas/
+
+== monitoring
+
+monitoring n1ql - https://developer.couchbase.com/documentation/server/5.0/monitoring/monitoring-n1ql-query.html#topic_nvs_ghr_dz
+
+system:completed_requests
+system:active_requests
+
+https://blog.couchbase.com/profiling-monitoring-update/
+
+https://blog.couchbase.com/tooling-improvements-couchbase-5-beta/
+
+== summary
+
+n1ql is great yeah yeah yeah
+it's not lame no no no
