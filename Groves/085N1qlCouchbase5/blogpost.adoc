@@ -84,16 +84,52 @@ image:08504-curl-result-in-n1ql.png[CURL result in N1QL]
 
 Note that introducing CURL to a query also introduces other issues: you are yielding performance and reliability to the external data source. Also note that you can use CURL on Couchbase Server's own REST API, which opens up a lot of interesting possibilities.
 
-== indexes
+== Indexes
 
-intro indexes
-https://blog.couchbase.com/gear-n1ql-era-engagement-databases/
-mention optimizations: https://developer.couchbase.com/documentation/server/5.0/performance/index_pushdowns.html#index_pushdowns
+As always, good indexing is vital to getting optimal performance from your N1QL queries. There are a lot of index options in Couchbase Server, which I won't cover in this blog post. Definitely link:https://blog.couchbase.com/gear-n1ql-era-engagement-databases/[check out this blog post from Prasad Varakur] and also look at some of the link:https://developer.couchbase.com/documentation/server/5.0/performance/index_pushdowns.html[optimizations] that have been added to Couchbase in version 5.0.
 
-=== adaptive indexes
+For this post, I'm just going to touch on the new *adaptive indexes* and *equivalent indexes*.
 
-show in .net program
-adaptive indexes: https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/adaptive-indexing.html#untitled1
+=== Adaptive Indexes
+
+In previous versions of Couchbase, if you wanted to index combinations of fields, you had to create an index for each combination. For example, if I plan to write queries that check "type" and "name" field together or the "type" and "age" field together, that would require two compound indexes: one for `type,name` and one for `type,state`.
+
+Consider this query:
+
+[source,SQL,indent=0]
+----
+SELECT l.*
+FROM `travel-sample` l
+WHERE l.type='landmark'
+AND l.state='California';
+----
+
+In the default `travel-sample` bucket, the `type` field is indexed, but not the state. This query works, but notice how flat the query plan is:
+
+image:08505-index-no-adaptive.png[Query without adaptive index]
+
+Also notice that the "fetch" and "filter" steps have to process almost 4500 documents.
+
+Adaptive indexes make it easier to write indexes that better support adhoc querying. They can be used to index specified fields or all fields of a document.
+
+A new keyword introduced to N1QL is `SELF`. It can create an adaptive index on all fields in all 'landmark' documents in the travel-sample bucket like so:
+
+[source,SQL,indent=0]
+----
+CREATE INDEX `ai_n1ql_enhancements` 
+    ON `travel-sample`(DISTINCT PAIRS(SELF)) 
+    WHERE type = 'landmark';
+----
+
+_You can also specify individual fields you want to index instead of `SELF`._
+
+After creating this index, run the above `SELECT` query again.
+
+image:08506-index-with-adaptive.png[Query with adaptive index]
+
+Notice the extra index scanning that's occurring to accommodate the `state` field that it's querying on. Also notice that "filter" and "fetch" are working through fewer documents: only 1900. With the relative small size of the "travel-sample" bucket, this is an overall small savings. With a _real_ bucket containing millions of documents, the time saved can be significant.
+
+Further, as your queries grow more complex, link:https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/adaptive-indexing.html[adaptive indexes] will save you work while still giving you a performance boost.
 
 === equivalent indexes
 
