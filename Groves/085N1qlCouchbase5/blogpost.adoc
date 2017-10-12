@@ -206,8 +206,10 @@ Since I have index replicas, this query could have run on different nodes. The r
 
 Be sure to check out the other link:https://blog.couchbase.com/tooling-improvements-couchbase-5-beta/[tooling updates] in Couchbase Server 5.0. It's not just N1QL that's getting enhancements.
 
-== summary
+== Summary
 
-n1ql is great yeah yeah yeah
+N1QL is one of Couchbase Server's major strengths, and Couchbase is committed to creating valuable N1QL enhancements.
 
-it's not lame no no no
+If you've not used N1QL yet, why not try the link:https://blog.couchbase.com/learn-n1ql-10-minutes-interactive-online-tutorial/[10 minute online tutorial] today?
+
+Got questions or comments? Find me on link:https://twitter.com/mgroves[Twitter @mgroves] or email me link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com].
