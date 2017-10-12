@@ -131,10 +131,37 @@ Notice the extra index scanning that's occurring to accommodate the `state` fiel
 
 Further, as your queries grow more complex, link:https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/adaptive-indexing.html[adaptive indexes] will save you work while still giving you a performance boost.
 
-=== equivalent indexes
+=== Index Replicas
 
-show on a cluster
-equivalent to replicas - https://blog.couchbase.com/transition-index-replicas/ and https://blog.couchbase.com/couchbase-index-replicas/
+If you are making heavy use of N1QL in your application, you may want to create multiple indexes that get distributed across your cluster. This can improve performance, load balancing, and availability.
+
+Until Couchbase Server 5, the way you did this was to create multiple identical indexes with different name. As Venkat covered in this link:https://blog.couchbase.com/couchbase-index-replicas/[earlier blog post on index replicas], there are some drawbacks to that.
+
+So, in Couchbase Server 5, index replicas have been introduced. When creating an index, simply use a `num_replica` setting to specify how many replica indexes you want to create.
+
+Here's an index on the `state` field that I was using earlier in the "travel-sample" bucket. In this case, I'm going to replicate it twice.
+
+[source,SQL,indent=0]
+----
+CREATE INDEX `ix_state`
+    ON `travel-sample`(state)
+    WHERE state IS NOT MISSING
+    WITH {"num_replica":2};
+----
+
+Note that in order for this to work, you'll need at least three nodes running the index service (1 for the index, 2 for the replicas).
+
+After running the above query (on a 3 node cluster), click "Indexes". You should see "ix_state" show up 3 times on three nodes. Two of them are marked "replica".
+
+image:08506-index-replicas.png[Index replicas]
+
+_You can also specify the exact nodes you want the replicas on by specifying IP addresses in `CREATE INDEX`._
+
+Couchbase will take care of the rest for you. Index replicas will be used for incoming queries.
+
+If you're not new to Couchbase, check out this link:https://blog.couchbase.com/transition-index-replicas/[guide on transitioning from "equivalent indexes" to index replicas].
+
+For more details, definitely check out link:https://blog.couchbase.com/couchbase-index-replicas/[Venkat's blog post on index replicas] and the link:https://developer.couchbase.com/documentation/server/5.0/indexes/index-replication.html[Couchbase Server 5.0 documentation on index replication].
 
 == monitoring
 
