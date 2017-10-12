@@ -36,7 +36,7 @@ GRANT data_writer
  TO myuser;
 ----
 
-After, you can navigate over to the "Security" section of Couchbase Console to see that "myuser" has the new permission.
+After executing that, you can navigate over to the "Security" section of Couchbase Console to see that "myuser" has the new permission.
 
 image:08502-grant-user-role-n1ql-enhancements.png[GRANT a role to a user as a N1QL enhancement]
 
@@ -44,9 +44,11 @@ You can find all of the role names (like "data_writer") in the link:https://deve
 
 `REVOKE` works the same way, but in reverse.
 
-=== `system` keyspaces for RBAC
+=== System keyspaces for RBAC
 
-There are a couple of link:https://developer.couchbase.com/documentation/server/5.0/monitoring/monitoring-n1ql-query.html[new system keyspaces] that are part of the 5.0 N1QL enhancements. `SELECT * FROM system:user_info` will return information about each user and their roles.
+There are a couple of link:https://developer.couchbase.com/documentation/server/5.0/monitoring/monitoring-n1ql-query.html[new system keyspaces] that are part of the 5.0 N1QL enhancements.
+
+`SELECT * FROM system:user_info` will return information about each user and their roles.
 
 image:08503-user-info-keyspace.png[User info keyspace]
 
@@ -82,7 +84,7 @@ That endpoint returns 10 planets at a time. I'm narrowing it just to the `result
 
 image:08504-curl-result-in-n1ql.png[CURL result in N1QL]
 
-Note that CURL to a query also introduces other issues: you are yielding performance and reliability to the external data source. Also note that you can use CURL on Couchbase Server's own REST API, which opens up a lot of interesting possibilities.
+Note that using CURL in a query can introduce other issues: you are yielding performance and reliability to the external data source. Also note that you can use CURL on Couchbase Server's own REST API, which opens up a lot of interesting possibilities.
 
 == Indexes
 
@@ -92,7 +94,7 @@ For this post, I'm just going to touch on the new *adaptive indexes* and *equiva
 
 === Adaptive Indexes
 
-In previous versions of Couchbase, if you wanted to index combinations of fields, you had to create an index for each combination. For example, if I plan to write queries that check "type" and "name" field together or the "type" and "age" field together, that would require two compound indexes: one for `type,name` and one for `type,state`.
+In previous versions of Couchbase, if you wanted to index combinations of fields, you had to create an index for each combination. For example, if I plan to write queries that check the "type" and "name" field together or the "type" and "age" field together, that would require two compound indexes: one for `type,name` and one for `type,state`.
 
 Consider this query:
 
@@ -135,7 +137,7 @@ Further, as your queries grow more complex, link:https://developer.couchbase.com
 
 If you are making heavy use of N1QL in your application, you may want to create multiple indexes that get distributed across your cluster. These N1QL enhancements can improve performance, load balancing, and availability.
 
-Until Couchbase Server 5, the way you did this was to create multiple identical indexes with different name. As Venkat covered in this link:https://blog.couchbase.com/couchbase-index-replicas/[earlier blog post on index replicas], there are some drawbacks to that.
+Until Couchbase Server 5, the way you did this was to create multiple identical indexes with different names. As Venkat covered in this link:https://blog.couchbase.com/couchbase-index-replicas/[earlier blog post on index replicas], there are some drawbacks to that.
 
 So, in Couchbase Server 5, index replicas have been introduced. When creating an index, simply use a `num_replica` setting to specify how many replica indexes you want to create.
 
@@ -157,7 +159,7 @@ image:08507-index-replicas.png[Index replicas]
 
 _You can also specify the exact nodes you want the replicas on by specifying IP addresses in `CREATE INDEX`._
 
-Couchbase will take care of the rest for you. Index replicas will be used for incoming queries.
+Couchbase will take care of the rest for you. Index replicas will be used for incoming queries as needed.
 
 If you're not new to Couchbase, check out this link:https://blog.couchbase.com/transition-index-replicas/[guide on transitioning from "equivalent indexes" to index replicas].
 
@@ -171,7 +173,7 @@ Way back in March, I wrote about the new link:https://blog.couchbase.com/profili
 
 You can get the full story on the link:https://developer.couchbase.com/documentation/server/5.0/monitoring/monitoring-n1ql-query.html#topic_nvs_ghr_dz[Monitoring N1QL Queries] documentation page.
 
-For this post, I just want to do a quick refresher. If you click the "Plan" button in Query Workbench, you'll see a graphic representation of the query plan. You can get a visual guide to which parts of the query take the most time. For instance, the query plan for the above `SELECT` query:
+For this post, I just want to do a quick refresher. If you click the "Plan" button in Query Workbench, you'll see a graphic representation of the query plan. You can get a visual guide to which parts of the query take the most time. For instance, here's a query plan for a `SELECT` query:
 
 image:08508-visual-query-plan.png[Visual N1QL query plan]
 
