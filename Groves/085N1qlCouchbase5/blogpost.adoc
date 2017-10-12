@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: There are many N1QL enhancements in the new Couchbase Server 5.0 release. This blog post will help you to scratch the surface.
 :title: N1QL Enhancements in Couchbase Server 5.0
 :slug: N1QL-Enhancements-Couchbase-Server-5
 :focus-keyword: n1ql enhancements
@@ -21,7 +21,7 @@ But, from a N1QL enhancements point of view, there are two keywords you should k
 
 The documentation covers it well, but here's a quick example. I'll create a user "myuser", and give that user only one role: Data Reader on the "travel-sample" bucket.
 
-image:08501-create-user.png[Create a user]
+image:08501-create-user.png[Create a user with N1QL enhancements]
 
 I could edit that user in the UI to give them Data Writer.
 
@@ -46,7 +46,7 @@ You can find all of the role names (like "data_writer") in the link:https://deve
 
 === `system` keyspaces for RBAC
 
-There are a couple of link:https://developer.couchbase.com/documentation/server/5.0/monitoring/monitoring-n1ql-query.html[new system keyspaces] that you can use from N1QL now as well. `SELECT * FROM system:user_info` will return information about each user and their roles.
+There are a couple of link:https://developer.couchbase.com/documentation/server/5.0/monitoring/monitoring-n1ql-query.html[new system keyspaces] that are part of the 5.0 N1QL enhancements. `SELECT * FROM system:user_info` will return information about each user and their roles.
 
 image:08503-user-info-keyspace.png[User info keyspace]
 
@@ -58,7 +58,7 @@ Note that only Adminstrators and users with a "Query System Catalog" role themse
 
 As link:https://blog.couchbase.com/curl-comes-n1ql-querying-external-json-data/[Isha blogged about earlier], you can now use a CURL function from N1QL to query external JSON data. There are definitely security implications when using CURL, so make sure to read the full link:https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/curl.html#topic_8_8[N1QL CURL documentation] before you decide to use this N1QL enhancement.
 
-Before I can demonstrate in this post, I have to add a URL to a whitelist. On Windows, this is done by creating a file in the /var/lib/couchbase/n1qlcerts folder (I had to create the n1qlcerts folder myself too) called curl_whitelist.json. _The full default path for your reference is: C:\Program Files\Couchbase\Server\var\lib\couchbase\n1qlcerts\curl_whitelist.json._
+Before I can use CURL, I have to add a URL to a whitelist. On Windows, this is done by creating a file in the /var/lib/couchbase/n1qlcerts folder (I had to create the n1qlcerts folder myself too) called curl_whitelist.json. _The full default path for your reference is: C:\Program Files\Couchbase\Server\var\lib\couchbase\n1qlcerts\curl_whitelist.json._
 
 I created a file with a single URL entry (swapi.co is the Star Wars API):
 
@@ -82,7 +82,7 @@ That endpoint returns 10 planets at a time. I'm narrowing it just to the `result
 
 image:08504-curl-result-in-n1ql.png[CURL result in N1QL]
 
-Note that introducing CURL to a query also introduces other issues: you are yielding performance and reliability to the external data source. Also note that you can use CURL on Couchbase Server's own REST API, which opens up a lot of interesting possibilities.
+Note that CURL to a query also introduces other issues: you are yielding performance and reliability to the external data source. Also note that you can use CURL on Couchbase Server's own REST API, which opens up a lot of interesting possibilities.
 
 == Indexes
 
@@ -112,7 +112,7 @@ Also notice that the "fetch" and "filter" steps have to process almost 4500 docu
 
 Adaptive indexes make it easier to write indexes that better support adhoc querying. They can be used to index specified fields or all fields of a document.
 
-A new keyword introduced to N1QL is `SELF`. It can create an adaptive index on all fields in all 'landmark' documents in the travel-sample bucket like so:
+A new keyword introduced by this round of N1QL enhancements is `SELF`. It can create an adaptive index on all fields in all 'landmark' documents in the travel-sample bucket like so:
 
 [source,SQL,indent=0]
 ----
@@ -133,7 +133,7 @@ Further, as your queries grow more complex, link:https://developer.couchbase.com
 
 === Index Replicas
 
-If you are making heavy use of N1QL in your application, you may want to create multiple indexes that get distributed across your cluster. This can improve performance, load balancing, and availability.
+If you are making heavy use of N1QL in your application, you may want to create multiple indexes that get distributed across your cluster. These N1QL enhancements can improve performance, load balancing, and availability.
 
 Until Couchbase Server 5, the way you did this was to create multiple identical indexes with different name. As Venkat covered in this link:https://blog.couchbase.com/couchbase-index-replicas/[earlier blog post on index replicas], there are some drawbacks to that.
 
