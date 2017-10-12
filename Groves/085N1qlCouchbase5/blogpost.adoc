@@ -153,7 +153,7 @@ Note that in order for this to work, you'll need at least three nodes running th
 
 After running the above query (on a 3 node cluster), click "Indexes". You should see "ix_state" show up 3 times on three nodes. Two of them are marked "replica".
 
-image:08506-index-replicas.png[Index replicas]
+image:08507-index-replicas.png[Index replicas]
 
 _You can also specify the exact nodes you want the replicas on by specifying IP addresses in `CREATE INDEX`._
 
@@ -163,18 +163,51 @@ If you're not new to Couchbase, check out this link:https://blog.couchbase.com/t
 
 For more details, definitely check out link:https://blog.couchbase.com/couchbase-index-replicas/[Venkat's blog post on index replicas] and the link:https://developer.couchbase.com/documentation/server/5.0/indexes/index-replication.html[Couchbase Server 5.0 documentation on index replication].
 
-== monitoring
+== Monitoring
 
-monitoring n1ql - https://developer.couchbase.com/documentation/server/5.0/monitoring/monitoring-n1ql-query.html#topic_nvs_ghr_dz
+The most difficult task in writing N1QL queries is making sure they are efficient and performant. To that end, Couchbase Server 5.0 has introduced a number of features to help you monitor and profile your queries.
 
-system:completed_requests
-system:active_requests
+Way back in March, I wrote about the new link:https://blog.couchbase.com/profiling-monitoring-update/[query plan visualization]. I also wrote about the link:https://blog.couchbase.com/new-profiling-monitoring-couchbase-server-4-6/[new system keyspaces] for monitoring queries.
 
-https://blog.couchbase.com/profiling-monitoring-update/
+You can get the full story on the link:https://developer.couchbase.com/documentation/server/5.0/monitoring/monitoring-n1ql-query.html#topic_nvs_ghr_dz[Monitoring N1QL Queries] documentation page.
 
-https://blog.couchbase.com/tooling-improvements-couchbase-5-beta/
+For this post, I just want to do a quick refresher. If you click the "Plan" button in Query Workbench, you'll see a graphic representation of the query plan. You can get a visual guide to which parts of the query take the most time. For instance, the query plan for the above `SELECT` query:
+
+image:08508-visual-query-plan.png[Visual N1QL query plan]
+
+There are a couple more N1QL enhancements to remind you about as well. Two new system keyspaces: `system:completed_requests` and `system:active_requests`. These keyspaces contain information about queries that have run or are currently running: how much time they take, errors, which nodes they run on, and so forth. A quick example:
+
+[source,SQL,indent=0]
+----
+SELECT r.node
+FROM system:completed_requests r;
+----
+
+Since I have index replicas, this query could have run on different nodes. The results show that they did:
+
+[source,JavaScript,indent=0]
+----
+[
+  {
+    "node": "10.142.173.101:8091"
+  },
+  {
+    "node": "10.142.173.101:8091"
+  },
+  {
+    "node": "10.142.173.103:8091"
+  },
+  {
+    "node": "10.142.173.103:8091"
+  },
+  // ... etc ...
+]
+----
+
+Be sure to check out the other link:https://blog.couchbase.com/tooling-improvements-couchbase-5-beta/[tooling updates] in Couchbase Server 5.0. It's not just N1QL that's getting enhancements.
 
 == summary
 
 n1ql is great yeah yeah yeah
+
 it's not lame no no no
