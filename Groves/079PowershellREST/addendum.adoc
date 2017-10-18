@@ -1,0 +1,9 @@
+:imagesdir: images
+
+*UPDATE*: An engineer at Couchbase, Chris Hillery, has brought a couple things to my attention that I think are worth mentioning in an update.
+
+The animated GIF showing the "Show curl command" is a bit misleading. That curl command is the one you use to _replace an existing FTS index_. When you are creating an index for the first time, the index definition JSON is also generated for you in a pane on the right side of the screen.
+
+image:07903-new-index-json.png[JSON generated for a new index]
+
+If you are creating a script to deploy an FTS index, and the index doesn't already exist, you'll need to use the latter. If your script is _replacing_ an index, you'll need to use the former.
