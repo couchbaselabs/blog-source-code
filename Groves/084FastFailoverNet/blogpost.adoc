@@ -9,7 +9,7 @@
 
 Fast failover is one of the many improvements that come with the release of link:https://www.couchbase.com/downloads[Couchbase Server 5.0] (now available for download).
 
-Failover is one of the important concepts to understand when it comes to distributed databases. link:https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed[The CAP theorem] states that a distributed database can't be both available _and_ consistent _all_ of the time. Couchbase Server's architecture is designed to be _always_ consistent, and _highly_ available. With fast failover, that availability has improved even more.
+Failover is one of the important concepts to understand when it comes to distributed databases. link:https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed[The CAP theorem] states that a distributed database can't be both available _and_ consistent _all_ of the time. Couchbase Server's architecture is designed to be _always_ consistent and partition tolerant. With fast failover, Couchbase Server is closing the gap on high availability.
 
 In this blog post, I'm going to demonstrate failover in action. I'll be using Docker to create a cluster of 3 Couchbase nodes on my local machine.
 
@@ -27,7 +27,7 @@ image:08401-three-couchbase-nodes.png[Three Couchbase Server nodes]
 
 I used the link:https://hub.docker.com/r/couchbase/server/tags/[Couchbase Server 5.0.0-beta2 image from Docker Hub], but by the time you read this, an official release of Couchbase Server 5.0 should be link:https://hub.docker.com/r/library/couchbase/tags/[available on the official docker Couchbase repository].
 
-Next, I created a bucket called "mybucket". Make sure to enable replication of 2.
+Next, I created a bucket called "mybucket". Make sure to enable replicas to create additional cop(ies) of data within the same cluster.
 
 image:08402-bucket.png[Couchbase Server bucket]
 
