@@ -1,0 +1,79 @@
+[start on downloads page]
+
+Hello again, Matt Groves here with another Couchbase video.
+
+We're trying something new at Couchbase, and that is developer releases.
+We plan to, on a monthly basis, release a developer preview of Couchbase
+Server 5.0 leading up to the official release later this year.
+
+This gives you a chance to provide feedback on Couchbase and have a real
+impact on the final product!
+
+Go to couchbase.com/downloads and click the "developer" tab
+and you'll be able to download developer versions of Couchbase Server.
+
+Today I'm going to show you the new Couchbase Web Console UI.
+Keep in mind this is a work in progress. I'm showing you an early build
+and things are likely to change.
+
+[switch to web console]
+
+I'm going to skip the setup screens because they haven't changed much
+in this release.
+
+But here is the new streamlined dashboard.
+
+Two things jump out at me:
+
+The design. The new Couchbase Server UI is heavily influenced by Google’s Material Design. You will see more evidence of this as you navigate around the site.
+Main Navigation. The navigation is now vertical and on the left side of the page. Also notice that is is organized by "cluster" and "data".
+
+--Lets look at a few different areas now. Starting with Servers.
+This should look relatively familiar. Each node is listed here, with a list of services and system metrics. I only have one node in my example, but each node would be listed here in a production deployment.
+"Active Server" and "Pending Rebalance"  are filters. Here are some buttons to manage servers and server groups.
+
+--Security
+Not much different on this screen compared to the old UI, but I do want to draw your attention to the sub-navagation at the top:
+"Internal User/Roles", "Root Certificate", and "Audit".
+In general, secondary navigation across the Web Console will be like this.
+
+There are some new features coming soon for role-based security! So I would expect the UI here to evolve and change in the future. So keep a lookout for that.
+
+--Query Workbench
+As a developer, this is where I spend most of my time. Besides the obvious design change, there are some improvements/changes I want to highlight.
+
+-No more Clear button: For many users, the clear button is a frustrating button to hit accidentally while working on queries, so it’s been removed.
+-History. Click on "history" to see a list of all the queries that you’ve run. It’s searchable! Remember that "clear" button? It’s here in the history popup; you can still access it, but you’re less likely to click it by accident.
+You can choose a query from history.
+-Data Bucket Insights. These have been moved to the right side of the screen. I think this is a better use of space. (This is an Enterprise Edition feature).
+-Plan and Plan Text options in results. By default, the queries you run will be EXPLAINed, and you can view the output of that in the Plan and Plan Text results.
+Plan shows a visual representation. Plan Text shows the output of the EXPLAIN.
+- There is a settings icon here that allows you to specify parameters, turn off query timings, and so on.
+-Query Monitor. Notice the "Query Monitor" secondary navigation link at the top. This page shows you information about some of the system catalogs that were added in Couchbase Server 4.5.
+
+--Buckets
+I spend a lot of time in the buckets area too. The new version of this page isn’t wildly different, but I have found it a little snappier.
+Click on a row to expand information about the bucket (as well as to expose the Delete/Compact/Edit buttons).
+
+--Charts
+One significant area of change is the way that charts and statsitics are shown in the UI. Clicking a bucket name will still bring you to the analytics and information that you’re used to.
+There aren’t any new charts that I’m aware of, but there have been changes made to improve usabilty of the charts as well as get them to adhere closer to the Material Design philosophy. They also take up the full space of the page, to maximize your view.
+
+--Switch to the old UI
+The old UI is not gone yet.  "Classic UI". Just click this link (at the top right of the page) and you’ll be able to view the old UI.
+I don’t know how long the old UI is going to stick around. It’s likely that new features will only appear in the new UI.
+
+[switch to Couchbase Blog]
+
+--Wrapping up
+Stay tuned to the Couchbase Blog for information about what’s coming in next developer build.
+I’ve given you the basic tour, but to really get a feel for the UI, I recommend you download and try it. couchbase.com/download
+
+--Feedback
+We want your feedback.
+
+If you find a bug  please file an issue in our JIRA system at issues.couchbase.com.
+Or, contact me with a description of the issue. I would be happy to help you or submit the bug for you
+For design feedback, we've got something in the works for you to use to provide feedback directly from Couchbase Web Console. Stay tuned.
+
+Thanks for watching!

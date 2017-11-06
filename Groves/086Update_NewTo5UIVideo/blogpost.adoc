@@ -1,0 +1,31 @@
+:imagesdir: images
+:meta-description: After the release of Couchbase Console 5, let's look back on the developer preview tour video. Your feedback helped us to improve before the release.
+:title: Couchbase Console (video tour) - Update
+:slug: Couchbase-Console-video-tour-Update
+:focus-keyword: Couchbase console
+:categories: Couchbase Server
+:tags: Couchbase Server, Couchbase, UI, UX
+:heroimage: 086-hero-tour-couchbase-console.jpg Great Sphinx ... with tourists, licensed by Creative Commons https://commons.wikimedia.org/wiki/File:Great_Sphinx_and_Kafra_Pyramid_with_tourists_in_2006_-_panoramio.jpg
+
+Couchbase Console has a refreshed UI in Couchbase Server 5.0. link:https://www.couchbase.com/downloads[Couchbase Server 5.0 is now available for download]. But back in January, we were releasing link:https://blog.couchbase.com/2017/january/introducing-developer-builds[developer builds] to get early feedback.
+
+_Note: this blog post is an updated repost of link:https://blog.couchbase.com/a-tour-of-the-new-couchbase-web-console-video/[A tour of the new Couchbase Web Console (video)]_
+
+Below is the video I recorded of one of the previews to introduce the new UI. I also did a link:https://blog.couchbase.com/a-tour-of-the-new-couchbase-web-console/[non-video tour of the new UI].
+
+This video can still give you a basic idea of how the new UI works, and it's also interesting to compare to the 5.0 release to see how your feedback impacted it.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Fu4bK5KdhxU" frameborder="0" allowfullscreen></iframe>
++++
+
+There are a few differences between that video and the actual Couchbase release:
+
+* The nav has been organized a little differently and the "cluster" and "data" nav headings have been removed.
+* The overall design is slightly different. There are percentages instead of percent gauges, for instance.
+* Some buttons/filters are in different locations. Make sure to check out the top right of each screen for possible actions.
+* In the video I mention that security features are coming soon. They are here! Definitely check out the new link:https://blog.couchbase.com/authentication-authorization-rbac-net/[RBAC features].
+* You can no longer switch back to the "classic" UI
+* The UI feedback feature is no longer available
+
+If you have questions or feedback, please contact me at link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com], or on link:https://twitter.com/mgroves[@mgroves at Twitter], or just leave a comment below.
