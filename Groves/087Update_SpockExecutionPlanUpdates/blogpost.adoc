@@ -1,0 +1,75 @@
+:imagesdir: images
+:meta-description: In Couchbase Server 5.0, there are updates for N1QL query monitoring and profiling. The Query Plan is more visual, making it easy to improve performance.
+:title: Profiling and Monitoring in Couchbase Server 5.0 Preview (Update)
+:slug: Profiling-Monitoring-Update-2
+:focus-keyword: profiling
+:categories: Couchbase Server, N1QL
+:tags: Couchbase Server, testing, profiling, monitoring, N1QL, performance
+:heroimage: same as 54
+
+= Profiling and Monitoring in Couchbase Server 5.0 (Update)
+
+Profiling and monitoring for N1QL are a big part of the Couchbase Server 5.0 release (link:https://www.couchbase.com/downloads[now available for download]).
+
+_Note: this is an updated repost of link:https://blog.couchbase.com/Profiling-Monitoring-Update/[Profiling and Monitoring in Couchbase Server 5.0 Preview (Update)]._
+
+== Query Workbench
+
+Once again, I'll be focusing on link:https://developer.couchbase.com/documentation/server/current/tools/query-workbench.html[Query Workbench] for this blog post.
+
+Just to review, there are other options for running N1QL queries:
+
+* Use the link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/n1ql-queries-with-sdk.html[SDK of your choice].
+* link:https://developer.couchbase.com/documentation/server/current/cli/cbq-tool.html[cbq command line tool].
+* link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-rest-api/index.html[REST API N1QL endpoints]
+
+Personally, I find the Query Workbench easiest to use, as it more visually presents the profiling.
+
+== Profiling complex queries
+
+Let's look at the `travel-sample` data again, just like I did in previous posts. I'm using the travel-sample bucket, but I have removed one of the indexes (`DROP INDEX `travel-sample`.`def_sourceairport`;`).
+
+I then execute a N1QL query to find routes between two cities. Let's use Columbus, Ohio and Denver, Colorado this time.
+
+[source,SQL]
+----
+SELECT r.id, a.name, s.flight, s.utc, r.sourceairport, r.destinationairport, r.equipment
+FROM `travel-sample` r
+UNNEST r.schedule s
+JOIN `travel-sample` a ON KEYS r.airlineid
+WHERE r.sourceairport = 'CMH'
+AND r.destinationairport = 'DEN'
+AND s.day = 0
+ORDER BY a.name;
+----
+
+Executing this query (on my single-node local machine) took about 8 seconds this time (as expected), which is too slow. 
+
+== Visual Breakdown of Profiling
+
+Let's look at the plan to see what the problem might be (I broke it into two lines so the screenshots will fit in the blog post).
+
+image:058-01-Profiling-Execution-Plan-Part-1.png[Visual profiling part 1]
+
+image:058-02-Profiling-Execution-Plan-Part-2.png[Visual profiling part 2]
+
+So, as before, the costliest parts of the query plan are the Filter and the Join. We could tell before by looking at the raw numbers and/or the percentages. But now we have a more visual way to tell: color. The parts of the plan go from gray to tan to gold based on percentages and defined thresholds.
+
+Right now, the thresholds are based on the fraction of the total query time taken by an operation:
+
+* Gray: less than 1% of total time
+* Tan/Some gold: 1% - 5%
+* Tan/More gold: 5% - 20%
+* All gold: 20%
+
+The purpose of this visual profiling is to quickly draw your eye to expensive operations. Then, if you care to know the exact numbers, you can read it in the details (in the diagram or even in the `META().plan` information).
+
+I'm not going to go through the index creation part again; it's the same as it was in the last blog post (just recreating the index that I removed for demonstration purposes).
+
+== Thank you for your feedback!
+
+Interested in trying out some of these new features? link:https://couchbase.com/downloads[Download Couchbase Server 5.0] today!
+
+Your feedback on the developer preview versions released earlier this year helped to drive improvement. Thank you!
+
+If you have questions, the best way to contact me is either link:https://twitter.com/mgroves[Twitter @mgroves] or email me matthew.groves@couchbase.com.
