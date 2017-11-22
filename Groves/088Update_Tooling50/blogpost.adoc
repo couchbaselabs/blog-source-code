@@ -1,0 +1,110 @@
+:imagesdir: images
+:meta-description: Tooling improvements have come to Couchbase 5.0. This post covers visual query plans, query monitoring, improved UX/UI, and import/export tools.
+:title: Tooling Improvements in Couchbase 5.0 (Update)
+:slug: Tooling-Improvements-Couchbase-5-Update
+:focus-keyword: tooling
+:categories: Couchbase Server, N1QL / Query
+:tags: Couchbase Server, tooling, N1QL, performance, monitoring, import, export
+:heroimage: 070-hero-tooling.jpg (public domain - https://pixabay.com/en/tool-devices-work-craft-allen-379595/)
+
+Tooling improvements have come to link:https://www.couchbase.com/downloads[Couchbase Server 5.0].
+
+_Note: this is an updated repost of link:https://blog.couchbase.com/tooling-improvements-couchbase-5-beta/[Tooling Improvements in Couchbase 5.0 Beta]._
+
+In this blog post, I'm going to show you some of the tooling improvements in:
+
+* Query plan visualization - to better understand how a query is going to execute
+* Query monitoring - to see how a query is actually executing
+* Improved UX - highlighting the new Couchbase Web Console
+* Import/export - the new cbimport and cbexport tooling
+
+Some of these topics have been covered in earlier blog posts. For your reference:
+
+* link:https://blog.couchbase.com/using-cbimport-to-import-wikibase-data-to-json-documents/[Using cbimport to import Wikibase data to JSON documents]
+* link:https://blog.couchbase.com/a-tour-of-the-new-couchbase-web-console/[A tour of the new Couchbase Web Console]
+* link:https://blog.couchbase.com/couchbase-console-video-tour-update/[A tour of the new Couchbase Web Console (video)]
+* link:https://blog.couchbase.com/profiling-monitoring-update-2/[Profiling and Monitoring in Couchbase Server 5.0 (Update)]
+
+== Query Plan Visualization tooling
+
+In order to help you write efficient queries, the tooling in Couchbase Server 5.0 has been enhanced to give you a Visual Query Plan when writing link:https://www.couchbase.com/products/n1ql[N1QL] queries. If you've ever used the link:https://stackoverflow.com/questions/7359702/how-do-i-obtain-a-query-execution-plan[Execution Plan feature in SQL Server Management Studio], this should feel familiar to you.
+
+As a quick example, I'll write a `UNION` query against Couchbase's `travel-sample` bucket (optional sample data that ships with Couchbase Server). First, I'll click "Query" to bring up the Couchbase Query Workbench. Then, I'll enter a query into the Query Editor.
+
+image:07001-query-editor-tooling.png[Query Editor tooling]
+
+This is a relatively complex query that involves the following steps (and more):
+
+1. Identify and scan the correct index(es)
+2. Fetch the corresponding data
+3. Project the fields named in the `SELECT` clause
+4. Find distinct results
+5. `UNION` the results together
+6. Stream the results back to the web console
+
+In Couchbase Server 4.x, you could use the `EXPLAIN` N1QL command to get an idea of the query plan. Now, in Couchbase Server 5.0, you can view the plan visually.
+
+image:07002-query-plan-visualization-tooling.gif[Query Plan Visualization tooling]
+
+This tooling shows you, at a glance, the costliest parts of the query, which can help you to identify improvements.
+
+== Query monitoring
+
+It's important to have tooling to monitor your queries in action. Couchbase Server 5.0 has tooling to monitor active, completed, and prepared queries. In addition, you have the ability to cancel queries that are in progress.
+
+Start by clicking "Query" on the Web Console menu, and then click "Query Monitor". You'll see the "Active", "Completed", and "Prepared" options at the top of the page.
+
+Let's look at the "Completed" queries page. The query text and other information about the query is displayed in a table.
+
+image:07003-query-monitor.png[Query Monitor of completed queries]
+
+Next, you can sort the table to see which query took the longest to run (duration), return the most results (result count), and so on. Finally, if you click "edit", you'll be taken to the Query Workbench with the text of that query.
+
+== New Couchbase Web Console
+
+If you've been following along, you've probably already noticed the new Couchbase Web Console. The UI has been given an overhaul in Couchbase Server 5.0. The goal is to improve navigation and optimize the UI.
+
+image:07004-couchbase-web-console-design.png[New Couchbase Web Console]
+
+This new design maximizes usability of existing features from Server 4.x, while leaving room to expand the feature set of 5.0 and beyond.
+
+== cbimport and cbexport
+
+New command line tooling includes cbimport and cbexport for moving data around.
+
+*cbimport* supports importing both CSV and JSON data. The link:https://developer.couchbase.com/documentation/server/current/tools/cbimport.html[documentation on cbimport] should tell you all you want to know, but I want to highlight a couple things:
+
+* Load data from a URI by using the `-d,--dataset <uri>` flags
+* Generate keys according to a template by using the `-g,--generate-key <key_expr>` flags. This gives you a powerful templating system to generate unique keys that fit your data model and access patterns
+* Specify a variety of JSON formats when importing: JSON per line (`lines`), JSON list/array (`list`), JSON ZIP file/folder containing multiple files (`sample`). So no matter what format you receive JSON in, cbimport can handle it.
+
+For more about cbimport in action, check out link:https://blog.couchbase.com/using-cbimport-to-import-wikibase-data-to-json-documents/[Using cbimport to import Wikibase data to JSON documents].
+
+*cbexport* exports data from Couchbase to file(s). Currently, only the JSON format is supported. Again, the link:https://developer.couchbase.com/documentation/server/current/tools/cbexport.html[documentation on cbexport] will tell you what you want to know. A couple things to point out:
+
+* Include the document key in your export by using the `--include-key <key>` flag.
+* Export to either "lines" or "list" format (see above).
+
+Here's an example of cbexport in action (I'm using Powershell on Windows, but it will be very similar on Mac/Linux):
+
+[source,JavaScript,indent=0]
+----
+PS C:\Program Files\Couchbase\Server\bin> .\cbexport.exe json -c localhost -u Administrator -p password -b mybucketname -f list -o c:\exportdirectory\cbexporttest.json --include-key _id
+
+Json exported to `c:\exportdirectory\cbexporttest.json` successfully
+
+PS C:\Program Files\Couchbase\Server\bin> type C:\exportdirectory\cbexporttest.json
+
+[
+{"_id":"463f8111-2000-48cc-bb69-e2ba07defa37","body":"Eveniet sed unde officiis dignissimos.","type":"Update"},
+{"_id":"e39375ab-2cdf-4dc4-9659-6c19b39e377d","name":"Jack Johnston","type":"User"}
+]
+----
+
+Notice that the key was included in an pass:["_id"] field.
+
+== Summary
+
+Tooling for link:https://www.couchbase.com/downloads[Couchbase Server 5.0] is designed to make your life easier. These tools will help you whether you're writing queries, integrating with data, monitoring, or performing administrative tasks.
+
+We're always looking for feedback. Feel free to leave a comment below, or link:https://twitter.com/mgroves[reach out to me on Twitter @mgroves].
