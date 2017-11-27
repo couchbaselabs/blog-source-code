@@ -1,0 +1,36 @@
+:imagesdir: images
+:meta-description: This video will show you how to get started with ASP.NET using Couchbase Server. You'll create an HTTP REST API for CRUD operations.
+:title: ASP.NET with Couchbase: Getting Started
+:slug: ASP-NET-Couchbase-Getting-Started
+:focus-keyword: ASP.NET
+:categories: Couchbase Server, .NET
+:tags: ASP.NET, .NET, Couchbase Server, Couchbase
+:heroimage: 089-hero-visual-studio-bokeh.jpg (original photograph)
+
+ASP.NET is the development platform that most Microsoft developers use. At the link:https://resources.couchbase.com/cc17_watch_ondemand[Couchbase Connect Silicon Valley 2017 conference], I spoke to some .NET developers in a workshop. I asked them what type of content they'd like to see me create that would be most useful for them. The answer was: videos on getting started.
+
+== ASP.NET Tools to Get Started
+
+The below video takes you from having no code to having an HTTP-based REST API that uses Couchbase Server, built with ASP.NET.
+
+The video uses the following tools:
+
+* link:https://www.visualstudio.com/[Visual Studio 2017]
+* link:https://www.couchbase.com/downloads[Couchbase Server 5.0 Community Edition] (Enterprise Edition will also work just fine)
+* link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html[Couchbase .NET SDK]
+* ASP.NET (not ASP.NET Core, that's coming in a later video)
+* link:https://swagger.io/[Swagger] (provided by link:https://github.com/domaindrivendev/Swashbuckle[Swashbuckle])
+
+== Getting Started Video
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MmvK6CRNluk" frameborder="0" allowfullscreen></iframe>
++++
+
+In the video, I briefly gloss over Scan Consistency. For more details on that, check out the link:https://developer.couchbase.com/documentation/server/current/indexes/performance-consistency.html[Scan Consistency documentation] or read link:https://blog.couchbase.com/new-to-couchbase-4-5-atplus/[a blog post that I wrote introducing AtPlus, which also covers the other types of Scan Consistency].
+
+== Summary
+
+This video gives you the absolute minimum to get started with Couchbase by walking you through a simple CRUD application. Stay tuned for a similar video on getting started with ASP.NET Core.
+
+If you have any questions, please leave a comment. Or, you can always ask me questions on link:https://twitter.com/mgroves[Twitter @mgroves].

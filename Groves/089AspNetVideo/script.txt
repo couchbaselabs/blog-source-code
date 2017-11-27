@@ -1,0 +1,243 @@
+intro splash
+----
+Hello!
+In this video I'm going to show you how to
+get started with Couchbase in ASP NET
+(and ASP NET Core in part 2).
+I'll be creating a basic CRUD 
+HTTP API (CRUD is Create, Read, Update, Delete).
+This API will be operating on a gift wishlist: all the items
+I want you to buy me for Christmas.
+I won't be building a UI, but you could use this API with
+Angular, React, Aurelia, etc.
+
+I'm using Visual Studio 2017.
+
+I'm also using Couchbase Server 5.0 Community Edition,
+which is already installed.
+I've created one bucket called "demo".
+I've also created one user with full access to the bucket
+called "myuser", which has a password of "password".
+
+Let's start with ASP.NET.
+
+File->New ->Project->ASP.NET
+Call it VideoPart1
+WebAPI
+
+This creates a basic shell site. Let's use NuGet to
+add the Couchbase .NET SDK. I'll use the NuGet UI
+but you can also use the command line to do this.
+
+(while nuget is installing):
+
+The Couchbase SDK allows us to connect to a Couchbase
+Cluster. Couchbase is a distributed database, so typically
+there are several servers (called "nodes") in a group (called
+a "cluster") that all act together. A cluster has one or more
+"buckets", which are collections of "documents".
+A bucket is distributed amongst the nodes in the cluster
+but it's treated as a single logical entity by the SDK
+Within a bucket, each document has a unique "key" and a JSON "value"
+
+For this video, my cluster
+only has a single node and a single bucket. In production, you will typically have
+at least three, and possibly hundreds of nodes, and possibly a few buckets.
+
+----
+
+Let's write some code in the ASP.NET app to connect to the cluster.
+
+In the Global.asax, in application_start, I'll use ClusterHelper.
+Supply it with the "myuser" credentials.
+
+            ClusterHelper.Initialize(new ClientConfiguration
+            {
+                Servers = new List<Uri> {new Uri("couchbase://localhost")}
+            }, new PasswordAuthenticator("myuser", "password"));
+
+You don't have to use ClusterHelper, but it is an easy, convenient way to get started.
+Make sure to close the ClusterHelper in application_end.
+
+From this point on, I can use ClusterHelper to get a Bucket object.
+The Bucket is what to use to do all the CRUD operations.
+I'm going to be using ClusterHelper directly, but if you are using an IoC
+container like StructureMap, you would use it there instead.
+
+I'll create a Controller for my crud operations called "GiftsController"
+In the constructor, I'll get
+the "demo" bucket with ClusterHelper.
+
+----
+
+Before we start writing some code, let's think about the data model.
+It's going to be a very simple model:
+A document has a key and a JSON value. The key can just be a GUID for our purposes,
+but you could also make it a more meaningful key if you wanted.
+Each item on the wishlist has a "name", so there's going to be a name field.
+A couchbase bucket can contain documents of all kinds, so it's a good idea to
+differentiate documents in case we add more kinds of documents in the future.
+So let's give each item a "type" of "wishlistItem".
+I'll create a C# class to represent an item: Id (nullable, we'll see why later), Name, Type.
+One trick I like to do is to use reflection so that Type isn't just a hardcoded string,
+but there are tradeoffs to this strategy. Use what works in your use case.
+
+----
+
+Let's go ahead and "prime" the database with a couple of wishlist items. (add in couchbase console)
+the first document will have a key "3ca6e87e-c3a6-4637-989d-33cbca5002b5", I'll give it a name of "Nintendo Switch" and a type of "WishlistItem"
+the second document will have a key "31c9cc33-8dfe-440c-bd1b-bb038939d2e0", I'll give it a name of "Monoprice 3d Printer" and a type of "WishlistItem"
+This should be the only time I'll need to enter documents into couchbase directly
+
+----
+
+Let's start with a simple endpoint to get all the items in the list (let's call it GetAll).
+        [HttpGet]
+        [Route("api/getall")]
+The easiest way to do this is to write a N1QL query (SQL for JSON, supported by Couchbase).
+Let's try out a query in Couchbase's Query Workbench.
+	SELECT META(g).id, g.* FROM demo g WHERE g.type = 'WishlistItem';
+This query fails, because there is no matching index.
+Let's create an index on the 'type' field.
+	CREATE INDEX ix_type ON demo(type);
+Now run the query again, and it works.
+So let's code this in C#. Go back to the GetAll method
+QueryRequest.Create
+ScanConsistency - I'm not going to go into much detail, check out the documentation.
+	The short version is that this will give us the most complete results
+	But the tradeoff is a bit of a performance penalty
+	For this small demo application we won't even notice.
+return list of WishlistItems.
+
+----
+
+now we could try this endpoint directly in the browser
+or we could try it out with fiddler or postman
+I'm going to show you how to add Swagger because it's super easy
+Swagger is automatically generated tooling-slash-documentation for HTTP APIs like the one we're building
+Just add the Swashbuckle NuGet package
+And that's it. Go to your website-slash-swagger
+Now we can try the endpoint right in the browser.
+[demonstrate]
+
+----
+
+Let's create another endpoint, this time to get a single
+item from the wishlist. This endpoint would be helpful
+when creating an 'edit' form in your web app, for instance.
+        [HttpGet]
+        [Route("api/get/{id}")]
+This endpoint will take the document key as a parameter.
+We could use N1QL, but it's actually faster to use a 'get' operation
+since we already know the key.
+bucket.get by key
+return WishlistItem
+it would also be a good idea to add validation here
+for example: to check that a key was actually passed in
+
+let's try this with swagger
+I'll get by key "matt1", which should correspond to "Nintendo Switch"
+[demonstrate]
+
+----
+
+Next, let's create and endpoint to handle both "create" and "update".
+        [HttpPost]
+        [Route("api/edit")]
+This endpoint will be a POST
+And it will be expecting an object of type WishlistItem
+Again, we could use N1QL here to do and INSERT or UPDATE,
+but it's going to be faster and easier to use an "upsert" operation.
+Upsert will create a new document if it doesn't exist, or replace an
+existing document if it does.
+To handle a "create", we check the "Id" value of the object.
+If it's null, then we can assume we're creating a new item, and so we'll
+generate a GUID key.
+If it's not null, then we're updating an existing item.
+I'm going to use the "upsert" operation on the bucket with the key.
+I'll map just the name, and force the type, into a new anonymous object.
+
+I could pass in the object directly,
+but I don't want to store the Id *within* the document, and I don't want to allow
+the user to specify their own Type.
+You can, of course, change this to accomodate your own needs.
+I've also left out validation--checking to see that "name" is not null or empty, for instance.
+
+let's try this with swagger
+First, let's get a list of all the items so far, using the 'getall' endpoint.
+There should be two.
+Let's use the new endpoint to create a new wishlist item.
+I'll specify a name of "Yankee Candle (Balsam)", my favorite scent.
+I could specify a type or literally any other fields I want, but as we know,
+they will all get ignored.
+okay hit "POST"
+
+Now let's go back to the "getall", and we should see 3 total items in the wishlist now.
+
+Next, let's use the endpoint to update an existing item.
+I'll specify Id of "matt1", which was the nintendo switch.
+I'll give it a new name of "SNES Classic Edition" because I changed my mind.
+I'll hit "POST"
+
+Now let's go back to the "getall", I should see 3 total items still, but one has been updated to "SNES Classic"
+
+----
+
+Finally, we need a "delete" endpoint to complete the CRUD
+
+I'll create another endpoint, this time expecting the "DELETE" verb
+It just needs an Id passed to it.
+Once again, I could use N1QL here, but it's faster to use the "delete" operation
+since I already know the key.
+
+bucket.delete with the key
+
+again, no validation, just keeping it simple.
+
+let's try in swagger
+enter the id of "matt1" and hit "DELETE"
+go back to "getall" and there should only be two items
+
+----
+
+Now you have full CRUD cababilities and basic Couchbase connectivity from your
+ASP.NET application. For more interesting stuff you can do with Couchbase and
+.NET, check out blog.couchbase.com
+
+Thank you for watching!
+----
+outro splash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
