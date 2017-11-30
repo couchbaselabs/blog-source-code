@@ -1,0 +1,36 @@
+:imagesdir: images
+:meta-description: This video will show you how to get started with ASP.NET Core using Couchbase Server. You'll create an HTTP REST API for CRUD operations.
+:title: ASP.NET Core with Couchbase: Getting Started
+:slug: ASP-NET-Core-Couchbase-Getting-Started
+:focus-keyword: ASP.NET Core
+:categories: Couchbase Server, .NET
+:tags: ASP.NET Core, .NET Core, Couchbase Server, Couchbase, swagger, swashbuckle
+:heroimage: 089-hero-visual-studio-bokeh.jpg (original photograph)
+
+ASP.NET Core is the newest development platform for Microsoft developers. If you are looking for information about plain old ASP.NET, check out link:https://blog.couchbase.com/asp-net-couchbase-getting-started/[ASP.NET with Couchbase: Getting Started].
+
+== ASP.NET Core Tools to Get Started
+
+The following video will take you from having no code to having an HTTP REST API that uses Couchbase Server, built with ASP.NET Core.
+
+These tools are used in the video:
+
+* link:https://www.visualstudio.com/[Visual Studio 2017]
+* link:https://www.couchbase.com/downloads[Couchbase Server 5.0 Community Edition] (Enterprise Edition will also work)
+* link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html[Couchbase .NET SDK]
+* ASP.NET Core 2.0
+* link:https://swagger.io/[Swagger] (provided by link:https://github.com/domaindrivendev/Swashbuckle.AspNetCore[Swashbuckle.AspNetCore])
+
+== Getting Started Video
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/kp4tpVtDMXs" frameborder="0" allowfullscreen></iframe>
++++
+
+In the video, I touch quickly on Scan Consistency. For more details on that, check out the link:https://developer.couchbase.com/documentation/server/current/indexes/performance-consistency.html[Scan Consistency documentation] or read link:https://blog.couchbase.com/new-to-couchbase-4-5-atplus/[a blog post that I wrote introducing AtPlus, which also covers the other types of Scan Consistency].
+
+== Summary
+
+This video gives you the absolute minimum to get started with Couchbase by walking you through a simple CRUD application.
+
+If you have any questions, please leave a comment. Or, you can always ask me questions on link:https://twitter.com/mgroves[Twitter @mgroves].
