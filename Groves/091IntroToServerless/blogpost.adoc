@@ -1,0 +1,85 @@
+:imagesdir: images
+:meta-description: TBD
+:title: TBD
+:slug: TBD
+:focus-keyword: TBD
+:categories: TBD
+:tags: serverless
+:heroimage: TBD
+
+== Intro
+
+serverless is a buzz word
+
+is doesn't mean there aren't servers, it just means that the server is abstracted away
+
+in some cases it can free your enterprise from the costs of maintaining infrastructure, upgrades, provisioning servers
+
+== What is Serverless?
+
+you write code
+
+the servers that execute that code are automatically provisioned by a cloud provider
+
+code is triggered by events (could be as simple as an HTTP request, or it could be some other event - link to azure function events)
+
+== Serverless vs Microservice
+
+There is some similarity between breaking up an application into microservices and using serverless in your application
+
+microservice, you might have a "shopping cart" service
+
+image:microservicesDiagram.png[Microservices]
+
+- this service has c r u d operations in it
+- it operates with a database
+- the microservice is will use, say, a VM even while idle, and you'll be charged for VM time
+
+for serverless, you might have 4 "functions" to handle each c r u d operations
+
+image:serverlessDiagram.png[Serverless]
+
+- you deploy 4 functions instead of 1 service
+- each function operates with a database
+- you don't have to provision a VM
+- the function only consumes resources when needed, and you are only charged for that
+
+
+== Benefits of Serverless
+
+scalability is handled by the infrastructure to handle demand
+
+costs are tied to usage
+
+reduced admin costs / improved agile iteration - reduced need for IT operations, at least initially, because there are no servers to deploy, fewer servers to manage/upgrade/etc, possible improved developer productivity
+
+== Couchbase and Serverless
+
+there are several popular serverless providers:
+
+microsoft azure functions
+amazon lambdas
+google cloud whatever
+and many more
+
+Couchbase Server can run on any of these clouds, or on multiple cloud vendors, or on a cloud hybrid. This makes it a great choice when you need a NoSQL document database to use with serverless computing
+
+link to https://www.couchbase.com/solutions/cloud maybe
+
+*no vendor lock in*, you aren't even locked into the cloud. with XDCR, you can  go cloud-first, and have an on-premise cluster for DR, or deploy couchbase to multiple clouds
+
+*cloud marketplace offerings* get started in minutes on azure, aws, gcp - link to azure video
+
+*sdks for your language* couchbase offers SDKs for node, .net, java, and other languages - link to azure functions blog posts, no matter your serverless platform or language preferences, couchbase has you covered
+
+*scaling* with couchbase is easy and efficient, shared nothing architecture, each node does reads and writes (masterless), high availability
+
+*flexibility of json* almost every app can benefit from a flexible schema, even if you're using a relational database for your system of record, couchbase can be the system of engagement
+
+== Summary
+
+serverless takes decomposition of apps one step further
+
+storing json data in Couchbase gives you schema flexibility and scaling flexibility
+
+is serverless right for you? it's not a silver bullet, but we'd be happy to help you create a careful plan on whether or not it's a right fit for you application, please contact us or contact me
