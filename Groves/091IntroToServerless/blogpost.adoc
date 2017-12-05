@@ -13,15 +13,17 @@ In some cases, serverless can free your enterprise from the costs of maintaining
 
 == What is Serverless?
 
-With serverless, you simply write code (usually in form of functions/methods). You can do so with many popular languages, including C#, JavaScript (Node), Java, and so on. This code is deployed to a cloud provider like Microsoft Azure, Amazon Web Services (AWS), Google Cloud Platform, and more.
+With serverless, you simply write code (usually in form of functions/methods). You can do so with many popular languages, including C#, JavaScript (Node), Java, and so on. This code is deployed to a cloud provider like Microsoft Azure, Amazon Web Services (AWS), Google Cloud Platform (GCP), and more.
 
-Your code is triggered by events. This could be as simple as an HTTP request, or it could be many other types of events, depending on what the cloud platform supports. (Azure, for instance, supports link:https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-scheduled-function[Timer], link:https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-github-webhook-triggered-function[GitHub], etc).
+Your code is triggered by events. Events can be as simple as HTTP requests, or they could be many other types of events, depending on what the cloud platform supports. (Azure, for instance, supports link:https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-scheduled-function[Timer], link:https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-github-webhook-triggered-function[GitHub], etc).
 
 Within the cloud, the servers that execute that code are automatically provisioned (and decommissioned) by the cloud provider on an as-needed basis.
 
+You might also see the terms BaaS (Backend as a Service) or FaaS (Function as a Service). Recently, the meaning of the "serverless" buzz word has been expanded, but this post mainly focuses on FaaS/BaaS cloud services.
+
 == Serverless vs Microservices
 
-There are some similarities between serverless and microservices. Generally, microservices are a way of breaking up a large application into multiple self-contained pieces.
+There are some similarities between serverless and microservices, but they are not the same thing. Both are approaches to break an application into smaller, independent pieces. They differ in what is deployed and what you manage.
 
 As an example, if you are using a microservice architecture, you might have a "shopping cart" service (in addition to other services like "user profile", "inventory", etc). Here's a diagram of a very simple microservice.
 
@@ -45,7 +47,7 @@ In the serverless architecture,
 * You don't have to provision a VM, you just deploy a function.
 * The function only consumes resources when needed (and you are only charged for actual use, not idle time)
 
-Show in the above diagram are only standard HTTP requests. You could use a Timer event, for instance, to check every 5 minutes to see if there are any abandoned shopping carts.
+Shown in the above diagram are only standard HTTP requests. You could also use a Timer event, for instance, to check every 5 minutes to see if there are any abandoned shopping carts.
 
 == Benefits of Serverless
 
@@ -67,13 +69,15 @@ There are several popular serverless providers:
 * Amazon link:https://aws.amazon.com/lambda/[AWS Lambda]
 * Google Cloud Platform link:https://cloud.google.com/functions/[Cloud Functions]
 
-Couchbase Server has partnered with each of these major cloud providers and can run on any one those platforms. In addition, you can run Couchbase Server across multiple cloud vendors for improved reach, disaster recovery, and diversification. You can also use Couchbase Server in a hybrid-cloud situation (a mix of cloud and on-premises). This makes Couchbase a great choice when you need a NoSQL document database, no matter your link:https://www.couchbase.com/solutions/cloud[cloud strategy]:
+Couchbase Server has partnered with each of these major cloud providers and can run on any of those platforms. In addition, you can run Couchbase Server across multiple cloud vendors for improved reach, disaster recovery, and diversification. You can also use Couchbase Server in a hybrid-cloud situation (a mix of cloud and on-premises).
 
-*No vendor lock in.* With Couchbase, you aren't even locked into the cloud, much less a single cloud vendor. With link:https://developer.couchbase.com/documentation/server/3.x/admin/XDCR/xdcr-intro.html[XDCR], you can go cloud-first, and have an on-premises cluster for disaster recovery, or deploy couchbase to multiple clouds.
+This makes Couchbase a great choice when you need a NoSQL document database, no matter your link:https://www.couchbase.com/solutions/cloud[cloud strategy]:
+
+*No vendor lock in.* With Couchbase, you aren't even locked into the cloud, much less a single cloud vendor. With link:https://developer.couchbase.com/documentation/server/3.x/admin/XDCR/xdcr-intro.html[XDCR], you can go cloud-first, and have an on-premises cluster for disaster recovery, or deploy Couchbase to multiple clouds.
 
 *Cloud marketplace offerings.* You can get started in minutes: on link:https://azure.microsoft.com/en-us/resources/templates/couchbase/[Microsoft Azure], link:https://aws.amazon.com/marketplace/seller-profile?id=1a064a14-5ac2-4980-9167-15746aabde72[AWS], or link:https://console.cloud.google.com/launcher/details/couchbase-public/couchbase-enterprise-edition-byol[GCP].
 
-*Tools for your programming language.* Couchbase offers SDKs for link:https://developer.couchbase.com/documentation/server/current/sdk/nodejs/start-using-sdk.html[Node.js], link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html[.NET], link:https://developer.couchbase.com/documentation/server/current/sdk/java/start-using-sdk.html[Java], link:https://developer.couchbase.com/documentation/server/current/sdk/php/start-using-sdk.html[PHP], link:https://developer.couchbase.com/documentation/server/current/sdk/python/start-using-sdk.html[Python], link:https://developer.couchbase.com/documentation/server/current/sdk/go/start-using-sdk.html[Go], link:https://developer.couchbase.com/documentation/server/current/sdk/c/start-using-sdk.html[C/C++], as well as community support for many others. No matter your serverless platform or language preferences, couchbase has you covered. Check out this blog post on link:https://blog.couchbase.com/azure-functions-couchbase-server/[Azure Functions with Couchbase Server] for a technical intro. 
+*Tools for your programming language.* Couchbase offers SDKs for link:https://developer.couchbase.com/documentation/server/current/sdk/nodejs/start-using-sdk.html[Node.js], link:https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html[.NET], link:https://developer.couchbase.com/documentation/server/current/sdk/java/start-using-sdk.html[Java], link:https://developer.couchbase.com/documentation/server/current/sdk/php/start-using-sdk.html[PHP], link:https://developer.couchbase.com/documentation/server/current/sdk/python/start-using-sdk.html[Python], link:https://developer.couchbase.com/documentation/server/current/sdk/go/start-using-sdk.html[Go], link:https://developer.couchbase.com/documentation/server/current/sdk/c/start-using-sdk.html[C/C++], as well as community support for many others. No matter your serverless platform or language preferences, Couchbase has you covered. Check out this blog post on link:https://blog.couchbase.com/azure-functions-couchbase-server/[Azure Functions with Couchbase Server] for a technical intro using .NET/C#/Azure. 
 
 *Scaling.* With Couchbase Server, scaling is easy and efficient. link:https://developer.couchbase.com/documentation/server/current/introduction/intro.html[Couchbase's architecture is designed for scaling], with built-in replication, autosharding, and data distribution. Every node in a Couchbase cluster can do both reads and writes, providing efficient use of computing resources and high availability.
 
@@ -85,4 +89,4 @@ Serverless takes decomposition of your application back-end one step further.
 
 Storing JSON data in Couchbase Server gives you flexibility with both schema and scaling.
 
-Is serverless right for you? It's not a silver bullet, if you're interested in benefiting from lower costs and easier deployment, we'd be happy to help you create a careful plan and discuss whether or not it's a right fit for you application. You can contact me by leaving a comment, or finding me on link:https://twitter.com/mgroves[Twitter @mgroves].
+Is serverless right for you? It's not a silver bullet, but if you're interested in benefiting from lower costs and easier deployment, we'd be happy to help you create a careful plan and discuss whether or not it's a right fit for your application. You can contact me by leaving a comment, or finding me on link:https://twitter.com/mgroves[Twitter @mgroves].
