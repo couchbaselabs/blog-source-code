@@ -1,4 +1,4 @@
-[ditaa, target="microservicesDiagram"]
+[ditaa, target="09101-microservices-diagram"]
 ....
   Client           Shopping Cart       Database
                    Microservice  
@@ -23,7 +23,7 @@
                  \---------------/
 ....
 
-[ditaa, target="serverlessDiagram"]
+[ditaa, target="09102-serverless-diagram"]
 ....
 
   Client             Action                     Function                         Database

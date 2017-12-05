@@ -27,7 +27,7 @@ There are some similarities between serverless and microservices, but they are n
 
 As an example, if you are using a microservice architecture, you might have a "shopping cart" service (in addition to other services like "user profile", "inventory", etc). Here's a diagram of a very simple microservice.
 
-image:microservicesDiagram.png[Microservices]
+image:09101-microservices-diagram.png[Microservices]
 
 Notice some properties of the microservice:
 
@@ -38,7 +38,7 @@ Notice some properties of the microservice:
 
 Contrast this with a similar set of features, this time created with a serverless approach.
 
-image:serverlessDiagram.png[Serverless]
+image:09102-serverless-diagram.png[Serverless]
 
 In the serverless architecture,
 
