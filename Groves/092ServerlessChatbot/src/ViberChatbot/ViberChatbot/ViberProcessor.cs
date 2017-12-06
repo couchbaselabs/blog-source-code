@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Couchbase.Core;
 using Couchbase.N1QL;
 using RestSharp;
@@ -19,14 +20,16 @@ namespace ViberChatbot
             _bucket = bucket;
         }
 
+        // tag::Process[]
         public void Process(ViberIncoming incoming)
         {
-            if (incoming.Message.Type == "text")
+            if (incoming?.Message?.Type == "text")
             {
                 LogIncoming(incoming);
                 ProcessMessage(incoming);
             }
         }
+        // end::Process[]
 
         private void LogIncoming(ViberIncoming incoming)
         {
@@ -54,9 +57,13 @@ namespace ViberChatbot
             // get "metrics" when asked for
             else if (incoming.Message.Text.ToLower().Contains("metrics"))
                 SendTextMessage(GetMetrics(), incoming.Sender.Id);
+            // get some flight information
+            else if (incoming.Message.Text.ToLower().Contains("flights"))
+                ProcessFlightRequest(incoming.Message.Text, incoming.Sender.Id);
             // if message contains "twitter" then return a random suggestion of who to follow on twitter
             else if (incoming.Message.Text.ToLower().Contains("twitter"))
                 SendTextMessage("I think you should follow https://twitter.com/" + TwitterSuggestions[Rand.Next(0, TwitterSuggestions.Count - 1)] + " on Twitter!", incoming.Sender.Id);
+            // tag::snippet[]
             // if the message contains "hi", "hello", etc say "howdy"
             else if (HelloStrings.Any(incoming.Message.Text.ToLower().Contains))
                 SendTextMessage("Howdy!", incoming.Sender.Id);
@@ -65,8 +72,43 @@ namespace ViberChatbot
                 SendTextMessage("If you have a Couchbase question, please ask on the forums! http://forums.couchbase.com", incoming.Sender.Id);
             else
                 SendTextMessage("I'm sorry, I don't understand you. Type 'help' for help!", incoming.Sender.Id);
+            // end::snippet[]
         }
 
+        private void ProcessFlightRequest(string incomingMessage, string id)
+        {
+            /*
+            // expecting messages that contain "{flight} from {airport} to {airport2}"
+            //var sourceairport = Regex.Match(incomingMessage, "from (.*?)").Value;
+            //var destinationairport = Regex.Match(incomingMessage, "to (.*?)").Value;
+            var dayOfTheWeek = (int)DateTime.Now.DayOfWeek;
+
+            var n1ql = @"SELECT COUNT(*) FROM (
+                select r.sourceairport, r.destinationairport, a.name, s.flight, s.utc
+                from `travel-sample` r
+                unnest r.schedule s
+                inner join `travel-sample` a ON KEYS r.airlineid
+                where r.type = 'route'
+                and r.sourceairport = 'CMH'
+                and r.destinationairport = 'ATL'
+                and s.day = 0
+                order by s.utc
+                ) flights;";
+            var query = QueryRequest.Create(n1ql);
+            query.AddNamedParameter("sourceairport", sourceairport);
+            query.AddNamedParameter("destinationairport", destinationairport);
+            query.AddNamedParameter("dayOfTheWeek", dayOfTheWeek);
+
+            var result = _bucket.Query<int>(query);
+
+            var count = result.Rows.First();
+
+            var resultMessage = $"There are {count} flights from {sourceairport} to {destinationairport} on {DateTime.Now.DayOfWeek.ToString()}";
+            SendTextMessage(resultMessage, id);
+            */
+        }
+
+        // tag::GetMetrics[]
         private string GetMetrics()
         {
             var n1ql = @"select value count(*) as totalIncoming
@@ -78,7 +120,9 @@ namespace ViberChatbot
                 return $"I have received {response.Rows.First()} incoming messages so far!";
             return "Sorry, I'm having trouble getting metrics right now.";
         }
+        // end::GetMetrics[]
 
+        // tag::SendTextMessage[]
         private void SendTextMessage(string message, string senderId)
         {
             var client = new RestClient("https://chatapi.viber.com/pa/send_message");
@@ -86,7 +130,7 @@ namespace ViberChatbot
             request.AddJsonBody(new
             {
                 receiver = senderId,    // receiver	(Unique Viber user id, required)
-                type = "text",          // type	(Message type, required) Available message types: text, picture, video, file, location, contact, sticker, carousel content, url
+                type = "text",          // type	(Message type, required) Available message types: text, picture, etc
                 text = message
             });
             request.AddHeader("X-Viber-Auth-Token", ViberKey);
@@ -95,12 +139,14 @@ namespace ViberChatbot
             // log to Couchbase
             _bucket.Insert("resp::" + Guid.NewGuid(), response.Content);
         }
+        // end::SendTextMessage[]
 
         private static string HelpMessage =
             @"Welcome! Here are some things you can do: 
 * Say 'hi'
 * Get 'metrics' about me
 * Ask a '?'
+* Ask about 'flights from CMH to ATL' (or other airports)
 * Ask for a 'twitter' recommendation.";
 
         private static readonly List<string> HelloStrings = new List<string> {

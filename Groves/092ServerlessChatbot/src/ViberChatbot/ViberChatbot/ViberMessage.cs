@@ -1,5 +1,6 @@
 ﻿namespace ViberChatbot
 {
+    // tag::ViberClasses[]
     public class ViberIncoming
     {
         public string Event { get; set; }
@@ -19,4 +20,5 @@
         public string Text { get; set; }
         public string Type { get; set; }
     }
+    // end::ViberClasses[]
 }

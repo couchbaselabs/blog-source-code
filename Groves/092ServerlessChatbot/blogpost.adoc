@@ -1,0 +1,120 @@
+:imagesdir: images
+:meta-description: Use a serverless approach to quickly build a chatbot. In this blog post, I'll show you an example with Azure, Couchbase, and Viber.
+:title: Developing a Viber Chatbot with Azure Functions and Couchbase Server
+:slug: Developing-Viber-Chatbot-Azure-Functions-Couchbase Server
+:focus-keyword: chatbot
+:categories: Couchbase Server, .NET
+:tags: serverless, azure, .net, viber
+:heroimage: TBD
+
+A chatbot can be a novel way to interact with users. After writing a post introducing the basics of serverless, and also writing a post on writing Azure Functions, I decided I would try to build something a little more practical than a "hello, world".
+
+Using a link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[serverless architecture] for a chatbot makes sense. Chatbot usage may be sporadic. Usage may peak and drop at various times of the day. By using serverless, you'll only be paying for the resources and time that you need.
+
+_If you want to follow along, all the source code for this blog post is link://[available on Github]._
+
+== Viber Chatbot
+
+I could have chosen a lot of different platforms to create a chatbot for: Facebook Messenger, Skype, WhatsApp, and more. But I decided to go with link:https://www.viber.com/[Viber].
+
+In the United States, Viber doesn't seem to have a huge following, but I've been using it a lot. It's a very handy way to chat with my wife, send pictures, funny GIFs, and so on. I find it to be more reliable and faster than SMS, especially for pictures. I wish everyone in my family was using it! It's also a nice side effect that link:https://www.couchbase.com/customers/viber[Viber is a Couchbase customer]. They switched from MongoDb to support their growing data needs.
+
+Also, link:https://developers.viber.com/docs/api/rest-bot-api/[Viber's REST API] is simple and well documented. Between the user of serverless architecture and Viber's API, I couldn't believe how fast I went from 0 to chatbot.
+
+== Setup
+
+First, You'll need to start by link:https://viber.github.io/docs/general/get-started/[creating a bot in Viber (you'll need a Viber account at some point). Viber will give you an API key that will something like `30a6470a1c67d66f-4207550bd0f024fa-c4cacb89afc04094`. This is how you will authenticate to the Viber API.
+
+Next, create a new Azure Functions solution. I've previously blogged about link:https://blog.couchbase.com/azure-functions-couchbase-server/[Azure Functions] with a followup on link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchbase-server/[Lazy Initialization].
+
+I decided to use C# to write my Azure Functions. Unfortunately, there is no .NET SDK for Viber (as far as I know), so I'll have to use the REST API directly. Not a big deal, I just used link:http://restsharp.org/[RestSharp]. But if you prefer link:https://developers.viber.com/docs/api/nodejs-bot-api/[NodeJS] or link:https://developers.viber.com/docs/api/python-bot-api/[Python], Viber has got you covered.
+
+Before you start coding, you'll need to setup a link:https://viber.github.io/docs/api/rest-bot-api/#webhooks[Webhook]. This is simply a way of telling Viber where to send incoming messages. You'll only need to do this at the beginning. I did this by first deploying a barebones Azure Function that returns a 200. I used Postman to set the initial webhook.
+
+[ image goes here ]
+
+Finally, I setup a Couchbase cluster on Azure. I didn't create anything fancy, just a single node. link:https://blog.couchbase.com/azure-getting-started-easy-free/[Getting started with Couchbase and Azure is easy and free]. (You can even use the "Test Drive" button to get 3 hours of Couchbase Server without expending any Azure credit).
+
+== Azure Function
+
+For this application, I wanted to create a chatbot with a little more substance than "Hello, world" and I also wanted to have a little fun. Here are the commands I want my chatbot to understand:
+
+* If I say "hi" (or hello, etc), it will respond with "Howdy!"
+* If I ask for "metrics", it will tell me how many messages it's processed so far.
+* If I mention "twitter", it will make a recommendation about who to follow.
+* If I ask for flights from CMH to ATL (or other airports) it will tell me how many flights there are today (I will use the link:https://developer.couchbase.com/documentation/server/current/settings/install-sample-buckets.html[travel-sample bucket] for this data).
+* If I say "help", it will give me a list of the above commands.
+
+I decided not to use any natural language processing or parsing libraries. I'm just going to use simple if/else statements and some basic string matching. If you are planning to create a robust chatbot with rich capabilities, I definitely recommend checking out libraries and tools like link:https://www.luis.ai/home[LUIS], link:https://wit.ai/[wit.ai], link:http://www.nltk.org/[NLTK] and others.
+
+== Chatbot code
+
+I started by creating a few C# classes to represent the structure of the data that Viber will be sending to my serverless endpoint.
+
+=== Viber classes
+
+This is not an exhaustive representation of Viber's capabilities by far, but it's enough to start receiving basic text messages.
+
+[source,C#,indent=0]
+----
+include::src/ViberChatbot/ViberChatbot/ViberMessage.cs[tag=ViberClasses]
+----
+
+Next, the Azure function will convert the raw HTTP request into a `ViberIncoming` object.
+
+[source,C#,indent=0]
+----
+include::src/ViberChatbot/ViberChatbot/Chatbot.cs[tag=Run]
+----
+
+After this, I created a `ViberProcessor` class with a `Process` method that receives this object.
+
+[source,C#,indent=0]
+----
+include::src/ViberChatbot/ViberChatbot/ViberProcessor.cs[tag=Process]
+----
+
+=== Processing Viber messages
+
+`LogIncoming` creates a record (in Couchbase) so that I know everything about each request that comes in.
+
+`ProcessMessage` will analyze the text of the message and figure out what to do in response. You can check out the complete code on link://[Github], but here's a brief snippet to give you the idea:
+
+[source,C#,indent=0]
+----
+include::src/ViberChatbot/ViberChatbot/ViberProcessor.cs[tag=snippet]
+----
+
+=== Getting metrics
+
+One of things my chatbot listens for is "metrics". When you ask it for metrics, it will give you a count of the incoming messages that it's processed. Since I'm logging every request to Couchbase, querying for metrics is easily done with a N1QL query.
+
+[source,C#,indent=0]
+----
+include::src/ViberChatbot/ViberChatbot/ViberProcessor.cs[tag=GetMetrics]
+----
+
+=== Sending a message back
+
+The chatbot needs to communicate back to the person who's talking to it. As I said earlier, there is no Viber .NET SDK, so I have to create a REST call "manually". This is easy enough with link:http://restsharp.org/[RestSharp]:
+
+[source,C#,indent=0]
+----
+include::src/ViberChatbot/ViberChatbot/ViberProcessor.cs[tag=SendTextMessage]
+----
+
+Note that I'm also logging each response from Viber to Couchbase. This could be very useful information for later analysis and/or troubleshooting. If Viber decides to change the structure and content of their response, the data in Couchbase is all stored as flexible JSON data. You will not get surprise errors or missing data at this ingestion point.
+
+== Summary
+
+That's all there is to it. To test out the bot, I used my Viber app for Android on my phone as well as my wife's.
+
+[ image of viber conversation ]
+
+Here's a recap of the benefits of this approach to creating a chatbot:
+
+* The link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[serverless approach] is a good way to control costs of a chatbot, whether it's Viber or some other messaging platform because of the potential for sporadic and cyclic use.
+* link:https://viber.github.io/docs/api/rest-bot-api/[Viber's REST API] utilizes JSON, which makes Couchbase a natural fit for tracking/storing/querying.
+* Couchbase's ease of scaling and partnerships with link:https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-enterprise[Microsoft] (and Amazon and Google) make it a great choice for a chatbot backend
+
+This was really fun, and I could definitely get carried away playing with this new chatbot. It could analyze images, tell jokes, look up all kinds of information, sell products and services, or any number of useful operations. I would love to hear what you're building a chatbot to do (please leave a comment or contact me on link:https://twitter.com/mgroves[Twitter @mgroves])!

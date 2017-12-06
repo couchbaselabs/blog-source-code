@@ -26,8 +26,11 @@ namespace ViberChatbot
             return cluster.OpenBucket(bucketName);
         });
 
+        // tag::Run[]
         [FunctionName("Chatbot")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequestMessage req, TraceWriter log)
+        public static async Task<HttpResponseMessage> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequestMessage req,
+            TraceWriter log)
         {
             var incoming = req.Content.ReadAsAsync<ViberIncoming>().Result;
 
@@ -38,5 +41,6 @@ namespace ViberChatbot
             // this is most important for the initial Viber webhook setup
             return req.CreateResponse(HttpStatusCode.OK);
         }
+        // end::Run[]
     }
 }
