@@ -77,21 +77,33 @@ namespace ViberChatbot
 
         private void ProcessFlightRequest(string incomingMessage, string id)
         {
-            /*
             // expecting messages that contain "{flight} from {airport} to {airport2}"
-            //var sourceairport = Regex.Match(incomingMessage, "from (.*?)").Value;
-            //var destinationairport = Regex.Match(incomingMessage, "to (.*?)").Value;
+            var matches = Regex.Matches(incomingMessage, "from (\\w+) to (\\w+)");
+            if (matches.Count < 1)
+            {
+                SendTextMessage("Sorry, I can't help you with those flights.", id);
+                return;
+            }
+            if (matches[0].Groups.Count != 3)
+            {
+                SendTextMessage("Sorry, I can't help you with those flights.", id);
+                return;
+            }
+
+            // uppercase the matches
+            var sourceairport = matches[0].Groups[1].Value.ToUpper();
+            var destinationairport = matches[0].Groups[2].Value.ToUpper();
             var dayOfTheWeek = (int)DateTime.Now.DayOfWeek;
 
-            var n1ql = @"SELECT COUNT(*) FROM (
+            var n1ql = @"SELECT VALUE COUNT(*) FROM (
                 select r.sourceairport, r.destinationairport, a.name, s.flight, s.utc
                 from `travel-sample` r
                 unnest r.schedule s
                 inner join `travel-sample` a ON KEYS r.airlineid
                 where r.type = 'route'
-                and r.sourceairport = 'CMH'
-                and r.destinationairport = 'ATL'
-                and s.day = 0
+                and r.sourceairport = $sourceairport
+                and r.destinationairport = $destinationairport
+                and s.day = $dayOfTheWeek
                 order by s.utc
                 ) flights;";
             var query = QueryRequest.Create(n1ql);
@@ -105,7 +117,6 @@ namespace ViberChatbot
 
             var resultMessage = $"There are {count} flights from {sourceairport} to {destinationairport} on {DateTime.Now.DayOfWeek.ToString()}";
             SendTextMessage(resultMessage, id);
-            */
         }
 
         // tag::GetMetrics[]
