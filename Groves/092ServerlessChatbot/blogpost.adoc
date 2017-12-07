@@ -31,7 +31,7 @@ I decided to use C# to write my Azure Functions. Unfortunately, there is no .NET
 
 Before you start coding, you'll need to setup a link:https://viber.github.io/docs/api/rest-bot-api/#webhooks[Webhook]. This is simply a way of telling Viber where to send incoming messages. You'll only need to do this at the beginning. I did this by first deploying a barebones Azure Function that returns a 200. I used Postman to set the initial webhook.
 
-[ image goes here ]
+image:09201-chatbot-webhook-with-postman.png[Chatbot webhook with Postman]
 
 Finally, I setup a Couchbase cluster on Azure. I didn't create anything fancy, just a single node. link:https://blog.couchbase.com/azure-getting-started-easy-free/[Getting started with Couchbase and Azure is easy and free]. (You can even use the "Test Drive" button to get 3 hours of Couchbase Server without expending any Azure credit). I created a single user called "viberchatbot", a bucket called "ViberChatBot", and I loaded the "travel-sample" bucket.
 
@@ -109,7 +109,7 @@ Note that I'm also logging each response from Viber to Couchbase. This could be 
 
 That's all the basics. Check out the source code for the complete set of actions/operations that the chatbot can do. To test out the bot, I used my Viber app for Android on my phone (and my wife's, to make sure it worked when I went public).
 
-[ image of viber conversation ]
+image:09202-viber-conversation-with-chatbot.png[Conversation with chatbot]
 
 Here's a recap of the benefits of this approach to creating a chatbot:
 
