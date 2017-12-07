@@ -33,7 +33,7 @@ Before you start coding, you'll need to setup a link:https://viber.github.io/doc
 
 [ image goes here ]
 
-Finally, I setup a Couchbase cluster on Azure. I didn't create anything fancy, just a single node. link:https://blog.couchbase.com/azure-getting-started-easy-free/[Getting started with Couchbase and Azure is easy and free]. (You can even use the "Test Drive" button to get 3 hours of Couchbase Server without expending any Azure credit).
+Finally, I setup a Couchbase cluster on Azure. I didn't create anything fancy, just a single node. link:https://blog.couchbase.com/azure-getting-started-easy-free/[Getting started with Couchbase and Azure is easy and free]. (You can even use the "Test Drive" button to get 3 hours of Couchbase Server without expending any Azure credit). I created a single user called "viberchatbot", a bucket called "ViberChatBot", and I loaded the "travel-sample" bucket.
 
 == Azure Function
 
@@ -107,7 +107,7 @@ Note that I'm also logging each response from Viber to Couchbase. This could be 
 
 == Summary
 
-That's all there is to it. To test out the bot, I used my Viber app for Android on my phone as well as my wife's.
+That's all the basics. Check out the source code for the complete set of actions/operations that the chatbot can do. To test out the bot, I used my Viber app for Android on my phone (and my wife's, to make sure it worked when I went public).
 
 [ image of viber conversation ]
 
