@@ -1,11 +1,11 @@
 :imagesdir: images
 :meta-description: Use a serverless approach to quickly build a chatbot. In this blog post, I'll show you an example with Azure, Couchbase, and Viber.
-:title: Developing a Viber Chatbot with Azure Functions and Couchbase Server
-:slug: Developing-Viber-Chatbot-Azure-Functions-Couchbase Server
+:title: Chatbot on Azure and Couchbase for Viber
+:slug: Chatbot-Azure-Couchbase-Viber
 :focus-keyword: chatbot
 :categories: Couchbase Server, .NET
 :tags: serverless, azure, .net, viber
-:heroimage: TBD
+:heroimage: 092-hero-chat-mobile-phone.jpg https://pixabay.com/en/mobile-phone-smartphone-bokeh-2566615/ no attribute required
 
 A chatbot can be a novel way to interact with users. After writing a post introducing the basics of link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[serverless], and also writing a post on writing link:https://blog.couchbase.com/azure-functions-couchbase-server/[Azure Functions], I decided I would try to build something a little more practical than a "hello, world".
 
@@ -33,7 +33,7 @@ Before you start coding, you'll need to setup a link:https://viber.github.io/doc
 
 image:09201-chatbot-webhook-with-postman.png[Chatbot webhook with Postman]
 
-Finally, I setup a Couchbase cluster on Azure. I didn't create anything fancy, just a single node. link:https://blog.couchbase.com/azure-getting-started-easy-free/[Getting started with Couchbase and Azure is easy and free]. (You can even use the "Test Drive" button to get 3 hours of Couchbase Server without expending any Azure credit). I created a single user called "viberchatbot", a bucket called "ViberChatBot", and I loaded the "travel-sample" bucket.
+Finally, I setup a Couchbase cluster on Azure. link:https://blog.couchbase.com/azure-getting-started-easy-free/[Getting started with Couchbase and Azure is easy and free]. (You can even use the "Test Drive" button to get 3 hours of Couchbase Server without expending any Azure credit). I created a single user called "viberchatbot", a bucket called "ViberChatBot", and I loaded the "travel-sample" bucket.
 
 == Azure Function
 
