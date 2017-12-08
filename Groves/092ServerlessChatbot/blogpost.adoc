@@ -4,7 +4,7 @@
 :slug: Chatbot-Azure-Couchbase-Viber
 :focus-keyword: chatbot
 :categories: Couchbase Server, .NET
-:tags: serverless, azure, .net, viber
+:tags: serverless, azure, .net, viber, cloud
 :heroimage: 092-hero-chat-mobile-phone.jpg https://pixabay.com/en/mobile-phone-smartphone-bokeh-2566615/ no attribute required
 
 A chatbot can be a novel way to interact with users. After writing a post introducing the basics of link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[serverless], and also writing a post on writing link:https://blog.couchbase.com/azure-functions-couchbase-server/[Azure Functions], I decided I would try to build something a little more practical than a "hello, world".
