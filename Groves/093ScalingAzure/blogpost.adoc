@@ -1,0 +1,169 @@
+:imagesdir: images
+:meta-description: Scaling Couchbase Server on Azure is as easy as using a slider. This post walks you through it from the beginning.
+:title: Scaling Couchbase Server on Azure
+:slug: Scaling-Couchbase-Server-Azure
+:focus-keyword: scaling
+:categories: Couchbase Server, .NET
+:tags: azure, scaling, cloud, microsoft
+:heroimage: that same cloud hero image I use for every azure post I guess
+
+Scaling is one of Couchbase Server's strengths. It's easy to scale and Couchbase's architecture makes an efficient use of your scaling resources. In fact, when Couchbase customer Viber switched from Mongo to Couchbase, they cut the link:https://diginomica.com/2014/04/07/viber-migrates-mongodb-couchbase-halves-number-aws-servers/[number of servers they needed in half].
+
+This blog post is the third in a (loose) series of posts on Azure.
+
+The first post showed you the benefits of link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[serverless computing] on Azure with Couchbase. The second post showed a concrete example of creating a link:https://blog.couchbase.com/chatbot-azure-couchbase-viber/[chatbot using Azure functions and Couchbase Server].
+
+The last post only used a cluster with a single node for demonstration purposes. Now suppose you've been in production for a while, and your chatbot is starting to get really popular. You need to scale up your Couchbase cluster. If you deployed Couchbase from the link:https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-enterprise[Azure Marketplace], this is a piece of cake. *Long story short: you pretty much just move a slider*. But this post will take you all the way through the details:
+
+1. Creating a brand new cluster with 3 nodes.
+2. Scaling the cluster up to 5 nodes.
+3. Scaling the cluster down to 4 nodes.
+
+== Create Couchbase Cluster on Azure
+
+Assuming you have an Azure account, login to the portal. If you don't yet, link:https://blog.couchbase.com/azure-getting-started-easy-free/[ 
+Getting Started with Azure is Easy and Free].
+
+Once you're logged in, click "+ New" and search for Couchbase Server in the marketplace. _I'm using BYOL (bring your own license) for demonstration, but there is also an "Hourly Pricing" option that comes with link:https://www.couchbase.com/support-policy[silver support]._
+
+image:09301-couchbase-azure-marketplace.png[Couchbase in the Azure Marketplace]
+
+Once you select Couchbase, you'll be taken through an Azure installation wizard. Click the "Create" button to get started.
+
+image:09302-azure-step-0.png[Azure step 0 - create]
+
+Step 1 is the "Basics". Fill out the username and password you want for Couchbase, the name of a resource group, and a location (I chose North Central US because it is close to me geographically). Make sure to make a note of this information, as you'll need it later.
+
+image:09303-azure-step-1-basics.png[Azure step 1 - basics]
+
+The next step is Couchbase Config. There are some recommended VM types to use. I went with DS1_V2 to keep this blog post cheap, but you probably want at least 4 cores and 4gb of RAM for your production environment. I also elected not to install any Sync Gateway Nodes, but if you plan to use Couchbase Mobile, you will need these too. I'm asking for a total of *3 nodes* for Couchbase Server.
+
+image:09304-azure-step-2-config.png[Azure step 2 - Couchbase Config]
+
+After this, step 3 is just a summary of the information you've entered.
+
+image:09305-azure-step-3-summary.png[Azure step 3 - summary]
+
+The last step is "buy". This shows you the terms. One "Create" button is all that remains.
+
+image:09306-azure-step-4-buy.png[Azure step 4 - buy]
+
+Now, Azure will go to work provisioning 3 VMs, installing Couchbase Server on them, and then creating a cluster. This will take a little bit of time. You'll get an Azure notification when it's done.
+
+image:09307-azure-waiting-provisioning.png[Azure provisioning VMs]
+
+You should have just enough time to get yourself a nice beverage.
+
+== Using your Couchbase Cluster
+
+When Azure finishes with deployment, go look at "Resource groups" in the Azure portal. Find your resource group. Mine was called _my_cb_resource_group_.
+
+image:09308-azure-resource-groups.png[Azure resource groups]
+
+Click on the resource group. Inside that resource group, you'll see 4 things:
+
+* networksecuritygroups (these are firewall rules, essentially)
+* vnet (the network that all the resources in the group are on)
+* server (Couchbase Server instances)
+* syncgateway (Couchbase Sync Gateway instances. I didn't ask for any, but it's still listed)
+
+image:09309-azure-resource-group-drill-down.png[Azure resource group drill down]
+
+First, click 'server', and then 'instances'. You should see 3 servers (or however many you provisioned).
+
+image:09310-servers-provisioned.png[Couchbase Servers provisioned]
+
+Next, click 'deployments'. You should see one for Couchbase listed. Click it for more information about the deployment.
+
+image:09311-deployment.png[Azure deployment]
+
+The next screen will tell you the URL that you need to get to the Couchbase Server UI (and Sync Gateway UI if you installed that). It should look something like: `http://vm0.server-foobarbazqux.northcentralus.cloudapp.azure.com:8091`.
+
+image:09312-deployment-info.png[Azure deployment info]
+
+Paste that URL into a browser. You will be taken to the Couchbase Server login screen. Use the credentials you specified earlier to login.
+
+image:09313-couchbase-login.png[Couchbase Server login]
+
+After you login, click on 'servers'. You will see the three servers listed here. The URLs will match the deployments you see in the Azure portal.
+
+Let's put some data in this database! Go to Settings -> Sample Buckets and load the 'travel-sample' bucket.
+
+image:09314-load-sample-data.png[Load sample data]
+
+This sample data contains 31591 documents. When it's done loading, go back to "servers". You can see how the 'items' (and replica items) are evenly distributed amongst the three servers. Each node in Couchbase can do both reads and writes, so this is not a master/slave or a read-only replica sets situation.
+
+image:09315-couchbase-servers.png[Couchbase servers]
+
+== Scaling up
+
+Now, let's suppose your application is really taking off, and you need to scale up to provide additional capacity, storage, performance. Since we're using couchbase deployed from the marketplace, this is even easier than usual. Go to the Azure portal, back to the resource group, and click "server" again. Now click "scaling"
+
+image:09316-azure-scaling.png[Azure scaling]
+
+Next, you will see a slider that you can adjust to add more instances. Let's bump it up to 5 total servers. Make sure to click "save".
+
+image:09317-azure-scaling-sliders.png[Azure scaling slider]
+
+Now, go back to 'instances' again. _Note: you may have to refresh the page. Azure doesn't seem to want to update the stale page served to the browser on its own._ You will now see *server_3* and *server_4* in "creating" status.
+
+image:09318-scaling-additional-servers.png[Scaling additional servers]
+
+You will need to wait for these to be deployed by Azure. In the meantime, you can go back over to the Couchbase Server UI and wait for them to appear there as well.
+
+image:09319-new-couchbase-nodes.png[New Couchbase Server nodes]
+
+When adding new servers, the cluster must be link:https://developer.couchbase.com/documentation/server/current/clustersetup/rebalance.html[rebalanced]. The Azure deployment should attempt to do this automatically (but just in case it fails, you can trigger the rebalance manually too).
+
+image:09320-rebalancing.png[Couchbase rebalancing]
+
+During this rebalance period, the cluster is still accessible from your applications. There will be no downtime. After the rebalance is over, you can see that the # of items on each server has changed. It's been redistributed (along with replicas).
+
+image:09321-servers-after-rebalance.png[Cluster after rebalance]
+
+That's it. It's pretty much just moving a slider and waiting a few minutes.
+
+== Scaling Down
+
+At some point, you may want to scale down your cluster. Perhaps you need 5 servers during a certain part of the year, but you only need 3 for other parts, and you'd like to save some money on your Azure bill.
+
+Once again, this is just a matter of adjusting the slider. However, it's a good idea to scale down one server at a time to avoid any risk of data loss.
+
+image:09322-scaling-down-slider.png[Scaling down slider]
+
+When you scale down, azure will pick a VM to decommission. Couchbase Server can respond in one of two ways:
+
+* Default behavior is to simply indicate that a node is down. This could link:https://developer.couchbase.com/documentation/server/5.0/settings/configure-alerts.html[trigger an email alert]. It will show as 'down' in the UI.
+* link:https://developer.couchbase.com/documentation/server/5.0/settings/change-failover-settings.htmlAuto-failover] can be turned on. This means that once a node is down, the Couchbase cluster will automatically consider it 'failed', promote the replicas on other nodes, and rebalance the cluster.
+
+I'm going to leave auto-failover off and show the default behavior.
+
+First, the server will show a status of 'deleting' in the Azure portal.
+
+image:09323-scaling-down-deleting.png[Scaling down - deleting]
+
+Soon after, Couchbase will recognize that a node is not responsive. It will suggest failover to 'activate available replicas'.
+
+image:09324-failing-node.png[Couchbase failing node]
+
+I'll go ahead and do just that.
+
+image:09325-manual-failover.png[Manual failover]
+
+Once it's removed, from the cluster, you'll need to trigger a 'rebalance'.
+
+image:09326-manual-rebalance.png[Manual rebalance]
+
+== Summary and resources
+
+Scaling a Couchbase cluster on Azure is simply a matter of using the slider.
+
+If you're scaling down, consider doing it one node at a time.
+
+For more information, check out these resources:
+
+- A link:https://www.youtube.com/watch?v=LAHc-FI95Ww[video by Ben Lackey] covering the scaling process of Couchbase on Azure.
+- Make sure to read up on link:https://developer.couchbase.com/documentation/server/current/settings/change-failover-settings.html[Auto-failover] in the documentation.
+- Also check out the documentation on link:https://developer.couchbase.com/documentation/server/current/clustersetup/rebalance.html[rebalancing].
+
+If you have questions, please contact me on link:https://twitter.com/mgroves[Twitter @mgroves] or leave a comment.
