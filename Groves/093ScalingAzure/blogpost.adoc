@@ -1,9 +1,9 @@
 :imagesdir: images
-:meta-description: Scaling Couchbase Server on Azure is as easy as using a slider. This post walks you through it from the beginning.
+:meta-description: Scaling a Couchbase Server cluster on Azure is as easy as using a slider. This post walks you through it from the beginning.
 :title: Scaling Couchbase Server on Azure
 :slug: Scaling-Couchbase-Server-Azure
 :focus-keyword: scaling
-:categories: Couchbase Server
+:categories: Couchbase Server, Couchbase Architecture
 :tags: azure, scaling, cloud, microsoft
 :heroimage: that same cloud hero image I use for every azure post I guess
 
