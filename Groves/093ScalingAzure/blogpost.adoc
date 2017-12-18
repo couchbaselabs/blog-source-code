@@ -3,7 +3,7 @@
 :title: Scaling Couchbase Server on Azure
 :slug: Scaling-Couchbase-Server-Azure
 :focus-keyword: scaling
-:categories: Couchbase Server, .NET
+:categories: Couchbase Server
 :tags: azure, scaling, cloud, microsoft
 :heroimage: that same cloud hero image I use for every azure post I guess
 
@@ -11,9 +11,11 @@ Scaling is one of Couchbase Server's strengths. It's easy to scale and Couchbase
 
 This blog post is the third in a (loose) series of posts on Azure.
 
-The first post showed you the benefits of link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[serverless computing] on Azure with Couchbase. The second post showed a concrete example of creating a link:https://blog.couchbase.com/chatbot-azure-couchbase-viber/[chatbot using Azure functions and Couchbase Server].
+The first post showed you the *benefits of link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[serverless computing]* on Azure with Couchbase.
 
-The last post only used a cluster with a single node for demonstration purposes. Now suppose you've been in production for a while, and your chatbot is starting to get really popular. You need to scale up your Couchbase cluster. If you deployed Couchbase from the link:https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-enterprise[Azure Marketplace], this is a piece of cake. *Long story short: you pretty much just move a slider*. But this post will take you all the way through the details:
+The second post showed a concrete example of creating a *link:https://blog.couchbase.com/chatbot-azure-couchbase-viber/[chatbot using Azure functions and Couchbase Server]*.
+
+The previous post only used a cluster with a single node for demonstration purposes. Now suppose you've been in production for a while, and your chatbot is starting to get really popular. You need to scale up your Couchbase cluster. If you deployed Couchbase from the link:https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-enterprise[Azure Marketplace], this is a piece of cake. *Long story short: you pretty much just move a slider*. But this post will take you all the way through the details:
 
 1. Creating a brand new cluster with 3 nodes.
 2. Scaling the cluster up to 5 nodes.
