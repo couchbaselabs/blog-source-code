@@ -7,7 +7,7 @@
 :tags: azure, scaling, cloud, microsoft
 :heroimage: that same cloud hero image I use for every azure post I guess
 
-Scaling is one of Couchbase Server's strengths. It's easy to scale and Couchbase's architecture makes an efficient use of your scaling resources. In fact, when Couchbase customer Viber switched from Mongo to Couchbase, they cut the link:https://diginomica.com/2014/04/07/viber-migrates-mongodb-couchbase-halves-number-aws-servers/[number of servers they needed in half].
+Scaling is one of Couchbase Server's strengths. It's easy to scale, and Couchbase's architecture makes an efficient use of your scaling resources. In fact, when Couchbase customer Viber switched from Mongo to Couchbase, they cut the link:https://diginomica.com/2014/04/07/viber-migrates-mongodb-couchbase-halves-number-aws-servers/[number of servers they needed in half].
 
 This blog post is the third in a (loose) series of posts on Azure.
 
@@ -64,10 +64,10 @@ image:09308-azure-resource-groups.png[Azure resource groups]
 
 Click on the resource group. Inside that resource group, you'll see 4 things:
 
-* networksecuritygroups (these are firewall rules, essentially)
-* vnet (the network that all the resources in the group are on)
-* server (Couchbase Server instances)
-* syncgateway (Couchbase Sync Gateway instances. I didn't ask for any, but it's still listed)
+* *networksecuritygroups* (these are firewall rules, essentially)
+* *vnet* (the network that all the resources in the group are on)
+* *server* (Couchbase Server instances)
+* *syncgateway* (Couchbase Sync Gateway instances. I didn't ask for any, so this is an empty grouping)
 
 image:09309-azure-resource-group-drill-down.png[Azure resource group drill down]
 
@@ -79,7 +79,7 @@ Next, click 'deployments'. You should see one for Couchbase listed. Click it for
 
 image:09311-deployment.png[Azure deployment]
 
-The next screen will tell you the URL that you need to get to the Couchbase Server UI (and Sync Gateway UI if you installed that). It should look something like: `http://vm0.server-foobarbazqux.northcentralus.cloudapp.azure.com:8091`.
+The next screen will tell you the URL that you need to get to the Couchbase Server UI (and Sync Gateway UI if you installed that). It should look something like: `\http://vm0.server-foobarbazqux.northcentralus.cloudapp.azure.com:8091`.
 
 image:09312-deployment-info.png[Azure deployment info]
 
@@ -99,7 +99,7 @@ image:09315-couchbase-servers.png[Couchbase servers]
 
 == Scaling up
 
-Now, let's suppose your application is really taking off, and you need to scale up to provide additional capacity, storage, performance. Since we're using couchbase deployed from the marketplace, this is even easier than usual. Go to the Azure portal, back to the resource group, and click "server" again. Now click "scaling"
+Now, let's suppose your application is really taking off, and you need to scale up to provide additional capacity, storage, performance. Since we're using Couchbase deployed from the Azure marketplace, this is even easier than usual. Go to the Azure portal, back to the resource group, and click "server" again. Now click "scaling"
 
 image:09316-azure-scaling.png[Azure scaling]
 
@@ -133,10 +133,10 @@ Once again, this is just a matter of adjusting the slider. However, it's a good 
 
 image:09322-scaling-down-slider.png[Scaling down slider]
 
-When you scale down, azure will pick a VM to decommission. Couchbase Server can respond in one of two ways:
+When you scale down, Azure will pick a VM to decommission. Couchbase Server can respond in one of two ways:
 
 * Default behavior is to simply indicate that a node is down. This could link:https://developer.couchbase.com/documentation/server/5.0/settings/configure-alerts.html[trigger an email alert]. It will show as 'down' in the UI.
-* link:https://developer.couchbase.com/documentation/server/5.0/settings/change-failover-settings.htmlAuto-failover] can be turned on. This means that once a node is down, the Couchbase cluster will automatically consider it 'failed', promote the replicas on other nodes, and rebalance the cluster.
+* link:https://developer.couchbase.com/documentation/server/5.0/settings/change-failover-settings.html[Auto-failover] can be turned on. This means that once a node is down, the Couchbase cluster will automatically consider it 'failed', promote the replicas on other nodes, and rebalance the cluster.
 
 I'm going to leave auto-failover off and show the default behavior.
 
@@ -152,7 +152,7 @@ I'll go ahead and do just that.
 
 image:09325-manual-failover.png[Manual failover]
 
-Once it's removed, from the cluster, you'll need to trigger a 'rebalance'.
+Once it's removed from the cluster, you'll need to trigger a 'rebalance'.
 
 image:09326-manual-rebalance.png[Manual rebalance]
 
