@@ -1,0 +1,48 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Test Drive: Trying Couchbase on Azure for Free
+:slug: Test-Drive-Trying-Couchbase-Azure-Free
+:focus-keyword: test drive
+:categories: Couchbase Server
+:tags: azure, cloud, microsoft, test drive
+:heroimage: that same cloud hero image I use for every azure post I guess
+
+Test Drive is an Azure feature that allows you to try out software in the cloud for free.
+
+Previously, I wrote about how link:https://blog.couchbase.com/azure-getting-started-easy-free/[Getting started with Couchbase on Azure is easy and free]. That post told you how to get started with $200 in Azure credit. With Test Drive, however, it's even easier to get started, and you don't have to use any of that $200 credit.
+
+== Test Drive on Azure Marketplace
+
+The only thing you need before you start is a Microsoft account, which is free.
+
+image:09401-create-free-account.png[Create account for free]
+
+Start by going to the link:https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-enterprise?tab=Overview[Couchbase Enterprise product page on Azure].
+
+image:09402-couchbase-azure-product-page.png[Couchbase Azure product page]
+
+There's a big "Test Drive" button. Simply click to get started.
+
+image:09403-launch-test-drive.png[Launch test drive]
+
+Before you click to get started, notice that the Test Drive has a limited duration. You will get 3 hours to evaluate Couchbase Server.
+
+== Step by Step Evaluation Labs
+
+We've prepared link:https://github.com/couchbase-partners/test-drive[4 step-by-step labs] that you can follow to start evaluating Couchbase Server.
+
+The test drive deployment is a fully functional Couchbase Server Enterprise cluster with all features enabled. The only limit you have is time.
+
+== Summary
+
+Couchbase is proud to partner with Microsoft to make this test drive available to you.
+
+If you are interested in learning more about Couchbase on Azure, please check out these other blog posts:
+
+* link:https://blog.couchbase.com/azure-getting-started-easy-free/[Azure: Getting Started is Easy and Free]
+* link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[Serverless Architecture with Cloud Computing]
+* link:https://blog.couchbase.com/azure-functions-couchbase-server/[Azure Functions with Couchbase Server] (and link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchbase-server/[follow-up on lazy initialization])
+* link:https://blog.couchbase.com/chatbot-azure-couchbase-viber/[Creating a chatbot] on Azure
+* link:https://blog.couchbase.com/scaling-couchbase-server-azure/[Scaling Couchbase on Azure]
+
+If you have any questions, comments, or suggestions, please leave a comment, email me link:mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com], or tweet me link:https://twitter.com/mgroves[@mgroves on Twitter].
