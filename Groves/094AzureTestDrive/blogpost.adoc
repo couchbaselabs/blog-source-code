@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: Test Drive allows you to try out software in the cloud for free. Couchbase has partnered with Microsoft to create a Couchbase Server Azure Test Drive.
 :title: Test Drive: Trying Couchbase on Azure for Free
 :slug: Test-Drive-Trying-Couchbase-Azure-Free
 :focus-keyword: test drive
