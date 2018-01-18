@@ -5,7 +5,7 @@
 :focus-keyword: csv
 :categories: Couchbase Server
 :tags: csv, oracle, sql server, relational
-:heroimage: TBD
+:heroimage: 095-hero-etl-data-migration.png by JakobVoss licensed through Creative Commons 3.0 https://commons.wikimedia.org/wiki/File:Etl-process.svg
 
 CSV (Comma-seperated values) is a file format that can be exported from a relational database (like Oracle or SQL Server). It can then be imported into Couchbase Server with the link:https://developer.couchbase.com/documentation/server/current/tools/cbimport.html[cbimport] utility.
 
