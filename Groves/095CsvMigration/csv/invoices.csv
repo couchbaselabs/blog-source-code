@@ -1,0 +1,4 @@
+Id,InvoiceNum,InvoiceDate,BillTo,ShipTo
+1,ABC123,2018-01-15 00:00:00.000,Lynn Hess,"Herman Trisler, 4189 Oak Drive"
+2,XYZ987,2017-06-23 00:00:00.000,Yvonne Pollak,"Clarence Burton, 1470 Cost Avenue"
+3,FOO777,2018-01-02 00:00:00.000,Phillip Freeman,"Ronda Snell, 4685 Valley Lane"

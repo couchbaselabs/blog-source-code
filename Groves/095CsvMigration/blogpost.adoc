@@ -1,0 +1,89 @@
+:imagesdir: images
+:meta-description: 
+:title: Migrating to Couchbase from Relational with CSV
+:slug: Migrating-Couchbase-Relational-CSV
+:focus-keyword: csv
+:categories: Couchbase Server
+:tags: csv, oracle, sql server, relational
+:heroimage: TBD
+
+CSV (Comma-seperated values) is a file format that can be exported from a relational database (like Oracle or SQL Server). It can then be imported into Couchbase Server with the link:https://developer.couchbase.com/documentation/server/current/tools/cbimport.html[cbimport] utility.
+
+_Note: cbimport comes with Couchbase Enterprise Edition. For Couchbase Community Edition, you can use the more limited link:https://developer.couchbase.com/documentation/server/current/cli/cbtransfer-tool.html[cbtransfer] tool or go with link:https://developer.couchbase.com/documentation/server/current/cli/cbdocloader-tool.html[cbdocloader] if JSON is an option._
+
+A straight relational->CSV->Couchbase ETL probably isn't going to be the complete solution for data migration. In a later post, I'll write about data modeling decisions that you'll have to consider. But it's a starting point: consider this data as "staged".
+
+_Note: for this post, I'm using SQL Server and a Couchbase Server cluster, both installed locally. The steps will be similar for SQL Server, Oracle, MySQL, PostgreSQL, etc._
+
+== Export to CSV
+
+The first thing you need to do is export to CSV. I have a relational database with two tables: Invoices and InvoiceItems.
+
+image:09501-relational-tables.png[Relational tables example]
+
+I'm going to export the data from these two tables into two CSV files. With SQL Server Management Studio, this can be done a number of different ways. You can use link:https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd] or link:https://docs.microsoft.com/en-us/sql/tools/bcp-utility[bcp] at the command line. Or you can use Powershell's link:https://docs.microsoft.com/en-us/powershell/module/sqlserver/invoke-sqlcmd?view=sqlserver-ps[`Invoke-Sqlcmd`] and pipe it through link:https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/export-csv?view=powershell-5.1[`Export-Csv`]. You can also use the SQL Server Management Studio UI.
+
+image:09504-export-csv-with-UI.png[Export CSV from SQL Server Management Studio]
+
+Other relational databases will have command line utilities, UI tools, etc to export CSV.
+
+Here is an example of a CSV export from a table called "Invoices":
+
+[source,indent=0]
+----
+include::csv/invoices.csv[]
+----
+
+Here's a CSV export from a related table called "InvoiceItems":
+
+[source,indent=0]
+----
+include::csv/invoice_items.csv[]
+----
+
+== Load CSV into Couchbase
+
+Let's import these into a Couchbase bucket. I'll assume you've already created an empty bucket named "staging".
+
+First, let's import invoices.csv.
+
+[source,Powershell,indent=0]
+----
+C:\Program Files\Couchbase\Server\bin\cbimport csv -c localhost -u Administrator -p password -b staging -d file://invoices.csv --generate-key invoice::%Id%
+----
+
+_Note: with Linux/Mac, instead of `C:\Program Files\Couchbase\Server\bin`, the path will be different._
+
+Let's break this down:
+
+* *cbimport*: This is the command line utility you're using
+* *csv*: We're importing from a CSV file. You can also import from JSON files.
+* *-c localhost*: The location of your Couchbase Server cluster.
+* *-u Administrator -p password*: Credentials for your cluster. Hopefully you have more secure credentials than this example!
+* *-b staging*: The name of the Couchbase bucket you want the data to end up in
+* *--generate-key invoice::%Id%* The template that will be used to create unique keys in Couchbase. Each line of the CSV will correspond to a single document. Each document needs a unique key. I decided to use the primary key (integer) with a prefix indicating that it's an invoice document.
+
+The end result of importing a 3 line CSV is 3 documents:
+
+image:09502-csv-documents-imported-to-couchbase.png[CSV documents imported into Couchbase]
+
+At this point, the staging bucket _only_ contains invoice documents, so you may want to perform transformations now. I may do this in later modeling examples, but for now let's move on to the next CSV file.
+
+[source,Powershell,indent=0]
+----
+C:\Program Files\Couchbase\Server\bin\cbimport csv -c localhost -u Administrator -p password -b staging -d file://invoice_items.csv --generate-key invoiceitem::#UUID#
+----
+
+This is nearly identical to the last import. One difference is that it's a new file (invoice_items.csv). But the most important difference is *--generate--key*. These records only contain foreign keys, but each document in Couchbase must have a unique key. Ultimately, we may decide to _embed_ these records into their parent Invoice documents. But for now I decided to use UUID to generate unique keys for the records.
+
+The end result of importing this 10 line CSV is 10 more documents:
+
+image:09503-more-csv-documents-imported-to-couchbase.png[More CSV documents imported into Couchbase]
+
+== What's next?
+
+Once you have a CSV file, it's very easy to get data into Couchbase. However, this sort of direct translation is often not going to be enough on its own. I've explored some aspects of data modeling in a link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/[previous blog post on migrating from SQL Server], but I will revisit this Invoices example in a refresher blog post soon.
+
+In the meantime, be sure to check out link:https://www.couchbase.com/comparing-couchbase-vs-oracle[How Couchbase Beats Oracle] for more information on why companies are replacing Oracle for certain use cases. And also take a look at the link:https://resources.couchbase.com/c/relational-no-sql-wp?x=Y7B0ca[Moving from Relational to NoSQL: How to Get Started] white paper.
+
+If you have any questions or comments, please feel free to leave them here, contact me on link:https://twitter.com/mgroves[Twitter @mgroves], or ask your question in the link:https://forums.couchbase.com[Couchbase Forums].
