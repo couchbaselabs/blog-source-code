@@ -1,7 +1,7 @@
 :imagesdir: images
-:meta-description: 
-:title: Migrating to Couchbase from Relational with CSV
-:slug: Migrating-Couchbase-Relational-CSV
+:meta-description: CSV can be exported from a relational database (e.g.  Oracle, SQL Server). It can then be imported into Couchbase Server with cbimport.
+:title: CSV tooling for migrating to Couchbase from Relational
+:slug: CSV-migrating-Couchbase-Relational
 :focus-keyword: csv
 :categories: Couchbase Server
 :tags: csv, oracle, sql server, relational
@@ -21,7 +21,7 @@ The first thing you need to do is export to CSV. I have a relational database wi
 
 image:09501-relational-tables.png[Relational tables example]
 
-I'm going to export the data from these two tables into two CSV files. With SQL Server Management Studio, this can be done a number of different ways. You can use link:https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd] or link:https://docs.microsoft.com/en-us/sql/tools/bcp-utility[bcp] at the command line. Or you can use Powershell's link:https://docs.microsoft.com/en-us/powershell/module/sqlserver/invoke-sqlcmd?view=sqlserver-ps[`Invoke-Sqlcmd`] and pipe it through link:https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/export-csv?view=powershell-5.1[`Export-Csv`]. You can also use the SQL Server Management Studio UI.
+I'm going to export the data from these two tables into two CSV files. With SQL Server Management Studio, this can be done a number of different ways. You can use link:https://docs.microsoft.com/en-us/sql/tools/sqlcmd-utility[sqlcmd] or link:https://docs.microsoft.com/en-us/sql/tools/bcp-utility[bcp] at the command line. Or you can use Powershell's link:https://docs.microsoft.com/en-us/powershell/module/sqlserver/invoke-sqlcmd?view=sqlserver-ps[`Invoke-Sqlcmd`] and pipe it through `Export-Csv`. You can also use the SQL Server Management Studio UI.
 
 image:09504-export-csv-with-UI.png[Export CSV from SQL Server Management Studio]
 
@@ -34,7 +34,7 @@ Here is an example of a CSV export from a table called "Invoices":
 include::csv/invoices.csv[]
 ----
 
-Here's a CSV export from a related table called "InvoiceItems":
+Here's an export from a related table called "InvoiceItems":
 
 [source,indent=0]
 ----
@@ -46,6 +46,8 @@ include::csv/invoice_items.csv[]
 Let's import these into a Couchbase bucket. I'll assume you've already created an empty bucket named "staging".
 
 First, let's import invoices.csv.
+
+=== Loading invoices
 
 [source,Powershell,indent=0]
 ----
@@ -63,11 +65,13 @@ Let's break this down:
 * *-b staging*: The name of the Couchbase bucket you want the data to end up in
 * *--generate-key invoice::%Id%* The template that will be used to create unique keys in Couchbase. Each line of the CSV will correspond to a single document. Each document needs a unique key. I decided to use the primary key (integer) with a prefix indicating that it's an invoice document.
 
-The end result of importing a 3 line CSV is 3 documents:
+The end result of importing a 3 line file is 3 documents:
 
 image:09502-csv-documents-imported-to-couchbase.png[CSV documents imported into Couchbase]
 
-At this point, the staging bucket _only_ contains invoice documents, so you may want to perform transformations now. I may do this in later modeling examples, but for now let's move on to the next CSV file.
+At this point, the staging bucket _only_ contains invoice documents, so you may want to perform transformations now. I may do this in later modeling examples, but for now let's move on to the next file.
+
+=== Loading invoice items
 
 [source,Powershell,indent=0]
 ----
@@ -76,7 +80,7 @@ C:\Program Files\Couchbase\Server\bin\cbimport csv -c localhost -u Administrator
 
 This is nearly identical to the last import. One difference is that it's a new file (invoice_items.csv). But the most important difference is *--generate--key*. These records only contain foreign keys, but each document in Couchbase must have a unique key. Ultimately, we may decide to _embed_ these records into their parent Invoice documents. But for now I decided to use UUID to generate unique keys for the records.
 
-The end result of importing this 10 line CSV is 10 more documents:
+The end result of importing this 10 line file is 10 more documents:
 
 image:09503-more-csv-documents-imported-to-couchbase.png[More CSV documents imported into Couchbase]
 
