@@ -1,0 +1,73 @@
+= Controlling Hierarchical Logging with SLF4J and Logback
+Hod Greeley <https://blog.couchbase.com>
+:meta-description: Enable and control improved logging with SLF4J and Logback.
+:title: Controlling Hierarchical Logging with SLF4J and Logback
+:slug: controlling-hierarchical-logging-slf4j-logback
+:focus-keyword: 
+:categories: Couchbase Server
+:tags: Couchbase Server, Logback, SLF4J
+:heroimage: 
+:source-highlighter: pygments
+include::../links.adoc[]
+
+image::images/SLF4J_Logo.jpg[]
+
+{CBS} is a complex product.  Like most substantive software, and especially enterprise products, monitoring behavior through logging is important.
+
+I recently wrote a small sample application using the Couchbase Multi-Cluster Aware Java client.  This client can handle fail over
+of a Couchbase node, seemlessly passing load over to a link:https://developer.couchbase.com/documentation/server/current/ha-dr/ha-dr-intro.html[completely different cluster] (very cool stuff).  (If you want to hear more about these capabilities, and see a live demo, check out our webinar entitled "How to Switch From Oracle to the World’s First Engagement Database
+" via the {resources}[resources] page.)
+
+=== Switching loggers
+
+Couchbase uses link:https://www.slf4j.org/[SLF4J] under the hood for logging.  SLF4J can automatically wrap and work with various frameworks, including the standard Java link:https://docs.oracle.com/javase/8/docs/technotes/guides/logging/index.html[java.util.logging] classes, link:https://logging.apache.org/log4j/2.x/[log4j], and link:https://logback.qos.ch/[logback].  Logback was written to replace log4j, and is the most powerful of the three, so I wanted to use that.
+
+Turns out it's quite easy.  For maven, just add the following dependency to your `pom` file.  This will pull in `slf4j-api` as a subdependency.
+
+[source,xml,indent=0]
+----
+<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.2.3</version>
+</dependency>
+----
+
+Sure enough, just by adding this, while I was getting output via standard Java logging before, I now get logging through logback.  The logging was really noisy, though.  I wanted to hone in on issues around network connectivity specifically, but the information was getting buried in other output.
+
+=== Tuning the output
+
+One cool feature of logback is its ability to control output hierarchically.  I read about this in the docs, but didn't find any good examples.
+
+Assuming you create loggers based on class names, here's a simple logback configuration file that tunes down the Couchbase Server logging in general, and turns it off for a specific class.
+
+[source,xml,indent=0]
+----
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50}-%msg%n</pattern>
+    </encoder>
+  </appender>
+  <root level="warn">
+    <appender-ref ref="STDOUT" />
+  </root>
+  <logger level="error" name="com.couchbase" />
+  <logger level="off" name="com.couchbase.client.core.endpoint.Endpoint" />
+</configuration>
+----
+
+The last two `logger` lines show the hierarchy in action.  The first line sets everything in the Couchbase code to log only on "error" or higher priority from the default of "warn".  This would control the `Endpoint` class output as well.  Instead, the second line turns off logging entirely for just that class.
+
+That's it.  You can read more about how to configure logback in the documentation on the project site.  That snippet of configuration will give you a good place to begin in tuning your {CBS} Java client code's output if you're looking for a quick start.
+
+=== Postscript
+
+Couchbase is open source and free to try out.  Download the latest versions, including previews of upcoming features, {downloads}[here].
+
+Find more resources on our {portal}[developer portal] and follow us on Twitter {CouchbaseDev}.
+
+You can post questions on our {forums}. And we actively participate on {SO}.
+
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}
