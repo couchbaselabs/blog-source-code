@@ -46,7 +46,7 @@ key - invoiceitem::bf9d3256-9c8a-4378-877d-2a563b163d45
 { "InvoiceId": "1", "Price": "20.00", "Product": "Tire", "Quantity": "2" }
 ----
 
-This lines up with the direct CSV import. This is _similar_ to the idea of a foreign key, but note that Couchbase (and distributed document databases in general) do not enforce this relationship in the same way that relational databases do. This is a trade-off made to satisfy the flexibility, scalability, and performance needs of a distributed system.
+This lines up with the direct CSV import. The `InvoiceId` field in each invoiceitem document is _similar_ to the idea of a foreign key, but note that Couchbase (and distributed document databases in general) do not enforce this relationship in the same way that relational databases do. This is a trade-off made to satisfy the flexibility, scalability, and performance needs of a distributed system.
 
 _Note that in this example, the "child" documents point to the parent via `InvoiceId`. But it could also be the other way around: the "parent" document could contain an array of the keys of each "child" document._
 
@@ -70,7 +70,7 @@ key - invoice::1
 }
 ----
 
-Note that "InvoiceId" is no longer present in the object in the objects in the `Items` array. This data is no longer foreign--it's now domestic--so that field is not necessary anymore.
+Note that "InvoiceId" is no longer present in the objects in the `Items` array. This data is no longer foreign--it's now domestic--so that field is not necessary anymore.
 
 == JSON Data Modeling Rules of Thumb
 
@@ -96,7 +96,7 @@ To explore this deeper, let's make some assumptions about the invoice system we'
 
 * A user usually views the entire invoice (including the invoice items)
 * When a user creates an invoice (or makes changes), they are updating both the "root" fields and the "items" together
-* There are _some_ queries in the system that only care about the invoice root data and ignore the "items" fields
+* There are _some_ queries (but not many) in the system that only care about the invoice root data and ignore the "items" fields
 
 Then, based on that knowledge, we know that:
 
@@ -149,21 +149,25 @@ CREATE INDEX ix_invoiceid ON staging(InvoiceId);
 
 This index will be necessary for the transformational join coming up next.
 
-Now, before actually transforming the data, let's run a `SELECT` to get a preview and make sure the data is going to join together how we expect. Use N1QL's `NEST` operation:
+Now, before making this data operational, let's run a `SELECT` to get a preview and make sure the data is going to join together how we expect. Use N1QL's `NEST` operation:
 
 [source,SQL,indent=0]
 ----
 SELECT i.*, t AS Items 
 FROM staging AS i
 NEST staging AS t ON KEY t.InvoiceId FOR i
-where i.type = 'invoice';
+WHERE i.type = 'invoice';
 ----
 
-The result of this query should be three total root invoice documents. The invoice items should now be nested into an "Items" array within their parent invoice.
+The result of this query should be three total root invoice documents.
+
+image:09603-result-of-select-transform.png[Results of transformation with N1QL]
+
+The invoice items should now be nested into an "Items" array within their parent invoice (I collapsed them in the above screenshot for the sake of brevity).
 
 === Moving the data out of staging
 
-Once you've verified this looks correct, the data can be moved over to the "operation" bucket using an `INSERT` command:
+Once you've verified this looks correct, the data can be moved over to the "operation" bucket using an `INSERT` command, which will just be a slight variation on the above `SELECT` command.
 
 [source,SQL,indent=0]
 ----
