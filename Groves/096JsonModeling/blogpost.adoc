@@ -1,0 +1,191 @@
+:imagesdir: images
+:meta-description: TBD
+:title: JSON Data Modeling for RDBMS Users
+:slug: JSON-Data-Modeling-RDBMS-Users
+:focus-keyword: JSON data modeling
+:categories: Couchbase Server, Data Modeling
+:tags: oracle, sql server, relational, json, modeling
+:heroimage: 064-hero-model.png - Glass ochem by Purpy Pupple, licensed through Creative Commons https://commons.wikimedia.org/wiki/File:Glass_ochem.png
+
+JSON data modeling is a vital part of using a document database like link:https://www.couchbase.com/downloads[Couchbase]. Beyond understanding the basics of JSON, there are two key approaches to modeling relationships between data that will be covered in this blog post.
+
+The examples in this post will build on the invoices example that I showed in link:https://blog.couchbase.com/csv-migrating-couchbase-relational/[CSV tooling for migrating to Couchbase from Relational].
+
+== Imported Data Refresher
+
+In the previous example, I started with two tables from a relational database: Invoices and InvoicesItems. Each invoice item belongs to an invoice, which is done with a foreign key in a relational database.
+
+I did a very straightforward (naive) import of this data into Couchbase. Each row became a document in a "staging" bucket.
+
+image:09601-imported-data.png[Data imported from CSV]
+
+Next, we must decide if that JSON data modeling design is appropriate or not (I don't think it is, as if the bucket being called "staging" didn't already give that away).
+
+== Two Approaches to JSON data modeling of relationships
+
+With a relational database, there is really only one approach: normalize your data. This means separate tables with foreign keys linking the data together.
+
+With a document database, there are two approaches. You can keep the data normalized or you can denormalize data by nesting it into its parent document.
+
+An example of the end state of the *normalized* approach represents a single invoice spread over multiple documents:
+
+[source,JavaScript,indent=0]
+----
+key - invoice::1
+{ "BillTo": "Lynn Hess", "InvoiceDate": "2018-01-15 00:00:00.000", "InvoiceNum": "ABC123", "ShipTo": "Herman Trisler, 4189 Oak Drive" }
+
+key - invoiceitem::1811cfcc-05b6-4ace-a52a-be3aad24dc52
+{ "InvoiceId": "1", "Price": "1000.00", "Product": "Brake Pad", "Quantity": "24" }
+
+key - invoiceitem::29109f4a-761f-49a6-9b0d-f448627d7148
+{ "InvoiceId": "1", "Price": "10.00", "Product": "Steering Wheel", "Quantity": "5" }
+
+key - invoiceitem::bf9d3256-9c8a-4378-877d-2a563b163d45
+{ "InvoiceId": "1", "Price": "20.00", "Product": "Tire", "Quantity": "2" }
+----
+
+This lines up with the direct CSV import. This is _similar_ to the idea of a foreign key, but note that Couchbase (and distributed document databases in general) do not enforce this relationship in the same way that relational databases do. This is a trade-off made to satisfy the flexibility, scalability, and performance needs of a distributed system.
+
+_Note that in this example, the "child" documents point to the parent via `InvoiceId`. But it could also be the other way around: the "parent" document could contain an array of the keys of each "child" document._
+
+The end state of the *nested* approach would involve just a single document to represent an invoice.
+
+[source,JavaScript,indent=0]
+----
+key - invoice::1
+{
+  "BillTo": "Lynn Hess",
+  "InvoiceDate": "2018-01-15 00:00:00.000",
+  "InvoiceNum": "ABC123",
+  "ShipTo": "Herman Trisler, 4189 Oak Drive",
+  "Items": [
+    { "Price": "1000.00", "Product": "Brake Pad", "Quantity": "24" },
+    { "Price": "10.00", "Product": "Steering Wheel", "Quantity": "5" },
+    { "Price": "20.00", "Product": "Tire", "Quantity": "2" } 
+  ]
+}
+----
+
+Note that "InvoiceId" is no longer present in the object in the objects in the `Items` array. This data is no longer foreign--it's now domestic--so that field is not necessary anymore.
+
+== JSON Data Modeling Rules of Thumb
+
+You may already be thinking that the _second_ option is a natural fit in this case. An invoice in this system is a natural  link:https://www.martinfowler.com/bliki/DDD_Aggregate.html[_aggregate-root_]. However, it is not always straightforward and obvious when and how to choose between these two approaches in your application.
+
+Here are some rules of thumb for when to choose each model:
+
+.Modeling Data Cheat Sheet
+[width="100%",options="header"]
+|====================
+| If ...| Then consider... 
+| Relationship is 1-to-1 or 1-to-many | Nested objects  
+| Relationship is many-to-1 or many-to-many | Separate documents
+| Data reads are mostly parent fields | Separate document
+| Data reads are mostly parent + child fields | Nested objects
+| Data reads are mostly parent __or__ child (not both) | Separate documents
+| Data writes are mostly parent __and__ child (both) | Nested objects
+|====================
+
+To explore this deeper, let's make some assumptions about the invoice system we're building.
+
+* A user usually views the entire invoice (including the invoice items)
+* When a user creates an invoice (or makes changes), they are updating both the "root" fields and the "items" together
+* There are _some_ queries in the system that only care about the invoice root data and ignore the "items" fields
+
+Then, based on that knowledge, we know that:
+
+1. The relationship is 1-to-many (a single invoice has many items)
+2. Data reads are _mostly_ parent + child fields together
+
+Therefore, "nested objects" seems like the right design.
+
+Please remember that these are not hard and fast rules that will always apply. They are simply guidelines to help you get started. The only "best practice" is to use your own knowledge and experience.
+
+== Transforming staging data with N1QL
+
+Now that we've done some JSON Data Modeling exercises, it's time to transform the data in the staging bucket from separate documents that came directly from the relational database to the nested object design.
+
+There are many approaches to this, but I'm going to keep it very simple and use Couchbase's powerful link:https://www.couchbase.com/products/n1ql[N1QL language] to run SQL queries on JSON data.
+
+First, create a "operation" bucket. I'm going to transform data and move it to from the "staging" bucket (containing the direct link:https://blog.couchbase.com/csv-migrating-couchbase-relational/[CSV import]) to the "operation" bucket.
+
+Next, I'm going to mark the 'root' documents with a "type" field. This is a way to mark documents as being of a certain type, and will come in handy later.
+
+[source,SQL,indent=0]
+----
+UPDATE staging
+SET type = 'invoice'
+WHERE InvoiceNum IS NOT MISSING;
+----
+
+I know that the root documents have a field called "InvoiceNum" and that the items do not have this field. So this is a safe way to differentiate.
+
+Next, I need to modify the items. They previously had a foreign key that was just a number. Now those values should be updated to point to the new document key.
+
+[source,SQL,indent=0]
+----
+UPDATE staging s
+SET s.InvoiceId = 'invoice::' || s.InvoiceId;
+----
+
+This is just prepending "invoice::" to the value. Note that the root documents don't have an InvoiceId field, so they will be unaffected by this query.
+
+After this, I need to create an index on that field.
+
+[source,SQL,indent=0]
+----
+CREATE INDEX ix_invoiceid ON staging(InvoiceId);
+----
+
+This index will be necessary for the transformational join coming up next.
+
+Now, before actually transforming the data, let's run a `SELECT` to get a preview and make sure the data is going to join together how we expect. Use N1QL's `NEST` operation:
+
+[source,SQL,indent=0]
+----
+SELECT i.*, t AS Items 
+FROM staging AS i
+NEST staging AS t ON KEY t.InvoiceId FOR i
+where i.type = 'invoice';
+----
+
+The result of this query should be three total root invoice documents. The invoice items should now be nested into an "Items" array within their parent invoice.
+
+Once you've verified this looks correct, the data can be moved over to the "operation" bucket using an `INSERT` command:
+
+[source,SQL,indent=0]
+----
+INSERT INTO operation (KEY k, VALUE v) 
+SELECT META(i).id AS k, { i.BillTo, i.InvoiceDate, i.InvoiceNum, "Items": t } AS v
+FROM staging i
+NEST staging t ON KEY t.InvoiceId FOR i
+where i.type = 'invoice';
+----
+
+If you're new to N1QL, there's a couple things to point out here:
+
+* `INSERT` will always use `KEY` and `VALUE`. You don't list all the fields in this clause, like you would in a relational database.
+* `META(i).id` is a way of accessing a document's key
+* The literal JSON syntax being SELECTed AS v is a way to specify which fields you want to move over. Wildcards could be used here.
+* `NEST` is a type of join that will nest the data into an array instead of at the root level.
+* `FOR i` specifies the left hand side of the `ON KEY` join. This syntax is probably the most non-standard portion of N1QL, but the next major release of Couchbase Server will include "ANSI JOIN" functionality that will be a lot more natural to read and write.
+
+After running this query, you should have 3 total documents in your 'operation' bucket representing 3 invoices.
+
+image:09602-result-from-n1ql-modeling.png[Result from JSON data modeling transformation]
+
+You can delete/flush the staging bucket since it now contains stale data. Or you can keep it around for more experimentation.
+
+== Summary
+
+Migrating data straight over to Couchbase Server can be as easy as importing via CSV and transforming with a few lines of N1QL. Doing the actual modeling and making decisions requires the most time and thought. Once you decide how to model, N1QL gives you the flexibility to transform from flat, scattered relational data into an aggregate-oriented document model.
+
+More resources:
+
+* link:https://blog.couchbase.com/sql-to-json-data-modeling-hackolade/[Using Hackolade] to collaborate on JSON data modeling.
+* link:https://blog.couchbase.com/moving-from-sql-server-to-couchbase-part-1-data-modeling/[Part of the SQL Server series] discusses the same type of JSON data modeling decisions
+* link:https://www.couchbase.com/comparing-couchbase-vs-oracle[How Couchbase Beats Oracle], if you're considering moving some of your data away from Oracle
+* link:https://resources.couchbase.com/c/relational-no-sql-wp?x=Y7B0ca[Moving from Relational to NoSQL: How to Get Started] white paper.
+
+Feel free to contact me if you have any questions or need help. I'm 
+link:https://twitter.com/mgroves[@mgroves] on Twitter. You can also ask questions on the link:https://forums.couchbase.com[Couchbase Forums]. There are N1QL experts there who are very responsive and can help you write the N1QL to accommodate your JSON data modeling.
