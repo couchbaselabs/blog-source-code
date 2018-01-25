@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: JSON data modeling is a vital part of using a document database like Couchbase. There are key approaches to modeling relationships.
 :title: JSON Data Modeling for RDBMS Users
 :slug: JSON-Data-Modeling-RDBMS-Users
 :focus-keyword: JSON data modeling
@@ -27,6 +27,8 @@ With a relational database, there is really only one approach: normalize your da
 
 With a document database, there are two approaches. You can keep the data normalized or you can denormalize data by nesting it into its parent document.
 
+=== Normalized (separate documents)
+
 An example of the end state of the *normalized* approach represents a single invoice spread over multiple documents:
 
 [source,JavaScript,indent=0]
@@ -47,6 +49,8 @@ key - invoiceitem::bf9d3256-9c8a-4378-877d-2a563b163d45
 This lines up with the direct CSV import. This is _similar_ to the idea of a foreign key, but note that Couchbase (and distributed document databases in general) do not enforce this relationship in the same way that relational databases do. This is a trade-off made to satisfy the flexibility, scalability, and performance needs of a distributed system.
 
 _Note that in this example, the "child" documents point to the parent via `InvoiceId`. But it could also be the other way around: the "parent" document could contain an array of the keys of each "child" document._
+
+=== Denormalized (nested)
 
 The end state of the *nested* approach would involve just a single document to represent an invoice.
 
@@ -86,6 +90,8 @@ Here are some rules of thumb for when to choose each model:
 | Data writes are mostly parent __and__ child (both) | Nested objects
 |====================
 
+=== Modeling example
+
 To explore this deeper, let's make some assumptions about the invoice system we're building.
 
 * A user usually views the entire invoice (including the invoice items)
@@ -106,6 +112,8 @@ Please remember that these are not hard and fast rules that will always apply. T
 Now that we've done some JSON Data Modeling exercises, it's time to transform the data in the staging bucket from separate documents that came directly from the relational database to the nested object design.
 
 There are many approaches to this, but I'm going to keep it very simple and use Couchbase's powerful link:https://www.couchbase.com/products/n1ql[N1QL language] to run SQL queries on JSON data.
+
+=== Preparing the data
 
 First, create a "operation" bucket. I'm going to transform data and move it to from the "staging" bucket (containing the direct link:https://blog.couchbase.com/csv-migrating-couchbase-relational/[CSV import]) to the "operation" bucket.
 
@@ -132,6 +140,8 @@ This is just prepending "invoice::" to the value. Note that the root documents d
 
 After this, I need to create an index on that field.
 
+=== Preparing an index
+
 [source,SQL,indent=0]
 ----
 CREATE INDEX ix_invoiceid ON staging(InvoiceId);
@@ -150,6 +160,8 @@ where i.type = 'invoice';
 ----
 
 The result of this query should be three total root invoice documents. The invoice items should now be nested into an "Items" array within their parent invoice.
+
+=== Moving the data out of staging
 
 Once you've verified this looks correct, the data can be moved over to the "operation" bucket using an `INSERT` command:
 
