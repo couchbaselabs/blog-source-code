@@ -1,4 +1,4 @@
-= Controlling Hierarchical Logging with SLF4J and Logback
+= Couchbase High Availability and Disaster Recovery: Setting up XDCR Step-by-Step
 Hod Greeley <https://blog.couchbase.com>
 :meta-description: 
 :title: 
