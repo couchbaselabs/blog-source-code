@@ -15,3 +15,7 @@
 :downloads: https://www.couchbase.com/downloads
 :portal: https://developer.couchbase.com/community?utm_source=blogs&utm_medium=link&utm_campaign=blogs
 :resources: https://www.couchbase.com/resources
+:nosql: https://www.couchbase.com/resources/why-nosql
+:start: https://www.couchbase.com/get-started
+:training: https://training.couchbase.com/
+
