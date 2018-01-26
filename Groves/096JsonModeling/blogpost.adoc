@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: JSON data modeling is a vital part of using a document database like Couchbase. There are key approaches to modeling relationships.
+:meta-description: JSON data modeling is a vital part of using a document database like Couchbase. There are two key approaches to modeling relationships.
 :title: JSON Data Modeling for RDBMS Users
 :slug: JSON-Data-Modeling-RDBMS-Users
 :focus-keyword: JSON data modeling
