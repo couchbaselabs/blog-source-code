@@ -1,12 +1,11 @@
 = Couchbase High Availability and Disaster Recovery: Setting up XDCR Step-by-Step
 Hod Greeley <https://blog.couchbase.com>
 :meta-description: 
-:title: 
-:slug: 
-:focus-keyword:
-:categories:
-:tags:
-:heroimage: 
+:slug: couchbase-high-availability-disaster-recovery-setting-xdcr-step-step
+:focus-keyword: High Availability Disaster Recovery
+:categories: Best Practices and Tutorials, Couchbase Server, Java
+:tags: High Availability, Disaster Recovery, NoSQL, XDCR
+:heroimage: HADR-2.png
 :source-highlighter: pygments
 :sectanchors:
 :imagesdir: images
@@ -14,11 +13,11 @@ include::../links.adoc[]
 
 image::HADR-2.png[]
 
-High Availabilty (HA) and Disaster Recovery (DR) are two of the driving reasons to move from a traditiontal RDBMS to a NoSQL-based
+High Availability (HA) and Disaster Recovery (DR) are two of the driving reasons to move from a traditional RDBMS to a NoSQL-based
 system like {CBS}.  In this link:https://event.on24.com/eventRegistration/EventLobbyServlet?target=reg20.jsp&referrer=https%3A%2F%2Fwww.couchbase.com%2Fresources%2Fwebinars&eventid=1569790&sessionid=1&key=86048A27BD53D35AFA6FFF8D43A09435&regTag=&sourcepage=register[webinar]
 we went over the many features of Couchbase Server that address HA and DR.
 
-In the webinar, we presented a demonstration of how to set up a multi-master, multi-region pair of clusters.  To
+During the webinar, we presented a demonstration of how to set up a multi-master, multi-region pair of clusters.  To
 complement the webinar and other resources (see links at the end), we've created a step-by-step tutorial walking through everything needed
 to create a multi-master, multi-region set of clusters, and replicate data between them.  You can find the tutorial link:https://github.com/couchbaselabs/xdcr-java-sample/blob/master/Tutorial.adoc[here].
 
