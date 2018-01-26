@@ -1,0 +1,22 @@
+:imagesdir: images
+:meta-description: JSON modeling is a vital part of using a document database like Couchbase. There are two key approaches to modeling relationships.
+:title: JSON Modeling for RDBMS Users (video)
+:slug: JSON-Modeling-RDBMS-Users-video
+:focus-keyword: JSON modeling
+:categories: Couchbase Server, Data Modeling
+:tags: oracle, sql server, relational, json, modeling
+:heroimage: 064-hero-model.png - Glass ochem by Purpy Pupple, licensed through Creative Commons https://commons.wikimedia.org/wiki/File:Glass_ochem.png
+
+JSON modeling was covered in a link:https://blog.couchbase.com/json-data-modeling-rdbms-users/[previous blog post] which was, in turn, based on a link:https://blog.couchbase.com/csv-migrating-couchbase-relational/[CSV import blog post] that came before that. While writing the post on JSON modeling, it occurred to me that it might be useful to see all the data in motion: from relational, to CSV, to a staging bucket, and finally assembled with the new JSON modeling.
+
+== JSON modeling video
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vVOumslyH4c" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
++++
+
+A tool that I neglected to mention in any of these earlier posts is link:https://csvkit.readthedocs.io/en/1.0.2/[csvkit] and specifically link:http://csvkit.readthedocs.io/en/1.0.2/scripts/csvsql.html?highlight=csvsql[csvsql]. This tool can pull CSV data from SQL Server, MySQL, Oracle, PostgreSQL, SQLite, Sybase, and Firebird directly into CSV.
+
+== Thanks for watching!
+
+As always, find me on Twitter link:https://twitter.com/mgroves[@mgroves], leave a comment, or post your questions into the link:https://forums.couchbase.com[Couchbase forums].

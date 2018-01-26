@@ -1,0 +1,169 @@
+reset: flush buckets
+reset: flush query history
+reset: scroll blog post
+reset: clear bash prompt
+reset: DROP INDEX staging.ix_invoiceid;
+reset: SQL studio
+
+Start with SSMS
+-----
+
+Hello, today I'm going to show you how to move data from a relational database
+and do some JSON data modeling
+
+I'm going to show SQL Server to start because that's what I know
+But this process will be similar if you're using Oracle, Postgres, MySQL, etc
+
+I have two tables in a database, invoices and invoiceitems
+(run queries)
+this data is normalized
+so InvoiceItems has a foreign key to invoices
+so typically if I want to get an invoice, I'd write an inner join
+and get 4 records
+
+let's say I want to move this over to Couchbase
+the simplest way to get started doing this is via CSV
+You can export from relational to CSV in a number of ways
+Sql Server Managemenet Studio has a UI so you can do it manually
+you can create an SSIS package
+and there are command line tools to do it
+
+(show UI process quickly)
+
+I'm not going to go through the whole process here
+I exported these CSV files earlier
+and I put the files on the same machine as Couchbase Server
+(it happens to be running in Docker, but that doesn't matter for this video)
+
+---
+
+ls -l
+
+cat them both out
+
+these files are on a couchbase server node
+i'll switch over to the couchbase UI
+
+[switch over to couchbase UI]
+
+two empty buckets
+one is staging, one is operation
+
+staging is where I want to start
+I'm going to load the CSV data into this
+using a command line utility called cbimport
+
+it lives at /opt/couchbase/bin on a linux machine
+
+[run cbimport]
+
+it will be a slightly different folder for windows and mac machines
+it can import from csv or json data
+
+[run cbimport csv]
+
+here is the manual for csv import, there's also documentation at couchbase.com
+
+cbimport csv -c localhost -u Administrator -p password -b staging -d file://invoices.csv -g invoice::%Id%
+
+[then show the docs in couchbase UI]
+
+cbimport csv -c localhost -u Administrator -p password -b staging -d file://invoice_items.csv -g invoiceitem::#UUID#
+
+so now we've got pretty much exactly what was in the relational database now in couchbase
+each row corresponds to a document
+
+---
+
+in some situations you may want to keep it like this
+
+[switch over to blog post]
+
+do we normalize, keep the data the way it is now
+or do we denormalize and nest the invoice items into their parent invoice
+this is the core of JSON data modeling
+
+you need to understand the basics of the data format and how JSON works sure
+but that is usually straightforward and mechanical
+the real work is deciding how to relate you data
+and this requires thought about how your data is going to be used
+
+modeling, thought, communication
+
+[go through blog post]
+---
+
+so now we've thought through the modeling
+
+[switch back to couchbase UI]
+
+we want to end up with 3 total invoice documents
+and we want the invoice items to be nested into their parent
+
+there are many approaches to this, I'm going to keep it simple
+and use Couchbase's N1QL query language
+
+first thing is I want to mark the root invoice documents with a 'type' field
+which will come in handy later
+
+UPDATE staging
+SET type = 'invoice'
+WHERE InvoiceNum IS NOT MISSING;
+
+InvoiceNum only exists on the root documents, so that's a safe way to differentiate
+
+[show the results in UI]
+
+Next, notice that the invoice items have a remnant of relational database, the foreign key
+in InvoiceId
+remember that the invoice documents now have a key that looks like "invoice::<number>"
+so let's transform this field to point to the correct document
+
+UPDATE staging s
+SET s.InvoiceId = 'invoice::' || s.InvoiceId;
+
+this is going to align with my key strategy, yours may be slightly different
+
+[show invoice items in bucket]
+
+next I need to create an index on this field
+
+CREATE INDEX ix_invoiceid ON staging(InvoiceId);
+
+I'm going to do a nested join and it requires the field to be indexed
+
+before I do the actual loading of the data, let's try out a SELECT to make sure
+the transformation will look how we expect
+this means instead of an INSERT, I'm going to do a SELECT
+this is an old trick from relational days, before doing INSERT/UPDATE/DELETE, run a SELECT to make sure it's
+going to affect the data how you expect
+
+SELECT i.*, t AS Items
+FROM staging AS i
+NEST staging AS t ON KEY t.InvoiceId FOR i
+WHERE i.type = 'invoice';
+
+[show and explain results]
+
+so that transformation looks how I want it to look
+the next step is to actually load the data into the operation bucket
+with an INSERT
+
+INSERT INTO operation (KEY k, VALUE v)
+SELECT META(i).id AS k, { i.BillTo, i.InvoiceDate, i.InvoiceNum, "Items": t } AS v
+FROM staging i
+NEST staging t ON KEY t.InvoiceId FOR i
+where i.type = 'invoice';
+
+review that the GET/UPDATE operation we discussed earlier can now work on a single document
+the 1-to-many relationship is here, but it is a single domestic array instead of several rows
+with foreign keys
+
+---
+
+so there you have it, we've gone from a normalized relational database
+to csv
+to json documents
+and then denormalized into aggregate-root json documents
+
+thanks for watching
