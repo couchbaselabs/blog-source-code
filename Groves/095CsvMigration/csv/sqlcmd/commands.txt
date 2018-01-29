@@ -1,0 +1,85 @@
+sqlcmd -S localhost -d cbimportexample -E -Q "set nocount off; select * from invoices" -o invoices.csv -s"," -W -w 999
+
+outputs:
+
+Id,InvoiceNum,InvoiceDate,BillTo,ShipTo
+--,----------,-----------,------,------
+1,ABC123,2018-01-15 00:00:00.000,Lynn Hess,Herman Trisler, 4189 Oak Drive
+2,XYZ987,2017-06-23 00:00:00.000,Yvonne Pollak,Clarence Burton, 1470 Cost Avenue
+3,FOO777,2018-01-02 00:00:00.000,Phillip Freeman,Ronda Snell, 4685 Valley Lane
+
+
+-h-1 will omit the first two lines from the output
+(a header row can be added using a "union" which is annoying)
+notice that the command before "4189 Oak Drive" for instance, is not a comma between fields, it's a comma within the column
+but this output screws that up
+
+#####################################
+
+bcp "select * from dbo.invoices" queryout invoices_bcp.csv -c -t"," -r"\n" -S localhost -T -d cbimportexample
+
+outputs:
+
+1,ABC123,2018-01-15 00:00:00.000,Lynn Hess,Herman Trisler, 4189 Oak Drive
+2,XYZ987,2017-06-23 00:00:00.000,Yvonne Pollak,Clarence Burton, 1470 Cost Avenue
+3,FOO777,2018-01-02 00:00:00.000,Phillip Freeman,Ronda Snell, 4685 Valley Lane
+
+notice that the field names are not present
+(they can be added using a "union" which is annoying)
+and same comma issue as sqlcmd
+
+#####################################
+
+Invoke-Sqlcmd -Query "SELECT * FROM invoices;" -database cbimportexample -Server localhost | Export-Csv -NoTypeInformation -Path "invoices_powershell.csv" -Encoding UTF8
+=
+"Id","InvoiceNum","InvoiceDate","BillTo","ShipTo"
+"1","ABC123","1/15/2018 12:00:00 AM","Lynn Hess","Herman Trisler, 4189 Oak Drive"
+"2","XYZ987","6/23/2017 12:00:00 AM","Yvonne Pollak","Clarence Burton, 1470 Cost Avenue"
+"3","FOO777","1/2/2018 12:00:00 AM","Phillip Freeman","Ronda Snell, 4685 Valley Lane"
+
+notice that all the fields are quoted (which isn't exactly what I want either, not everything is necessarily a string. This avoids the comma issue, but it might not avoid quote issue)
+but cbimport / cbtransfer both seem to choke on quotes
+
+##################
+##################
+
+'C:\Program Files\Couchbase\Server\bin\cbtransfer.exe' .\invoices_powershell.csv http://localhost:8091 -B staging -u Administrator -p password
+
+output:
+
+error: no 'id' field in 1st line of csv: .\invoices_powershell.csv
+
+##################
+
+cbimport (which is enterprise only)
+
+/opt/couchbase/bin/cbimport csv -c localhost -u Administrator -p password -b staging -d file://invoices_powershell.csv --generate-key invoiceitem::#UUID#
+
+output:
+
+2018-01-22T14:45:32.929+00:00 ERRO: line 1, column 1: bare " in non-quoted-field -- plan.(*data).execute() at data.go:89
+CSV import failed: line 1, column 1: bare " in non-quoted-field
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

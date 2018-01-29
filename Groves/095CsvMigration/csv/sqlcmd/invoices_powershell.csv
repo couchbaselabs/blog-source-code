@@ -1,0 +1,4 @@
+﻿"Id","InvoiceNum","InvoiceDate","BillTo","ShipTo"
+"1","ABC123","1/15/2018 12:00:00 AM","Lynn Hess","Herman Trisler, 4189 Oak Drive"
+"2","XYZ987","6/23/2017 12:00:00 AM","Yvonne Pollak","Clarence Burton, 1470 Cost Avenue"
+"3","FOO777","1/2/2018 12:00:00 AM","Phillip Freeman","Ronda Snell, 4685 Valley Lane"
