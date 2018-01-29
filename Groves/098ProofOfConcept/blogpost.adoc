@@ -38,12 +38,13 @@ If your application can benefit from one of those criteria, it's worth checking 
 
 Some use cases that Couchbase has been a great fit for include:
 
-* Product Catalog
+* Product Catalog (Customer spotlight: link:https://www.couchbase.com/use-cases/catalogs[Tesco])
 * Asset Tracking
-* Content Management
+* Content Management (Customer spotlight:  link:https://www.couchbase.com/use-cases/content-management[replacing SQL Server with Couchbase for content management])
 * Application Configuration
-* Customer Management
+* Customer Management (Customer spotlight: link:https://www.couchbase.com/customers/directv[DirecTV])
 * File or Streaming Metadata Service
+* And many more: check out our link:https://www.couchbase.com/use-cases[whitepaper on top 10 enterprise use cases for NoSQL]
 
 === Define the success criteria
 
