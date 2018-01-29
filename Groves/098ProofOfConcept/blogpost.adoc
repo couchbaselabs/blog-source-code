@@ -1,10 +1,10 @@
 :imagesdir: images
-:meta-description: Proof of concept may be just what you need to start when you're evaluating Couchbase.
+:meta-description: Proof of concept may be just what you need to start when you're evaluating Couchbase. Learn about the five steps to success.
 :title: Proof of Concept: Making a case to move from relational
-:slug: Proof-Concept-Making-case-move-relational
+:slug: Proof-of-Concept-move-relational
 :focus-keyword: proof of concept
 :categories: Couchbase Server
-:tags: proof of concept, oracle, sql server
+:tags: proof of concept, oracle, sql server, use case, use cases
 :heroimage: 098-hero-proof-of-concept.jpg "POC21 - Proof of Concept" by POC21 licensed through creative commons https://www.flickr.com/photos/poc21cc/22114029108
 
 Proof of concept may be just what you need to start when you're evaluating Couchbase.
