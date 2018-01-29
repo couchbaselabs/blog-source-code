@@ -22,11 +22,17 @@ But for this post, we're going to talk more about the overall process instead of
 
 == Proof of Concept steps
 
-These steps are not just for migrating an existing application away from a database to Couchbase, they also work just as well for creating a brand new "greenfield" application with Couchbase, or even augmenting an existing database (as opposed to replacing it completely).
+These steps are not just for migrating an existing application to Couchbase, they also work just as well for creating a brand new "greenfield" application with Couchbase, or even augmenting an existing database (as opposed to replacing it completely).
+
+When creating a Proof of Concept, it's a good idea to keep the scope as small and simple as possible. Some questions to ask:
+
+* Will it prove/disprove what you need it to, and help you move to the next step?
+* Can this be accomplished fairly quickly? If it takes too long or isn't a priority, it might fizzle out.
+* Ask a link:https://info.couchbase.com/Contact_Solutions_Engineer.html[Couchbase technical team member]: is this a good fit for Couchbase? You can draw on their experience to save yourself some heartburn.
 
 === Select a use case and application
 
-When I talk to people about Couchbase and NoSQL, I tell people that I want them to use Couchbase. But, I also tell them the only thing worse than them _not_ using Couchbase is using Couchbase for the wrong thing and becoming soured on document databases.
+When I talk to people about Couchbase and NoSQL, I tell them the only thing worse than _not_ using Couchbase is using Couchbase for the wrong thing and becoming soured on document databases.
 
 +++
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">&quot;Different isn&#39;t always better, but better is always different.&quot;  - Author Unknown</p>&mdash; Programming Wisdom (@CodeWisdom) <a href="https://twitter.com/CodeWisdom/status/864589021376282624?ref_src=twsrc%5Etfw">May 16, 2017</a></blockquote>
@@ -41,7 +47,13 @@ The benefits of a distributed database like Couchbase are:
 * Greater data agility/flexibility
 * Improved operational management
 
-If your application can benefit from one of those characteristics, it's worth checking out Couchbase. Couchbase may not be the best fit if you need multi-document transactions. But as I showed in my post on link:https://blog.couchbase.com/author/matthew-groves/[data modeling], if you choose to nest data instead of scattering it in pieces, you may not need multi-document transactions as much as you think.
+If your application can benefit from one of those characteristics, it's worth checking out Couchbase. Couchbase may not be the best fit if you need multi-document transactions. But as I showed in my post on link:https://blog.couchbase.com/author/matthew-groves/[data modeling], if you can nest data instead of scattering it in pieces, you may not need multi-document transactions as much as you think.
+
+Further, conversations with Couchbase customers have lead us to identify the need beyond a traditional database to power _interactions_. link:https://www.couchbase.com/customers/marriott[Marriott] calls this the "look-to-book" ratio.
+
+image:09801-transactions-interactions.gif[Interaction to transaction ratio]
+
+If you're in a situation where you need to record transactions in your traditional database, but you want a low-latency, flexible, scalable database to power all the interactions leading up to it, Couchbase might be the right fit for you.
 
 Some use cases that Couchbase has been a great fit for include:
 
@@ -62,6 +74,7 @@ Examples of criteria:
 * *Performance/latency improvements* - This might boil down to a number, like "5ms latency in the 95th percentile".
 * *Ease of scaling* - How easy is it to scale now? How much time does it take a person? How many 2am Saturdays do you need to work to do upgrades?
 * *Faster development cycles* - Does schema management eat up a lot of time in your sprints? A proof of concept with Couchbase can help to demonstrate if a flexible model is going to save you time.
+* *Maintenence and costs* 
 
 +++
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">&quot;The most important single aspect of software development is to be clear about what you are trying to build.&quot; - Bjarne Stroustrup</p>&mdash; Programming Wisdom (@CodeWisdom) <a href="https://twitter.com/CodeWisdom/status/728672498364076032?ref_src=twsrc%5Etfw">May 6, 2016</a></blockquote>
@@ -74,9 +87,7 @@ Whatever the criteria, it's good to define it at the beginning, so you can work 
 
 As I covered in the link:https://blog.couchbase.com/json-data-modeling-rdbms-users/[JSON data modeling post], it's important for you to understand your data before you even start writing any code. You need to understand what you are going to model and how your application needs to function.
 
-Migrating from a relational to document database is not going to be a purely mechanical exercise. If you plan to migrate data, it's better to start by thinking about how it would look independent of how it's currently stored. Draw out a concept of it on a whiteboard without using "tables" or "documents". 
-
-"Weeks of coding can save you hours of planning."
+Migrating from a relational to a document database is not going to be a purely mechanical exercise. If you plan to migrate data, it's better to start by thinking about how it would look independent of how it's currently stored. Draw out a concept of it on a whiteboard without using "tables" or "documents". 
 
 +++
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">&quot;Weeks of coding can save you hours of planning.&quot; - Unknown</p>&mdash; Programming Wisdom (@CodeWisdom) <a href="https://twitter.com/CodeWisdom/status/900121152655429633?ref_src=twsrc%5Etfw">August 22, 2017</a></blockquote>
@@ -85,7 +96,7 @@ Migrating from a relational to document database is not going to be a purely mec
 
 === Identify the access patterns
 
-I also covered this in my link:https://blog.couchbase.com/json-data-modeling-rdbms-users/[JSON data modeling post]. Couchbase is very flexible in the way that it can store data. But, the data model can be accessed via different patterns. The design of your model should take these into account.
+I also covered this in my link:https://blog.couchbase.com/json-data-modeling-rdbms-users/[JSON data modeling post]. Couchbase is very flexible in the way that it can store data. But, data access is also flexible. The design of your model should take that into account.
 
 +++
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">&quot;Figure out your data structures, and the code will follow.&quot; - William Laeder</p>&mdash; Programming Wisdom (@CodeWisdom) <a href="https://twitter.com/CodeWisdom/status/956173245144846336?ref_src=twsrc%5Etfw">January 24, 2018</a></blockquote>
@@ -97,7 +108,7 @@ In that blog post, I layed out some rules of thumb for nested/seperate documents
 * *Key/value* - The ability to get/change a document based on its key. This is the fastest, lowest latency method available in Couchbase.
 * *N1QL query* - N1QL is SQL for JSON data, available in Couchbase. It can query data just about any way you can imagine. Most importantly, you can query data based on something _other_ than its key.
 * *Full Text Search* - When you need to query based on text in a language aware way. Great for user driven searches, for instance.
-* *Map/Reduce* - Writing a pure function to calculate query results ahead of time. N1QL is taking a lot of these use cases away from M/R, but it's still good for some specialized types of aggregation.
+* *Map/Reduce* - Writing a pure function to calculate query results ahead of time. N1QL is taking a lot of the workload away from M/R, but it's still good for some specialized types of aggregation.
 * *Geospatial* - Querying of documents based on some geographical/location based information.
 * *Analytics/reporting* - Couchbase Analytics (currently in link:http://docs.couchbase.com/prerelease/analytics-dp4/introduction.html[preview]) can give you heavily indexed non-operational access to your data. You can run complex reports without impacting day-to-day users.
 
@@ -112,13 +123,14 @@ It might be a good idea to iterate on this proof on concept: you can apply what 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 +++
 
-Finally, if your proof of concept is a success (and I know it will be), then it's time to prepare for production. Take the time to review the architecture, the decisions you've made, what worked well, what didn't work well, and so on. The more you document, the more the rest of your team and organization can learn from for the next project.
+Finally, if your proof of concept is a success (and I know it will be), then it's time to prepare for production. Take the time to review the architecture, the decisions you've made, what worked well, what didn't work well, and so on. The more you document, the better off the rest of your team and organization will be on the next project.
 
 == Summary
 
 Creating a proof of concept with these five steps will help make you successful! All that's left to do is get started:
 
 * link:https://couchbase.com/downloads[Download Couchbase Server] and try it out today.
-* link:https://info.couchbase.com/Contact_Solutions_Engineer.html[Contact a Solutions Engineer] for resources and help
 * Post your questions into the link:https://forums.couchbase.com[Couchbase forum]
+* Check out link:https://training.couchbase.com/online[Couchbase's free online training]
+* link:https://info.couchbase.com/Contact_Solutions_Engineer.html[Contact a Solutions Engineer] for resources and help
 * Contact me link:https://twitter.com/mgroves[on Twitter @mgroves] if you have any questions or comments (or leave a comment below).
