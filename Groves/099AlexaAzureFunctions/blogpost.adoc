@@ -1,11 +1,11 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: Alexa Skills are the "apps" that run on devices like the Echo. In this blog post, you'll build a skill using Azure Functions and Couchbase running on Azure.
 :title: Alexa Skills with Azure Functions and Couchbase
 :slug: Alexa-Skills-Azure-Functions-Couchbase
 :focus-keyword: alexa skills
 :categories: Couchbase Server, .NET
 :tags: alexa, echo, echo dot, couchbase, azure, azure functions
-:heroimage: TBD
+:heroimage: that same azure cloud image
 
 Alexa Skills are the "apps" that you can build to run on Amazon devices like the Echo, Echo Dot, etc. In this blog post, you'll learn how to build an Alexa skill using serverless Azure Functions and a Couchbase backend running on Azure. This post builds on a lot of blog posts I've written about Azure Functions, Serverless, and Couchbase on Azure in the past:
 
@@ -34,7 +34,7 @@ But you know who is always enthusiastic? Alexa! So, if I bring my Echo Dot to th
 
 If these Alexa skills turn out to be helpful, I can expand the skills later to answer more complex questions.
 
-_If you want to follow along with this post and create your own Alexa skills, the full link://[source code is available on Github]._
+_If you want to follow along with this post and create your own Alexa skills, the full link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/099AlexaAzureFunctions/AlexaBoothDuty[source code is available on Github]._
 
 == Design
 
@@ -88,6 +88,8 @@ To create an Azure Function, I used link:https://github.com/AreYouFreeBusy/Alexa
 
 After creating my Azure Functions solution, I added it with NuGet.
 
+=== Using AlexaSkills.NET
+
 Next, I created a "speechlet" class. I chose to make my speechlet asynchronous, but a synchronous option exists as well. There are four methods that need to be created. I only really need two of them for the skill at this point.
 
 [source,C#,indent=0]
@@ -104,6 +106,8 @@ The `OnIntentAsync` is where most of the Alexa skills request will be processed.
 include::AlexaBoothDuty/AlexaBoothDuty.Core/IntentProcessors/IntentProcessor.cs[tag=Create]
 ----
 
+=== Connecting to Couchbase
+
 `CouchbaseBucket.GetBucket()` is using `Lazy` behind the scenes as outlined in my link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchbase-server/[earlier blog post on Azure Functions].
 
 So, whenever a 'What is Couchbase' intent comes in, a `WhatIsCouchbaseIntentProcessor` is instantiated and executed.
@@ -115,7 +119,9 @@ include::AlexaBoothDuty/AlexaBoothDuty.Core/IntentProcessors/WhatIsCouchbaseInte
 
 Note the use of the N1QL query that was mentioned earlier (slightly tweaked so that facts with lower numbers will be given priority). This code is also using the link:https://blog.couchbase.com/sub-document-api-in-couchbase-server-4-5-with-the-net-sdk-revisted/[Couchbase subdocument API] to increment the "number" field by 1.
 
-You can view the full code of the other intent processors on Github, but they are very similar (just with slightly different N1QL).
+You can view the full code of the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/099AlexaAzureFunctions/AlexaBoothDuty[other intent processors on Github], but they are very similar (just with slightly different N1QL).
+
+=== Connecting to Azure Functions
 
 Finally, once my speechlet is ready, it's easy to wire up to an Azure Function.
 
