@@ -29,7 +29,20 @@ Joining their ranks this year is *our own link:http://devnexus.com/speakers/750[
 
 If you'll be at DevNexus, make sure to check out her sessions. If not, you should follow link:https://twitter.com/rajagp[@rajagp on Twitter]. 
 
-Some of my other favorite speakers will be there too: link:http://devnexus.com/speakers/1008[Venkat Subramaniam], link:http://devnexus.com/speakers/1117[Jeff Strauss], link:http://devnexus.com/speakers/1156[Kelsey Hightower], link:http://devnexus.com/speakers/711[Neal Ford], link:http://devnexus.com/speakers/773[Ted Neward], link:http://devnexus.com/speakers/764[Simon Baslé], and many more! link:http://devnexus.com/speakers/852[James Bender] will be there too, but don't let that dissuade you.
+Some of my other favorite speakers will be there too: link:http://devnexus.com/speakers/1008[Venkat Subramaniam], link:http://devnexus.com/speakers/1117[Jeff Strauss], link:http://devnexus.com/speakers/1156[Kelsey Hightower], link:http://devnexus.com/speakers/711[Neal Ford], link:http://devnexus.com/speakers/773[Ted Neward], link:http://devnexus.com/speakers/764[Simon Baslé], and many more! link:http://devnexus.com/speakers/852[James Bender] will also be there, but don't let that dissuade you.
+
+== We are hiring
+
+Our primary goal at DevNexus is to increase awareness about Couchbase and learn from developers.
+
+But this year at DevNexus, we are also bringing a recruiter!
+
++++
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/Couchbase?src=hash&amp;ref_src=twsrc%5Etfw">#Couchbase</a> is hiring! Want to join a super fun team and be a part of a great company culture? Check out our <a href="https://twitter.com/hashtag/careers?src=hash&amp;ref_src=twsrc%5Etfw">#careers</a> page! <a href="https://t.co/2yp6AtoOet">https://t.co/2yp6AtoOet</a></p>&mdash; Couchbase (@couchbase) <a href="https://twitter.com/couchbase/status/962028342475042817?ref_src=twsrc%5Etfw">February 9, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
++++
+
+We are link:https://www.couchbase.com/careers/open-positions[hiring], and if you are looking for something new, come by the Couchbase booth, talk to a recruiter, and there just might be a place for you.
 
 == Couchbase booth
 
