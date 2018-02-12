@@ -1,0 +1,67 @@
+:imagesdir: images
+:meta-description: Couchbase will once again be sponsoring DevNexus, a 3 day developer's conference in Atlanta, Georgia in 2018.
+:title: Meet Couchbase at DevNexus
+:slug: Meet-Couchbase-DevNexus
+:focus-keyword: devnexus
+:categories: Couchbase Server, Couchbase Mobile
+:tags: event, devnexus, speaking, conference
+:heroimage: TBD
+
+DevNexus is a link:http://devnexus.com/[huge professional developers conference] that takes place February 21-23, 2018 in Atlanta, Georgia at the Georgia World Congress Center.
+
+Couchbase is honored to once again be link:http://devnexus.com/sponsors[sponsoring] this tremendous conference.
+
++++
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Have <a href="https://twitter.com/mgroves?ref_src=twsrc%5Etfw">@mgroves</a> rocking <a href="https://twitter.com/hashtag/couchbase?src=hash&amp;ref_src=twsrc%5Etfw">#couchbase</a> at <a href="https://twitter.com/hashtag/devnexus?src=hash&amp;ref_src=twsrc%5Etfw">#devnexus</a> <a href="https://t.co/sQHK84xk0v">pic.twitter.com/sQHK84xk0v</a></p>&mdash; Nic Raboy (@nraboy) <a href="https://twitter.com/nraboy/status/835124111814840322?ref_src=twsrc%5Etfw">February 24, 2017</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
++++
+
+Not only will you find a Couchbase booth in the hallway, but you will also find one of our finest speakers presenting twice.
+
+== DevNexus speakers
+
+DevNexus attracts terrific speakers from all over the world.
+
+Joining their ranks this year is *our own link:http://devnexus.com/speakers/750[Priya Rajagopal]*! She will be presenting:
+
+* Postman Delivers : API Development and Testing Made Easy
+* A NoSQL Option to Persisting Data in your Mobile Apps
+
+If you'll be at DevNexus, make sure to check out her sessions. If not, you should follow link:https://twitter.com/rajagp[@rajagp on Twitter]. 
+
+Some of my other favorite speakers will be there too: link:http://devnexus.com/speakers/1008[Venkat Subramaniam], link:http://devnexus.com/speakers/1117[Jeff Strauss], link:http://devnexus.com/speakers/1156[Kelsey Hightower], link:http://devnexus.com/speakers/711[Neal Ford], link:http://devnexus.com/speakers/773[Ted Neward], link:http://devnexus.com/speakers/764[Simon Baslé], and many more! link:http://devnexus.com/speakers/852[James Bender] will be there too, but don't let that dissuade you.
+
+== Couchbase booth
+
+In between the great sessions, come by the Couchbase booth. We'll have some great swag, prizes, and all the information about the world's first engagement database that you care to know. Please come by and say "hi"!
+
+DevNexus was my very first event staffing a sponsor booth full time at a developer event.
+
+Looking back over a year later, I learned:
+
+That I should invest in a good pair of shoes.
+
++++
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">My first time on booth duty for <a href="https://twitter.com/hashtag/Couchbase?src=hash&amp;ref_src=twsrc%5Etfw">#Couchbase</a> and I am wiped out. See you tomorrow, <a href="https://twitter.com/hashtag/DevNexus?src=hash&amp;ref_src=twsrc%5Etfw">#DevNexus</a>!</p>&mdash; Matthew D. Groves (@mgroves) <a href="https://twitter.com/mgroves/status/834918424849575937?ref_src=twsrc%5Etfw">February 24, 2017</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
++++
+
+Developers love a prize giveaway.
+
++++
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Huuuuge crowd for the <a href="https://twitter.com/hashtag/Couchbase?src=hash&amp;ref_src=twsrc%5Etfw">#Couchbase</a> raffle at <a href="https://twitter.com/hashtag/DevNexus?src=hash&amp;ref_src=twsrc%5Etfw">#DevNexus</a> <a href="https://t.co/4JJzThRjOo">pic.twitter.com/4JJzThRjOo</a></p>&mdash; Matthew D. Groves (@mgroves) <a href="https://twitter.com/mgroves/status/835231983542353921?ref_src=twsrc%5Etfw">February 24, 2017</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
++++
+
+Working a booth, sometimes you have to have a little fun.
+
++++
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Come by the <a href="https://twitter.com/hashtag/Couchbase?src=hash&amp;ref_src=twsrc%5Etfw">#Couchbase</a> <a href="https://twitter.com/hashtag/devnexus?src=hash&amp;ref_src=twsrc%5Etfw">#devnexus</a> booth if you can handle such an awesome hat! <a href="https://t.co/Dg4KTyA0rk">pic.twitter.com/Dg4KTyA0rk</a></p>&mdash; Matthew D. Groves (@mgroves) <a href="https://twitter.com/mgroves/status/834749905218461696?ref_src=twsrc%5Etfw">February 23, 2017</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
++++
+
+== Now what?
+
+Stay tuned to the link:https://blog.couchbase.com[Couchbase Blog] for more information about upcoming events.
+
+Follow link:https://twitter.com/devnexus[DevNexus on Twitter].
