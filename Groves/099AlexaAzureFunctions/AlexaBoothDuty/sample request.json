@@ -1,0 +1,40 @@
+{
+  "session": {
+    "new": false,
+    "sessionId": "SessionId.cd5bb431-256e-403f-abf5-69597a393632",
+    "application": {
+      "applicationId": "amzn1.ask.skill.ef5332ca-0971-4bf4-8f49-5aa530c098d0"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.xxx"
+    }
+  },
+  "request": {
+    "type": "IntentRequest",
+    "requestId": "EdwRequestId.983feab8-0375-4bf9-9cbf-b11f5004116b",
+    "intent": {
+      "name": "MongodbComparisonIntent",
+      "slots": {}
+    },
+    "locale": "en-US",
+    "timestamp": "2018-02-12T14:39:57Z"
+  },
+  "context": {
+    "AudioPlayer": {
+      "playerActivity": "IDLE"
+    },
+    "System": {
+      "application": {
+        "applicationId": "amzn1.ask.skill.ef5332ca-0971-4bf4-8f49-5aa530c098d0"
+      },
+      "user": {
+        "userId": "amzn1.ask.account.xxx"
+      },
+      "device": {
+        "supportedInterfaces": {}
+      }
+    }
+  },
+  "version": "1.0"
+}

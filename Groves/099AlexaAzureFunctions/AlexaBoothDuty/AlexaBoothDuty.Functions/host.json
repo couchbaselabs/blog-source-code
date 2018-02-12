@@ -1,0 +1,8 @@
+{
+  "Values": {
+    "couchbaseUri": "http://vm0.server-xxx.centralus.cloudapp.azure.com:8091",
+    "couchbaseBucketName": "boothduty",
+    "couchbaseUsername": "booth",
+    "couchbasePassword": "password"
+  }
+}

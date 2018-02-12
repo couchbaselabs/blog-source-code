@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AlexaSkillsKit.NET" Version="1.6.0" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlexaBoothDuty.Core\AlexaBoothDuty.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AlexaSkillsKit">
+      <HintPath>..\packages\AlexaSkillsKit.NET.1.6.0\lib\net45\AlexaSkillsKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+</Project>

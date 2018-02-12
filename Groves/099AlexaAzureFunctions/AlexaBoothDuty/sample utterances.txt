@@ -1,0 +1,9 @@
+MongodbComparisonIntent what is the difference between Couchbase and MongoDb
+MongodbComparisonIntent what is the difference between MongoDb and Couchbase
+MongodbComparisonIntent what is the difference between Mongo and Couchbase
+MongodbComparisonIntent what is the difference between Couchbase and Mongo
+WhatIsCouchbaseIntent what is the best thing about Couchbase
+WhatIsCouchbaseIntent what is Couchbase
+WhatIsCouchbaseIntent why should I use Couchbase
+CouchDbIntent is Couchbase the same thing as CouchDb
+CouchDbIntent is CouchDb the same thing as Couchbase

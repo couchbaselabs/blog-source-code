@@ -1,0 +1,169 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Alexa Skills with Azure Functions and Couchbase
+:slug: Alexa-Skills-Azure-Functions-Couchbase
+:focus-keyword: alexa skills
+:categories: Couchbase Server, .NET
+:tags: alexa, echo, echo dot, couchbase, azure, azure functions
+:heroimage: TBD
+
+Alexa Skills are the "apps" that you can build to run on Amazon devices like the Echo, Echo Dot, etc. In this blog post, you'll learn how to build an Alexa skill using serverless Azure Functions and a Couchbase backend running on Azure. This post builds on a lot of blog posts I've written about Azure Functions, Serverless, and Couchbase on Azure in the past:
+
+* link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[Serverless Architecture with Cloud Computing] - What is serverless?
+* link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchbase-server/[Azure Functions and Lazy Initialization with Couchbase Server] - Recommendations when using Couchbase and Azure Functions together
+* link:https://blog.couchbase.com/chatbot-azure-couchbase-viber/[Chatbot on Azure and Couchbase for Viber] - A use case similar to an Alexa skill
+* link:https://blog.couchbase.com/azure-getting-started-easy-free/[Azure: Getting Started is Easy and Free] - How to use the Azure Marketplace to easily create a Couchbase Cluster
+
+== What kind of Alexa skills am I building?
+
+I work as a Developer Advocate, which means I often spend time at sponsor booths at developer events. I love doing this: I get to tell people how great Couchbase is, and I often get feedback from developers about what problems they're trying to solve with Couchbase.
+
+If there's one thing I don't like about working a booth, though, it's repetition. I often get asked the same set of questions hundreds of times per events:
+
+* What is Couchbase? (distributed NoSQL document database with a memory first architecture)
+* How is Couchbase different than MongoDB? (they are both document databases, but Couchbase has major feature and architectural differences)
+* Is Couchbase the same thing as CouchDB? (link:https://www.couchbase.com/couchbase-vs-couchdb[No.])
+
+I'm not complaining, mind you. It's just that it's hard to be enthusiastic when answering the question for the 100th time as the conference is about to close down.
+
+But you know who is always enthusiastic? Alexa! So, if I bring my Echo Dot to the next event, maybe she can help me:
+
+* *What is Couchbase?* - Alexa will say a random interesting fact about Couchbase
+* *How is Couchbase different than MongoDB?* Alexa will say a random architectural or feature difference.
+* *Is Couchbase the same thing as CouchDB?* Alexa will say "no".
+
+If these Alexa skills turn out to be helpful, I can expand the skills later to answer more complex questions.
+
+_If you want to follow along with this post and create your own Alexa skills, the full link://[source code is available on Github]._
+
+== Design
+
+Alexa skills are registered with Amazon. For the most part, they make simple HTTP requests to the endpoint that you designate and expect a certain JSON response. Azure Functions can process HTTP requests. The Azure Functions can make queries out to a database full of responses, and can also keep track of how many times each response has been given.
+
+Below is a high-level architectural diagram of my minimum viable Alexa skills project:
+
+image:09904-architecture-diagram.png[Architecture diagram from you, to an echo, to Alexa skills, to Azure Functions, to Couchbase Server and back]
+
+== Data storage and design
+
+The skill is going to ultimately query some data from Couchbase Server. I'll start with 2 different kinds of documents. (If these Alexa skills turn out to be useful, I'll add more complex stuff later).
+
+=== Document design
+
+Each document represents a possible response. Each will have 3 fields:
+
+* `type` - This will be either "mongodbcomparison" or "whatiscouchbase".
+* `number` - The number of times this response has been used (starting at 0).
+* `text` - The text that I want the Alexa skills to say.
+
+The document key design of these documents is not important (at least not yet), since I'll be using only N1QL (SQL for JSON) queries to retrieve them. However, I've decided to create keys like "mongo::2" and "couchbase::5".
+
+To start, I will store this data in a single Couchbase node on a low cost Azure VM. A single node with a small amount of data should be able to handle even heavy booth traffic no problem. But if, for instance, I were to install these as kiosks in airports around the world I will definitely need to scale up my Couchbase cluster. link:https://blog.couchbase.com/scaling-couchbase-server-azure/[Couchbase and Azure makes this easy].
+
+=== Query design
+
+To get a random document, I need to run a N1QL query:
+
+[source,SQL,indent=0]
+----
+SELECT m.*, META(m).id
+FROM boothduty m
+WHERE m.type = 'mongodbcomparison'
+ORDER BY UUID()
+LIMIT 1;
+----
+
+UUID is functioning as a random number generator. That's not really what it's for, but it's "good enough". If I really needed true randomness, I could make a link:https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/curl.html[curl request] in N1QL to link:https://www.random.org/clients/http/[random.org's API]. 
+
+To run that query, I need to create an index for the 'type' field:
+
+[source,SQL,indent=0]
+----
+CREATE INDEX ix_type ON boothduty(type);
+----
+
+== Azure Functions
+
+To create an Azure Function, I used link:https://github.com/AreYouFreeBusy/AlexaSkillsKit.NET[an existing .NET library] called AlexaSkills.NET, which makes it very easy to write the code you need to create Alexa skills.
+
+After creating my Azure Functions solution, I added it with NuGet.
+
+Next, I created a "speechlet" class. I chose to make my speechlet asynchronous, but a synchronous option exists as well. There are four methods that need to be created. I only really need two of them for the skill at this point.
+
+[source,C#,indent=0]
+----
+include::AlexaBoothDuty/AlexaBoothDuty.Core/BoothDutySpeechlet.cs[tag=speechlet]
+----
+
+The `OnLaunchAsync` is the first thing that an Echo user will reach. The user will say something like "Alexa, open Matt's booth helper", and this code will respond with some basic instructions.
+
+The `OnIntentAsync` is where most of the Alexa skills request will be processed. I'm using a factory/strategy code pattern here to instantiate a different object depending on which intent is being invoked (more on "intents" later).
+
+[source,C#,indent=0]
+----
+include::AlexaBoothDuty/AlexaBoothDuty.Core/IntentProcessors/IntentProcessor.cs[tag=Create]
+----
+
+`CouchbaseBucket.GetBucket()` is using `Lazy` behind the scenes as outlined in my link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchbase-server/[earlier blog post on Azure Functions].
+
+So, whenever a 'What is Couchbase' intent comes in, a `WhatIsCouchbaseIntentProcessor` is instantiated and executed.
+
+[source,C#,indent=0]
+----
+include::AlexaBoothDuty/AlexaBoothDuty.Core/IntentProcessors/WhatIsCouchbaseIntentProcessor.cs[tag=class]
+----
+
+Note the use of the N1QL query that was mentioned earlier (slightly tweaked so that facts with lower numbers will be given priority). This code is also using the link:https://blog.couchbase.com/sub-document-api-in-couchbase-server-4-5-with-the-net-sdk-revisted/[Couchbase subdocument API] to increment the "number" field by 1.
+
+You can view the full code of the other intent processors on Github, but they are very similar (just with slightly different N1QL).
+
+Finally, once my speechlet is ready, it's easy to wire up to an Azure Function.
+
+[source,C#,indent=0]
+----
+include::AlexaBoothDuty/AlexaBoothDuty.Functions/BoothDuty.cs[tag=azurefunction]
+----
+
+You can now test this locally with Postman, or with the Alexa interface once you deploy to azure.
+
+== Creating the Alexa skills
+
+I won't go through the whole process, since there's plenty of documentation on how to setup Alexa skills. I think I have more work to do before my skill is officially certified, but it's good enough for beta testing.
+
+Once you have the Azure Functions URL, you'll use that with Alexa. Alexa requires skills to use HTTPS, but fortunately Azure Functions come with HTTPS on a azurewebsites.net subdomain. Here's a screenshot:
+
+image:09901-alexa-skills-https-configuration.png[Alexa skills HTTPS configuration with Azure Functions]
+
+I mentioned "intents" earlier. These are various types of actions that Alexa skills can process, along with their inputs. Think of these like function signatures. Currently, I have designed 3 intents, and I have no parameters on these (yet). So my intent schema is a very simple piece of JSON:
+
+image:09902-alexa-skills-intent-schema.png[Alexa skills intent schema]
+
+For each intent, you can create "utterances" that map to the intents. These are the phrases that an Echo user will speak, and which intent they correspond to.
+
+image:09903-alexa-skills-sample-utterances.png[Alexa skills sample utterances]
+
+I've tried to think of all the different variations. But if I really wanted this to work more generally, I would setup parameters so that a user could ask the question "What is the difference between Couchbase and {x}".
+
+== Echo Dot in action
+
+I did not publish this on the Alexa store. I did deploy it as a "beta test", so if you want to try it out, I'd be happy to send you an invitation to get it.
+
+Here's a video of my trying it out on my Echo Dot (which was a speaker gift last year from the fine people at link:http://devnexus.com/[DevNexus]):
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/RaYV6jDO8Q8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
++++
+
+Will this actually work at a noisy booth? Well, let's just say I'm not ready to bring an easy chair and pillow to the booth just yet. But it's a fun way to demonstrate the power of Couchbase as an engagement database.
+
+== Summary
+
+Alexa skills are a great place to use serverless architecture like Azure Functions. The skills will be used intermittently, and Azure Functions will only bill you for the time they are executed.
+
+Couchbase Server again makes a great database for such an app. It can start out small to handle a single booth, but it can scale easily to accommodate larger demand.
+
+Have a question about Couchbase? Visit the link:https://forums.couchbase.com[Couchbase forums].
+
+Have a question for me? Find me on link:https://twitter.com/mgroves[Twitter @mgroves].
+
+Be sure to check out all the great link:https://docs.microsoft.com/en-us/azure/azure-functions/[documentation from Microsoft on Azure Functions], and the documentation on the Alexa Skills link:https://github.com/AreYouFreeBusy/AlexaSkillsKit.NET[.NET library].
