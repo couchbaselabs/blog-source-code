@@ -5,7 +5,7 @@
 :focus-keyword: devnexus
 :categories: Couchbase Server, Couchbase Mobile
 :tags: event, devnexus, speaking, conference
-:heroimage: TBD
+:heroimage: 100-hero-event.jpg by National Assembly for Wales https://www.flickr.com/photos/nationalassemblyforwales/12838413173 licensed through creative commons
 
 DevNexus is a link:http://devnexus.com/[huge professional developers conference] that takes place February 21-23, 2018 in Atlanta, Georgia at the Georgia World Congress Center.
 
