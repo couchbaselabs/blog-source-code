@@ -46,7 +46,7 @@ We are link:https://www.couchbase.com/careers/open-positions[hiring], and if you
 
 == Couchbase booth
 
-In between the great sessions, come by the Couchbase booth. We'll have some great swag, prizes, and all the information about the world's first engagement database that you care to know. Please come by and say "hi"!
+In between the great sessions, come by the Couchbase booth. We'll have some fun swag, prizes, and all the information about the world's first engagement database that you care to know. Please come by and say "hi"!
 
 DevNexus was my very first event staffing a sponsor booth full time at a developer event.
 
