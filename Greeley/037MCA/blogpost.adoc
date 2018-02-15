@@ -31,7 +31,7 @@ strategies.  To find out more before diving deeper into client specifics, take a
 Intro to Couchbase HA/DR - {hadr}[High Availability/Disaster Recover documentation]
 Couchbase XDCR - {xdcr}[XDCR documentation]
 XDCR/MCA webinar (including technical demo) - link:https://event.on24.com/eventRegistration/EventLobbyServlet?target=reg20.jsp&referrer=https%3A%2F%2Fwww.couchbase.com%2Fresources%2Fwebinars&eventid=1569790&sessionid=1&key=86048A27BD53D35AFA6FFF8D43A09435&regTag=&sourcepage=register[HA/DR webinar]
-Webinar tutorial - link:https://github.com/couchbaselabs/xdcr-java-sample/blob/master/Tutorial.adoc[Setting up clusters step-by-step, with XDCR]
+Webinar tutorial - link:https://github.com/couchbaselabs/mca-java-sample/blob/master/Tutorial.adoc[Setting up clusters step-by-step, with XDCR]
 A deeper look at XDCR - link:https://blog.couchbase.com/deep-dive-cross-data-center-replication-xdcr/[Deep Dive on Cross Data Center Replication (XDCR)] by https://twitter.com/deniswsrosa[Denis Rosa]
 Setting up XDCR using Docker - link:https://blog.couchbase.com/replicate-nosql-data-between-datacenters-with-couchbase-xdcr/[Replicate NoSQL Data Between Datacenters with Couchbase XDCR] by link:https://twitter.com/nraboy[Nick Raboy]
 Short video on setting up XDCR using Docker - link:https://blog.couchbase.com/use-xdcr-replicate-nosql-data-couchbase-docker-containers/[Use XDCR to Replicate NoSQL Data Between Couchbase Docker Containers – Video Tutorial] by link:https://twitter.com/nraboy[Nick Raboy]
@@ -56,12 +56,12 @@ One group simply reads from the database, one writes new, random records, one re
 performs a simple {N1QL} query.  The idea is to provide a variety of loads to apply against a cluster.  In link:https://event.on24.com/eventRegistration/EventLobbyServlet?target=reg20.jsp&referrer=https%3A%2F%2Fwww.couchbase.com%2Fresources%2Fwebinars&eventid=1569790&sessionid=1&key=86048A27BD53D35AFA6FFF8D43A09435&regTag=&sourcepage=register[this webinar],
 we used this app to illustrate some simple inter-cluster failover behavior.
 
-You can find the complete code, along with build instructions and other materials link:https://github.com/couchbaselabs/xdcr-java-sample[on GitHub]. Here's an
+You can find the complete code, along with build instructions and other materials link:https://github.com/couchbaselabs/mca-java-sample[on GitHub]. Here's an
 example invocation running against two 3-node clusters with 10 threads updating documents.
 
 [source,bash]
 ----
-java -jar xdcr-1.0.jar -c 172.23.123.4,172.23.123.5,172.23.123.6:172.23.122.55,172.23.122.56,172.23.122.57 -b my_bucket -i user -p password -u 10 -l statistics
+java -jar mca-1.0.jar -c 172.23.123.4,172.23.123.5,172.23.123.6:172.23.122.55,172.23.122.56,172.23.122.57 -b my_bucket -i user -p password -u 10 -l statistics
 ----
 
 Now, let's go through the main parts of the code.
@@ -70,7 +70,7 @@ Now, let's go through the main parts of the code.
 
 The application code, in this case, consists of one main class and some simple helper classes.  Once we have the MCA client instance, it's used
 almost exactly like the regular client.  I'll just focus, then, on the client set up.  The code comes from the
-link:https://github.com/couchbaselabs/xdcr-java-sample/blob/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[ClusterBasics] class.
+link:https://github.com/couchbaselabs/mca-java-sample/blob/master/src/main/java/com/couchbase/server/mca/ClusterBasics.java[ClusterBasics] class.
 
 ==== Cluster Nodes and Groupings
 
@@ -80,7 +80,7 @@ and creates a cluster spec for each cluster.
 
 [source,java,indent=0]
 ----
-include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=cluster-spec]
+include::https://raw.githubusercontent.com/couchbaselabs/mca-java-sample/master/src/main/java/com/couchbase/server/mca/ClusterBasics.java[tag=cluster-spec]
 ----
 
 ==== Couchbase Service Types
@@ -91,7 +91,7 @@ use later.
 
 [source,java,indent=0]
 ----
-include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=services]
+include::https://raw.githubusercontent.com/couchbaselabs/mca-java-sample/master/src/main/java/com/couchbase/server/mca/ClusterBasics.java[tag=services]
 ----
 
 ==== Inter-client Coordination
@@ -103,7 +103,7 @@ with some non-default options.
 
 [source,java,indent=0]
 ----
-include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=coordinator]
+include::https://raw.githubusercontent.com/couchbaselabs/mca-java-sample/master/src/main/java/com/couchbase/server/mca/ClusterBasics.java[tag=coordinator]
 ----
 <1> Create an `IsolatedCoordinator` instance with the configured options
 <2> Specify the nodes for each member of this topology
@@ -130,7 +130,7 @@ into a `DisjunctionFailureDetector` to get the final detector object to hand to 
 
 [source,java,indent=0]
 ----
-include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=failure-detector]
+include::https://raw.githubusercontent.com/couchbaselabs/mca-java-sample/master/src/main/java/com/couchbase/server/mca/ClusterBasics.java[tag=failure-detector]
 ----
 <1> Instantiate and configure the `TrafficMonitoringFailureDetector` options
 <2> Fix the number of failed operations needed to indicate a problem
@@ -150,7 +150,7 @@ interface identical to the standard one.
 
 [source,java,indent=0]
 ----
-include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=client]
+include::https://raw.githubusercontent.com/couchbaselabs/mca-java-sample/master/src/main/java/com/couchbase/server/mca/ClusterBasics.java[tag=client]
 ----
 
 == Wrapping up
