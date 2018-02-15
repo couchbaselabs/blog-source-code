@@ -80,7 +80,7 @@ and creates a cluster spec for each cluster.
 
 [source,java,indent=0]
 ----
-include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=cluster-spec]
+include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=cluster-spec]
 ----
 
 ==== Couchbase Service Types
@@ -91,7 +91,7 @@ use later.
 
 [source,java,indent=0]
 ----
-include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=services]
+include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=services]
 ----
 
 ==== Inter-client Coordination
@@ -103,7 +103,7 @@ with some non-default options.
 
 [source,java,indent=0]
 ----
-include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=coordinator]
+include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=coordinator]
 ----
 <1> Create an `IsolatedCoordinator` instance with the configured options
 <2> Specify the nodes for each member of this topology
@@ -130,7 +130,7 @@ into a `DisjunctionFailureDetector` to get the final detector object to hand to 
 
 [source,java,indent=0]
 ----
-include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=failure-detector]
+include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=failure-detector]
 ----
 <1> Instantiate and configure the `TrafficMonitoringFailureDetector` options
 <2> Fix the number of failed operations needed to indicate a problem
@@ -150,7 +150,7 @@ interface identical to the standard one.
 
 [source,java,indent=0]
 ----
-include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=client]
+include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=client]
 ----
 
 == Wrapping up
