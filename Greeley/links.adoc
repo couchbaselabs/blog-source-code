@@ -1,4 +1,5 @@
 :Couchbase: https://www.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase]
+:CDP: https://www.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Data Platform]
 :CBM: https://developer.couchbase.com/mobile?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Mobile]
 :CBL: https://developer.couchbase.com/documentation/mobile/current/guides/couchbase-lite/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Lite]
 :SG: https://developer.couchbase.com/documentation/mobile/current/guides/sync-gateway/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Sync Gateway]
@@ -18,4 +19,5 @@
 :nosql: https://www.couchbase.com/resources/why-nosql
 :start: https://www.couchbase.com/get-started
 :training: https://training.couchbase.com/
-
+:xdcr: https://developer.couchbase.com/documentation/server/current/xdcr/xdcr-intro.html
+:hadr: https://developer.couchbase.com/documentation/server/current/ha-dr/ha-dr-intro.html
