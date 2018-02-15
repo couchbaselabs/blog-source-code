@@ -1,0 +1,178 @@
+= Couchbase High Availability and Disaster Recovery: Java Multi-Cluster Aware Client
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: High Availability Disaster Recovery
+:categories: Best Practices and Tutorials, Couchbase Server, Java
+:tags: High Availability, Disaster Recovery, Java, NoSQL
+:heroimage: 
+include::../links.adoc[]
+
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/036HADR/images/HADR-2.png[]
+
+In this post, I'm going to take a look at a sample application that uses the {CBS} Multi-Cluster Aware
+(MCA) Java client.  This client goes hand-in-hand with Couchbase's Cross-Data Center Replication ({xdcr}[XDCR]) capabilities.
+
+XDCR supports flexible replication of data between different clusters.  The MCA client can automatically redirect traffic
+to these separate clusters based on library configuration, relieving the application developer of managing much of the
+complexity involved.
+
+These and other features allow Couchbase deployments to support a range of strong high availability and disaster recovery
+strategies.  To find out more before diving deeper into client specifics, take a look at these resources:
+
+[%hardbreaks]
+Intro to Couchbase HA/DR - {hadr}[High Availability/Disaster Recover documentation]
+Couchbase XDCR - {xdcr}[XDCR documentation]
+XDCR/MCA webinar (including technical demo) - link:https://event.on24.com/eventRegistration/EventLobbyServlet?target=reg20.jsp&referrer=https%3A%2F%2Fwww.couchbase.com%2Fresources%2Fwebinars&eventid=1569790&sessionid=1&key=86048A27BD53D35AFA6FFF8D43A09435&regTag=&sourcepage=register[HA/DR webinar]
+Webinar tutorial - link:https://github.com/couchbaselabs/xdcr-java-sample/blob/master/Tutorial.adoc[Setting up clusters step-by-step, with XDCR]
+A deeper look at XDCR - link:https://blog.couchbase.com/deep-dive-cross-data-center-replication-xdcr/[Deep Dive on Cross Data Center Replication (XDCR)] by https://twitter.com/deniswsrosa[Denis Rosa]
+Setting up XDCR using Docker - link:https://blog.couchbase.com/replicate-nosql-data-between-datacenters-with-couchbase-xdcr/[Replicate NoSQL Data Between Datacenters with Couchbase XDCR] by link:https://twitter.com/nraboy[Nick Raboy]
+Short video on setting up XDCR using Docker - link:https://blog.couchbase.com/use-xdcr-replicate-nosql-data-couchbase-docker-containers/[Use XDCR to Replicate NoSQL Data Between Couchbase Docker Containers – Video Tutorial] by link:https://twitter.com/nraboy[Nick Raboy]
+
+== MCA Client Details in Brief
+
+The MCA Java SDK builds on the standard link:https://developer.couchbase.com/documentation/server/current/sdk/java/start-using-sdk.htm[Couchbase Java SDK].  The core API mostly mimics that of the standard
+client.
+
+Currently the MCA client adds three other groups of features:
+
+. The ability to prioritize a list of clusters.
+. Ways to supply rules on what constitutes a failure.
+. A management interface.
+
+We'll discuss the first two using the code sample.  Management happens via a JMX interface.  This allows administrators to switch nodes in the priority list.  It falls outside the scope of this post.
+
+== The Sample application
+
+To illustrate use of the MCA client, we have a straightforward sample application.  The app runs a configurable number of threads in groups.
+One group simply reads from the database, one writes new, random records, one reads documents, modifies them, then writes them back, and one
+performs a simple {N1QL} query.  The idea is to provide a variety of loads to apply against a cluster.  In link:https://event.on24.com/eventRegistration/EventLobbyServlet?target=reg20.jsp&referrer=https%3A%2F%2Fwww.couchbase.com%2Fresources%2Fwebinars&eventid=1569790&sessionid=1&key=86048A27BD53D35AFA6FFF8D43A09435&regTag=&sourcepage=register[this webinar],
+we used this app to illustrate some simple inter-cluster failover behavior.
+
+You can find the complete code, along with build instructions and other materials link:https://github.com/couchbaselabs/xdcr-java-sample[on GitHub]. Here's an
+example invocation running against two 3-node clusters with 10 threads updating documents.
+
+[source,bash]
+----
+java -jar xdcr-1.0.jar -c 172.23.123.4,172.23.123.5,172.23.123.6:172.23.122.55,172.23.122.56,172.23.122.57 -b my_bucket -i user -p password -u 10 -l statistics
+----
+
+Now, let's go through the main parts of the code.
+
+== Code Walkthrough
+
+The application code, in this case, consists of one main class and some simple helper classes.  Once we have the MCA client instance, it's used
+almost exactly like the regular client.  I'll just focus, then, on the client set up.  The code comes from the
+link:https://github.com/couchbaselabs/xdcr-java-sample/blob/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[ClusterBasics] class.
+
+==== Cluster Nodes and Groupings
+
+Clusters are specified on the command line as groups of nodes separated by colons (`:`).  Within each group, the nodes names or IP addresses
+are separated by commas.  Implicitly, the clusters are specified in priority order.  This code block breaks down that simple format into sets
+and creates a cluster spec for each cluster.
+
+[source,java,indent=0]
+----
+include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=cluster-spec]
+----
+
+==== Couchbase Service Types
+
+We'll talk about coordination and failure monitoring in a moment.  You can tune both by service type.  In this example, we're using direct
+key/value retrieval (`ServiceType.BINARY`) and N1QL queries (`ServiceType.QUERY`).  These next two lines prepare a set of service types for
+use later.
+
+[source,java,indent=0]
+----
+include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=services]
+----
+
+==== Inter-client Coordination
+
+Next we start to see the real difference in capabilities of this client.  `Coordinators` manage orchestration of behavior across client instances.
+Currently, only isolated coordinators have been implemented, but that's appropriate for this case anyway.  More sophisticated ones are planned for
+the future.  Still, looking at all the options, you can see even an isolated coordinator allows quite a bit of control.  Here's how to create one
+with some non-default options.
+
+[source,java,indent=0]
+----
+include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=coordinator]
+----
+<1> Create an `IsolatedCoordinator` instance with the configured options
+<2> Specify the nodes for each member of this topology
+<3> Set the number of clusters to consider active
+<4> Set the number of individual failed nodes before a whole cluster fails over completely
+<5> Timeout period to wait before marking failure
+<6> Select the behavior when the end of a topology is reached.  Alternatives include staying at the end cluster, or reversing through the list.
+<7> Assign the services governed
+
+==== Failure Detection
+
+The client can monitor quite a lot of information while operating.  Failure detectors make use of this wealth of insight happening under the hood.
+They use it to signal the coordinator.  The coordinator can then decide how to respond.
+
+A `TrafficMonitoringFailureDetector` watches requests sent to the server.  You can configure the kinds of errors (exceptions) to count, the threshold
+number of exceptions, time interval in which they must occur and more.  I mostly use the defaults and just tune the failed operation count and interval.
+
+The client also has visibility into what's going on with nodes and the cluster directly.  This is captured using a `NodeHealthFailureDetector`. There
+are some nuances best left for the documentation.  I just use the defaults here.
+
+Finally, you can construct complex condition combinations using `ConjunctionFailureDetector` and `DisjunctionFailureDetector`.  Think of conjunction detectors
+as performing a logical "and" of the constituent detectors.  Disjunction does an "or".  I want to trigger on any failure, so I plug my traffic and health monitoring
+into a `DisjunctionFailureDetector` to get the final detector object to hand to the client.
+
+[source,java,indent=0]
+----
+include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=failure-detector]
+----
+<1> Instantiate and configure the `TrafficMonitoringFailureDetector` options
+<2> Fix the number of failed operations needed to indicate a problem
+<3> Set the time interval over which to bin failures
+<4> Create a `TrafficMonitoringFailureDetector` factory instance, with access to the `Coordinator` to trigger, and our options
+<5> Create a `NodeHealthFailureDetector` with default options
+<6> Define the final logic using a `DisjunctionFailureDetector`, again via a factory
+
+==== Client Instantiation
+
+Finally, we instantiate a client, and use it to obtain a bucket instance.  For those unfamiliar with Couchbase, buckets are a high-level organizational
+abstraction.  You can think of them as something between a table and a full database.  
+
+The bucket handle is all we need to run the loads against our clusters.  A multi-cluster client bucket lets you specify timeouts for individual
+operations.  For simplicity, I've wrapped the interface in a facade, applying only one fixed timeout to every operation.  This makes the
+interface identical to the standard one.
+
+[source,java,indent=0]
+----
+include::/Users/hod/work/projects/couchbaselabs/xdcr-java-sample/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[tag=client]
+----
+
+== Wrapping up
+
+That's it for the new concepts needed to get off the ground with the MCA client.  The rest of the code parses options, sets up the
+requested threads, and just runs them in loops.  There are some statistics thrown in.  I do make calls out to obtain the random data
+for writing and updating documents, so this code is not optimized for driving load.  It can give some insight into the performance
+that Couchbase offers, though.
+
+Again, to see this all in action, along with how the clusters behave, check out the demonstration during the second half of
+link:https://event.on24.com/eventRegistration/EventLobbyServlet?target=reg20.jsp&referrer=https%3A%2F%2Fwww.couchbase.com%2Fresources%2Fwebinars&eventid=1569790&sessionid=1&key=86048A27BD53D35AFA6FFF8D43A09435&regTag=&sourcepage=register[this webinar].
+
+Version 1.0 of the MCA client was recently released.  It's currently an Enterprise Edition only feature, as of this writing.  To
+find out more and get access to the client, talk to a Couchbase sales representative.  You can contact me for more information also,
+as described below.
+
+=== Postscript
+
+Couchbase is open source and free to try out.  *Get started* with {start}[sample code, example queries, tutorials, and more].
+
+Find more resources on our {portal}[developer portal] and follow us on Twitter {CouchbaseDev}.
+
+You can post questions on our {forums}. And we actively participate on {SO}.
+
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}
