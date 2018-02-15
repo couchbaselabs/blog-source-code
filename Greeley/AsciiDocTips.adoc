@@ -1,0 +1,44 @@
+= Tips for AsciiDoc
+
+== Command line processing:
+
+[source,shell]
+----
+asciidoctor -a allow-uri-read -b html5 blogpost.adoc
+----
+
+== Visual Studio Code support
+Get the https://marketplace.visualstudio.com/items?itemName=joaompinto.asciidoctor-vscode[preview extension]
+
+Add this to user or workspace settings to allow importing of content via URI
+
+[source]
+"AsciiDoc.html_generator": "asciidoctor -a allow-uri-read -o-"
+
+To output html5 instead of xhtml, add `-b html5`
+
+== Pull content directly from GitHub
+
+Use links to raw content.
+
+e.g. `include::https://raw.githubusercontent.com/couchbaselabs/xdcr-java-sample/master/src/main/java/com/couchbase/server/xdcr/ClusterBasics.java[]`
+
+This works with images, too.
+
+== Shorthand links
+
+Keep a file of commonly used links and shorthand codes.  E.g. AsciiDoc automatically replaces {CBS}
+with a link and Couchbase Server as the link text.  Or, don't supply default text and add it on use.  E.g. {xdcr}[XDCR is cool].
+
+See https://github.com/couchbaselabs/blog-source-code/blob/master/Greeley/links.adoc[links.adoc]
+
+== Use tags
+
+With tags, you can automate including code segments from complete source.
+See http://asciidoctor.org/docs/user-manual/#include-partial[]
+
+== Use callouts
+
+Number code lines for reference.
+See http://asciidoctor.org/docs/user-manual/#callouts[]
+
