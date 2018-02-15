@@ -1,15 +1,18 @@
 = 
 Hod Greeley <https://blog.couchbase.com>
-:meta-description: 
-:title: 
-:slug: 
-:focus-keyword:
-:categories:
-:tags:
-:heroimage: 
-:source-highlighter: pygments
+:doctype: article
+:encoding: utf-8
 :sectanchors:
 :imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: High Availability Disaster Recovery
+:categories: Best Practices and Tutorials, Couchbase Server, Java
+:tags: High Availability, Disaster Recovery, Java, NoSQL
+:heroimage: 
 include::../links.adoc[]
 
 image::
