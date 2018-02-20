@@ -20,9 +20,9 @@ image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/G
 In this post, I'm going to take a look at a sample application that uses the {CBS} Multi-Cluster Aware
 (MCA) Java client.  This client goes hand-in-hand with Couchbase's Cross-Data Center Replication ({xdcr}[XDCR]) capabilities.
 
-XDCR supports flexible replication of data between different clusters.  The MCA client can automatically redirect traffic
-to these separate clusters based on library configuration, relieving the application developer of managing much of the
-complexity involved.
+XDCR supports flexible replication of data between different clusters.  XDCR is an important feature for large scale, multi-data center
+deployments.  The references below include several on XDCR.  The MCA client can automatically redirect traffic to these separate clusters
+based on library configuration, relieving the application developer of managing much of the complexity involved.
 
 These and other features allow Couchbase deployments to support a range of strong high availability and disaster recovery
 strategies.  To find out more before diving deeper into client specifics, take a look at these resources:
@@ -41,13 +41,14 @@ Short video on setting up XDCR using Docker - link:https://blog.couchbase.com/us
 The MCA Java SDK builds on the standard link:https://developer.couchbase.com/documentation/server/current/sdk/java/start-using-sdk.htm[Couchbase Java SDK].  The core API mostly mimics that of the standard
 client.
 
-Currently the MCA client adds three other groups of features:
+Currently the MCA client adds several other groups of features, including:
 
 . The ability to prioritize a list of clusters.
 . Ways to supply rules on what constitutes a failure.
+. APIs to coordinate client instances.
 . A management interface.
 
-We'll discuss the first two using the code sample.  Management happens via a JMX interface.  This allows administrators to switch nodes in the priority list.  It falls outside the scope of this post.
+We'll discuss the first two using the code sample.  Management happens programmatically, or via a JMX interface.  This allows administrators to switch clusters in the priority list.  It falls outside the scope of this post.
 
 == The Sample application
 
@@ -76,7 +77,8 @@ link:https://github.com/couchbaselabs/mca-java-sample/blob/master/src/main/java/
 
 Clusters are specified on the command line as groups of nodes separated by colons (`:`).  Within each group, the nodes names or IP addresses
 are separated by commas.  Implicitly, the clusters are specified in priority order.  This code block breaks down that simple format into sets
-and creates a cluster spec for each cluster.
+and creates a cluster spec for each cluster.  (A cluster spec can include an id for easy reference.  It wasn't necessary here, but worthwhile
+to point out.)
 
 [source,java,indent=0]
 ----
@@ -109,8 +111,8 @@ include::https://raw.githubusercontent.com/couchbaselabs/mca-java-sample/master/
 <2> Specify the nodes for each member of this topology
 <3> Set the number of clusters to consider active
 <4> Set the number of individual failed nodes before a whole cluster fails over completely
-<5> Timeout period to wait before marking failure
-<6> Select the behavior when the end of a topology is reached.  Alternatives include staying at the end cluster, or reversing through the list.
+<5> Grace period after failure before cluster switchover
+<6> Select the behavior when the end of a topology is reached.  Alternatives include staying at the end cluster, or reversing through the list.  The best option will depend on your specific scenario.
 <7> Assign the services governed
 
 ==== Failure Detection
@@ -164,7 +166,7 @@ Again, to see this all in action, along with how the clusters behave, check out 
 link:https://event.on24.com/eventRegistration/EventLobbyServlet?target=reg20.jsp&referrer=https%3A%2F%2Fwww.couchbase.com%2Fresources%2Fwebinars&eventid=1569790&sessionid=1&key=86048A27BD53D35AFA6FFF8D43A09435&regTag=&sourcepage=register[this webinar].
 
 Version 1.0 of the MCA client was recently released.  It's currently an Enterprise Edition only feature, as of this writing.  To
-find out more and get access to the client, talk to a Couchbase sales representative.  You can contact me for more information also,
+find out more and get access to the client, talk to a Couchbase sales representative (mailto:sales@couchbase.com[]).  You can contact me for more information also,
 as described below.
 
 === Postscript
