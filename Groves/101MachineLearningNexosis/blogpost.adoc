@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: Machine Learning APIs from Nexosis can be used directly from Couchbase using the CURL function available in N1QL. In this post, we'll use machine learning to classify Amazon reviews.
+:meta-description: Machine Learning APIs from Nexosis can be used from Couchbase using the CURL function in N1QL. In this post, machine learning classifies Amazon reviews.
 :title: Machine Learning with Couchbase and Nexosis
 :slug: Machine-Learning-Couchbase-Nexosis
 :focus-keyword: machine learning
@@ -161,6 +161,8 @@ The response from that request will look something like this:
 
 Note that this type of session will take some time to produce. You will get an email notification from Nexosis when the session is ready. You can also check the "results" (see the above URL) from time to time.
 
+=== Completed model
+
 Once the session is completed, you will get a `modelId` in the results, that will be another GUID. You will need this to proceed.
 
 Once you receive the modelId, you can check to see how accurate the model is. Make a GET to \https://ml.nexosis.com/v1/sessions/< guid >/results and look at the `metrics` field. The results for mine looks like:
@@ -258,6 +260,8 @@ Let's start with a simple `SELECT` and build from there.
 
 image:10103-query-1.png[First simple query]
 
+=== Using CURL to bring in Machine Learning
+
 Next, I'll bring in CURL. I'm using link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/let.html[LET] to make the query more readable.
 
 [source,SQL,indent=0]
@@ -312,6 +316,8 @@ And here's the results (I truncated the full text):
   }
 ]
 ----
+
+=== Results
 
 As you might expect, Nexosis took the 1-star review from Amazon and rightly discerned that it was a negative review (classified it as "\__label__1").
 
