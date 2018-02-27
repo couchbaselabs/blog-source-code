@@ -5,7 +5,7 @@
 :focus-keyword: machine learning
 :categories: Couchbase Server, N1QL
 :tags: machine learning, curl, rest
-:heroimage: TBD
+:heroimage: 101-hero-review-star.jpg
 
 Machine Learning is a tool that is helping developers and data scientists to accomplish all sorts of tasks:
 
@@ -18,9 +18,9 @@ In this post, I'm going to show you how you can combine the web-based REST API t
 
 The first place to go when trying out machine learning is often Kaggle. Kaggle provides a wide variety of data sets perfect for machine learning applications. I've decided to use the link:https://www.kaggle.com/bittlingmayer/amazonreviews[Amazon Reviews for Sentiment Analysis data set] (I have link:https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Groves/101MachineLearningNexosis/src/modified5000.csv[truncated it and slightly modified it for this post]).
 
-The data in this set contains the text of a review left on Amazon and a label of either "__label__1" or "__label__2". The former means it was a negative review (1 or 2 stars) and the latter means it was a positive review (4 or 5 stars). Score 3 is consider neutral and is not included in this training set, but I'm going to explore that a little later.
+The data in this set contains the text of a review left on Amazon and a label of either "\__label__1" or "\__label__2". The former means it was a negative review (1 or 2 stars) and the latter means it was a positive review (4 or 5 stars). Score 3 is consider neutral and is not included in this training set, but I'm going to explore that a little later.
 
-My goal is to give Nexosis an Amazon review that is *not* in the training set, and have Nexosis classify it as "__label__1" or "__label__2" for me. This type of classification is also known as sentiment analysis. This can be useful for early warning of negative customer experience, for instance.
+My goal is to give Nexosis an Amazon review that is *not* in the training set, and have Nexosis classify it as "\__label__1" or "\__label__2" for me. This type of classification is also known as *sentiment analysis*. This can be useful for early warning of negative customer experience, for instance.
 
 == Create your Nexosis machine learning account
 
@@ -80,7 +80,7 @@ The response from this request, if successful, should look similar to this:
 }
 ----
 
-This import may take a little time. You can make a GET request to  https://ml.nexosis.com/v1/imports to check to see that your request went through. You'll see this data set as one of the "items".
+This import may take a little time. You can make a GET request to  \https://ml.nexosis.com/v1/imports to check to see that your request went through. You'll see this data set as one of the "items".
 
 == Creating a Nexosis session
 
@@ -101,7 +101,7 @@ Some notes on what this all means:
 
 * `"predictionDomain":"classification"` - Remember when I said I was going to use "classification" for sentiment analysis?
 * `"dataSourceName" : "AmazonReviews"` - I gave the data source this name, so I'm telling it to use this data source for training.
-* `"targetColumn": "review_sentiment"` - The 'review_sentiment' column contains the "__label__1" or "__label__2" values. This is the value that I want Nexosis to learn how to generate.
+* `"targetColumn": "review_sentiment"` - The 'review_sentiment' column contains the "\__label__1" or "\__label__2" values. This is the value that I want Nexosis to learn how to generate.
 * `"extraParameters" : { "balance": true }` - If your data set is unbalanced (meaning, for instance, it contains a lot more negative reviews than positive ones), that could disproportionally influence the machine learning. Set balance to "true" to adjust for this.
 
 The response from that request will look something like this:
@@ -163,7 +163,7 @@ Note that this type of session will take some time to produce. You will get an e
 
 Once the session is completed, you will get a `modelId` in the results, that will be another GUID. You will need this to proceed.
 
-Once you receive the modelId, you can check to see how accurate the model is. Make a GET to https://ml.nexosis.com/v1/sessions/< guid >/results and look at the `metrics` field. The results for mine looks like:
+Once you receive the modelId, you can check to see how accurate the model is. Make a GET to \https://ml.nexosis.com/v1/sessions/< guid >/results and look at the `metrics` field. The results for mine looks like:
 
 [source,indent=0]
 ----
@@ -186,9 +186,11 @@ It's still not going to be perfect, so if this analysis is going to be used for 
 
 == Test out the machine learning model
 
-Let's test the model out with REST. I'll be making a POST request to the /predict url using the modelId like: POST https://ml.nexosis.com/v1/models/<model ID guid>/predict 
+Let's test the model out with REST. I'll be making a POST request to the */predict* url using the modelId like:
 
-The body of this request will contain the Amazon review that I want to get Nexosis's opinion on whether or not it's a positive review. I'll give it the text of a 1-star review.
+`POST \https://ml.nexosis.com/v1/models/<model ID guid>/predict` 
+
+The body of this request will contain the Amazon review that I want to get Nexosis's opinion on. I'll give it the text of a 1-star review.
 
 [source,indent=0]
 ----
@@ -233,8 +235,7 @@ To use Nexosis in Couchbase, simply make CURL requests to the Nexosis API from a
 
 === Allowing CURL in Couchbase
 
-First, you need to setup couchbase to allow it to make link:https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/curl.html
-[CURL] requests. Allowing any arbitrary CURL request would be a security risk, so you'll need to opt-in to allowing certain requests. You do this by creating (or updating) a curl_whitelist.json file. Check out link:https://blog.couchbase.com/curl-comes-n1ql-querying-external-json-data/[CURL Comes to N1QL] for more details.
+First, you need to setup couchbase to allow it to make link:https://developer.couchbase.com/documentation/server/5.0/n1ql/n1ql-language-reference/curl.html[CURL] requests. Allowing any arbitrary CURL request would be a security risk, so you'll need to opt-in to allowing certain requests. You do this by creating (or updating) a curl_whitelist.json file. Check out link:https://blog.couchbase.com/curl-comes-n1ql-querying-external-json-data/[CURL Comes to N1QL] for more details.
 
 Here is the curl_whitelist.json I'm using. On Windows, this file goes in the `C:\Program Files\Couchbase\Server\var\lib\couchbase\n1qlcerts` folder.
 
@@ -247,19 +248,13 @@ include::src/curl_whitelist.json[]
 
 N1QL is Couchbase's SQL implementation used to query JSON. Ultimately, you may want Nexosis to feed into UPDATE or INSERT commands. But for this post, I'm just going to use a SELECT.
 
-In Couchbase, I've created a bucket with some reviews I pulled manually from Amazon (and I executed `CREATE PRIMARY INDEX on reviews`).
+In Couchbase, I've created a bucket with some reviews I pulled manually from Amazon. (I also executed `CREATE PRIMARY INDEX on reviews`).
 
 image:10102-reviews-in-bucket.png[Reviews in Couchbase bucket]
 
 These were not part of the training data, so Nexosis will be giving a positive or negative sentiment score on its own.
 
 Let's start with a simple `SELECT` and build from there.
-
-[source,SQL,indent=0]
-----
-SELECT r.*
-FROM reviews r;
-----
 
 image:10103-query-1.png[First simple query]
 
@@ -277,7 +272,7 @@ body = '{ "data": [{ "text": "' || r.text || '" }], "extraParameters": { "includ
 requestType = "POST";
 ----
 
-Notice that the `body` is pulling the text directly from the review document in Couchbase. The only thing being selected is the entire response from Nexosis, which looks similar to this:
+Notice that the `body` is pulling the text directly from the review document in Couchbase. The only thing being I've selected (so far) is the entire response from Nexosis, which looks similar to this:
 
 image:10104-query-2.png[Query 2]
 
@@ -295,7 +290,7 @@ body = '{ "data": [{ "text": "' || r.text || '" }], "extraParameters": { "includ
 requestType = "POST";
 ----
 
-And here's the results (I truncated the actual text for the blog):
+And here's the results (I truncated the full text):
 
 [source,JavaScript,indent=0]
 ----
@@ -318,11 +313,11 @@ And here's the results (I truncated the actual text for the blog):
 ]
 ----
 
-As you might expect, Nexosis took the 1-star review from Amazon and rightly discerned that it was a negative review (classified it as "__label__1").
+As you might expect, Nexosis took the 1-star review from Amazon and rightly discerned that it was a negative review (classified it as "\__label__1").
 
-It also took the 5-star review and rightly discerned that it was a positive review (classified it as "__label__2").
+It also took the 5-star review and rightly discerned that it was a positive review (classified it as "\__label__2").
 
-What is interesting is that I also decided to give it a 3-star "neutral" review. Note that the training set had none of these, so this may not be a useful result, but I was curious. It classified it as a negative review. Just based on the language alone this is probably accurate. This might actually be a helpful tool to look at ostensibly "neutral" reviews and discern if they are leaning one way or the other.
+I also decided to give it a 3-star "neutral" review. Note that the training set had none of these, so this may not be valid, but I was curious. It classified it as a negative review. Just based on the language alone this is probably accurate. This might actually be a helpful tool to look at ostensibly "neutral" reviews and discern if they are leaning one way or the other.
 
 == Summary
 
@@ -330,7 +325,7 @@ Anytime you use CURL in N1QL, be careful. When you use CURL, you are putting you
 
 But if you CURL wisely, you can use a 3rd party tool like Nexosis to peform machine learning, categorization, sentiment analysis, and more. Nexosis happened to make it very easy for me to get started and very easy to use with a standard CURL command.
 
-If you are interested in Nexosis, check out the link:https://nexosis.com/use-case[Nexosis Use Cases] page to see how Nexosis can help you or your business.
+If you are interested in Nexosis, check out the link:https://nexosis.com/use-case[Nexosis Use Cases] page to see how Nexosis can help you or your business. If you have questions about using Nexosis, check out the link:https://community.nexosis.com/[Nexosis Forums].
 
 Have a question about Couchbase? Check out the link:https://forums.couchbase.com[Couchbase forums], and check out the link:https://forums.couchbase.com/c/n1ql[N1QL Forum] if you have a question about the queries you see in this post.
 
