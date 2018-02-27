@@ -276,7 +276,7 @@ body = '{ "data": [{ "text": "' || r.text || '" }], "extraParameters": { "includ
 requestType = "POST";
 ----
 
-Notice that the `body` is pulling the text directly from the review document in Couchbase. The only thing being I've selected (so far) is the entire response from Nexosis, which looks similar to this:
+Notice that the `body` is pulling the text directly from the review document in Couchbase. The only thing I've selected (so far) is the entire response from Nexosis, which looks similar to this:
 
 image:10104-query-2.png[Query 2]
 
