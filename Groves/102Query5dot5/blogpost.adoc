@@ -1,0 +1,156 @@
+:imagesdir: images
+:meta-description: TBD
+:title: New Query Features in Couchbase Server 5.5
+:slug: New-Query-Features-Couchbase-Server
+:focus-keyword: querying
+:categories: Couchbase Server, N1QL
+:tags: querying, n1ql, couchbase, ansi sql, sql, hash, aggregation, aggregates
+:heroimage: TBD
+
+--- do not share these links ---
+FROM docs: https://docs.google.com/document/d/10IfKfrsn6u5DNFjO5FNMKjlPV6fJ79u7Ezu3b52koi4/edit#
+GROUP BY docs: https://docs.google.com/document/d/1pqH0kFCHDSsofO8c_R7qkNqw2GEdc8VemtSrMF9wkUM/edit
+--- do not share above ---
+
+New querying features figure prominently in the latest release of Couchbase Server 5.5. The link:https://www.couchbase.com/downloads[developer build is now available as a free download].
+
+In this post, I want to highlight a few of the new features and show you how to get started using them:
+
+* ANSI JOINs - N1QL in Couchbase already has JOIN, but now JOIN is more standards compliant and more flexible.
+* HASH joins - Performance on certain types of joins can be improved with a HASH join (in Enterprise Edition only)
+* Aggregate pushdowns - GROUP BY can be pushed down to the indexer, improving aggregation performance
+
+_All the examples in this post use the "travel-sample" bucket that comes with Couchbase._
+
+== ANSI JOINs
+
+Until Couchbase Server 5.5, JOINs were possible, with two caveats:
+
+* One side of the JOIN has to be document key(s)
+* You must use the `ON KEYS` syntax
+
+In Couchbase Server 5.5, it is no longer necessary to use `ON KEYS`, and so writing joins becomes much more natural and more in line with other SQL dialects.
+
+For example, here's the old syntax:
+
+[source,SQL,indent=0]
+----
+SELECT r.destinationairport, r.sourceairport, r.distance, r.airlineid, a.name
+FROM `travel-sample` r
+JOIN `travel-sample` a ON KEYS r.airlineid
+WHERE r.type = 'route'
+AND r.sourceairport = 'CMH'
+ORDER BY r.distance DESC
+LIMIT 10;
+----
+
+This will get 10 routes that start at CMH airport, joined with their corresponding airline documents. The result are below (I'm showing them in table view, but it's still JSON):
+
+image:10201-ansi-join-table-view.png[ANSI join results]
+
+And here's the new syntax doing the same thing:
+
+[source,SQL,indent=0]
+----
+SELECT r.destinationairport, r.sourceairport, r.distance, r.airlineid, a.name
+FROM `travel-sample` r
+JOIN `travel-sample` a ON META(a).id = r.airlineid
+WHERE r.type = 'route'
+AND r.sourceairport = 'CMH'
+ORDER BY r.distance DESC
+LIMIT 10;
+----
+
+The only difference is the `ON`. Instead of `ON KEYS`, it's now `ON <field1> = <field2>`. It's more natural for those coming from a relational background (like myself).
+
+But that's not all. Now you are no longer limited to joining just on document keys. Here's an example of a `JOIN` on a city field.
+
+[source,SQL,indent=0]
+----
+SELECT a.airportname, a.city AS airportCity, h.name AS hotelName, h.city AS hotelCity, h.address AS hotelAddress
+FROM `travel-sample` a
+INNER JOIN `travel-sample` h ON h.city = a.city
+WHERE a.type = 'airport'
+AND h.type = 'hotel'
+LIMIT 10;
+----
+
+This query will show hotels that match airports based on their city.
+
+image:10202-ansi-join-on-fields.png[ANSI join on fields]
+
+Note that for this to work, you must have an index created on the field that's on the inner side of the JOIN. The "travel-sample" bucket already contains a predefined index on the city field. If I were to attempt it with other fields, I'd get an error message like "No index available for ANSI join term...".
+
+For more information on ANSI JOIN, check out the link://[full N1QL JOIN documentation].
+
+_Note: The old JOIN, ON KEYS syntax will still work, so don't worry about having to update your old code._
+
+== Hash Joins
+
+Under the covers, there are a few different ways that a join is actually carried out. If you run the query above, Couchbase will use a Nested Loop (NL) approach to execute the join. However, you can also instruct Couchbase to use a HASH join instead. If you want to try a hash join, you must explicitly say so in your query. For instance: 
+
+[source,SQL,indent=0]
+----
+SELECT COUNT(1)
+FROM `travel-sample` r
+INNER JOIN `travel-sample` a USE HASH (BUILD)
+    ON (r.airlineid = META(a).id)
+WHERE r.type = 'route';
+----
+
+Notice the usage and placement of the `USE HASH` keywords. This will tell Couchbase to __attempt__ a hash join. If it cannot do so (or if you are using Couchbase Server Community Edition), it will fall back to a nested-loop. (By the way, you can explicitly specify nested-loop with the `USE NL` syntax).
+
+--- TODO: why would I use hash build, hash probe, or not? ---
+
+For more information, check out the link://[HASH join] areas of the documentation.
+
+== Aggregate pushdowns
+
+Aggregations in the past have been tricky when it comes to performance. With Couchbase Server 5.5, __aggregate pushdowns__ are now supported for `SUM, COUNT, MIN, MAX, and AVG`.
+
+In earlier versions of Couchbase, indexing was not used for statements involving `GROUP BY`. This could severely impact performance, because there is an extra "grouping" step that has to take place. In Couchbase Server 5.5, the index service can do the grouping/aggregation.
+
+Here's an example query that finds the total number of hotels, and groups them by country, state, and city.
+
+[source,SQL,indent=0]
+----
+SELECT country, state, city, COUNT(1) AS total 
+FROM `travel-sample`
+WHERE type = 'hotel' and country is not null
+GROUP BY country, state, city
+ORDER BY COUNT(1) DESC;
+----
+
+The query will execute, and it will return as a result:
+
+image:10203-aggregate-result.png[Aggregation result]
+
+Let's take a look at the visual query plan (only available in Enterprise Edition, but you can view the raw Plan Text in Community Edition).
+
+image:10204-query-plan-no-pushdown.png[Query plan with no pushdown]
+
+Note that the only index being used is for the `type` field. The grouping step is doing the aggregation work. With the relatively small travel-sample data set, this query is taking around ~90ms on my single node desktop. But let's see what happens if I add an index on the fields that I'm grouping by:
+
+[source,SQL,indent=0]
+----
+CREATE INDEX ix_hotelregions ON `travel-sample` (country, state, city) WHERE type='hotel';
+----
+
+Now, execute the above `SELECT` query again. It should return the same results. But:
+
+* It's now taking ~7ms on my single node desktop. We're taking ms, but with a large, more realistic data set, that is a huge difference in magnitude.
+* The query plan is different.
+
+image:10205-query-plan-with-pushdown.png[Query plan with pushdown]
+
+Note that this time, there is no 'group' step. All the work is being pushed down to the index service, which can use the ix_hotelregions index. It can use this index because my query is exactly matching the fields in the index.
+
+Index push down does not always happen: your query has to meet specific conditions. For more information, check out the link://[GROUP BY and Aggregate performance] areas of the documentation.
+
+== Summary
+
+With Couchbase Server 5.5, N1QL includes even more standards-compliant syntax and becomes more performant than ever.
+
+Try out N1QL today. You can link:https://www.couchbase.com/downloads[install Enterprise Edition] or link:https://www.couchbase.com/get-started[try out N1QL right in your browser].
+
+Have a question for me? I'm on link:https://twitter.com/mgroves[Twitter @mgroves]. You can also check out link:https://twitter.com/N1QL[@N1QL on Twitter]. The link:https://forums.couchbase.com/c/n1ql[N1QL Forum] is a good place to go if you have in-depth questions about N1QL.
