@@ -1,0 +1,159 @@
+= Simplifying Couchbase Cluster Creation with Docker
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+include::../links.adoc[]
+
+image::foo
+
+It's pretty straight-forward to run an instance of Couchbase Server in a Docker
+container.  It takes a bit more work to set up and fully configure a cluster.
+In this post, I'm going to walk through a shell script I wrote to automate
+the process.
+
+== Background
+
+For Couchbase Connect 2017, we built an application that shows off everything
+from the link:https://www.couchbase.com/downloads?family=server&product=couchbase-analytics&edition=enterprise[Couchbase Analytics Service] through to real-time mobile data 
+synchronization using {CBM}.  We use an NFC temperature sensing patch, generate
+alerts through the Vue.js-based web client, alter schemas on the fly, send push
+notifications, fail over clusters, and more.  Check out this video of it in action.
+
+video::-U_UjqnhMBI[youtube,start=138,width=640,height=360]
+
+In the demo, {CBS}, {SG}, and the web backend are all running in the cloud.
+We're working on releasing the code for the entire project.  As part of that, I
+want to be able to run a trimmed-down version on a single machine.
+
+That means, ideally, running two Couchbase Server clusters, Sync Gateway,
+and the Node.js backend application, all simultaneously.
+
+Docker makes running separate instances of Couchbase pretty easy.  Completely
+configuring a whole cluster still takes some work, though.  That's where the
+script I wrote comes in.
+
+== A Flexible Cluster Creation Script
+
+The script is written using Bash.  I had a few goals in mind while developing it:
+
+1. Make something general purpose and easy to use.
+2. Allow for flexible configuration, while falling back to sensible defaults.
+3. Minimize dependencies to Bash, common standard utilities (some things are just worth doing in awk), and the Docker cli.
+
+I've posted the code and other related pieces on Github in link:https://gist.github.com/HodGreeley/fa88c74baf55115ef83135d4d069e796[this gist].
+Here's the cluster formation script.
+
+[source,shell]
+----
+include::https://gist.githubusercontent.com/HodGreeley/fa88c74baf55115ef83135d4d069e796/raw/a131ed3961a139276f4a31eb85e3e71fd9a19bb1/server[]
+----
+
+== Outline
+
+Roughly speaking, in order, the script takes care of the following:
+
+* Configuring parameters
+* Starting the requested number of Couchbase Server instances, one per Docker container, using the latest production image
+* Mapping the necessary ports (offsetting each instance to avoid collisions)
+* Setting the administrative account and password
+* Selecting the services available and setting the memory allocations for them
+* Creating a bucket
+* Granting rights to a client account using {rbac}[RBAC]
+* Combining the nodes into a cluster
+* Rebalancing the final cluster
+
+I won't go through the script in detail.  There are comments that tell which section corresponds to the outline.  Feel free
+to leave a comment here or on Github if you have questions.
+
+== Usage
+
+I wrote this to set up clusters on my Mac.  I expect it will work equally well
+for any machine that can run Bash and Docker.  
+
+The script doesn't have any
+options.  Everything is controlled by supplying parameters as key/value pairs.
+They're supplied four ways.  In order of priority, from lowest to highest,
+
+* Defaults (written into the script itself)
+* Existing environment variables
+* Lines fed to the standard input
+* Supplied as command line arguments
+
+In the last two instances, parameters are supplied just the way you would
+define an environment variable.  E.g. to request 3 nodes, add `COUCHBASE_NODE_COUNT=3`,
+either on the command line or redirected from a file.  Look at where the
+defaults are set to see what you can control.
+
+Port mapping takes a little explanation.  Couchbase uses several port ranges.  To
+create a cluster, a number of ports have to both be exposed by Docker and mapped
+to open ports on the host machine.  To do this, specify blocks of ranges and mappings,
+separated by double colons (`::`).  For example, setting `COUCHBASE_SERVER_PORTS="9091-9094:8091-8094::12210:11210`
+maps the standard Couchbase ports 8091-8094 and 11210 to the host machine ports 9091-9094
+and 12210, respectively.
+
+== Example
+
+In a typical scenario, you might have the cluster administrator account information assigned in
+environment variables.  I.e.
+
+[source,shell]
+----
+export COUCHBASE_ADMINISTRATOR_USERNAME=Administrator
+export COUCHBASE_ADMINISTRATOR_PASSWORD=password
+----
+
+You might then keep some other general configuration information in a file.  The name doesn't
+matter.  Here's one I use I call `london-cluster`
+
+[source,shell]
+----
+COUCHBASE_NODE_NAME=london
+COUCHBASE_CLUSTER_NAME=london-cluster
+COUCHBASE_BUCKET=health
+COUCHBASE_RBAC_USERNAME=admin
+COUCHBASE_RBAC_PASSWORD=password
+COUCHBASE_RBAC_NAME='J. D. User'
+COUCHBASE_RBAC_ROLES=Admin
+COUCHBASE_SERVER_PORTS="11091-11094:8091-8094::14210:11210"
+----
+
+Finally, to start the cluster, you would invoke something like the following on the command line.
+
+[source,shell]
+----
+$ ./server COUCHBASE_NODE_COUNT=3 < london-cluster
+----
+
+== Related Scripts
+
+In the link:https://gist.github.com/HodGreeley/fa88c74baf55115ef83135d4d069e796[gist] you can also
+find a similar script for setting up Sync Gateway.  That script is a little more built out in terms
+of having commands to create a container, start it, stop it, and remove it.  Because Sync Gateway 
+requires a configuration file, the script has to work a little harder to do the parameter substitutions.
+Otherwise it's similar to but simpler than the server script.
+
+There's also a script that sets up the entire demo, including using the previous two scripts.  As I mentioned
+earlier, we're working on releasing the code for the whole application end-to-end.  The setup script gives
+an idea of what's involved.
+
+=== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}
