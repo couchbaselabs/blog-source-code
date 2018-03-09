@@ -1,11 +1,11 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: New querying features figure prominently in the latest release of Couchbase Server 5.5
 :title: New Query Features in Couchbase Server 5.5
 :slug: New-Query-Features-Couchbase-Server
 :focus-keyword: querying
 :categories: Couchbase Server, N1QL
 :tags: querying, n1ql, couchbase, ansi sql, sql, hash, aggregation, aggregates
-:heroimage: TBD
+:heroimage: 102-hero-query.jpg from https://pixabay.com/en/question-mark-important-sign-1872665/
 
 New querying features figure prominently in the latest release of Couchbase Server 5.5. The link:https://www.couchbase.com/downloads[developer build is now available as a free download].
 
