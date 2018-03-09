@@ -9,9 +9,9 @@ Hod Greeley <https://blog.couchbase.com>
 :icons: font
 :meta-description: 
 :slug: 
-:focus-keyword: High Availability Disaster Recovery
-:categories: Best Practices and Tutorials, Couchbase Server, Java
-:tags: High Availability, Disaster Recovery, Java, NoSQL
+:focus-keyword: 
+:categories: 
+:tags: 
 :heroimage: 
 include::../links.adoc[]
 
@@ -19,10 +19,11 @@ image::
 
 === Postscript
 
-Couchbase is open source and free to try out.  *Get started* with {start}[sample code, example queries, tutorials, and more].
-
-Find more resources on our {portal}[developer portal] and follow us on Twitter {CouchbaseDev}.
-
-You can post questions on our {forums}. And we actively participate on {SO}.
-
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
 Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}

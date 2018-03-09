@@ -21,3 +21,4 @@
 :training: https://training.couchbase.com/
 :xdcr: https://developer.couchbase.com/documentation/server/current/xdcr/xdcr-intro.html
 :hadr: https://developer.couchbase.com/documentation/server/current/ha-dr/ha-dr-intro.html
+:rbac: https://developer.couchbase.com/documentation/server/current/security/concepts-rba-for-apps.html
