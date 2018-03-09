@@ -1,10 +1,10 @@
 :imagesdir: images
-:meta-description: New querying features figure prominently in the latest release of Couchbase Server 5.5
-:title: New Query Features in Couchbase Server 5.5
-:slug: New-Query-Features-Couchbase-Server
+:meta-description: New querying features figure prominently in the latest release of Couchbase Server. ANSI JOINs, HASH joins, aggregate pushdowns are covered in this post.
+:title: New Querying Features in Couchbase Server 5.5
+:slug: New-Querying-Features-Couchbase-Server
 :focus-keyword: querying
 :categories: Couchbase Server, N1QL
-:tags: querying, n1ql, couchbase, ansi sql, sql, hash, aggregation, aggregates
+:tags: querying, n1ql, couchbase, ansi sql, sql, hash, hash join, aggregation, aggregates, nested loop
 :heroimage: 102-hero-query.jpg from https://pixabay.com/en/question-mark-important-sign-1872665/
 
 New querying features figure prominently in the latest release of Couchbase Server 5.5. The link:https://www.couchbase.com/downloads[developer build is now available as a free download].
@@ -26,6 +26,8 @@ Until Couchbase Server 5.5, JOINs were possible, with two caveats:
 
 In Couchbase Server 5.5, it is no longer necessary to use `ON KEYS`, and so writing joins becomes much more natural and more in line with other SQL dialects.
 
+=== Previous JOIN syntax 
+
 For example, here's the old syntax:
 
 [source,SQL,indent=0]
@@ -42,6 +44,8 @@ LIMIT 10;
 This will get 10 routes that start at CMH airport, joined with their corresponding airline documents. The result are below (I'm showing them in table view, but it's still JSON):
 
 image:10201-ansi-join-table-view.png[ANSI join results]
+
+=== New JOIN syntax
 
 And here's the new syntax doing the same thing:
 
@@ -95,7 +99,11 @@ WHERE l.type = 'landmark'
 AND h.type = 'hotel';
 ----
 
-The above query will take a very long time to run, and probably time out. Next I'll try a hash join, which must be explicitly invoked with a `USE HASH` hint.
+The above query will take a very long time to run, and probably time out.
+
+=== Syntax
+
+Next I'll try a hash join, which must be explicitly invoked with a `USE HASH` hint.
 
 [source,SQL,indent=0]
 ----
@@ -107,6 +115,8 @@ AND h.type = 'hotel';
 ----
 
 A hash join has two sides: a `BUILD` and a `PROBE`. The `BUILD` side of the join will be used to create an in-memory hash table. The `PROBE` side will use that table to find matches and perform the join. Typically, this means you want the `BUILD` side to be used on the smaller of the two sets. However, you can only supply one hash hint, and only to the right side of the join. So if you specify `BUILD` on the right side, then you are implicitly using `PROBE` on the left side (and vice versa).
+
+=== BUILD and PROBE
 
 So why did I use `HASH(BUILD)`?
 
@@ -123,6 +133,8 @@ For more information, check out the link:https://developer.couchbase.com/documen
 Aggregations in the past have been tricky when it comes to performance. With Couchbase Server 5.5, __aggregate pushdowns__ are now supported for `SUM, COUNT, MIN, MAX, and AVG`.
 
 In earlier versions of Couchbase, indexing was not used for statements involving `GROUP BY`. This could severely impact performance, because there is an extra "grouping" step that has to take place. In Couchbase Server 5.5, the index service can do the grouping/aggregation.
+
+=== Example
 
 Here's an example query that finds the total number of hotels, and groups them by country, state, and city.
 
@@ -144,6 +156,8 @@ Let's take a look at the visual query plan (only available in Enterprise Edition
 image:10204-query-plan-no-pushdown.png[Query plan with no pushdown]
 
 Note that the only index being used is for the `type` field. The grouping step is doing the aggregation work. With the relatively small travel-sample data set, this query is taking around ~90ms on my single node desktop. But let's see what happens if I add an index on the fields that I'm grouping by:
+
+=== Indexing
 
 [source,SQL,indent=0]
 ----
