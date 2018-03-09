@@ -7,18 +7,13 @@
 :tags: querying, n1ql, couchbase, ansi sql, sql, hash, aggregation, aggregates
 :heroimage: TBD
 
---- do not share these links ---
-FROM docs: https://docs.google.com/document/d/10IfKfrsn6u5DNFjO5FNMKjlPV6fJ79u7Ezu3b52koi4/edit#
-GROUP BY docs: https://docs.google.com/document/d/1pqH0kFCHDSsofO8c_R7qkNqw2GEdc8VemtSrMF9wkUM/edit
---- do not share above ---
-
 New querying features figure prominently in the latest release of Couchbase Server 5.5. The link:https://www.couchbase.com/downloads[developer build is now available as a free download].
 
 In this post, I want to highlight a few of the new features and show you how to get started using them:
 
 * ANSI JOINs - N1QL in Couchbase already has JOIN, but now JOIN is more standards compliant and more flexible.
 * HASH joins - Performance on certain types of joins can be improved with a HASH join (in Enterprise Edition only)
-* Aggregate pushdowns - GROUP BY can be pushed down to the indexer, improving aggregation performance
+* Aggregate pushdowns - GROUP BY can be pushed down to the indexer, improving aggregation performance (in Enterprise Edition only)
 
 _All the examples in this post use the "travel-sample" bucket that comes with Couchbase._
 
@@ -26,8 +21,8 @@ _All the examples in this post use the "travel-sample" bucket that comes with Co
 
 Until Couchbase Server 5.5, JOINs were possible, with two caveats:
 
-* One side of the JOIN has to be document key(s)
-* You must use the `ON KEYS` syntax
+1. One side of the JOIN has to be document key(s)
+2. You must use the `ON KEYS` syntax
 
 In Couchbase Server 5.5, it is no longer necessary to use `ON KEYS`, and so writing joins becomes much more natural and more in line with other SQL dialects.
 
@@ -81,28 +76,47 @@ image:10202-ansi-join-on-fields.png[ANSI join on fields]
 
 Note that for this to work, you must have an index created on the field that's on the inner side of the JOIN. The "travel-sample" bucket already contains a predefined index on the city field. If I were to attempt it with other fields, I'd get an error message like "No index available for ANSI join term...".
 
-For more information on ANSI JOIN, check out the link://[full N1QL JOIN documentation].
+For more information on ANSI JOIN, check out the link:https://developer.couchbase.com/documentation/server/5.5/n1ql/n1ql-language-reference/from.html#story-h2-9[full N1QL JOIN documentation].
 
 _Note: The old JOIN, ON KEYS syntax will still work, so don't worry about having to update your old code._
 
 == Hash Joins
 
-Under the covers, there are a few different ways that a join is actually carried out. If you run the query above, Couchbase will use a Nested Loop (NL) approach to execute the join. However, you can also instruct Couchbase to use a HASH join instead. If you want to try a hash join, you must explicitly say so in your query. For instance: 
+Under the covers, there are different ways that joins can be carried out. If you run the query above, Couchbase will use a *Nested Loop (NL)* approach to execute the join. However, you can also instruct Couchbase to use a *hash join* instead. A hash join can sometimes be more performant than a nested loop. Additionally, a hash join isn't dependent on an index. It is, however, dependent on the join being an equality join only.
+
+For instance, in "travel-sample", I could join landmarks to hotels on their email fields. This may not be the best find to find out if a hotel is a landmark, but since email is not indexed by default, it illustrates the point.
 
 [source,SQL,indent=0]
 ----
-SELECT COUNT(1)
-FROM `travel-sample` r
-INNER JOIN `travel-sample` a USE HASH (BUILD)
-    ON (r.airlineid = META(a).id)
-WHERE r.type = 'route';
+SELECT l.name AS landmarkName, h.name AS hotelName, l.email AS landmarkEmail, h.email AS hotelEmail
+FROM `travel-sample` l
+INNER JOIN `travel-sample` h ON h.email = l.email 
+WHERE l.type = 'landmark'
+AND h.type = 'hotel';
 ----
 
-Notice the usage and placement of the `USE HASH` keywords. This will tell Couchbase to __attempt__ a hash join. If it cannot do so (or if you are using Couchbase Server Community Edition), it will fall back to a nested-loop. (By the way, you can explicitly specify nested-loop with the `USE NL` syntax).
+The above query will take a very long time to run, and probably time out. Next I'll try a hash join, which must be explicitly invoked with a `USE HASH` hint.
 
---- TODO: why would I use hash build, hash probe, or not? ---
+[source,SQL,indent=0]
+----
+SELECT l.name AS landmarkName, h.name AS hotelName, l.email AS landmarkEmail, h.email AS hotelEmail
+FROM `travel-sample` l
+INNER JOIN `travel-sample` h USE HASH(BUILD) ON h.email = l.email 
+WHERE l.type = 'landmark'
+AND h.type = 'hotel';
+----
 
-For more information, check out the link://[HASH join] areas of the documentation.
+A hash join has two sides: a `BUILD` and a `PROBE`. The `BUILD` side of the join will be used to create an in-memory hash table. The `PROBE` side will use that table to find matches and perform the join. Typically, this means you want the `BUILD` side to be used on the smaller of the two sets. However, you can only supply one hash hint, and only to the right side of the join. So if you specify `BUILD` on the right side, then you are implicitly using `PROBE` on the left side (and vice versa).
+
+So why did I use `HASH(BUILD)`?
+
+I know from using link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/infer.html[`INFER`] and/or link:https://developer.couchbase.com/documentation/server/current/tools/query-workbench.html[Bucket Insights] that landmarks make up roughly 10% of the data, and hotels make up about 3%. Also, I know from just trying it out that `HASH(BUILD)` was slightly slower. But in either case, the query execution time was milliseconds. Turns out there are two hotel-landmark pairs with the same email address.
+
+image:10205-hash-join-results.png[Hash join results]
+
+`USE HASH` will tell Couchbase to __attempt__ a hash join. If it cannot do so (or if you are using Couchbase Server Community Edition), it will fall back to a nested-loop. (By the way, you can explicitly specify nested-loop with the `USE NL` syntax, but currently there is no reason to do so).
+
+For more information, check out the link:https://developer.couchbase.com/documentation/server/5.5/n1ql/n1ql-language-reference/from.html#story-h2-10[HASH join] areas of the documentation.
 
 == Aggregate pushdowns
 
@@ -143,9 +157,9 @@ Now, execute the above `SELECT` query again. It should return the same results. 
 
 image:10205-query-plan-with-pushdown.png[Query plan with pushdown]
 
-Note that this time, there is no 'group' step. All the work is being pushed down to the index service, which can use the ix_hotelregions index. It can use this index because my query is exactly matching the fields in the index.
+Note that this time, there is no 'group' step. All the work is being pushed down to the index service, which can use the *ix_hotelregions* index. It can use this index because my query is exactly matching the fields in the index.
 
-Index push down does not always happen: your query has to meet specific conditions. For more information, check out the link://[GROUP BY and Aggregate performance] areas of the documentation.
+Index push down does not always happen: your query has to meet specific conditions. For more information, check out the link:https://developer.couchbase.com/documentation/server/5.5/n1ql/n1ql-language-reference/groupby-aggregate-performance.html[GROUP BY and Aggregate Performance] areas of the documentation.
 
 == Summary
 
