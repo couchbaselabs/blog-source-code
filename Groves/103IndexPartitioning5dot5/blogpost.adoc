@@ -19,7 +19,7 @@ In this post, I'm going to cover:
 
 == Index partitioning
 
-When developing you application, you may want to take advantage of Couchbase Server's ease of scaling to give more resources to indexing. With link:https://developer.couchbase.com/documentation/server/current/clustersetup/services-mds.html[multi-dimensional scaling (MDS)], one option is that you can add multiple high-end machines to the cluster with index capabilities as you need them.
+When developing your application, you may want to take advantage of Couchbase Server's ease of scaling to give more resources to indexing. With link:https://developer.couchbase.com/documentation/server/current/clustersetup/services-mds.html[multi-dimensional scaling (MDS)], one option is that you can add multiple high-end machines to the cluster with index capabilities as you need them.
 
 To take advantage of multiple nodes with index services, you would have to create link:https://blog.couchbase.com/couchbase-index-replicas/[index replicas]. This is still possible, and if this is working for you, it's not going away.
 
@@ -29,11 +29,14 @@ But Couchbase Server 5.5 is introducing another way to spread the index load aro
 
 image:10302-index-partitioning.jpg[Index partitioning]
 
-And, you can use partitioning and replicas together in concert. So, much like documents, index partitions can be recovered from replicas if a node goes down.
+And, you can use partitioning and replicas together in concert. Index partition replicas will be used automatically, and with no interruption if a node goes down.
 
 image:10303-index-partitioning-with-replicas.jpg[Index partitioning with replicas]
 
-The primary benefits to index partitioning is that the index scan load is now balanced amongst all the index nodes. This leads to a more even distribution of work and better performance.
+The primary benefits to index partitioning:
+
+* The index scan load is now balanced amongst all the index nodes. This leads to a more even distribution of work and better performance.
+* Aggregation: an aggregate query (e.g. `SUM` + `GROUP BY`) can be run in parallel on each partition.
 
 == How to use index partitioning
 
@@ -48,11 +51,27 @@ When you create this index, it will show as "partitioned" in the Couchbase Conso
 
 image:10304-index-partitioning-in-couchbase-console.png[Index partitioning in Couchbase Console]
 
-For more information about `PARTITION BY`, check out the Couchbase documentation.
+For more information about the full `PARTITION BY` syntax, check out the link://[Couchbase documentation].
+
+== Partition elimination
+
+Partition elimination is one of the benefits of creating an index partitioning.
+
+This is a feature that is unique in the market to Couchbase. Let's say you have a partition on the airline, as above. Next, write a query that uses that index and specifies the airline value:
+
+[source,SQL,indent=0]
+----
+SELECT t.*
+FROM `travel-sample` t
+WHERE airline IN ["UA", "AA"]
+AND source_airport = "SFO"
+----
+
+Then the indexing service will only scan the matching partitions ("UA" and "AA"). This leads to a faster range query response, and the same latency as a non-partitioned index, regardless of cluster size. More on this later.
 
 == Index partitioning caveats
 
-You may have noticed that "airline" was used in the above `CREATE INDEX` command. When using index partitioning, you must specify one (or more fields) to give to the hash to use for partitioning. This hash will determine how to divide up the index.
+You may have noticed that "airline" was used in the above `CREATE INDEX` command. When using index partitioning, you must specify one (or more) fields to give to the hash to use for partitioning. This hash will determine how to divide up the index.
 
 The simplest thing you can do is use the document key in the hash.
 
@@ -61,9 +80,11 @@ The simplest thing you can do is use the document key in the hash.
 CREATE INDEX ix_route2 ON `travel-sample` (airline, flight, source_airport, destination_airport) PARTITION BY HASH(META().Id);
 ----
 
-You can, however, use whatever fields you like. But you must keep in mind that these fields should be considered *immutable*. That is, you shouldn't change the value of the fields. Couchbase Server will __not__ prevent you from doing so, but if you do, you are likely to end up with documents that have duplicate indexes. So, if you have a field with a value that does not typically change (many Couchbase users create a "type" field, for instance), that would be a good candidate for partitioning.
+But unlike Couchbase's key-value engine, you can use whatever fields you like. But you must keep in mind that these fields should be considered *immutable*. That is, you shouldn't change the value of the fields. So, if you have a field with a value that does not typically change (many Couchbase users create a "type" field, for instance), that would be a good candidate for partitioning.
 
-If you choose to index on an "immutable" field, be warned that this may also cause some skewing of the partition. If you partition on the "type" field, where 10% of documents have a type of "order" and 90% of documents have a type of "invoice", then the partition is likely to look similar. Index partitioning does not take into account the proportion of the data; it only takes into account the proportion of the resources (RAM and CPU) available on each node.
+If you choose to index on an "immutable" field, be warned that this may also cause some skewing of the partition (using `META().Id` will minimize the amount of skew). If you partition on the "type" field, where 10% of documents have a type of "order" and 90% of documents have a type of "invoice", then the partition is likely to look similar. Index partitioning uses an optimization algorithm to balance RAM, CPU and data size during rebalancing, but skewing is still going to be a possibility.
+
+So *why wouldn't you use META().Id* to reduce skewing? Recall the partition elimination section above. If your queries fall along the same lines as your index partitions, then you are minimizing the "scatter+gather" operations having to check all partitions, and you can further reduce latency.
 
 One more caveat: *index partitioning is an Enterprise Edition only feature*.
 
@@ -71,6 +92,6 @@ One more caveat: *index partitioning is an Enterprise Edition only feature*.
 
 Index partitioning allows you to more easily and automatically scale out your indexing capabilities. If you are using a lot of N1QL queries in your project, then this will come in very handy and make your job much easier.
 
-If you have any questions about index partitioning or anything else with indexing, please check out the link:https://forums.couchbase.com/c/couchbase-server[Couchbase Server Forums]. Be sure to link:https://www.couchbase.com/downloads?family=server&product=couchbase-server-developer&edition=enterprise[download the developer build of Couchbase Server 5.5] today, and try it out. We'd love to hear your feedback.
+If you have any questions about index partitioning or anything else with indexing, please check out the link:https://forums.couchbase.com/c/couchbase-server[Couchbase Server Forums] or the link:https://forums.couchbase.com/c/n1ql[N1QL forums] if you have questions about creating index and queries. Be sure to link:https://www.couchbase.com/downloads?family=server&product=couchbase-server-developer&edition=enterprise[download the developer build of Couchbase Server 5.5] today, and try it out. We'd love to hear your feedback.
 
 You can reach me by leaving a comment below or finding me on link:https://twitter.com/mgroves[Twitter @mgroves].
