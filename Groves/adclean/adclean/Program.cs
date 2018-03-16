@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using HtmlAgilityPack;
 
 namespace adclean
 {
@@ -8,7 +10,7 @@ namespace adclean
     {
         const string HELP_MESSAGE = @"
 
-            ADClean: Runs asciidoctor on the given adoc file
+            ADClean 2: Runs asciidoctor on the given adoc file
             Then runs it through my custom HTML cleanup for Couchbase blogging
             Then opens the result in Notepad++
 
@@ -64,19 +66,31 @@ namespace adclean
             }
 
             // this should result in filename.html 
+            // load the contents of that file
             var newHtmlFile = Path.ChangeExtension(originalFullPath, "html");
-
-            // which needs to be run through the cleaner
-            var originalFilename = Path.GetFileName(newHtmlFile);
-            var newFilename = "clean_" + originalFilename;
             var newPathRoot = Path.GetPathRoot(originalFullPath);
-            var newFullPath = Path.Combine(newPathRoot, newFilename);
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.Load(newHtmlFile);
 
-            var cleaner = new Cleaner(newHtmlFile);
-            cleaner.OutputTo(newFullPath);
+            // run it through asciidoc cleaner
+            var cleaner = new CleanUpAsciiDoctorGeneratedHtml();
+            var cleanedContent = cleaner.Process(htmlDocument);
 
-            // finally, open it up in Notepad++
-            var notepadCommand = "notepad++ " + newFullPath;
+            // now run it through each blog platform specific filter
+            IBlogFormattingFilter wordpressFilter = new WordPressFilter();
+            var wordpressContent = wordpressFilter.Process(cleanedContent);
+            var wordpressFilterFullPath = Path.Combine(newPathRoot, "blogpost_wordpress.html");
+            File.WriteAllText(wordpressFilterFullPath, wordpressContent);
+
+            IBlogFormattingFilter cccFilter = new CrossCuttingConcernsFilter();
+            var cccContent = cccFilter.Process(cleanedContent);
+            var cccFilterFullPath = Path.Combine(newPathRoot, "blogpost_ccc.html");
+            File.WriteAllText(cccFilterFullPath, cccContent);
+
+            // finally, open them up in Notepad++
+            var notepadCommand = "notepad++ " + wordpressFilterFullPath;
+            ExecuteCommandLine(notepadCommand);
+            notepadCommand = "notepad++ " + cccFilterFullPath;
             ExecuteCommandLine(notepadCommand);
         }
 
