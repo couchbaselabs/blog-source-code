@@ -9,20 +9,32 @@
         <li>Click "search" to use Couchbase's Geospatial FTS to find any points within that bounding box.</li>
     </ol>
     
+    <!-- tag::form[] -->
     <p>
         Bounding box search:
         <br />
-        Latitude (top left): <input type="text" value="${ latitudeTopLeft }" />
-        Longitude (top left): <input type="text" value="${ longitudeTopLeft }" />
+        Latitude (top left):
+            <input type="text" value="${ latitudeTopLeft }" />
+        Longitude (top left):
+            <input type="text" value="${ longitudeTopLeft }" />
         <br />
-        Latitude (bottom right): <input type="text" value="${ latitudeBottomRight }" />
-        Longitude (bottom right): <input type="text" value="${ longitudeBottomRight }" />
+        Latitude (bottom right):
+            <input type="text" value="${ latitudeBottomRight }" />
+        Longitude (bottom right):
+            <input type="text" value="${ longitudeBottomRight }" />
         <br />
-        <input if.bind="latitudeTopLeft && latitudeBottomRight" click.trigger="searchClick()" type="button" name="search" value="Search" />
+        <input
+            if.bind="latitudeTopLeft && latitudeBottomRight"
+            click.trigger="searchClick()"
+            type="button"
+            name="search"
+            value="Search" />
     </p>
+    <!-- end::form[] -->
 
     <p if.bind="!markers"><em>Loading...</em></p>
     
+    <!-- tag::googlemap[] -->
     <google-map
         if.bind="markers"
         map-click.delegate="clickMap($event)"
@@ -31,6 +43,7 @@
         zoom="12"
         markers.bind="markers">
     </google-map>
+    <!-- end::googlemap[] -->
 
 
 </template>

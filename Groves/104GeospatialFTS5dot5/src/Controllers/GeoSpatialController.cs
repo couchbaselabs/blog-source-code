@@ -18,6 +18,7 @@ namespace GeospatialSearch.Controllers
             _bucket = bucketProvider.GetBucket("travel-sample");
         }
 
+        // tag::Point[]
         [Route("api/Point")]
         [HttpPost]
         public IActionResult Point([FromBody] PointSearch point)
@@ -26,7 +27,9 @@ namespace GeospatialSearch.Controllers
             query.Latitude(point.Latitude);
             query.Longitude(point.Longitude);
             query.Distance(point.DistanceWithUnits);
-            var searchParams = new SearchParams().Limit(10).Timeout(TimeSpan.FromMilliseconds(10000));
+            var searchParams = new SearchParams()
+                .Limit(10)
+                .Timeout(TimeSpan.FromMilliseconds(10000));
             var searchQuery = new SearchQuery
             {
                 Query = query,
@@ -48,12 +51,20 @@ namespace GeospatialSearch.Controllers
                 {
                     Latitude = doc.geo.lat,
                     Longitude = doc.geo.lon,
-                    InfoWindow = new InfoWindow { Content = doc.name + "<br />" + doc.city + ", " + doc.state + " " + doc.country }
+                    InfoWindow = new InfoWindow
+                    {
+                        Content = doc.name + "<br />" +
+                                  doc.city + ", " +
+                                  doc.state + " " +
+                                  doc.country
+                    }
                 });
             }
             return Ok(list);
         }
+        // end::Point[]
 
+        // tag::Box[]
         [Route("api/Box")]
         [HttpPost]
         public IActionResult Box([FromBody] BoxSearch box)
@@ -61,7 +72,9 @@ namespace GeospatialSearch.Controllers
             var query = new GeoBoundingBoxQuery();
             query.TopLeft(box.LongitudeTopLeft, box.LatitudeTopLeft);
             query.BottomRight(box.LongitudeBottomRight, box.LatitudeBottomRight);
-            var searchParams = new SearchParams().Limit(10).Timeout(TimeSpan.FromMilliseconds(10000));
+            var searchParams = new SearchParams()
+                .Limit(10)
+                .Timeout(TimeSpan.FromMilliseconds(10000));
             var searchQuery = new SearchQuery
             {
                 Query = query,
@@ -69,7 +82,9 @@ namespace GeospatialSearch.Controllers
                 SearchParams = searchParams
             };
             var results = _bucket.Query(searchQuery);
+            // end::Box[]
 
+            // tag::BoxResults[]
             var list = new List<GeoSearchResult>();
             foreach (var hit in results.Hits)
             {
@@ -83,10 +98,17 @@ namespace GeospatialSearch.Controllers
                 {
                     Latitude = doc.geo.lat,
                     Longitude = doc.geo.lon,
-                    InfoWindow = new InfoWindow { Content = doc.name + "<br />" + doc.city + ", " + doc.state + " " + doc.country}
+                    InfoWindow = new InfoWindow
+                    {
+                        Content = doc.name + "<br />" +
+                            doc.city + ", " +
+                            doc.state + " " +
+                            doc.country
+                    }
                 });
             }
             return Ok(list);
         }
+        // end::BoxResults[]
     }
 }

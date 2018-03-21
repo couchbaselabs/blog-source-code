@@ -1,5 +1,6 @@
 namespace GeospatialSearch.Models
 {
+    // tag::BoxSearch[]
     public class BoxSearch
     {
         public double LatitudeTopLeft { get; set; }
@@ -7,4 +8,5 @@ namespace GeospatialSearch.Models
         public double LatitudeBottomRight { get; set; }
         public double LongitudeBottomRight { get; set; }
     }
+    // end::BoxSearch[]
 }

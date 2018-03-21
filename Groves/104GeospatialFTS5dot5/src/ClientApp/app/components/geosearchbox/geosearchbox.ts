@@ -15,12 +15,14 @@ export class GeosearchBox {
         this.markers = [];
     }
 
+    // tag::clickMap[]
     public clickMap(event : any) {
         var latLng = event.detail.latLng,
             lat = latLng.lat(),
             lng = latLng.lng();
 
-        // only update top left if it hasn't been set yet, or bottom right is already set
+        // only update top left if it hasn't been set yet
+        // or if bottom right is already set
         if (!this.longitudeTopLeft || this.longitudeBottomRight) {
             this.longitudeTopLeft = lng;
             this.latitudeTopLeft = lat;
@@ -31,10 +33,10 @@ export class GeosearchBox {
             this.latitudeBottomRight = lat;
         }
     }
+    // end::clickMap[]
 
+    // tag::searchClick[]
     public searchClick() {
-        console.log("Searching with bounding box (" + this.latitudeTopLeft + "," + this.longitudeTopLeft + ") - (" + this.latitudeBottomRight + ", " + this.longitudeBottomRight + ")");
-
         let boxSearch = {
             latitudeTopLeft: this.latitudeTopLeft,
             longitudeTopLeft: this.longitudeTopLeft,
@@ -47,9 +49,9 @@ export class GeosearchBox {
         this.http.fetch('api/Box', { method: "POST", body: json(boxSearch) })
             .then(result => result.json() as Promise<any[]>)
             .then(data => {
-                console.log(data);
                 this.markers = data;
             });
     }
+    // end::searchClick[]
 }
 

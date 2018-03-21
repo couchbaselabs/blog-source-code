@@ -15,19 +15,19 @@ export class GeosearchBox {
         this.distance = 10;
     }
 
+    // tag::clickMap[]
     public clickMap(event: any) {
         var latLng = event.detail.latLng,
             lat = latLng.lat(),
             lng = latLng.lng();
 
-        // only update top left if it hasn't been set yet, or bottom right is already set
         this.longitude = lng;
         this.latitude = lat;
     }
+    // end::clickMap[]
 
+    // tag::searchClick[]
     public searchClick() {
-        console.log("Searching " + this.distance + " mile radius of (" + this.latitude + "," + this.longitude + ")");
-
         let pointSearch = {
             latitude: this.latitude,
             longitude: this.longitude,
@@ -42,5 +42,6 @@ export class GeosearchBox {
                 this.markers = data;
             });
     }
+    // tag::searchClick[]
 }
 

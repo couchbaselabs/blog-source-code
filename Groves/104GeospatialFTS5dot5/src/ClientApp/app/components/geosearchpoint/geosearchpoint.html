@@ -1,5 +1,5 @@
 <template>
-    <h1>Bounding box search</h1>
+    <h1>Distance search</h1>
 
     <p>This component demonstrates a map component that makes geospatial search requests.</p>
 
@@ -9,6 +9,7 @@
         <li>Click "search" to use Couchbase's Geospatial FTS to find any points within that area.</li>
     </ol>
 
+    <!-- tag::form[] -->
     <p>
         Distance search:
         <br />
@@ -19,18 +20,18 @@
         <br />
         <input if.bind="latitude" click.trigger="searchClick()" type="button" name="search" value="Search" />
     </p>
+    <!-- end::form[] -->
 
     <h3 if.bind="markers">${ markers.length } result(s) found.</h3>
 
     <p if.bind="!markers"><em>Loading...</em></p>
-    
-    <google-map
-        if.bind="markers"
-        map-click.delegate="clickMap($event)"
-        latitude="37.780986253433895"
-        longitude="-122.45291600632277"
-        zoom="12"
-        markers.bind="markers">
+
+    <google-map if.bind="markers"
+                map-click.delegate="clickMap($event)"
+                latitude="37.780986253433895"
+                longitude="-122.45291600632277"
+                zoom="12"
+                markers.bind="markers">
     </google-map>
 
 </template>
