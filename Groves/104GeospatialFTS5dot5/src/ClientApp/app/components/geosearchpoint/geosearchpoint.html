@@ -1,0 +1,27 @@
+<template>
+    <h1>Bounding box search</h1>
+
+    <p>This component demonstrates a map component that makes geospatial search requests.</p>
+
+    <ol>
+        <li>Click on the map to select a point.</li>
+        <li>Specify the distance of the search radius in miles.</li>
+        <li>Click "search" to use Couchbase's Geospatial FTS to find any points within that area.</li>
+    </ol>
+
+    <p>
+        Distance search:
+        <br />
+        Latitude: <input type="text" value="${ latitude }" />
+        Longitude: <input type="text" value="${ longitude }" />
+        <br />
+        Distance (miles): <input type="text" value="${ distance }" />
+        <br />
+        <input if.bind="latitude" click.trigger="searchClick()" type="button" name="search" value="Search" />
+    </p>
+
+    <p if.bind="!markers"><em>Loading...</em></p>
+
+    <google-map if.bind="markers" map-click.delegate="clickMap($event)" draw-mode="polygon" latitude="37.323" longitude="-122.0527" markers.bind="markers"></google-map>
+
+</template>

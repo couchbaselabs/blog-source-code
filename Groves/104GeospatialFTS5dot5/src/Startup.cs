@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Couchbase.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -23,10 +22,17 @@ namespace GeospatialSearch
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddCouchbase(clientDefinition =>
+            {
+                clientDefinition.Username = "matt";
+                clientDefinition.Password = "password";
+                clientDefinition.Servers = new List<Uri> {new Uri("http://localhost:8091")};
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -52,6 +58,11 @@ namespace GeospatialSearch
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
+            });
+
+            applicationLifetime.ApplicationStopped.Register(() =>
+            {
+                app.ApplicationServices.GetRequiredService<ICouchbaseLifetimeService>().Close();
             });
         }
     }

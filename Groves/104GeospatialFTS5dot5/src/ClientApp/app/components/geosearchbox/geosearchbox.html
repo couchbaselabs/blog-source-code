@@ -1,0 +1,52 @@
+<template>
+    <h1>Bounding box search</h1>
+
+    <p>This component demonstrates a map component that makes geospatial search requests.</p>
+    
+    <ol>
+        <li>Click on the map to select the top left point of the bounding box.</li>
+        <li>Click again to select the bottom right point.</li>
+        <li>Click "search" to use Couchbase's Geospatial FTS to find any points within that bounding box.</li>
+    </ol>
+    
+    <p>
+        Bounding box search:
+        <br />
+        Latitude (top left): <input type="text" value="${ latitudeTopLeft }" />
+        Longitude (top left): <input type="text" value="${ longitudeTopLeft }" />
+        <br />
+        Latitude (bottom right): <input type="text" value="${ latitudeBottomRight }" />
+        Longitude (bottom right): <input type="text" value="${ longitudeBottomRight }" />
+        <br />
+        <input if.bind="latitudeTopLeft && latitudeBottomRight" click.trigger="searchClick()" type="button" name="search" value="Search" />
+    </p>
+
+    <p if.bind="!markers"><em>Loading...</em></p>
+    
+    <google-map
+        if.bind="markers"
+        map-click.delegate="clickMap($event)"
+        latitude="37.323"
+        longitude="-122.0527"
+        markers.bind="markers">
+    </google-map>
+
+<!--    <table if.bind="forecasts" class="table">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>Hotel</th>-->
+<!--                <th>field1</th>-->
+<!--                <th>field2</th>-->
+<!--                <th>field3</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--            <tr repeat.for="forecast of forecasts">-->
+<!--                <td>${ forecast.dateFormatted }</td>-->
+<!--                <td>${ forecast.temperatureC }</td>-->
+<!--                <td>${ forecast.temperatureF }</td>-->
+<!--                <td>${ forecast.summary }</td>-->
+<!--            </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+</template>
