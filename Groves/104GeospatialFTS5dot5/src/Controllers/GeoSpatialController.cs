@@ -4,34 +4,11 @@ using Couchbase.Core;
 using Couchbase.Extensions.DependencyInjection;
 using Couchbase.Search;
 using Couchbase.Search.Queries.Geo;
+using GeospatialSearch.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GeospatialSearch.Controllers
 {
-    public class BoxSearch
-    {
-        public double LatitudeTopLeft { get; set; }
-        public double LongitudeTopLeft { get; set; }
-        public double LatitudeBottomRight { get; set; }
-        public double LongitudeBottomRight { get; set; }
-    }
-
-    public class GeoSearchResult
-    {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public string InfoWindow { get; set; }
-    }
-
-    public class PointSearch
-    {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public int Distance { get; set; }
-        // miles is being assumed as the unit
-        public string DistanceWithUnits => Distance + "mi";
-    }
-
     public class GeoSpatialController : Controller
     {
         private readonly IBucket _bucket;
@@ -61,17 +38,19 @@ namespace GeospatialSearch.Controllers
             var list = new List<GeoSearchResult>();
             foreach (var hit in results.Hits)
             {
+                // *** this part shouldn't be necessary
+                // the geo and name should come with the search results
+                // and not require a separate lookup
+                // but there's maybe an SDK bug
+                var doc = _bucket.Get<dynamic>(hit.Id).Value;
+                // ****************
                 list.Add(new GeoSearchResult
                 {
-
+                    Latitude = doc.geo.lat,
+                    Longitude = doc.geo.lon,
+                    InfoWindow = new InfoWindow { Content = doc.name + "<br />" + doc.city + ", " + doc.state + " " + doc.country }
                 });
             }
-//            list.Add(new GeoSearchResult
-//            {
-//                Latitude = 37.754582,
-//                Longitude = -122.446418,
-//                InfoWindow = "Something something " + Guid.NewGuid()
-//            });
             return Ok(list);
         }
 
@@ -80,8 +59,8 @@ namespace GeospatialSearch.Controllers
         public IActionResult Box([FromBody] BoxSearch box)
         {
             var query = new GeoBoundingBoxQuery();
-            query.TopLeft(box.LongitudeTopLeft, box.LatitudeTopLeft); // -2.235143, 53.482358);
-            query.BottomRight(box.LongitudeBottomRight, box.LatitudeBottomRight); // 28.955043, 40.991862);
+            query.TopLeft(box.LongitudeTopLeft, box.LatitudeTopLeft);
+            query.BottomRight(box.LongitudeBottomRight, box.LatitudeBottomRight);
             var searchParams = new SearchParams().Limit(10).Timeout(TimeSpan.FromMilliseconds(10000));
             var searchQuery = new SearchQuery
             {
@@ -94,17 +73,19 @@ namespace GeospatialSearch.Controllers
             var list = new List<GeoSearchResult>();
             foreach (var hit in results.Hits)
             {
+                // *** this part shouldn't be necessary
+                // the geo and name should come with the search results
+                // and not require a separate lookup
+                // but there's maybe an SDK bug
+                var doc = _bucket.Get<dynamic>(hit.Id).Value;
+                // ****************
                 list.Add(new GeoSearchResult
                 {
-
+                    Latitude = doc.geo.lat,
+                    Longitude = doc.geo.lon,
+                    InfoWindow = new InfoWindow { Content = doc.name + "<br />" + doc.city + ", " + doc.state + " " + doc.country}
                 });
             }
-//            list.Add(new GeoSearchResult
-//            {
-//                Latitude = 37.754582,
-//                Longitude = -122.446418,
-//                InfoWindow = "Something something " + Guid.NewGuid()
-//            });
             return Ok(list);
         }
     }

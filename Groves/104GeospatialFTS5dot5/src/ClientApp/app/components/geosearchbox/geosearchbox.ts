@@ -13,21 +13,6 @@ export class GeosearchBox {
     constructor(http: HttpClient) {
         this.http = http;
         this.markers = [];
-
-/*
-        this.markers = [
-            {
-                latitude: -27.451673,   // brisbane
-                longitude: 153.043981,
-                infoWindow: { content: `<p>somewhere in Brisbane</p>`}
-            },
-            {
-                latitude: 37.754582,    // sf
-                longitude: -122.446418,
-                infoWindow: { content: `<p>somewhere in sf</p>` }
-            }
-        ];
-        */
     }
 
     public clickMap(event : any) {
@@ -62,6 +47,7 @@ export class GeosearchBox {
         this.http.fetch('api/Box', { method: "POST", body: json(boxSearch) })
             .then(result => result.json() as Promise<any[]>)
             .then(data => {
+                console.log(data);
                 this.markers = data;
             });
     }

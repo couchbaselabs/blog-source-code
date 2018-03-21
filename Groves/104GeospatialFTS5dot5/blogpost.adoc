@@ -1,0 +1,102 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Geospatial Search with ASP.NET Core, Auerlia, and Google Maps
+:slug: TBD
+:focus-keyword: geospatial search
+:categories: Couchbase Server, .NET
+:tags: geospatial, search, geospatial search, asp.net, auerlia, google maps
+:heroimage: TBD
+
+Geospatial search is now fully supported in Couchbase Server 5.5 [links to 5.5, blah blah]
+
+i want to cover bounding box search and distance search
+
+i could've just created a console app but let's have a little fun
+
+== setting up 
+
+dotnet new auerlia - a sentence on why i like aurelia
+
+asp.net Core - not using razor, just using as REST API endpoints
+
+added couchbase.extensions.dependencyinjection - you don't have to use this extension but it makes things easier - also note that this is not a .net-only feature, you can use it with the other SDKs like node, java, etc
+
+npm install auerlia-google-maps - again, you don't have to use this plugin, but it makes using google maps very easy
+
+create a component for bounded box search and one for distance search
+
+couchbase 5.5 with travel-sample bucket
+
+== asp.net core endpoints
+
+two endpoints, one to demonstrate each search technique
+
+=== bounded box
+
+input: top left coordinate, bottom right coordinate
+
+[snippet of boundedbox model object]
+
+output: list of coordinates and description
+
+[snippet of end point]
+
+=== distance search
+
+input: coordinate and a 'distance' search radius
+
+[snippet of point model object]
+
+output: list of coordinates and description
+
+[snippet of end point]
+
+== auerlia and google maps ui
+
+drop in google maps, centered on california since that's where a lot of travel-sample data is
+
+[aurelia code of google map snippet]
+
+=== bounded box 
+
+click a spot on the map, that sets the first coordinate (top left)
+
+[aurelia html snippet]
+[aurelia code snippet]
+
+click another spot on the map, that sets the second coordinate (bottom right)
+
+no validation of the second coordinate being to the bottom right of the first
+
+click 'search' to hit the endpoint
+
+[aurelia html snippet]
+[aurelia code snippet]
+
+[gif of bounded search]
+
+=== distance search
+
+click a spot on the map
+
+[aurelia html snippet]
+[aurelia code snippet]
+
+specify a distance (in miles is what I've used, but you can specify other distances if you'd like)
+
+click 'search' to hit the endpoint
+
+[aurelia html snippet]
+[aurelia code snippet]
+
+[gif of distance search]
+
+== summary
+
+with geospatial search, the hard work is done by the database
+
+you can focus on building a killer UI (better than mine anyway) and business logic
+
+link to forums
+
+link to twitter

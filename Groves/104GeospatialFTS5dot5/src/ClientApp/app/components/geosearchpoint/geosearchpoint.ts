@@ -13,21 +13,6 @@ export class GeosearchBox {
         this.http = http;
         this.markers = [];
         this.distance = 10;
-
-        /*
-                this.markers = [
-                    {
-                        latitude: -27.451673,   // brisbane
-                        longitude: 153.043981,
-                        infoWindow: { content: `<p>somewhere in Brisbane</p>`}
-                    },
-                    {
-                        latitude: 37.754582,    // sf
-                        longitude: -122.446418,
-                        infoWindow: { content: `<p>somewhere in sf</p>` }
-                    }
-                ];
-                */
     }
 
     public clickMap(event: any) {

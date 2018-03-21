@@ -20,8 +20,17 @@
         <input if.bind="latitude" click.trigger="searchClick()" type="button" name="search" value="Search" />
     </p>
 
-    <p if.bind="!markers"><em>Loading...</em></p>
+    <h3 if.bind="markers">${ markers.length } result(s) found.</h3>
 
-    <google-map if.bind="markers" map-click.delegate="clickMap($event)" draw-mode="polygon" latitude="37.323" longitude="-122.0527" markers.bind="markers"></google-map>
+    <p if.bind="!markers"><em>Loading...</em></p>
+    
+    <google-map
+        if.bind="markers"
+        map-click.delegate="clickMap($event)"
+        latitude="37.780986253433895"
+        longitude="-122.45291600632277"
+        zoom="12"
+        markers.bind="markers">
+    </google-map>
 
 </template>

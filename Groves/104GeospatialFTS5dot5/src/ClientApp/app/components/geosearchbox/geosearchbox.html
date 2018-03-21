@@ -26,27 +26,11 @@
     <google-map
         if.bind="markers"
         map-click.delegate="clickMap($event)"
-        latitude="37.323"
-        longitude="-122.0527"
+        latitude="37.780986253433895"
+        longitude="-122.45291600632277"
+        zoom="12"
         markers.bind="markers">
     </google-map>
 
-<!--    <table if.bind="forecasts" class="table">-->
-<!--        <thead>-->
-<!--            <tr>-->
-<!--                <th>Hotel</th>-->
-<!--                <th>field1</th>-->
-<!--                <th>field2</th>-->
-<!--                <th>field3</th>-->
-<!--            </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--            <tr repeat.for="forecast of forecasts">-->
-<!--                <td>${ forecast.dateFormatted }</td>-->
-<!--                <td>${ forecast.temperatureC }</td>-->
-<!--                <td>${ forecast.temperatureF }</td>-->
-<!--                <td>${ forecast.summary }</td>-->
-<!--            </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
+
 </template>
