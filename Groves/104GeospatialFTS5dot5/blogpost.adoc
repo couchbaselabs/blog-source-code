@@ -1,10 +1,10 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: Geospatial search is now fully supported in Couchbase Server 5.5. This post demonstrates the geospatial search in Couchbase with a web-based UI.
 :title: Geospatial Search with ASP.NET Core, Aurelia, and Google Maps
-:slug: Geospatial-Search-ASPNET-Core-Aurelia-Google-Maps
+:slug: Geospatial-ASPNET-Aurelia-Google-Maps
 :focus-keyword: geospatial
 :categories: Couchbase Server, .NET
-:tags: geospatial, search, geospatial search, asp.net, c#, aurelia, google maps, typescript, javascript
+:tags: geospatial, search, geospatial search, asp.net, c#, aurelia, google maps, typescript, javascript, FTS
 :heroimage: 104-hero-map-geospatial.jpg public domain via https://www.flickr.com/photos/130729854@N07/16491939584
 
 Geospatial search is now fully supported in Couchbase Server 5.5. Check out the link:https://blog.couchbase.com/announcing-couchbase-server-5-5-developer-build/[Couchbase Server 5.5 announcement], and link:https://www.couchbase.com/downloads?family=server&product=couchbase-server-developer&edition=enterprise[download the developer build] for free right now.
@@ -19,15 +19,15 @@ _If you want to follow along, the link:https://github.com/couchbaselabs/blog-sou
 
 Here are the steps I took to create a new project before I started writing code.
 
-1. At the command line: `dotnet new aurelia`. This assumes that you have link:https://dotnet.github.io/[.NET Core] installed and that you've installed a link:https://www.hanselman.com/blog/dotnetNewAngularAndDotnetNewReact.aspx[SPA template for Aurelia]. You can also go with Angular or React if you'd like, but I really like Aurelia, and I think you should give it a chance.
+1. At the command line: `dotnet new aurelia`. This assumes that you have link:https://dotnet.github.io/[.NET Core] installed.  *Note that Geospatial Search is not a .NET-only feature: you can use it with the link:https://www.couchbase.com/products/developer-sdk[other Couchbase SDKs] like Node.js, Java, etc.* It also assumes that you've installed a link:https://www.hanselman.com/blog/dotnetNewAngularAndDotnetNewReact.aspx[SPA template for Aurelia]. You can also go with Angular or React if you'd like, but I really like link:http://aurelia.io/[Aurelia], and I think you should give it a chance.
 
-2. The above command will create a shell of an ASP.NET Core project. In this blog post, I'm not going to use Razor. I'm just using ASP.NET as a backend for REST API endpoints. *Note that Geospatial Search is not a .NET-only feature: you can use it with the link:https://www.couchbase.com/products/developer-sdk[other Couchbase SDKs] like Node.js, Java, etc.*
+2. The above command will create a shell of an ASP.NET Core project. In this blog post, I'm not going to use Razor. I'm just using ASP.NET as a backend for REST API endpoints.
 
 3. `npm install aurelia-google-maps`. You don't have to use this, but the link:https://github.com/Vheissu/aurelia-google-maps[aurelia-google-maps plugin] will make it easy for me to interact with Google Maps in my app.
 
-4. I opened this project in Visual Studio 2017. I added link:https://blog.couchbase.com/dependency-injection-aspnet-couchbase/[Couchbase.Extensions.DependencyInjection]. You don't have to use this extension but it makes things easier.
+4. I opened this project in Visual Studio 2017. I added link:https://blog.couchbase.com/dependency-injection-aspnet-couchbase/[Couchbase.Extensions.DependencyInjection] with NuGet. You don't have to use this extension but it makes things easier.
 
-5. I installed Couchbase Server 5.5. I setup the travel-sample bucket. I created a user "matt" with full access to that bucket.
+5. I installed Couchbase Server 5.5. I setup the link:https://developer.couchbase.com/documentation/server/5.5/settings/install-sample-buckets.html[travel-sample bucket]. I link:https://developer.couchbase.com/documentation/server/5.5/security/security-rbac-for-admins-and-apps.html[created a user] "matt" with full access to that bucket.
 
 == Create a Geospatial Index
 
@@ -35,11 +35,13 @@ Before building the ASP.NET backend, we need to create a geospatial index in Cou
 
 image:10401-create-geospatial-query-index.gif[Create Geospatial index]
 
-I named my index "mygeoindex". It will be on the travel-sample bucket, so just select that one.
+I named my index "mygeoindex". I selected travel-sample as the bucket to index.
 
 In "Type Mappings", I uncheck the default. I add a new type mapping with a type name of "hotel". Every hotel document in "travel-sample" has a type with a value of "hotel". Check the "only index specified fields" box.
 
 I'm going to add two child fields. One is "geo", which contains the geospatial coordinates inside a hotel document. Make sure to select "geopoint" as the type. The other is "name", which will be the name of the hotel. I choose to "store" each of these: it will make the index larger, but I can avoid a secondary lookup if I store the information in the index.
+
+*Important Note: There is a bug (link:https://issues.couchbase.com/browse/NCBC-1651[NCBC-1651]) in the current release of the .NET SDK that will cause an error if you try to read from a geopoint field. In the code samples, I've created a workaround: I don't actually get the geo & name fields from the search index. I instead use the document key returned by search to make a secondary "get" call and get the full document. Keep in mind this is still a technique you may want to consider if you want to keep the size of your index down. This bug has already been fixed and will be in a future release. Such is the peril of being on the cutting edge!*
 
 That's all there is to it. Click "Create Index". Watch the "indexing progress" on the next screen until it gets to 100% (it should not take very long, assuming you remembered to uncheck "default").
 
@@ -47,7 +49,7 @@ That's all there is to it. Click "Create Index". Watch the "indexing progress" o
 
 Next, let's move over to ASP.NET. I'll create two endpoints. One endpoint will demonstrate the *bounded box* search method, and the other will demonstrate the *distance* search method.
 
-I'll need a Couchbase bucket object to execute the queries. Follow the examples in the post linked above for dependency injection or check out the source code on Github if you've never done this before.
+_I'll need a Couchbase bucket object to execute the queries. Follow the link:https://blog.couchbase.com/dependency-injection-aspnet-couchbase/[examples in my blog post about dependency injection] or check out the source code on Github if you've never done this before._
 
 === Bounded Box
 
@@ -67,14 +69,14 @@ include::src/Controllers/GeoSpatialController.cs[tag=Box]
 // ... snip ...
 ----
 
-All I need to return for now is a list of the results: each hotel's coordinates and the hotel's name & location. I created a `GeoSearchResult` class for this.
+All I need to return from this endpoint is a list of the results: each hotel's coordinates and the hotel's name & location. I created a `GeoSearchResult` class for this.
 
 [source,C#,indent=0]
 ----
 include::src/Models/GeoSearchResult.cs[tag=GeoSearchResult]
 ----
 
-Note that I've constructed this class to match the Google Maps plugin that I'll be using later.
+_I've constructed this class to match the Google Maps plugin that I'll be using later._
 
 Finally, I'll use this class to return some results from the endpoint.
 
@@ -115,33 +117,35 @@ Each of them will have a Google Maps component that the user can interact with. 
 
 === Bounded Box search component
 
-On this component, you'll need to first click a spot on the map. This will set the first coordinate (top left).
+The `google-map`` component has a map-click.delegate that will will fire whenever the users clicks on the map. In geosearchbox.html:
 
 [source,JavaScript,indent=0]
 ----
-geosearchbox.html:
-
 include::src/ClientApp/app/components/geosearchbox/geosearchbox.html[tag=googlemap]
+----
 
-geosearchbox.ts:
+`markers` is simply an array containing coordinates of search results that should appear on the map. Initially it will be empty.
 
+When the user first clicks the map, this will set the first coordinate (top left) in the form. In geosearchbox.ts:
+
+[source,JavaScript,indent=0]
+----
 include::src/ClientApp/app/components/geosearchbox/geosearchbox.ts[tag=clickMap]
 ----
 
 Then, click another spot on the map. This will set the second coordinate (bottom right). 
 
-My implementation is very bare bones. No fancy graphics and no validation of the second coordinate being to the bottom right of the first.
-
-Once you've selected two coordinates, a search button will appear. Click that to post these coordinates to the endpoint created earlier.
+My implementation is very bare bones. No fancy graphics and no validation of the second coordinate being to the bottom right of the first. The fields on a form will simply be populated with the latitude and longitude. In geosearchbox.html:
 
 [source,JavaScript,indent=0]
 ----
-geosearchbox.html:
-
 include::src/ClientApp/app/components/geosearchbox/geosearchbox.html[tag=form]
+----
 
-geosearchbox.ts:
+Once you've selected two coordinates, a search button will appear. Click that to post these coordinates to the endpoint created earlier, and it will trigger the `searchClick()` method as seen in geosearchbox.ts:
 
+[source,JavaScript,indent=0]
+----
 include::src/ClientApp/app/components/geosearchbox/geosearchbox.ts[tag=searchClick]
 ----
 
@@ -151,7 +155,7 @@ image:10403-geospatial-bounding-box.gif[Geospatial bounding box]
 
 === Distance Search
 
-This will be similar to the bounding box UI. This time, you only need to click a single point on the map. But, you will need to type in a distance (in miles).
+Implementing the "distance" geostatial query will be similar to the bounding box UI. This time, you only need to click a single point on the map. But, you will need to type in a distance (in miles).
 
 The `google-map` component will look identical. The `clickMap` function is different:
 
@@ -183,6 +187,6 @@ With Couchbase's built-in geospatial indexing and search feature, all the math a
 
 Be sure to link:https://developer.couchbase.com/documentation/server/5.5/fts/fts-geospatial-queries.html[check out the documentation] for a complete overview of the geospatial capabilities of Couchbase.
 
-If you need help or have questions, please check out the link:https://forums.couchbase.com/c/couchbase-server[Couchbase Server forums].
+If you need help or have questions, please check out the link:https://forums.couchbase.com/c/couchbase-server[Couchbase Server forums], and if you have any questions about the Couchbase .NET SDK, check out the link:https://forums.couchbase.com/c/net-sdk[.NET SDK forums].
 
 If you'd like to get in touch with me, please leave a comment or find me on link:https://twitter.com/mgroves[Twitter @mgroves].

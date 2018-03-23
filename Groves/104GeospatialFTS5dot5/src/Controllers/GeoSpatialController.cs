@@ -28,6 +28,7 @@ namespace GeospatialSearch.Controllers
             query.Longitude(point.Longitude);
             query.Distance(point.DistanceWithUnits);
             var searchParams = new SearchParams()
+                // .Fields("geo", "name") // omitting because of bug NCBC-1651
                 .Limit(10)
                 .Timeout(TimeSpan.FromMilliseconds(10000));
             var searchQuery = new SearchQuery
@@ -43,8 +44,7 @@ namespace GeospatialSearch.Controllers
             {
                 // *** this part shouldn't be necessary
                 // the geo and name should come with the search results
-                // and not require a separate lookup
-                // but there's maybe an SDK bug
+                // but there's an SDK bug NCBC-1651
                 var doc = _bucket.Get<dynamic>(hit.Id).Value;
                 // ****************
                 list.Add(new GeoSearchResult
@@ -73,6 +73,7 @@ namespace GeospatialSearch.Controllers
             query.TopLeft(box.LongitudeTopLeft, box.LatitudeTopLeft);
             query.BottomRight(box.LongitudeBottomRight, box.LatitudeBottomRight);
             var searchParams = new SearchParams()
+                // .Fields("geo", "name") // omitting because of bug NCBC-1651
                 .Limit(10)
                 .Timeout(TimeSpan.FromMilliseconds(10000));
             var searchQuery = new SearchQuery
@@ -90,8 +91,7 @@ namespace GeospatialSearch.Controllers
             {
                 // *** this part shouldn't be necessary
                 // the geo and name should come with the search results
-                // and not require a separate lookup
-                // but there's maybe an SDK bug
+                // but there's an SDK bug NCBC-1651
                 var doc = _bucket.Get<dynamic>(hit.Id).Value;
                 // ****************
                 list.Add(new GeoSearchResult
