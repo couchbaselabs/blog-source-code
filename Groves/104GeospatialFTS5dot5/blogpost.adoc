@@ -9,7 +9,7 @@
 
 Geospatial search is now fully supported in Couchbase Server 5.5. Check out the link:https://blog.couchbase.com/announcing-couchbase-server-5-5-developer-build/[Couchbase Server 5.5 announcement], and link:https://www.couchbase.com/downloads?family=server&product=couchbase-server-developer&edition=enterprise[download the developer build] for free right now.
 
-In this post, I'm going to demonstrate the geospatial search capabilities of Couchbase Server by creating a web-based UI that performs searches. Whenever I think of geospatial searches, I think about Yelp, which is great at helping me find restaurants in a specific area.
+In this post, I'm going to demonstrate the geospatial search capabilities of Couchbase Full Text Search by creating a web-based UI that performs searches. Whenever I think of geospatial searches, I think about Yelp, which is great at helping me find restaurants in a specific area.
 
 So I'm going to have a little fun and create a very bare-bones version of Yelp, but only for hotels.
 
@@ -27,7 +27,7 @@ Here are the steps I took to create a new project before I started writing code.
 
 4. I opened this project in Visual Studio 2017. I added link:https://blog.couchbase.com/dependency-injection-aspnet-couchbase/[Couchbase.Extensions.DependencyInjection] with NuGet. You don't have to use this extension but it makes things easier.
 
-5. I installed Couchbase Server 5.5. I setup the link:https://developer.couchbase.com/documentation/server/5.5/settings/install-sample-buckets.html[travel-sample bucket]. I link:https://developer.couchbase.com/documentation/server/5.5/security/security-rbac-for-admins-and-apps.html[created a user] "matt" with full access to that bucket.
+5. I installed Couchbase Server 5.5, *including the Full Text Search service*. I setup the link:https://developer.couchbase.com/documentation/server/5.5/settings/install-sample-buckets.html[travel-sample bucket]. I link:https://developer.couchbase.com/documentation/server/5.5/security/security-rbac-for-admins-and-apps.html[created a user] "matt" with full access to that bucket.
 
 == Create a Geospatial Index
 
@@ -47,20 +47,20 @@ That's all there is to it. Click "Create Index". Watch the "indexing progress" o
 
 == ASP.NET Core REST Endpoints
 
-Next, let's move over to ASP.NET. I'll create two endpoints. One endpoint will demonstrate the *bounded box* search method, and the other will demonstrate the *distance* search method.
+Next, let's move over to ASP.NET. I'll create two endpoints. One endpoint will demonstrate the *bounding box* search method, and the other will demonstrate the *distance* search method.
 
 _I'll need a Couchbase bucket object to execute the queries. Follow the link:https://blog.couchbase.com/dependency-injection-aspnet-couchbase/[examples in my blog post about dependency injection] or check out the source code on Github if you've never done this before._
 
-=== Bounded Box
+=== Bounding Box
 
-A "bounded box" search means that you define a box on a map, and you want to search for points of interest that are inside of that box. You only need two points to define a box: the top right corner coordinates and the bottom left corner coordinates. (Coordinates are latitude and longitude).
+A "bounding box" search means that you define a box on a map, and you want to search for points of interest that are inside of that box. You only need two points to define a box: the top right corner coordinates and the bottom left corner coordinates. (Coordinates are latitude and longitude).
 
 [source,C#,indent=0]
 ----
 include::src/Models/BoxSearch.cs[tag=BoxSearch]
 ----
 
-To create a bounded box geospatial query, use the `GeoBoundingBoxQuery` class available in the .NET SDK. I'll do this inside of a POST method with the above `BoxSearch` class as a parameter.
+To create a bounding box geospatial query, use the `GeoBoundingBoxQuery` class available in the .NET SDK. I'll do this inside of a POST method with the above `BoxSearch` class as a parameter.
 
 [source,C#,indent=0]
 ----
@@ -115,7 +115,7 @@ image:10402-aurelia-components.png[Auerlia components]
 
 Each of them will have a Google Maps component that the user can interact with. These maps will be centered on San Francisco, because that's where a lot of the hotels in "travel-sample" are located.
 
-=== Bounded Box search component
+=== Bounding Box search component
 
 The `google-map`` component has a map-click.delegate that will will fire whenever the users clicks on the map. In geosearchbox.html:
 
