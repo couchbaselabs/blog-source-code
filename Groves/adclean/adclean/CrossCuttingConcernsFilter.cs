@@ -30,8 +30,6 @@ namespace adclean
                     var newSrc = $"https://crosscuttingconcerns.blob.core.windows.net/images/{filenameonly}";
                     t.Attributes["src"].Value = newSrc;
 
-                    Debugger.Launch();
-
                     // add img-responsive to css class if it's not already on there
                     var existingCssClasses = t.GetAttributeValue("class","");
                     var classes = existingCssClasses.Split(new []{' '},StringSplitOptions.RemoveEmptyEntries).ToList();

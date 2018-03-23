@@ -27,7 +27,7 @@ namespace adclean
                     // but I think it's generally a safe assumption to make that I'm generating this HTML in the same
                     // month I'm uploading images
                     var currentYear = DateTime.Now.Year;
-                    var currentMonth = DateTime.Now.Month;
+                    var currentMonth = DateTime.Now.Month.ToString().PadLeft(2, '0');
                     var filenameonly = existingSrc.Replace("images/", "");
                     var newSrc = $"http://blog.couchbase.com/wp-content/uploads/{currentYear}/{currentMonth}/{filenameonly}";
                     t.Attributes["src"].Value = newSrc;
