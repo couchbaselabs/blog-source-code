@@ -1,0 +1,40 @@
+:imagesdir: images
+:meta-description: TBD
+:title: ACID and Couchbase: Part 1
+:slug: ACID-Couchbase-Part-1
+:focus-keyword: ACID
+:categories: Couchbase Server, .NET
+:tags: TBD
+:heroimage: TBD
+
+In this post: intro to ACID, and some couchbase primitives. Currently Couchbase does not claim multi-document transactions, which is what most developers think of when they think of ACID. But there are other aspects of ACID that Couchbase does support. This post will demonstrate how to use them.
+
+Maybe your use case is in the minority that actually needs multi-document NoSQL transactions. In part 2 of this series, we'll look at why that might be, the tradeoffs that databases make, and some possible ways to achieve it in Couchbase.
+
+## Intro: What is ACID?
+
+History of acronym. CB provides primitives to help you solve your problem while not sacrificing the benefits of a distributed db.
+
+ACID (Atomicity, Consistency, Isolation, Durability)
+
+In the Intro, we should emphasize that Couchbase is a Strongly Consistent NoSQL database (the C in ACID is different from the NoSQL Consistency). Some competitors (Aerospike specifically) are trying to use Strong Consistency as implying transactionality (admittedly some Durability aspects are implied by strong consistency), so we should clearly state that we are Strongly Consistent (there are corner cases where we are not, but for all practical purposes we are strongly consistent – of course this part does not need to go in the blog). We want to use this blog to drive this message as well.
+
+## A is for Atomicity
+
+A: Individual documents ops are atomic. Show example of relational normalized that needs atomicity across multiple tables and why that isn't as necessary in a document db with a hierarchical document.
+
+## C is for Consistency
+
+C: Consistency of N1QL queries. Short RequestPlus example in .net. Link to AtPlus blog post.
+
+## I is for Isolation
+
+I: Pessimistic and optimistic locking. Short CAS explanation. Short .net sample
+
+## D is for Durability
+
+D: short Review of CB memory-first arch. PersistTo and ReplicateTo. Short example in .net
+
+## Summary
+
+leverage primitives when necessary without sacrificing benefits of distributed. Short preview of next post on two-phase commit. Links to forums, twitter, etc.
