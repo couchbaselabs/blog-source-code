@@ -1,18 +1,38 @@
 :imagesdir: images
 :meta-description: TBD
-:title: ACID and Couchbase: Part 1
-:slug: ACID-Couchbase-Part-1
-:focus-keyword: ACID
+:title: ACID Properties of Couchbase: Part 1
+:slug: ACID-Properties-Couchbase-Part-1
+:focus-keyword: ACID properties
 :categories: Couchbase Server, .NET
 :tags: TBD
 :heroimage: TBD
 
-In this post: intro to ACID, and some couchbase primitives. Currently Couchbase does not claim multi-document transactions, which is what most developers think of when they think of ACID. But there are other aspects of ACID that Couchbase does support. This post will demonstrate how to use them.
+keywords to use:
+"acid transactions"
+"acid properties"
+"nosql transactions"
+"database transaction"
 
-Maybe your use case is in the minority that actually needs multi-document NoSQL transactions. In part 2 of this series, we'll look at why that might be, the tradeoffs that databases make, and some possible ways to achieve it in Couchbase.
+ACID properties are a topic that I get asked about a lot. Generally, people ask in the context of transactions: "Are there NoSQL transactions?", "Can I use ACID transactions in Couchbase?", and so on. But there is more to ACID than just a database transaction capability.
 
-## Intro: What is ACID?
+## Couchbase and Transactions
 
+Scaling, performance, and flexibility have been the core focus of the Couchbase data platform, and transactions are often at odds with these characteristics. 
+
+This blog post is going to cover the building blocks of ACID that *are* available in Couchbase. These "primitives" can be used without sacrificing the overall scaling, performance, and flexibility of Couchbase. Depending on your use case, these primitives might be adequate on their own, or in concert with eachother.
+
+There are a couple of things I want to assert:
+
+1. A NoSQL database like Couchbase is not always the right choice for every situation
+2. For use cases where NoSQL *is* appropriate, a minority truly need a full transaction support.
+
+--- image: paredo diagram showing no need, need primitives, need full transaction ---
+
+Currently, Couchbase does not claim multi-document transaction support, which is what most developers think of when they think of ACID. But, in part 2 of this series, I will show an approach that uses these building blocks to provide an approach to doing transactions with Couchbase.
+
+## What are the ACID properties?
+
+ACID stands for: Atomicity, Consistency, Isolation, Durability. It was coined in the 1980s and describes a class of database operation that provides safety guarantees. At the time, relational databases and the SQL language were 
 History of acronym. CB provides primitives to help you solve your problem while not sacrificing the benefits of a distributed db.
 
 ACID (Atomicity, Consistency, Isolation, Durability)
