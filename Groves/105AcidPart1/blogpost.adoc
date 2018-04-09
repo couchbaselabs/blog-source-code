@@ -7,54 +7,182 @@
 :tags: TBD
 :heroimage: TBD
 
-keywords to use:
-"acid transactions"
-"acid properties"
-"nosql transactions"
-"database transaction"
-
 ACID properties are a topic that I get asked about a lot. Generally, people ask in the context of transactions: "Are there NoSQL transactions?", "Can I use ACID transactions in Couchbase?", and so on. But there is more to ACID than just a database transaction capability.
 
 ## Couchbase and Transactions
 
 Scaling, performance, and flexibility have been the core focus of the Couchbase data platform, and transactions are often at odds with these characteristics. 
 
-This blog post is going to cover the building blocks of ACID that *are* available in Couchbase. These "primitives" can be used without sacrificing the overall scaling, performance, and flexibility of Couchbase. Depending on your use case, these primitives might be adequate on their own, or in concert with eachother.
+This blog post is going to cover the building blocks of ACID that *are* available in Couchbase. These "primitives" can be used without sacrificing the overall scaling, performance, and flexibility of Couchbase. Depending on your use case, these primitives might be adequate on their own, or in concert with each other.
 
-There are a couple of things I want to assert:
-
-1. A NoSQL database like Couchbase is not always the right choice for every situation
-2. For use cases where NoSQL *is* appropriate, a minority truly need a full transaction support.
-
---- image: paredo diagram showing no need, need primitives, need full transaction ---
-
-Currently, Couchbase does not claim multi-document transaction support, which is what most developers think of when they think of ACID. But, in part 2 of this series, I will show an approach that uses these building blocks to provide an approach to doing transactions with Couchbase.
+Currently, Couchbase does not claim multi-document transaction support, which is what most developers think of when they think of ACID. But, in part 2 of this series, I will show an approach that uses these building blocks to make something *like* a transaction with Couchbase.
 
 ## What are the ACID properties?
 
-ACID stands for: Atomicity, Consistency, Isolation, Durability. It was coined in the 1980s and describes a class of database operation that provides safety guarantees. At the time, relational databases and the SQL language were 
-History of acronym. CB provides primitives to help you solve your problem while not sacrificing the benefits of a distributed db.
+ACID stands for: Atomicity, Consistency, Isolation, Durability. It was coined in the 1980s, but has existed since the 1970s in traditional, non-distributed, relational databases. It describes a class of database that is capable of providing operations with safety guarantees.
 
-ACID (Atomicity, Consistency, Isolation, Durability)
-
-In the Intro, we should emphasize that Couchbase is a Strongly Consistent NoSQL database (the C in ACID is different from the NoSQL Consistency). Some competitors (Aerospike specifically) are trying to use Strong Consistency as implying transactionality (admittedly some Durability aspects are implied by strong consistency), so we should clearly state that we are Strongly Consistent (there are corner cases where we are not, but for all practical purposes we are strongly consistent – of course this part does not need to go in the blog). We want to use this blog to drive this message as well.
+At the time, relational databases and the SQL language were meant to be directly used by the end user, and thus safety was critical. As software evolved, the database gets moved further and further from the end user. Safety may still be important, but in modern web and mobile software, it is often lower priority to performance and scalability. However, it is not an "either/or" situation. Couchbase provides some tools and capabilities to help you balance safety and performance.
 
 ## A is for Atomicity
 
-A: Individual documents ops are atomic. Show example of relational normalized that needs atomicity across multiple tables and why that isn't as necessary in a document db with a hierarchical document.
+"Atomicity" means that a group of operations either all succeed or all fail. Couchbase provides atomicity for a single document at a time. An operation to get or set a document either succeeds or fails. Compared to an RDBMS guarantee of *multiple* operations succeeding or failing together, this may not seem like much.
+
+But consider that link:https://blog.couchbase.com/json-data-modeling-rdbms-users/[data modeling] is very different between document databases and RDBMS.
+
+In a relational database, the data should always be *normalized*. So, for instance, a shopping cart with 3 items in it would be stored as:
+
+* 1 row in a ShoppingCart table
+* 3 rows in a ShoppingCartItems table
+
+image:10501-shopping-cart-acid-properties.png[Shopping Cart example for ACID properties]
+
+If you want to create a shopping cart with 3 items, this requires four `INSERT` statements. So, you might want those 4 statements to be treated atomically.
+
+Now consider a document database. You would create a single shopping cart JSON document, which would itself contain 3 items.
+
+[source,JavaScript,indent=0]
+----
+key cart::001
+{
+    "user": "Matthew Groves",
+    "dateCreated": "2018-03-22T13:57:31.2311892-04:00",
+    "items": [
+        { "name": "widget", "price": 19.99, "quantity": 2},
+        { "name": "sprocket", "price": 17.89, "quantity": 1},
+        { "name": "doodad", "price": 20.99, "quantity": 5}
+    ]
+}
+----
+
+Getting or setting this document is a single atomic operation in Couchbase.
+
+If your data can be modelled like this, then you immediately reduce your need for a multi-operation transaction.
 
 ## C is for Consistency
 
-C: Consistency of N1QL queries. Short RequestPlus example in .net. Link to AtPlus blog post.
+"Consistency" means that any constraints in the database about the data remain consistent before and after an ACID operation. For instance, if an atomic set of operations fails, then the data remains consistent with what it was before the operation. Additionally, other constraints like a schema are enforced on the data. You cannot insert 6 columns of data into a 5 column table, for instance.
+
+As discussed in "Atomicity", Couchbase only guarantees single-document atomicity.
+
+The only schema that Couchbase supports is JSON. If you perform an insert operation with JSON, you must supply valid JSON (the Couchbase SDKs will typically handle this for you). This schema is only enforced at the document level. Couchbase cannot prevent you from using a different JSON schema from document to document. For instance, both of these documents can be inserted into the same bucket:
+
+[source,JavaScript,indent=0]
+----
+key user::001
+{
+    "user": "Matthew Groves",
+    "dateCreated": "2018-03-22T13:57:31.2311892-04:00"
+}
+
+key user::002
+{
+    "userName": "Matthew Groves",
+    "the_date_created": "2018-03-22T13:57:31.2311892-04:00"
+}
+----
+
+Both of those documents are allowed. However, note that the field names are not consistent with each other. This means that there is more responsibility at the application level to ensure the documents have consistent naming.
+
+Another constraint that Couchbase enforces is the key. Each document must have a unique key. If you try to insert another document with a key of "user::001", for instance, an error will occur. So if you need to enforce a unique constraint, using the document key is one way to achieve this.
+
+Finally, I want to mention link:https://blog.couchbase.com/new-to-couchbase-4-5-atplus/[index consistency]. Couchbase is able to index fields or combinations of fields in JSON documents (just as relational databases can index columns or combinations of columns). However, Couchbase indexes are updated *asynchronously*. When executing a N1QL query (SQL for JSON) in Couchbase, the default behavior is "Not Bounded". This means that the query will not wait for the index to be updated before returning results. So, hypothetically, if you create a new document and immediately run a query, that document might not be in the results.
+
+Fortunately, there are two other options to tweak the consistency of queries: RequestPlus and AtPlus.
+
+*RequestPlus* is at the opposite end of the consistency spectrum. It will wait for any pending index updates before processing the query. The trade-off here is performance, of course. A RequestPlus query will possibly take longer to execute.
+
+*AtPlus* is in the middle. Instead of waiting for an entire index to complete, it will wait only for the documents you specify to be indexed. This provides better performance, better consistency, but it requires more work (since you have to specify which documents to wait for).
+
+_Note: The "Consistency" in ACID is different than the "Consistency" in the link:https://developer.couchbase.com/documentation/server/current/concepts/data-management.html[CAP theorem]. Couchbase is a *strongly consistent* distributed database. This means that each document has a single correct document per cluster, and there cannot be a "conflicting" or "sibling" document with the same key elsewhere in the cluster. A strongly consistent database does *not* imply anything about transactions or ACID properties._
 
 ## I is for Isolation
 
-I: Pessimistic and optimistic locking. Short CAS explanation. Short .net sample
+"Isolation" is the ability for an operation to occur only after another operation on the same data has been completed. In this way, each operation is _independent_ of other operations. This is very important when a database is handling concurrent data access. It should _appear_ that the database is handling only one operation at a time. In order to accomplish this, the data that's being updated must be *locked* out of being modified (and/or viewed) until the operation is complete.
+
+Again, Couchbase is able to provide this guarantee at the single document level.
+
+There are two types of locks that you can do in Couchbase: pessimistic locking and optimistic locking.
+
+### Optimistic locking
+
+"Optimistic" locking hinges on a value in Couchbase called CAS (check-and-set). Every document has a CAS value, which is just a number. Every time that document changes, it gets a new CAS number. When you attempt to update a document, you pass a CAS number as part of the operation. If the CAS numbers match, the operation is allowed. If not, the operation is not allowed, and there's an error returned instead.
+
+As an example, let's suppose there are two processes: A and B. A and B both make a "get" request to Couchbase to fetch a document. Couchbase returns the document, along with a CAS value. Then, A and B both send a "set" request to Couchbase, passing along the CAS value they previously received. One of them is going to get processed first, let's say it's A. When it's B's turn, the CAS value of the document has already changed, and so the operation fails.
+
+Here's an example in .NET. Let's suppose we're working on a mobile game, and we want to keep track of a player's Sword Level. The higher the level, the more damage it does. In this example, A is trying to upgrade to level 2 and B is trying to upgrade to level 3.
+
+[source,C#,indent=0]
+----
+include::src/AcidPart1/Program.cs[tag=OptimisticLockingExample]
+----
+
+At the end of this process, B fails, and the player's sword stays at level 2. If you want B to succeed, then one solution is to re-fetch the document, get the latest CAS value, and try again.
+
+Of course, that solution could fail again. And again. But this is why it's called "optimistic". It assumes that the document is not going to be under heavy contention, and it will eventually succeed.
+
+### Pessimistic locking
+
+If you know that a document will be under heavy contention, and that it's mostly likely to keep failing, then you might want to use pessimistic locking instead.
+
+There is an atomic operation available in Couchbase called "GetAndLock". This operation returns the document and a CAS value. At this point, the document is considered "locked". No more locks can be made on it by other processes, and only the CAS value can unlock the document.
+
+Here's a C# example of a pessimistic lock in action:
+
+[source,C#,indent=0]
+----
+include::src/AcidPart1/Program.cs[tag=PessimisticLockingExample1]
+----
+
+Further, when using GetAndLock, you must set a timeout period. After the timeout period, the lock is automatically released. Here's an example of the timeout in action.
+
+[source,C#,indent=0]
+----
+include::src/AcidPart1/Program.cs[tag=PessimisticLockingExample2]
+----
+
+When running this example, the following output would occur:
+
+image:10502-pessimistic-lock-time-out.png[Pessimistic lock time out]
+
+Using these locks, you can obtain isolation of an individual document, to make sure that changes happen in the order that you expect.
 
 ## D is for Durability
 
-D: short Review of CB memory-first arch. PersistTo and ReplicateTo. Short example in .net
+"Durability" means that when an operation completes successfully, that the changes the operation made are stored to disk. This means that even if a system failure occurs, the change still takes place.
 
-## Summary
+Couchbase has a "memory-first" architecture. This means that the results of write operations are first written to memory, and then put into a queue to be asynchronously written to disk soon after. So, if an operation writes to memory, and the system shuts down immediately, then that operation is not durable. This is the default trade-off that Couchbase makes: speed over link:https://developer.couchbase.com/documentation/server/current/sdk/durability.html[durability].
 
-leverage primitives when necessary without sacrificing benefits of distributed. Short preview of next post on two-phase commit. Links to forums, twitter, etc.
+However, Couchbase allows you to override that default configuration and specify a stronger level of durability. This will swing the pendulum away from performance and towards the safety of ACID properties, but sometimes it may be necessary.
+
+The default behavior is that writing the document to memory is considered a success. It will still be persisted and replicated according to your Couchbase cluster configuration, but the durability will not be checked by the SDK.
+
+[source,C#,indent=0]
+----
+include::src/AcidPart1/Program.cs[tag=default]
+----
+
+I can specify the number of nodes to replicate to that I consider to be a successfully durable operation by using `ReplicateTo`:
+
+[source,C#,indent=0]
+----
+include::src/AcidPart1/Program.cs[tag=justreplicate]
+----
+
+And I can also specify a combination of persistence to other nodes and replication to other nodes that I consider to be durable "enough" by using `PersistTo` as well:
+
+[source,C#,indent=0]
+----
+include::src/AcidPart1/Program.cs[tag=both]
+----
+
+Note that if the durability requirements _fail_, then the document still may be written and eventually distributed across the cluster. All we know is that it didn't succeed as far as the SDK knows. You can choose to act on this information to introduce more safety into your application.
+
+## Final Notes
+
+It's important to note that even with all these primitives, there's no way to get the same kind of total safety that a non-distributed database can offer. But it can give you a different kind of safety: if a single machine goes down and your data isn't distributed, then your application is going to stop working altogether.
+
+Make sure you are using a distributed database for the right use case and/or in concert with a traditional relational database. Then you can get the performance, scalability, and flexibility of NoSQL when you need it and the safety of relational when you need it. You can leverage all the primitives to provide some of the aspects of ACID properties when you need them.
+
+In the next post, we'll look at one way you might leverage these ACID properties and primitives to create a kind of "NoSQL transaction".
+
+If you have any questions, be sure to check out the link:https://forums.couchbase.com/[Couchbase Forums]. You can find the same code used in this blog post link://[on Github].

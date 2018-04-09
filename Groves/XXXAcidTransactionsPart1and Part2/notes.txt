@@ -1,0 +1,93 @@
+blog post A
+
+primitives
+
+talk about these in a specific use cases
+"for example, what if you want to do this..."
+
+make sure this is understood this is a two parter
+and don't rely solely on this if you're an SE
+don't mention "transaction"
+
+A
+
+	reiterate atomic for single document
+	
+C
+
+	requestplus/atplus?
+
+I
+
+	optimistic/pessmistic locks
+	
+	cas
+
+		dustin blog post
+		cas operations
+		maintaining a list - http://dustin.sallings.org/2011/02/17/memcached-set.html
+	
+D
+
+	peristto
+	
+	replicateto
+
+-----
+
+blog post B
+
+reference blog post A
+
+put examples farmville, ad, recommendation system right at the top
+
+explain why distributed system multi-doc transactions are difficult
+
+explain why ACID is fundamentally impossible even down to something ridiculous like the processor opcode level
+
+ATM example of distributed system
+
+transactions might compromise the scalability and performance of your distributed system, so it's all about trade-offs!
+
+business-level trade-offs, it might be overkill for your system
+
+what if i use relational to build farmville? scaling to the whole world is an intractable problem
+	reference pokemon
+
+mutability vs shared access problem
+	
+explain caveats, edge cases [Matt I]
+
+	edge case 1: deletions are "tombstones", a deleted item could reappear, so you might get orphan transaction documents
+	mitigation: game dev, players have items, items are owned by players-references between items themselves
+		if user purchases an item (tractor/chicken), so the player and item points bidirectionally
+		if a failure occurs, loses chicken reference
+		there's another process that iterates through all items and make sure they are tied to user
+		"repair" the object graph
+		
+		did the same thing with 'friend' relationships and so on
+		
+	maybe when a rollback is occurring, you'd need a repair process
+	
+	orphan transactions
+
+	imagine a transfer of $100 from one user to another
+		dec matt
+		inc shivani
+		remove transactions document
+		matt's vbucket "goes backwards" (maybe a node goes down and a replica vbucket is used) and his total amount goes back up, there's no log or record
+
+	use event sourcing instead
+		background job to 'compact' events
+		event sourcing might be its own blog post
+		makes the data more like an 'immutable' database
+		
+	another example: ad targeting, trading off accuracy for lower latency
+		since it's all probability anyway
+		recommendation targeting same thing
+		
+two phase commit bare bones how-to code example (in .NET)
+
+**hint at more integrated support in the near future**
+
+------
