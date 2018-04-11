@@ -1,11 +1,11 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: ACID properties and transaction questions include: "Are there NoSQL transactions?", "Can I use ACID transactions in Couchbase?", and so on. Today's distributed applications do not always expect or need all of the ACID properties from their database. I'll dig deeper into the ACID properties in this post.
 :title: ACID Properties of Couchbase: Part 1
 :slug: ACID-Properties-Couchbase-Part-1
 :focus-keyword: ACID properties
-:categories: Couchbase Server, .NET
-:tags: TBD
-:heroimage: TBD
+:categories: Couchbase Server, .NET, N1QL
+:tags: ACID, ACID properties, CAS, Couchbase Server, Couchbase, transactions
+:heroimage: http://www.usafe.af.mil/News/Photos/igphoto/2000830121/
 
 ACID properties are a topic that I get asked about a lot. Generally, people ask in the context of transactions: "Are there NoSQL transactions?", "Can I use ACID transactions in Couchbase?", and so on. But today's distributed applications do not always expect or need all of the ACID properties from their database. I'll dig deeper into the ACID properties in this post.
 
@@ -179,7 +179,7 @@ Note that if the durability requirements _fail_, then Couchbase may still save t
 
 ## Final Notes
 
-It's important to note that even with all these primitives, there's no way to get the same kind of total safety that a non-distributed database can offer. But you get a different kind of safety: if a single non-distributed database goes down, then your application is going to stop working altogether.
+It's important to note that even with all these primitives, there's no way to get the same kind of total safety that a non-distributed database can offer will full ACID properties. But you get a different kind of safety: if a single non-distributed database goes down, then your application is going to stop working altogether.
 
 Make sure you are using a distributed database for the right use case and/or in concert with a traditional relational database. Then you can get the performance, scalability, and flexibility of NoSQL when you need it and the safety of relational when you need it. You can leverage all the primitives to provide some of the aspects of ACID properties when you need them.
 
