@@ -7,21 +7,21 @@
 :tags: TBD
 :heroimage: TBD
 
-ACID properties are a topic that I get asked about a lot. Generally, people ask in the context of transactions: "Are there NoSQL transactions?", "Can I use ACID transactions in Couchbase?", and so on. But there is more to ACID than just a database transaction capability.
+ACID properties are a topic that I get asked about a lot. Generally, people ask in the context of transactions: "Are there NoSQL transactions?", "Can I use ACID transactions in Couchbase?", and so on. But today’s distributed applications do not always expect or need all of the ACID properties from their database. I’ll dig deeper into the ACID properties in this post.
 
 ## Couchbase and Transactions
 
-Scaling, performance, and flexibility have been the core focus of the Couchbase data platform, and transactions are often at odds with these characteristics. 
+Scaling, performance, and flexibility have been the core focus of the Couchbase data platform, and distributed, multi-document transactions are often at odds with these characteristics. 
 
-This blog post is going to cover the building blocks of ACID that *are* available in Couchbase. These "primitives" can be used without sacrificing the overall scaling, performance, and flexibility of Couchbase. Depending on your use case, these primitives might be adequate on their own, or in concert with each other.
+Part 1 of this 2-part blog post is going to cover the building blocks of ACID that *are* available in Couchbase. These "primitives" can be used without sacrificing the overall scaling, performance, and flexibility of Couchbase. Depending on your use case, these primitives might be adequate on their own, or in concert with each other.
 
-Currently, Couchbase does not claim multi-document transaction support, which is what most developers think of when they think of ACID. But, in part 2 of this series, I will show an approach that uses these building blocks to make something *like* a transaction with Couchbase.
+Currently, Couchbase supports single document transactions, but does not provide multi-document transaction support. But, in part 2 of this series, I will show an approach that uses these building blocks to make something *like* a multi-document transaction with Couchbase.
 
 ## What are the ACID properties?
 
 ACID stands for: Atomicity, Consistency, Isolation, Durability. It was coined in the 1980s, but has existed since the 1970s in traditional, non-distributed, relational databases. It describes a class of database that is capable of providing operations with safety guarantees.
 
-At the time, relational databases and the SQL language were meant to be directly used by the end user, and thus safety was critical. As software evolved, the database gets moved further and further from the end user. Safety may still be important, but in modern web and mobile software, it is often lower priority to performance and scalability. However, it is not an "either/or" situation. Couchbase provides some tools and capabilities to help you balance safety and performance.
+Applications have evolved from monolithic to distributed micro-service based applications. Microservices still expect certain aspects of transactionality such as an atomic commit or rollback, but not necessarily full ACID behavior. The safety of full ACID behavior may still be important, but in modern web and mobile software, it is often lower priority to performance and scalability. However, it is not an "either/or" situation. Couchbase provides some tools and capabilities to help you balance safety and performance.
 
 ## A is for Atomicity
 
@@ -62,9 +62,7 @@ If your data can be modelled like this, then you immediately reduce your need fo
 
 "Consistency" means that any constraints in the database about the data remain consistent before and after an ACID operation. For instance, if an atomic set of operations fails, then the data remains consistent with what it was before the operation. Additionally, other constraints like a schema are enforced on the data. You cannot insert 6 columns of data into a 5 column table, for instance.
 
-As discussed in "Atomicity", Couchbase only guarantees single-document atomicity.
-
-The only schema that Couchbase supports is JSON. If you perform an insert operation with JSON, you must supply valid JSON (the Couchbase SDKs will typically handle this for you). This schema is only enforced at the document level. Couchbase cannot prevent you from using a different JSON schema from document to document. For instance, both of these documents can be inserted into the same bucket:
+The only schema that Couchbase needs is JSON. If you perform an insert operation with JSON, you must supply valid JSON (the Couchbase SDKs will typically handle this for you). This schema is only enforced at the document level. Couchbase cannot prevent you from using a different JSON schema from document to document. For instance, both of these documents can be inserted into the same bucket:
 
 [source,JavaScript,indent=0]
 ----
@@ -148,9 +146,9 @@ Using these locks, you can obtain isolation of an individual document, to make s
 
 ## D is for Durability
 
-"Durability" means that when an operation completes successfully, that the changes the operation made are stored to disk. This means that even if a system failure occurs, the change still takes place.
+"Durability" traditionally means that when an operation completes successfully, that the changes the operation made are stored to disk. In a distributed database, durability can mean that changes are written to disk and/or other nodes in the system. Ultimately, to a developer, it means that even if a system failure occurs, the change still takes place.
 
-Couchbase has a "memory-first" architecture. This means that the results of write operations are first written to memory, and then put into a queue to be asynchronously written to disk soon after. So, if an operation writes to memory, and the system shuts down immediately, then that operation is not durable. This is the default trade-off that Couchbase makes: speed over link:https://developer.couchbase.com/documentation/server/current/sdk/durability.html[durability].
+Couchbase has a "memory-first" architecture. This means that the results of write operations are first written to memory, and then put into a queue to be asynchronously written to disk or replicated to another node soon after. So, if an operation writes to memory, and the system shuts down immediately, then that operation is not durable. This is the default trade-off that Couchbase makes: speed over link:https://developer.couchbase.com/documentation/server/current/sdk/durability.html[durability].
 
 However, Couchbase allows you to override that default configuration and specify a stronger level of durability. This will swing the pendulum away from performance and towards the safety of ACID properties, but sometimes it may be necessary.
 
