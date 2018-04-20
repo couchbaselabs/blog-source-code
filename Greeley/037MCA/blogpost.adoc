@@ -18,7 +18,7 @@ include::../links.adoc[]
 image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/036HADR/images/HADR-2.png[]
 
 In this post, I'm going to take a look at a sample application that uses the {CBS} Multi-Cluster Aware
-(MCA) Java client.  This client goes hand-in-hand with Couchbase's Cross-Data Center Replication ({xdcr}[XDCR]) capabilities.
+(MCA) Java client.  This client goes hand-in-hand with Couchbase's Cross-Data Center Replication ({XDCR}) capabilities.
 
 XDCR supports flexible replication of data between different clusters.  XDCR is an important feature for large scale, multi-data center
 deployments.  The references below include several on XDCR.  The MCA client can automatically redirect traffic to these separate clusters
@@ -29,7 +29,7 @@ strategies.  To find out more before diving deeper into client specifics, take a
 
 [%hardbreaks]
 Intro to Couchbase HA/DR - {hadr}[High Availability/Disaster Recover documentation]
-Couchbase XDCR - {xdcr}[XDCR documentation]
+Couchbase XDCR - {XDCR-}[XDCR documentation]
 XDCR/MCA webinar (including technical demo) - link:https://event.on24.com/eventRegistration/EventLobbyServlet?target=reg20.jsp&referrer=https%3A%2F%2Fwww.couchbase.com%2Fresources%2Fwebinars&eventid=1569790&sessionid=1&key=86048A27BD53D35AFA6FFF8D43A09435&regTag=&sourcepage=register[HA/DR webinar]
 Webinar tutorial - link:https://github.com/couchbaselabs/mca-java-sample/blob/master/Tutorial.adoc[Setting up clusters step-by-step, with XDCR]
 A deeper look at XDCR - link:https://blog.couchbase.com/deep-dive-cross-data-center-replication-xdcr/[Deep Dive on Cross Data Center Replication (XDCR)] by https://twitter.com/deniswsrosa[Denis Rosa]

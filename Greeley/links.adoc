@@ -1,24 +1,36 @@
-:Couchbase: https://www.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase]
-:CDP: https://www.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Data Platform]
-:CBM: https://developer.couchbase.com/mobile?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Mobile]
-:CBL: https://developer.couchbase.com/documentation/mobile/current/guides/couchbase-lite/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Lite]
-:SG: https://developer.couchbase.com/documentation/mobile/current/guides/sync-gateway/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Sync Gateway]
-:CBS: https://www.couchbase.com/nosql-databases/couchbase-server?utm_source=blogs&utm_medium=link&utm_campaign=blogs[Couchbase Server]
-:N1QL: https://www.couchbase.com/n1ql?utm_source=blogs&utm_medium=link&utm_campaign=blogs[N1QL]
+:Couchbase: https://www.couchbase.com/[Couchbase]
+:CDP: https://www.couchbase.com/[Couchbase Data Platform]
+:CBM: https://developer.couchbase.com/mobile[Couchbase Mobile]
+:CBM-: https://developer.couchbase.com/mobile
+:CBL: https://developer.couchbase.com/documentation/mobile/current/guides/couchbase-lite/index.html[Couchbase Lite]
+:CBL-: https://developer.couchbase.com/documentation/mobile/current/guides/couchbase-lite/index.html
+:SG: https://developer.couchbase.com/documentation/mobile/current/guides/sync-gateway/index.html[Sync Gateway]
+:SG-: https://developer.couchbase.com/documentation/mobile/current/guides/sync-gateway/index.html
+:CBS: https://www.couchbase.com/nosql-databases/couchbase-server[Couchbase Server]
+:CBS-: https://www.couchbase.com/nosql-databases/couchbase-server
+:CAS: https://developer.couchbase.com/documentation/server/5.5/analytics/introduction.html[Couchbase Analytics]
+:CAS-: https://developer.couchbase.com/documentation/server/5.5/analytics/introduction.html
+:CES: https://developer.couchbase.com/documentation/server/5.5/eventing/eventing-overview.html[Couchbase Eventing Service]
+:CES-: https://developer.couchbase.com/documentation/server/5.5/eventing/eventing-overview.html
+:FTS: https://developer.couchbase.com/documentation/server/current/fts/full-text-intro.html[Full-Text Search]
+:FTS-: https://developer.couchbase.com/documentation/server/current/fts/full-text-intro.html
+:N1QL: https://www.couchbase.com/n1ql[N1QL]
+:XDCR: https://developer.couchbase.com/documentation/server/current/xdcr/xdcr-intro.html[XDCR]
+:XDCR-: https://developer.couchbase.com/documentation/server/current/xdcr/xdcr-intro.html
 :CouchbaseDev: https://twitter.com/CouchbaseDev[@CouchbaseDev]
 :HodGreeley: https://twitter.com/HodGreeley[@HodGreeley]
-:forums: https://forums.couchbase.com/?utm_source=blogs&utm_medium=link&utm_campaign=blogs[forums]
+:forums: https://forums.couchbase.com/[forums]
 :SO: http://stackoverflow.com/questions/tagged/couchbase[Stack Overflow]
-:sync: https://developer.couchbase.com/documentation/mobile/current/develop/guides/sync-gateway/sync-function-api-guide/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs
-:channels: https://developer.couchbase.com/documentation/mobile/current/develop/guides/sync-gateway/channels/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs
-:SGD: https://developer.couchbase.com/documentation/mobile/current/develop/guides/sync-gateway/index.html?utm_source=blogs&utm_medium=link&utm_campaign=blogs
+:sync: https://developer.couchbase.com/documentation/mobile/current/develop/guides/sync-gateway/sync-function-api-guide/index.html
+:channels: https://developer.couchbase.com/documentation/mobile/current/develop/guides/sync-gateway/channels/index.html
+:SGD: https://developer.couchbase.com/documentation/mobile/current/develop/guides/sync-gateway/index.html
 :SVCBMU: https://www.meetup.com/Couchbase-Silicon-Valley[Silicon Valley Couchbase Meetup]
 :downloads: https://www.couchbase.com/downloads
-:portal: https://developer.couchbase.com/community?utm_source=blogs&utm_medium=link&utm_campaign=blogs
+:portal: https://developer.couchbase.com/community
 :resources: https://www.couchbase.com/resources
 :nosql: https://www.couchbase.com/resources/why-nosql
 :start: https://www.couchbase.com/get-started
 :training: https://training.couchbase.com/
-:xdcr: https://developer.couchbase.com/documentation/server/current/xdcr/xdcr-intro.html
 :hadr: https://developer.couchbase.com/documentation/server/current/ha-dr/ha-dr-intro.html
 :rbac: https://developer.couchbase.com/documentation/server/current/security/concepts-rba-for-apps.html
+:cc17repo-: https://github.com/couchbaselabs/connect-fall-2017-demo

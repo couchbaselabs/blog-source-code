@@ -1,4 +1,5 @@
 = Tips for AsciiDoc
+include::links.adoc[]
 
 == Command line processing:
 
@@ -27,8 +28,8 @@ This works with images, too.
 
 == Shorthand links
 
-Keep a file of commonly used links and shorthand codes.  E.g. AsciiDoc automatically replaces {CBS}
-with a link and Couchbase Server as the link text.  Or, don't supply default text and add it on use.  E.g. {xdcr}[XDCR is cool].
+Keep a file of commonly used links and shorthand codes.  For example AsciiDoc automatically replaces \{CBS}
+with the link {CBS}.  Or, don't supply default text and add it on use, e.g. {XDCR-}[XDCR is cool].
 
 See https://github.com/couchbaselabs/blog-source-code/blob/master/Greeley/links.adoc[links.adoc]
 
@@ -39,6 +40,6 @@ See http://asciidoctor.org/docs/user-manual/#include-partial[]
 
 == Use callouts
 
-Number code lines for reference.
+Number code lines for reference.  This doesn't currently translate well to WordPress.
 See http://asciidoctor.org/docs/user-manual/#callouts[]
 

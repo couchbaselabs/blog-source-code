@@ -1,0 +1,79 @@
+= The Couchbase Data Platform in Action: The Couchbase Connect 2017 Silicon Valley Technical Demo
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: couchbase-data-platform-connect-2017-technical-demo
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+include::../links.adoc[]
+
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/041CBHOverview/images/Connect17Demo.jpg[]
+
+== A Full Stack Couchbase Data Platform Application
+
+This past year, at the annual Couchbase Connect conference in Silicon Valley, 
+we were proud to present a technical demonstration showing much of
+the breadth of the {CDP} capabilities.  This included:
+
+* Data storage and manipulation in {CBS-}[operational], {CAS-}[analytical], and {CBM-}[mobile] contexts
+* IoT data moving from sensor to server to web client
+* {CBL-}[Cross-platform mobile device local data persistence] with {SG-}[automatic synchronization]
+* Event-driven web UI using the {CES}
+* Live schema changes with no down time/migration 
+* SQL-style dynamic queries with {N1QL}
+* {FTS} with stemming, fuzzy matching, and facets
+* Combining in-database with on-the-fly REST results retrieved with N1QL's link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/curl.html[cURL] capability
+* Large-scale ad hoc {CAS-}[data analytics] with no ETL
+* link:https://www.couchbase.com/multi-dimensional-scalability-overview[Multi-Dimensional Scaling] of the working clusters
+* Easy hosting with popular cloud providers^link:https://aws.amazon.com/marketplace/seller-profile?id=1a064a14-5ac2-4980-9167-15746aabde72[1]^^link:https://azuremarketplace.microsoft.com/en-us/marketplace/apps/couchbase.couchbase-enterprise[2]^^link:https://console.cloud.google.com/launcher/partners/couchbase-public[3]^
+* Automatic replication of data with {XDCR}
+* {hadr}[Cluster failover]
+
+and more.
+
+That's a lot to take in.
+
+Personally, I was super excited to be part of building this project.  It's hard to
+understand the real scope without seeing it in action.  Take a look at this video.
+
+video::-U_UjqnhMBI[youtube,start=138,width=640,height=360]
+
+== Project Source Code
+
+I'm happy to announce the code base is now {cc17repo-}[open-source
+and available on GitHub].  This includes sample data suitable for demonstrating on a single machine.
+(Scaling to the size of the actual demo isn't feasible with GitHub!)  You'll be
+able to try out the whole thing and see how each piece works.
+
+There are shell scripts as well.
+These aim to simplify setting up the entire demo.  They use Docker to allow setting up multiple
+clusters.  (Read about cluster setup with Docker link:https://blog.couchbase.com/simplified-couchbase-server-cluster-creation-via-docker/[here].)
+You can run an entire multi-data center example on one machine.
+
+== Exploring the Code
+
+In an upcoming series of blog posts, we will go into detail on all aspects
+of the demo.  This will include an architectural review, setting up and running all the elements, and deep dives into
+many parts of the source code.  We'll look at everything from the NFC temperature
+patch through to the Vue.js-based web client.
+
+The code and supporting files are still a work in progress.  Feel free to enter issues, pull requests, and ping us with questions.
+
+=== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}
