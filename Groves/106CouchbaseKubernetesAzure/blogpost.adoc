@@ -1,0 +1,105 @@
+Title: TBD - AKS Couchbase Cluster
+
+intro
+-----
+
+AKS is the managed container service for Azure (think of it like Kubernetes on Azure)
+AKS is currently in preview
+In this post, we'll create an AKS cluster and install couchbase on it, using the couchbase kubernetes operator
+
+azure cloud shell
+-----------------
+
+open a cloud shell in azure portal - requires you to use a storage account
+
+I'm using powershell (windows), but it won't be much different in bash (linux)
+this will take a few minutes to spin up the first time
+
+if you're like me and have multiple accounts, you should check to see which is the "default"
+	az account list
+and look at the "isDefault" field in the json
+
+if you want to change that:
+	az account set --subscription "Visual Studio Ultimate with MSDN"
+
+use the azure-cli
+-----------------
+create a resource group from the command line
+
+az group list - list of resource groups
+
+az group create --name cb_aks_spike --location eastus
+
+(succeeds, should appear in portal when you click "resource groups")
+
+MAYBE:
+az provider list | ConvertFrom-Json | Format-Wide
+az provider register -n Microsoft.ContainerService (might not be needed if AKS is general available
+az provider show -n Microsoft.ContainerService to view progress
+wait until "registrationState" is not "Registering" and becomes "Registered"
+
+create AKS cluster
+------------------
+
+create cluster inside group:
+az aks create --resource-group cb_aks_spike --name cbAKScluster --generate-ssh-keys
+(note: AKS cluster name can only contain letter,numbers,dashes)
+
+this will take some time to run
+
+when it's done, you'll have a managed container service with a node pool of size 3 (the default, you can specify with --node-count)
+of the azure standard DS1 v2 - these are single CPU, 3.5gb RAM machines, which are inexpensive and fine for this demo, but you will probably
+want to use a more powerful machine for couchbase
+
+put couchbase on the cluster with kubectl
+-----------------------------------------
+
+this next part run locally on powershell, and not in the azure cloud shell
+you will need to be logged in and have azure-cli already installed - https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli
+
+az aks install-cli
+az aks get-credentials --resource-group=cb_aks_spike --name=cbAKScluster
+
+kubectl get nodes
+- this should list the three nodes in the pool
+
+first step is to create a couchbase operator, which is currently in beta as I write this - https://blog.couchbase.com/introducing-couchbase-operator/
+
+kubectl create -f https://s3.amazonaws.com/packages.couchbase.com/kubernetes/beta/operator.yaml
+kubectl get deployments
+
+now time to deploy couchbase:
+
+kubectl create -f https://s3.amazonaws.com/packages.couchbase.com/kubernetes/beta/secret.yaml
+kubectl create -f https://s3.amazonaws.com/packages.couchbase.com/kubernetes/beta/couchbase-cluster.yaml
+
+you can use those sample yaml files, or of course, create your own (check out the documentation - http://docs.couchbase.com/prerelease/couchbase-operator/beta/couchbaseClusterConfig.html)
+
+MAYBE: I created my own variation on this sample using the couchbase 5.5 beta container and some other tweaks
+
+at this point, the pods will start to be created, you can check out the status with:
+- kubectl get pods
+
+this will take a few minutes to complete
+
+access cluster through ssh tunnel
+---------------------------------
+
+The couchbase cluster is now created and can be accessed from other pods in the cluster
+But one other way you can access it is by port forwarding
+
+kubectl port-forward cb-example-0000 8091:8091
+
+When you do this, your localhost on port 8091 will be forwarded to the cb-example-0000 pod on port 8091
+which means if you open http://localhost:8091 in your local browser, you'll be directed to the couchbase cluster
+running in AKS on Azure
+
+summary
+-------
+wrap up with links:
+
+https://github.com/couchbase-partners/azure-kubernetes-couchbase
+https://github.com/Azure/azure-cli/issues/6142#issuecomment-382555004
+https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli
+
+forum, twitter, etc

@@ -1,0 +1,34 @@
+apiVersion: couchbase.database.couchbase.com/v1beta1
+kind: CouchbaseCluster
+metadata:
+  name: cb-example
+spec:
+  baseImage: couchbase/server
+  version: enterprise-5.0.1
+  authSecret: cb-example-auth
+  exposeAdminConsole: true
+  cluster:
+    dataServiceMemoryQuota: 512
+    indexServiceMemoryQuota: 256
+    searchServiceMemoryQuota: 256
+    indexStorageSetting: memory_optimized
+    autoFailoverTimeout: 30
+  buckets:
+    - name: myBucket
+      type: couchbase
+      memoryQuota: 128
+      replicas: 2
+      ioPriority: high
+      evictionPolicy: valueOnly
+      conflictResolution: seqno
+      enableFlush: true
+      enableIndexReplica: false
+  servers:
+    - size: 3
+      name: all_services
+      services:
+        - data
+        - index
+        - query
+      dataPath: /opt/couchbase/var/lib/couchbase/data
+      indexPath: /opt/couchbase/var/lib/couchbase/data
