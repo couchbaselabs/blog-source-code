@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: 
+:meta-description: AKS (Azure Container Service) is the managed Kubernetes service on Microsoft Azure. In this post, I'm going to create an AKS cluster and install a Couchbase cluster on it.
 :title: AKS with the Couchbase Kubernetes Operator
 :slug: AKS-Couchbase-Kubernetes-Operator
 :focus-keyword: AKS
@@ -19,7 +19,7 @@ First, login to the link:https://portal.azure.com/#@[Azure portal]. I'm going to
 
 image:10601-azure-cloud-shell-icon.png[Azure Cloud Shell icon]
 
-Clicking this will open up a shell command prompt window right in your browser. The first time you do this, you will be prompted to decided between Bash and PowerShell. I decided to use PowerShell. _(If you are more comfortable with Bash, then you should still be able to follow along)_. You will need to setup a storage account the first time you use the Cloud Shell. This will take several minutes, but you only need to do it the first time.
+Clicking this will open up a shell command prompt window right in your browser. The first time you do this, Azure will be prompt you to decide between Bash and PowerShell. I decided to use PowerShell. _(If you are more comfortable with Bash, then you should still be able to follow along)_. You will need to setup a storage account the first time (and only the first time) you use the Cloud Shell. This will take several minutes.
 
 image:10602-bash-or-powershell.png[Bash or PowerShell]
 
@@ -34,7 +34,7 @@ If you're like me and have multiple account subscriptions within Azure (for inst
 az account list
 ----
 
-This command will print out a list of your accounts in JSON format. Check out the `isDefault` field in the JSON. For instance, mine had my "Pay as you go" account as the default (which I don't want, because I have free credit on my MSDN account).
+This command will print out a list of your accounts in JSON format. Check out the `isDefault` field in the JSON. For instance, mine had "Pay as you go" as the default (which I don't want, because I have plenty of credit on my MSDN account).
 
 If you want to change the default, enter a command like this:
 
@@ -43,13 +43,13 @@ If you want to change the default, enter a command like this:
 az account set --subscription "Visual Studio Ultimate with MSDN"
 ----
 
-You can use the subscription name or the ID. 
+You can use the subscription name (as I did) or the ID. 
 
 ## Azure-cli
 
 The above two commands that used "az" are using the "Azure CLI". You can install this on your local machine, and it comes out-of-the-box when using the Cloud Shell.
 
-Before we can create a Kubernetes cluster with a Couchbase cluster, let's lay some groundwork.
+Before we can create a Kubernetes cluster with a Couchbase cluster, let's use azure-cli to lay the groundwork.
 
 First, create a resource group. A resource group is a logical grouping that you can use to organize the various services and instances in Azure. You can get a list of all your current resource groups with this command:
 
@@ -67,11 +67,11 @@ az group create --name cb_aks_spike --location eastus
 
 At this point, the resource group should appear when you run `az group list`, or when you view your resource groups in the normal Azure Portal UI.
 
-If you're using Cloud Shell, you probably won't need the following steps. But if you're trying to use your local Windows PowerShell, you might also need to take the following steps:
+If you're trying to use your local Windows PowerShell, you might also need to take the following steps:
 
-* Do you have the ContainerService registered? You can find out by running `az provider list | ConvertFrom-Json | Format-Wide`
-* Start ContainerService registration: `az provider register -n Microsoft.ContainerService
-* Monitor the progress of ContainerService registration: `az provider show -n Microsoft.ContainerService` (wait until "registrationState" is not "Registering" and becomes "Registered")
+1. Check to see if you have the ContainerService registered. You can find out by running `az provider list | ConvertFrom-Json | Format-Wide` and seeing if it's listed there.
+2. If it's not listed, start ContainerService registration: `az provider register -n Microsoft.ContainerService`
+3. Then, monitor the progress of ContainerService registration: `az provider show -n Microsoft.ContainerService` (wait until "registrationState" is not "Registering" and becomes "Registered")
 
 These steps might not be necessary when AKS goes out of preview into a general release.
 
@@ -84,12 +84,12 @@ Next, create an AKS cluster inside of the resource group you created in the prev
 az aks create --resource-group cb_aks_spike --name cbAKScluster --generate-ssh-keys
 ----
 
-_(AKS cluster name can only contain letter,numbers,dashes)._
+_(AKS cluster name can only contain letter, numbers, and dashes)._
 
 This will take some time to complete. When it's done, you'll have a managed container service with:
 
 * A node pool of size 3 (the default, you can specify with --node-count)
-* Each node is a DS1_v2 (Single CPU, 3.5gb RAM machines, which are inexpensive and fine for this demo, but you will probably want to use a more powerful machine for Couchbase in production)
+* Each node is a DS1_v2 Azure instance (Single CPU, 3.5gb RAM machines, which are inexpensive and fine for this demo, but you will probably want to use a more powerful machine for Couchbase in production)
 
 Note that you've created a *Kubernetes cluster*. Next, we'll install a *Couchbase cluster* _within_ the Kubernetes cluster. It's important to keep track of and communicate the specific cluster whenever you refer to one.
 
@@ -119,7 +119,7 @@ image:10604-kubectl-get-nodes.png[Kubectl get nodes]
 
 Couchbase has introduced a link:https://blog.couchbase.com/introducing-couchbase-operator/[Kubernetes operator], which is currently in beta. You don't _have_ to use this operator, but it's going to make using Couchbase on Kubernetes a much better experience.
 
-Start by creating the operator with `kubectl`:
+Start by deploying the operator with `kubectl`:
 
 [source]
 ----
@@ -128,7 +128,7 @@ kubectl create -f https://s3.amazonaws.com/packages.couchbase.com/kubernetes/bet
 
 image:10608-create-operator.png[Create operator]
 
-When that's finished, you can view the deployements with `kubectl get deployments`.
+When that's finished, you can view all deployments with `kubectl get deployments`.
 
 Now it's time to deploy Couchbase. You'll need to create a secret and a cluster, both with YAML files. You can use a couple of sample YAML files available at these URLs:
 
@@ -147,27 +147,27 @@ I created my own minor variation on this sample, adjusting the memory quota, the
 include::src/couchbase-cluster-matt.yaml[]
 ----
 
-At this point, the "pods" will start to be created on AKS. You can check out the status with: `kubectl get pods`.
+At this point, AKS will start creating the "pods". You can check out the status with: `kubectl get pods`.
 
 image:10606-get-pods.png[get pods]
-image:10605-kubectl-get-pods.png[kubectl get pods]
+image:10605-kubectl-get-pods.png[kubectl get pods running on AKS]
 
 This will take a few minutes to complete.
 
 ## Access the AKS cluster
 
-The Couchbase cluster is now created and can be accessed from other pods in the cluster. One other way you can access it, just to verify it's working, is with port forwarding. Run this command locally:
+The Couchbase cluster is now running in the Kubernetes cluster. One other way you can access Couchbase, just to verify it's working, is with port forwarding. Run this command locally:
 
 [source]
 ----
 kubectl port-forward cb-example-0000 8091:8091
 ----
 
-When you do this, your localhost on port 8091 will be forwarded to the cb-example-0000 pod on port 8091. Which means that if you open http://localhost:8091 in your local browser, you'll be directed to the Couchbase cluster running in AKS on Azure.
+When you do this, you're forwarding localhost on port 8091 to the cb-example-0000 pod on port 8091. Which means that if you open http://localhost:8091 in your local browser, you'll be directed to the Couchbase cluster running in AKS on Azure.
 
 image:10607-couchbase-cluster.png[Couchbase cluster]
 
-An easy way to see AKS and Kubernetes in action is to remove the bucket. The Couchbase operator will see this, and recreate the bucket.
+An easy way to see AKS and the Kubernetes operator in action is to remove the bucket. The Couchbase operator will notice this, and recreate the bucket automatically.
 
 ## Summary
 
