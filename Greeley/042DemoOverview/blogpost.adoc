@@ -72,8 +72,7 @@ video::bmNVuLLkOpA[youtube,width=640,height=360]
 
 This is just one of the keynote demos we've presented at our Couchbase Connect conferences.
 Don't miss the chance to see upcoming demos and speak with Couchbase engineers, product managers,
-and other experts at our upcoming conferences and events.  Find out more on our
-link:https://www.couchbase.com/resources/events[events page].
+and other experts at our upcoming conferences and events.  Find out more on our link:https://www.couchbase.com/resources/events[events page].
 
 === Postscript
 
