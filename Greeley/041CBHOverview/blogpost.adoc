@@ -17,7 +17,7 @@ include::../links.adoc[]
 
 image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/041CBHOverview/images/Connect17Demo.jpg[]
 
-== A Full Stack Couchbase Data Platform Application
+== A Full Stack Application Built Using the Couchbase Data Platform
 
 This past year, at the annual Couchbase Connect conference in Silicon Valley, 
 we were proud to present a technical demonstration showing much of

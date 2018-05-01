@@ -1,0 +1,86 @@
+= The Couchbase Data Platform in Action: Couchbase Connect 2017 SV Demo Technical Overview
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+include::../links.adoc[]
+
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/042DemoOverview/images/CCDemoHighLevel.jpg[]
+
+Last Fall we showed a 30 minute live demo of a full stack application written
+using a broad range of the {CDP} capabilities.  This was at
+the Couchbase Connect Silicon Valley 2017 conference.  
+
+In this link:https://blog.couchbase.com/couchbase-data-platform-connect-2017-technical-demo/[introductory post],
+I highlighted most of what we showed.  The post includes pointers for more information,
+and to the project source code.  If you haven't seen the demo video yet, or read about
+the project, I'd suggest taking a look at that post first.
+
+== High-Level Architecture
+
+With this post I want to kick off the deep dives into the technical aspects of the demo.
+Let's take a look at the overall architecture.  Here's a diagram of it for reference.
+
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/042DemoOverview/images/CCDemoHighLevel.jpg[]
+
+== Web Application Components
+
+The web side is pretty standard.  We have a web client written using Vue.js.
+The server side runs in Node.js.  The Node server exposes all the REST
+endpoints needed by the client, and handles the communication with {CBS}.
+
+There are some less common pieces, like using Server Sent Events together with
+the {CES}.  This allows pushing data to the client instead
+of polling the database.
+
+== Mobile/IoT Application Components
+
+Working up through the other side, the architecture is more unique.
+
+First off,
+there's the temperature sensor.  For this we used a link:http://www.ti.com/tool/TIDM-RF430-TEMPSENSE[battery-less NFC patch]
+made by Texas Instruments.  We read in temperatures using an NFC-enabled phone.
+This data gets stored in the mobile app's built-in {CBL} database.
+That let's us easily record readings while the phone is online or off.
+
+To sync the readings, {CBL} connects to Couchbase {SG}.
+Sync Gateway is specially designed to be a cloud-edge service, and core to
+making the sync process easy.
+
+Among other things, Sync Gateway handles moving the data into a {Bucket}.
+During the demo we also make a schema change on the fly.  The changes
+automatically transfer down to the phone.  That's also managed by Sync Gateway.
+
+== Video
+
+If you like, you can also find out more in this video walk-through.  I talk
+a bit about the {CDP} capabilities used in the demo as well.
+
+video::bmNVuLLkOpA[youtube,width=640,height=360]
+
+== Couchbase Connect
+
+This is just one of the keynote demos we've presented at our Couchbase Connect conferences.
+Don't miss the chance to see upcoming demos and speak with Couchbase engineers, product managers,
+and other experts at our upcoming conferences and events.  Find out more on our link:https://www.couchbase.com/resources/events[events page].
+
+=== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}

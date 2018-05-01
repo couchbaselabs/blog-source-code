@@ -17,6 +17,10 @@
 :N1QL: https://www.couchbase.com/n1ql[N1QL]
 :XDCR: https://developer.couchbase.com/documentation/server/current/xdcr/xdcr-intro.html[XDCR]
 :XDCR-: https://developer.couchbase.com/documentation/server/current/xdcr/xdcr-intro.html
+:Bucket: https://developer.couchbase.com/documentation/server/current/architecture/core-data-access-buckets.html[Couchbase Server Bucket]
+:Bucket-: https://developer.couchbase.com/documentation/server/current/architecture/core-data-access-buckets.html
+:Buckets: https://developer.couchbase.com/documentation/server/current/architecture/core-data-access-buckets.html[Couchbase Server Buckets]
+:Buckets-: https://developer.couchbase.com/documentation/server/current/architecture/core-data-access-buckets.html
 :CouchbaseDev: https://twitter.com/CouchbaseDev[@CouchbaseDev]
 :HodGreeley: https://twitter.com/HodGreeley[@HodGreeley]
 :forums: https://forums.couchbase.com/[forums]
