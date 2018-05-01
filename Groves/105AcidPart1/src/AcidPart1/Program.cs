@@ -38,15 +38,15 @@ namespace AcidPart1
 
             // tag::justreplicate[]
             // replicate
-            var result2 = bucket.Upsert("persist-to-1", new { email = "matthew.groves@couchbase.com" }, ReplicateTo.One);
-            if (result2.Success)
+            var result2 = bucket.Upsert("replicate-to-1", new { email = "matthew.groves@couchbase.com" }, ReplicateTo.One);
+            if (!result2.Success)
                 Console.WriteLine("This will also fail if I only have 1 node");
             // end::justreplicate[]
 
             // tag::both[]
             // persist and replicate
-            var result3 = bucket.Upsert("persist-to-1-replicate-to-1", new { site = "blog.couchbase.com" }, ReplicateTo.One, PersistTo.One);
-            if (result3.Success)
+            var result3 = bucket.Upsert("replicate-to-1-persist-to-1", new { site = "blog.couchbase.com" }, ReplicateTo.One, PersistTo.One);
+            if (!result3.Success)
                 Console.WriteLine("This will also fail if I only have 1 node");
             // end::both[]
 
