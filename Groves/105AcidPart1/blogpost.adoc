@@ -5,7 +5,7 @@
 :focus-keyword: ACID properties
 :categories: Couchbase Server, .NET, N1QL
 :tags: ACID, ACID properties, CAS, Couchbase Server, Couchbase, transactions
-:heroimage: http://www.usafe.af.mil/News/Photos/igphoto/2000830121/
+:heroimage: 105-acid-properties-hero.jpg from http://www.usafe.af.mil/News/Photos/igphoto/2000830121/
 
 ACID properties are a topic that I get asked about a lot. Generally, people ask in the context of transactions: "Are there NoSQL transactions?", "Can I use ACID transactions in Couchbase?", and so on. But today's distributed applications do not always expect or need all of the ACID properties from their database. I'll dig deeper into the ACID properties in this post.
 
@@ -19,9 +19,9 @@ Currently, Couchbase supports many ACID properties on single documents, but does
 
 ## What are the ACID properties?
 
-ACID stands for: Atomicity, Consistency, Isolation, Durability. It was coined in the 1980s, but has existed since the 1970s in traditional, non-distributed, relational databases. It describes a class of database that is capable of providing operations with safety guarantees.
+ACID stands for: Atomicity, Consistency, Isolation, Durability. It was coined in the 1980s, but has existed since the 1970s in traditional, non-distributed, relational databases. It describes a class of database that is capable of providing operations with guarantees.
 
-Applications have evolved from monolithic all the way to distributed micro-service based applications. Microservices still expect certain aspects of transactionality such as an atomic commit or rollback, but not necessarily full ACID behavior. The safety of full ACID behavior may still be important, but in modern web and mobile software, it is often lower priority to performance and scalability. However, it is not an "either/or" situation. Couchbase provides some tools and capabilities to help you balance safety and performance.
+Applications have evolved from monolithic all the way to distributed micro-service based applications. Microservices still expect certain aspects of transactionality such as an atomic commit or rollback, but not necessarily full ACID behavior. Full ACID behavior may still be important, but in modern web and mobile software, it is often lower priority to performance and scalability. However, it is not an "either/or" situation. Couchbase provides some tools and capabilities to help you balance ACID properties and performance.
 
 ## A is for Atomicity
 
@@ -152,7 +152,7 @@ Using these locks, you can obtain isolation of an individual document, to make s
 
 Couchbase has a "memory-first" architecture. This means that the results of write operations are acknowledged when received to memory, and then put into a queue to be asynchronously written to disk or replicated to another node soon after. So, if an operation writes to memory, and the system shuts down immediately, then that operation is not durable. This is the default trade-off that Couchbase makes: speed over link:https://developer.couchbase.com/documentation/server/current/sdk/durability.html[durability].
 
-However, Couchbase allows you to override that default configuration and specify a stronger level of durability with _Durability Requirements_. This will swing the pendulum away from performance and towards the safety of ACID properties. The benefit of this design is that the application developer knows and decides when it's important to pay the extra cost.
+However, Couchbase allows you to override that default configuration and specify a stronger level of durability with _Durability Requirements_. This will swing the pendulum away from performance and towards the ACID properties. The benefit of this design is that the application developer knows and decides when it's important to pay the extra cost.
 
 The default behavior is that writing the document to memory is considered a success. Couchbase will still persist and replicate according to your Couchbase cluster configuration, but the method call will proceed after the operation is acknowledged.
 
@@ -177,13 +177,15 @@ include::src/AcidPart1/Program.cs[tag=both]
 
 Each of these method calls will block until the desired _Durability Requirements_ are met, and will allow your application to perform additional error handling.
 
-Note that if the durability requirements _fail_, then Couchbase may still save the document and eventually distribute it across the cluster. All we know is that it didn't succeed as far as the SDK knows. You can choose to act on this information to introduce more safety into your application.
+Note that if the durability requirements _fail_, then Couchbase may still save the document and eventually distribute it across the cluster. All we know is that it didn't succeed as far as the SDK knows. You can choose to act on this information to introduce more ACID properties into your application.
 
 ## Final Notes
 
-It's important to note that even with all these primitives, there's no way to get the same kind of total safety that a non-distributed database can offer with full ACID properties. But you get a different kind of safety: if a single non-distributed database goes down, then your application is going to stop working altogether. And if you need to scale your application up, you don't have to wrestle with the all the baggage of a rigidly ACID-compliant relational database system.
+It's important to note that even with all these primitives, there's no way to get the full ACID properties that a non-distributed database can offer. But, if a single non-distributed database goes down, then your application is going to stop working altogether. And if you need to scale your application up, you don't have to wrestle with the all the baggage of a rigidly ACID-compliant relational database system.
 
-Make sure you are using a distributed database for the right use case and/or in concert with a traditional relational database. Then you can get the performance, scalability, and flexibility of NoSQL when you need it and the safety of relational when you need it. You can leverage all the primitives to provide some of the aspects of ACID properties when you need them.
+Applications have evolved from monolithic to micro-service based and they no longer rely on getting all of the ACID behaviors from the underlying database. Couchbase already provides a rich set of primitives for what you need. Using these, you can build to your own specifications. Couchbase is committed to keep enriching our transactional support.
+
+Make sure you are using a distributed database for the right use case. Then you can get the performance, scalability, and flexibility of NoSQL when you need it.
 
 In the next post, we'll look at one way you might leverage these ACID properties and primitives to create a kind of "NoSQL transaction".
 
