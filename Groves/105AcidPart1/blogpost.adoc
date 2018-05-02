@@ -181,12 +181,8 @@ Note that if the durability requirements _fail_, then Couchbase may still save t
 
 ## Final Notes
 
-It's important to note that even with all these primitives, there's no way to get the full ACID properties that a non-distributed database can offer. But, if a single non-distributed database goes down, then your application is going to stop working altogether. And if you need to scale your application up, you don't have to wrestle with the all the baggage of a rigidly ACID-compliant relational database system.
+This blog post talked about the various primitives available to you in Couchbase to build ACID-like guarantees into your application. While these primitives do not satisfy full ACID definition, they are sufficient for what the vast majority of modern microservices-based applications need. For the small percentage of use cases that need additional transactional guarantees, Couchbase will continue to innovate further.
 
-Applications have evolved from monolithic to micro-service based and they no longer rely on getting all of the ACID behaviors from the underlying database. Couchbase already provides a rich set of primitives for what you need. Using these, you can build to your own specifications. Couchbase is committed to keep enriching our transactional support.
-
-Make sure you are using a distributed database for the right use case. Then you can get the performance, scalability, and flexibility of NoSQL when you need it.
-
-In the next post, we'll look at one way you might leverage these ACID properties and primitives to create a kind of "NoSQL transaction".
+In the next post, we'll look at techniques and sample code you might leverage to build a multi-document transaction in Couchbase.
 
 If you have any questions, be sure to check out the link:https://forums.couchbase.com/[Couchbase Forums]. You can find the same code used in this blog post link://[on Github].
