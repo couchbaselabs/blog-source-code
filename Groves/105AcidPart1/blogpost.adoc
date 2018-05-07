@@ -99,7 +99,7 @@ _Note: The "Consistency" in ACID link:https://martin.kleppmann.com/2015/05/11/pl
 
 "Isolation" is the ability for an operation to occur only after another operation on the same data has been completed. In this way, each operation is _independent_ of other operations. This is very important when a database is handling concurrent data access. It should _appear_ that the database is handling only one operation at a time. In order to accomplish this, the data that's being updated must be *locked* out of being modified (and/or viewed) until the operation is complete.
 
-Again, Couchbase is able to provide this guarantee at the single document level.
+Couchbase provides read committed isolation by default at (again) the single document level.
 
 There are two types of locks that you can do in Couchbase: pessimistic locking and optimistic locking.
 
@@ -148,7 +148,7 @@ Using these locks, you can obtain isolation of an individual document, to make s
 
 ## D is for Durability
 
-"Durability" traditionally means that when an operation completes successfully, that the disk stores the changes made by the operation. In a distributed database, durability can mean that the disk and/or the other nodes in the system store the changes. Ultimately, to a developer, it means that even if a system failure occurs, the change still takes place.
+"Durability" traditionally means that when an operation completes successfully, that the *disk* stores the changes made by the operation. In a distributed database, durability can mean that the *disk and/or the memory in other nodes* store the changes. Ultimately, to a developer, it means that even if a system failure occurs, the change still takes place.
 
 Couchbase has a "memory-first" architecture. This means that the results of write operations are acknowledged when received to memory, and then put into a queue to be asynchronously written to disk or replicated to another node soon after. So, if an operation writes to memory, and the system shuts down immediately, then that operation is not durable. This is the default trade-off that Couchbase makes: speed over link:https://developer.couchbase.com/documentation/server/current/sdk/durability.html[durability].
 
