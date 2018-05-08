@@ -1,0 +1,40 @@
+:imagesdir: images
+:meta-description: Michigan User Groups are going to be seeing a lot of Couchbase and NoSQL in the month of May. Visit your local user groups in Lansing, Grand Rapids, Ann Arbor, and Detroit.
+:title: Michigan User Groups this month
+:slug: Michigan-User-Groups-month
+:focus-keyword: michigan user groups
+:categories: Couchbase Server, .NET, N1QL
+:tags: Couchbase Server, .NET
+:heroimage: 108-hero-michigan-map.jpg https://commons.wikimedia.org/wiki/File:Map_of_USA_MI.svg
+
+Michigan user groups: watch out! I'll be spending a solid week at in your state! I'll be talking about the tech I'm most enthusiastic about, including: link:https://couchbase.com/downloads[Couchbase Server], .NET, C#.
+
+If you're anywhere in Michigan (lower peninsula, sorry link:https://en.wikipedia.org/wiki/Yooper[Yoopers]), you should definitely get to one of these groups and network with fellow developers.
+
+== May 14th: West Michigan .NET Users Group
+
+The first of the Michigan user groups I'll be at is the link:https://www.meetup.com/wmdotnet/[West Michigan .NET Users Group]. I'll be presenting link:https://www.meetup.com/wmdotnet/events/250411803/[5 Popular Choices for NoSQL on a Microsoft Platform], which will highlight Couchbase, of course, compared to some of the other choices out there.
+
+== May 15th: Ann Arbor .NET Developers Group
+
+The next of the Michigan user groups is in the forbidden city of link:https://www.meetup.com/aadndevs/[Ann Arbor] (forbidden because I live in Columbus, Ohio, and well, link:https://www.12up.com/posts/4126934-6-best-woody-hayes-quotes-about-michigan-rivalry[you know]). At this group, they've asked me to link:https://www.meetup.com/aadndevs/events/249349717/[speak about Aspect-Oriented Programming], which I don't use much anymore, but I did write a book about it once. I'm sure some Couchbase stuff will sneak into the presentation.
+
+== May 16th: Great Lakes Area .NET Users Group
+
+The Michigan user groups tour rolls on with one of my favorite, seminal .NET user groups. This one is in the Detroit area: link:https://www.meetup.com/Great-Lakes-Area-NET-User-Group-GANG/events/swhmmpyxhbvb/[Great Lakes Area .NET Users Group]. If you've never been to a GANG meeting, you're missing out! I'll again be presenting "5 Popular Choices for NoSQL on a Microsoft Platform".
+
+image:10801-migang-michigan-user-groups.jpg[Great Lakes Area .NET Michigan user groups]
+
+_One of my personal traditions/rituals is to hand-draw a doodle of each user group/meetup/conference logo (or some variation of it) that I attend or speak at. This logo is a combination of "Pure Michigan", which is the state tourism motto (also on the license plates) and the MIGANG logo._
+
+== May 17th: Greater Lansing .NET User Group
+
+Finally, I'm going to end the tour in the state capital at the link:https://www.meetup.com/GLUGnet/[Greater Lansing .NET User Group]. Once again, I'll be presenting link:https://www.meetup.com/GLUGnet/events/qkmgpkyxhbwb/[5 Popular Choices for NoSQL on a Microsoft Platform].
+
+== I'll see you at these Michigan user groups!
+
+If you think I'll be giving the exact same presentation 3 times, think again! User groups generally provide more time for audience questions, participation, and improvisation. I sometimes change the entire direction of a presentation mid-course. I may end up diving deeper into querying (like link:http://couchbase.com/n1ql[N1QL]) in one session, text-based search in another, and CAP theorem in another.
+
+It all depends on you. Support your local user group, bring your burning questions, come and learn about NoSQL, meet some great people, and let's have some fun!
+
+I'll see you there: I'm on link:https://twitter.com/mgroves[Twitter @mgroves].
