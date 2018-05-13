@@ -77,7 +77,7 @@ If you used Docker, just visit *localhost:8080/NiFi*. You'll see what looks like
 
 I'm going to skip a head a bit and show the complete data flow that I built:
 
-image:10701-NiFi-end-state.png[NiFi complete data flow]
+image:10701-nifi-end-state.png[NiFi complete data flow]
 
 I'll go through this step-by-step, but keep in mind that I'm not a NiFi expert. 
 
