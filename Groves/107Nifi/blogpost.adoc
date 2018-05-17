@@ -1,10 +1,10 @@
 :imagesdir: images
 :meta-description: NiFi is a tool to automate the flow of data. It's a tool for migration, synchronization, and other types of data processing. I am just starting to learn about it: it was introduced to me by one of Couchbase's newest customers: the Cincinnati Reds.
-:title: NiFi Data Processing and Flow with Couchbase Server 
-:slug: NiFi-Data-Processing-Flow-Couchbase-Server 
+:title: NiFi Processing and Flow with Couchbase Server 
+:slug: NiFi-Processing-Flow-Couchbase-Server
 :focus-keyword: NiFi
 :categories: Couchbase Server
-:tags: Couchbase Server, NiFi, Apache NiFi, migration, processing
+:tags: Couchbase Server, NiFi, Apache NiFi, migration, processing, flow, data processing, data flow
 :heroimage: 107-hero-couchbase-team-and-mr-redlegs.jpg
 
 NiFi is a tool to automate the flow of data. It's a tool for migration, synchronization, and other types of data processing. I am just starting to learn about it. It was introduced to me by one of Couchbase's newest customers: the Cincinnati Reds.
@@ -93,6 +93,8 @@ image:10703-nifi-configuration.png[NiFi Configuration]
 
 Look at the Controller Services tab. I think of this as a collection of external data sources that the processors can connect to. We're going to add two controller services: one for SQL Server and one for Couchbase.
 
+=== DBCPConnectionPool
+
 Click the "+" button to add. Let's start with SQL Server: find DBCPConnectionPool and click "Add". It should appear in the list. Click the gear icon and navigate to the properties tab:
 
 * *Database Connection URL* - Enter a value like `jdbc:sqlserver://172.17.0.4`.
@@ -101,6 +103,8 @@ Click the "+" button to add. Let's start with SQL Server: find DBCPConnectionPoo
 * *Database User* and *Password* - The SQL Server credentials you need to connect.
 
 Once you've added it, you'll need to "enable" it (click the lighting icon) in order to use it. If you need to make changes in the future, you'll need to disable it first.
+
+=== CouchbaseClusterService
 
 Next, let's tell NiFi about Couchbase. Again, click the "plus" button to add. Look for CouchbaseClusterService. Again, navigate to the properties tab. There should be one property called *Connection String*. Enter something like `couchbase://172.17.0.3`. Next, click the "plus" button on this tab and create a new property called "Bucket Password for tickets". Note that the property name must be of the form *"Bucket Password for <your bucket name>"*. The value of this property should be the password of the Couchbase user you created earlier.
 
