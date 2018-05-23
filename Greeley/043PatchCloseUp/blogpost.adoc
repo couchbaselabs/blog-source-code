@@ -1,0 +1,58 @@
+= The Couchbase Data Platform in Action: IoT Temperature Sensing Up Close
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: https://blog.couchbase.com/couchbase-iot-temperature-sensing/
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+include::../links.adoc[]
+
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/043PatchCloseUp/images/PatchHighlight.png[]
+
+During Couchbase Connect Silicon Valley last Fall, we went through an extensive
+demonstration application that showed many of the capabilities of the {CDP}.
+You can see the full video of the demonstration link:https://youtu.be/-U_UjqnhMBI[here].
+
+In some parts of the video it's a little difficult to see exactly what's going on.
+We're making some follow-on ones to help with that.
+
+This first video takes a close-up look at the NFC battery-less temperature sensing
+patch.  It also highlights the automatic sync capabilities of {CBM}.
+
+video::-AZ-77qMjY4[youtube,width=640,height=360]
+
+There will be related posts looking at the source code for reading the patch.
+There is also a soft-entry version that lets you run the application without
+having an actual patch.  See the upcoming video and posts about configuring
+the demo understand how to use that.
+
+You can read about the patch on the Texas Instruments website link:http://www.ti.com/tool/TIDM-RF430-TEMPSENSE#technicaldocuments[here].
+Programming information is available in the link:http://www.ti.com/lit/ug/slau603b/slau603b.pdf[Firmware User's Guide].
+
+You can order the patch through link:https://www.mouser.com/ProductDetail/Texas-Instruments/RF430-TMPSNS-EVM?qs=LuYMPh7GGMQNdxPRpX2qbg%3D%3D[Mouser Electronics].  There may be other sources.  That's just where I was
+able to get them.
+
+For a high-level architectural overview of the complete application, see link:https://www.youtube.com/watch?v=bmNVuLLkOpA[this video]
+or link:https://blog.couchbase.com/couchbase-connect-2017-demo-technical-overview/[this post].
+
+
+
+
+=== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}

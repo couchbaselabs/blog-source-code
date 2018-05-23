@@ -15,6 +15,7 @@
 :FTS: https://developer.couchbase.com/documentation/server/current/fts/full-text-intro.html[Full-Text Search]
 :FTS-: https://developer.couchbase.com/documentation/server/current/fts/full-text-intro.html
 :N1QL: https://www.couchbase.com/n1ql[N1QL]
+:N1QL-: https://www.couchbase.com/n1ql
 :XDCR: https://developer.couchbase.com/documentation/server/current/xdcr/xdcr-intro.html[XDCR]
 :XDCR-: https://developer.couchbase.com/documentation/server/current/xdcr/xdcr-intro.html
 :Bucket: https://developer.couchbase.com/documentation/server/current/architecture/core-data-access-buckets.html[Couchbase Server Bucket]
@@ -38,3 +39,4 @@
 :hadr: https://developer.couchbase.com/documentation/server/current/ha-dr/ha-dr-intro.html
 :rbac: https://developer.couchbase.com/documentation/server/current/security/concepts-rba-for-apps.html
 :cc17repo-: https://github.com/couchbaselabs/connect-fall-2017-demo
+:cURL-: https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/curl.html

@@ -1,0 +1,72 @@
+= The Couchbase Data Platform in Action: Configuring the Application
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+include::../links.adoc[]
+
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/044SetupVideo/images/DemoShort.gif[]
+
+For the Couchbase Connect Silicon Valley conference last fall we built one of
+the most extensive demonstrations of the {CDP} capabilities ever using a combined
+web and mobile application.  The application incorporates dynamic N1QL queries,
+offline mobile, IoT sensors, ad hoc queries with analytics, cross-data center
+replication, failover, fuzzy text matching, and a slew of other features.  In
+short, we aimed to show the core of a complete, realistic use, based on a real
+data standard (link:https://www.hl7.org/fhir/overview.html[FHIR]) used in
+healthcare.  Check out the video from the conference link:https://youtu.be/-U_UjqnhMBI[here].
+
+A deployment of this complexity necessarily requires quite a bit of setup.  Along
+with the {cc17repo-}[source code] for the project, I've included both regular
+shell scripts and scripts to use with link:https://www.docker.com/[Docker] to simplify
+running the demo yourself.
+
+Sometimes seeing it all put together by hand is really helpful, though.  With that
+in mind, I made a video showing every step needed to configure the demo.  I go
+quickly, and sped up parts to get it all crunched in to 15 minutes.  (Realistically,
+even with practice, it takes about 1/2 an hour.)
+
+Watch the full video, or use this table of contents to jump to sections directly.
+
+Table of Contents:
+
+[%hardbreaks]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=33s[00:33] - Web Server and Client Setup
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=75s[01:15] - Server-Side Urban Airship Configuration
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=111s[01:51] - {CBS-}[Couchbase Server] Basic Setup
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=184s[03:04] - {Bucket-}[Bucket Creation]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=214s[03:34] - {rbac}[RBAC]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=240s[04:00] - {N1QL-}[Query Index Creation]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=282s[04:42] - {CES-}[Eventing Service]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=354s[05:54] - {cURL-}[cURL Access Restrictions]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=380s[06:20] - Configuring {CAS-}[Analytics]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=422s[07:02] - {FTS-}[Full-Text Search]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=622s[10:22] - link:https://developer.couchbase.com/documentation/server/current/tools/cbimport.html[Importing Data]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=712s[11:52] - Start {SG-}[Sync Gateway]
+link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=749s[12:29] - Mobile Application
+
+video::RlSMLkd9vrg[youtube,width=640,height=360]
+
+Feel free to post questions in the comments section of the video, on our forum,
+or you can reach me directly on Twitter.
+
+=== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}
