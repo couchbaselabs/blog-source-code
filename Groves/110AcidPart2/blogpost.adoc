@@ -1,0 +1,4 @@
+https://github.com/subalakr/ramptransactionsimple
+
+http://rustyrazorblade.com/post/2015/ramp-made-easy/
+http://www.bailis.org/blog/scalable-atomic-visibility-with-ramp-transactions/
