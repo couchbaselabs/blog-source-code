@@ -1,0 +1,9 @@
+[
+    {
+        "name": "demoCouchbase",
+        "host": "localhost",
+        "dbName": "matt",
+        "password": "password",
+        "datasource": "couchbase"
+    }
+]
