@@ -7,9 +7,9 @@
 :tags: Couchbase Server, Couchbase, Analytics, knowi, data visualization
 :heroimage: reds again?
 
-Data visualization and reporting can help decision makers to identify patterns and concepts in analytics. Couchbase Analytics (currently in developer preview) provides a seamless link:https://www.youtube.com/watch?v=MIno71jTOUI[NoETL experience (video)] to analyze data with powerful queries. Knowi is a cloud-based reporting and visualization tool that integrates with Couchbase. Together, these tools can work together to provide powerful and easy data visualization.
+Data visualization and reporting can help decision makers to identify patterns and concepts in analytics. Couchbase Analytics (currently in developer preview) provides a seamless link:https://www.youtube.com/watch?v=MIno71jTOUI[NoETL experience (video)] to analyze data with powerful queries. link:https://www.knowi.com/[Knowi] is a cloud-based reporting and visualization tool that integrates with Couchbase. Together, these tools can work together to provide powerful and easy data visualization.
 
-As I blogged about previously, the Cincinnati Reds are using link:https://blog.couchbase.com/nifi-processing-flow-couchbase-server/[Apache NiFi] to process data from their enterprise into a Couchbase Cluster. One of the many use cases they are exploring with Couchbase is to create a real-time dashboard. This dashboard would, among other things, show a data visualization of the ballpark after the gates open and tickets are starting to be scanned.
+As I blogged about previously, the link:https://blog.couchbase.com/nifi-processing-flow-couchbase-server/[Cincinnati Reds (a Couchbase customer) are using Apache NiFi] to process data from their enterprise into a Couchbase Cluster. One of the many use cases they are exploring with Couchbase is to create a real-time dashboard. This dashboard would, among other things, show a data visualization of the ballpark after the gates open and tickets are starting to be scanned.
 
 This visualization can help show patterns in real time of the ballpark, and give the Reds an idea of when ticket holders are showing up and where they are going.
 
@@ -35,7 +35,7 @@ The data I'm working with is a simplified document consisting of a ticket holder
 
 This is an over-simplified example. I would expect mapping data to be separate, and possibly joined on-the-fly with a ticket scan. But let's assume that's been done already. We have all we need in a single document.
 
-I've created a bucket called "tickets" which will contain documents like the above. In production, data will continually flow into this bucket (probably through NiFi) during a baseball game.
+I've created a bucket called "tickets" which will contain documents like the above. In production, data will continually flow into this bucket (probably through NiFi) during a baseball game. In fact, I recently attended a game and helped test this system as I walking through the gates and getting my ticket scanned!
 
 == Couchbase Analytics
 
@@ -43,7 +43,7 @@ Knowi could connect to this bucket directly and start reporting on it. However, 
 
 To get started with Couchbase Analytics, make sure you've enabled the Analytics service when you installed Couchbase. The analytics service should appear in the "Servers" tab:
 
---- image ---
+image:10901-analytics-service.png[Analytics service enabled on Couchbase]
 
 Next, go to the "Analytics" tab. You will see a screen that looks very similar to the normal N1QL Query Workbench, but it is not.
 
@@ -70,17 +70,19 @@ It will start happening immediately. You can run a query like `select * from tic
 
 You should also see a visual representation of this setup under "Bucket Insights" at the top right of the page.
 
---- bucket insights image ---
+image:10902-bucket-insights-analytics.png[Bucket insights for Analytics]
 
-== Setting up the Knowi Agent
+Note that Analytics is still in developer preview at this time, and the above steps may change after general release (currently planned for later this year).
+
+== Setting up the Knowi Agent (optional)
 
 You can create a free 14-day trial of link:https://www.knowi.com/[Knowi].
 
-Knowi is cloud-based, so you don't necessarily need to download anything. You can build reports and visualization right in your browser.
+Knowi is cloud-based, so you don't necessarily need to download anything. You can build reports and visualizations right in your browser.
 
 However, if your Couchbase cluster isn't exposed to the internet, or you don't have a VPN tunnel set up, you can still use Knowi by running the Knowi Agent on your network. This is an easy way for Knowi to get access to your data. My local Couchbase cluster is not exposed to the internet, so I simply downloaded the Knowi Agent:
 
---- gif ---
+image:10903-knowi-cloud9-agent.gif[Download Cloud9 Agent for Knowi]
 
 You'll need to create a datasource JSON file in the /config folder. This is really easy to do, because there are a ton of example files in the /example folder. For Couchbase, check out `datasource_example_couchbase.json`. For my local cluster, I created a file with these contents:
 
@@ -99,7 +101,7 @@ Now go back to the Knowi.com UI. Create a new datasource. You can give it whatev
 
 Finally, check the box for "Internal Datasource". If the agent is working properly, you will see a dropdown and be able to select the agent.
 
---- new data source ---
+image:10904-new-couchbase-datasource.png[New Couchbase ]
 
 At this point, you can use this data source to create 1 or more Knowi data feeds.
 
@@ -107,40 +109,48 @@ At this point, you can use this data source to create 1 or more Knowi data feeds
 
 A data feed / data set in Knowi is analogous to a query. Here is the (very simple) data feed that I created to get the ticket information from Couchbase.
 
---- data feeds ---
+image:10905-data-feed.png[Knowi data feed]
+
+Notice that Knowi supports N1QL natively. All the power of Couchbase's N1QL language is available to you when creating a data feed. My query is a very simple one just for demonstration.
 
 == Knowi widget
 
-Finally, I can create a Knowi widget. Widgets are individual reports or data visualizations. There are a variety of widgets available, and you can even customize and combine widgets. I'm going to keep it simple and create a single widget. Click "New Widget+" and then select the data set that you created.
+Finally, I can create a Knowi widget. Widgets are individual reports or data visualizations. There are a variety of widgets available, and you can even customize and combine widgets. I'm going to keep it simple and create a single widget. Click "New Widget+" and then select the data set that you created in the previous section.
 
-Click the "settings" cog next to the widget. There are a lot of options for reporting and data visualization. Definitely check them out and experiment with them. I'm going right for "Geo-Heatmaps".
+Next, click the "settings" cog next to the widget. There are a lot of options for reporting and data visualization. Definitely check them out and experiment with them. I'm going right for "Geo-Heatmaps".
 
---- geo heatmaps ---
+image:10906-geo-heatmaps.png[Geo heatmaps in Knowi]
 
-I've chosen the middle of Great American Ball Park for the Center Latitude and Center Longitude (39.097208,-84.506530) and a zoom level of 16 (the highest zoom). The radius represents how big you want to spots on the heatmap to be. Mine correspond to seats in a baseball stadium, so I've entered a relatively small value of 5.
+I've chosen the middle of Great American Ball Park for the Center Latitude and Center Longitude (39.097208,-84.506530) and a high zoom level. The radius represents how big you want to spots on the heatmap to be. Mine correspond to seats in a baseball stadium, so I've entered a relatively small value of 5.
 
-That's it. Save the widget. Click the eyeball icon if you want to see a preview. Here's a preview with just 6 tickets total in my Couchbase bucket.
+That's it. Save the widget. Click the eyeball icon to see a preview. Here's a preview with just 6 tickets total in my Couchbase bucket.
 
---- geo preview ---
+image:10907-geo-heatmap-data-visualization-preview.png[Geo heatmap data visualization preview]
 
 == Dashboard / Auto refresh
 
 Finally, I'm going to create a dashboard with this data visualization on it. Simply go to the Knowi dashboard, click "Add Widget to Dashboard" and select the widget. The widget can then be resized and moved around. You can add other widgets for a more complete dashboard. This is what the Reds are working on: just seeing a visualization by itself isn't enough. They also want to report on the overall trends: what sections are the fullest, how many total tickets have been scanned over a time period, etc.
 
-I created a .NET program to start randomly added tickets. I wanted to see a real-time update of this data visualization. My example is not entirely accurate: I didn't want to spend the time mapping every seat to latitude and longitude myself. But it's close enough for you to get the idea.
+I created a .NET program to start randomly adding tickets. I wanted to see a real-time update of this data visualization. My example is not entirely accurate: I didn't want to spend the time mapping every seat to latitude and longitude myself. But it's close enough for you to get the idea.
 
---- map visualization ---
+image:10908-realtime-data-visualization.gif[Realtime data visualization]
+
+The distribution is obviously random, and it's obviously within two boxed areas. This is the part where the Cincinnati Reds have more expertise in actually mapping their data to a more efficient seat map. (Also, this clip represents a 5-minute period of my sample program running, compressed down into 30 seconds).
 
 Note that for a data visualization to be real-time (like above), you can't use the agent. I had to give direct access to Knowi for a "Direct Query" checkbox to appear when I was creating a data feed.
 
 == What's next?
 
-Knowi has a free trial. I've found the Knowi support to be helpful and responsive.
+In this post, you saw how easy it was to get started with Knowi and Couchbase Analytics to start building real-time data visualizations.
 
---- chat screenshot --
+This particular visualization might also be useful for a real-time outage map for a utility company. You could create a dashboard to report internet, power, gas, or phone outages on a map. Couchbase provides the flexibility of N1QL and the performance of a memory-first architecture and Knowi provides the data visualization and dashboard capabilities.
 
-Download the agent here.
+Remember that Knowi has a free trial. I've worked with Knowi on this Reds project for a short time, but I've found their support to be helpful and responsive and their documentation to be complete and useful.
 
-Couchbase forums, knowi forums.
+Some next steps for you:
 
-Twitter link.
+* link:https://www.couchbase.com/downloads[Download Couchbase Server] for free and try out Couchbase Analytics (currently included as a developer preview in Couchbase Server 5.5 Beta)
+* Sign up for a link:https://www.knowi.com/[free trial of Knowi] today.
+* Got a Couchbase question? Ask on the link:https://docs.knowi.com[Couchbase forums].
+* Got a Knowi question? Check out the link:ps://docs.knowi.com[Knowi Help Center].
+* Got a question for me? I'm on link:https://twitter.com/mgroves[Twitter @mgroves].
