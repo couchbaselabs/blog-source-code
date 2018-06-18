@@ -130,7 +130,7 @@ namespace AcidPart2
                     // since the changes were already made to the documents, the amounts
                     // must be swapped back
                     // tag::committedrollback[]
-                    var helper = new TransactionHelper(_bucket, false, false); // don't simulate errors next time through
+                    var helper = new TransactionHelper(_bucket, false, false);
                     helper.Perform(destination, source, 1);
                     // end::committedrollback[]
                     break;

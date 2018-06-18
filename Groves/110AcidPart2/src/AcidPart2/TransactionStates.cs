@@ -1,5 +1,6 @@
 ﻿namespace AcidPart2
 {
+    // tag::TransactionStates[]
     public enum TransactionStates
     {
         Initial = 0,
@@ -9,4 +10,5 @@
         Cancelling,
         Cancelled
     }
+    // end::TransactionStates[]
 }
