@@ -1,0 +1,483 @@
+= Couchbase Connect Fall 2017 Demo
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+include::../links.adoc[]
+
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/044SetupVideo/images/DemoShort.gif[]
+
+The application built for the Couchbase Connect Silicon Valley conference last fall incorporates dynamic N1QL queries,
+offline mobile, IoT sensors, ad hoc queries with analytics, cross-data center
+replication, failover, fuzzy text matching, and a slew of other features.
+
+You can watch the keynote demonstration link:https://youtu.be/-U_UjqnhMBI[here], find out about the high-level architecture link:https://blog.couchbase.com/couchbase-connect-2017-demo-technical-overview/[here], and watch a full walk-through of how to set up the demo link:https://youtu.be/RlSMLkd9vrg[here].
+
+In this post, I'll go through all the steps to configure and run the demo.
+We'll do this through the command line.
+(Some steps require the link:https://curl.haxx.se/[cURL] tool.)
+
+Throughout I include direct links to video that goes over similar material.
+
+== Clone Repository and Set Working Directory
+
+You can find the code for the demo on {cc17repo-}[GitHub].
+Clone the repo and change directories to the top level.
+
+[source,shell]
+----
+git clone https://github.com/couchbaselabs/connect-fall-2017-demo.git
+cd connect-fall-2017-demo
+----
+
+== Configuring Couchbase Server
+
+The demo project depends on new capabilities slated for Couchbase 5.5.
+As of this writing, 5.5 is in beta.
+Download and install Couchbase 5.5 for your platform {downloads}[here].
+Start a node running.
+
+=== Preparing
+
+The following assumes you're running on `localhost`.
+You can adjust to a remote host as necessary.
+The command executables are included in your Couchbase installation.
+You may want to add the tools directory to your command path.
+For example, on a Mac, you can do something like this.
+
+[source,shell]
+----
+export PATH="$PATH:/path/to/install/Couchbase Server.app/Contents/Resources/couchbase-core/bin"
+----
+
+=== Initialize the Node
+
+To initialize the first node, we need three steps.
+
+* Basic setup of the administrative user, services to run, and memory allocations
+* Creation of the main application bucket
+* Adding a separate user for role-based access control.
+
+Run the following commands to perform these steps.
+
+[source,shell]
+----
+# Basic memory and service configuration
+couchbase-cli cluster-init --cluster couchbase://127.0.0.1 --cluster-name cluster \
+  --cluster-username Administrator --cluster-password password \
+  --services data,index,query,fts,analytics,eventing --cluster-ramsize 256 --cluster-analytics-ramsize 1024 \
+  --cluster-index-ramsize 256 --cluster-fts-ramsize 256 --index-storage-setting default
+# Main bucket creation
+couchbase-cli bucket-create --cluster couchbase://127.0.0.1 -u Administrator -p password \
+  --bucket health --bucket-type couchbase --bucket-ramsize 100
+# Role-Based Access Control
+couchbase-cli user-manage --cluster couchbase://127.0.0.1 -u Administrator -p password \
+  --set --rbac-username admin --rbac-password password \
+  --rbac-name "J. R. Admin" --roles "Admin" --auth-domain local
+----
+
+Most of the parameters for these commands should be fairly straight-forward to figure out.
+
+Couchbase Server nodes can be dedicated to running a subset of all available services, part of what's referred to as link:https://developer.couchbase.com/documentation/server/current/architecture/services-archi-multi-dimensional-scaling.html[Multidimensional Scaling].
+Here, we're configuring the node with all the services needed by the application.
+
+The RAM allocations are all set to their minimum values.
+These aren't typically what you'd use in production, but are plenty for data included here.
+
+Note the cluster specification uses a custom URL, `couchbase://127.0.0.1`.
+There are other ways to specify it, but this is the easiest.
+This is telling the commands to connect to Couchbase Server on the local machine.
+
+After running these commands, it will typically take a few moments to warm the node up.
+Give it a short pause before proceeding with the next steps.
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=111s[Couchbase Server Basic Setup]
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=184s[Bucket Creation]
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=214s[Role-Based Access Control]
+
+=== Data
+
+We generated realistic synthetic patient data using the link:https://github.com/synthetichealth/synthea[Synthea] tool (Copyright © 2018 The MITRE Corporation).
+Synthea is open source and free to use.
+The full demo at Connect 2017 used hundreds of millions of records.
+A dataset more suitable for running on a single machine has been included in the demo source repository.
+To load it, execute the following.
+
+[source,shell]
+----
+# Load sample data
+for file in data/*.json
+do
+  cbimport json -c couchbase://127.0.0.1:8091 -d file://${file} -g '%id%' -f lines -b health -u admin -p password
+done
+----
+
+The options tell `cbimport` to expect one record per line, and to auto-generate the document key from the id field of each record.
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=622s[Importing Data]
+
+=== Eventing Service
+
+The {CES} is one of the new features being added in release 5.5.
+It allows you to monitor changes in the database and run JavaScript functions in response.
+
+In this application we use it to monitor incoming patient data.
+This lets us push the data to the web app, rather than relying on polling.
+This happens using the {curl-}[cURL capabilities] built into {N1QL}.
+
+To do this, we need to set up a JavaScript function that watches changes in the database.
+Currently the Eventing Service needs its own meta-data bucket as well.
+Configure this part with the following commands.
+
+[source,shell]
+----
+# Eventing Service meta-data bucket creation
+couchbase-cli bucket-create --cluster couchbase://127.0.0.1 -u Administrator -p password \
+  --bucket eventing --bucket-type couchbase --bucket-ramsize 100
+# Eventing Service function
+curl -X POST -u admin:password -d "@scripts/config/eventing" http://127.0.0.1:8096/api/v1/functions/monitor
+----
+
+Here's the actual JavaScript.
+
+[source,javascript]
+----
+function OnUpdate(doc, meta) {
+  if (doc.resourceType != 'Observation') return;
+  
+  let reference = doc.subject.reference;
+  let url = "http://localhost:8080/events/" + reference.substr(9);
+  let data = JSON.stringify({
+    "reference": doc.subject.reference,
+    "code": doc.code.coding[0].code,
+    "recordedAt": doc.issued,
+    "value": doc.valueQuantity.value
+  });
+    
+  let curl = SELECT CURL($url, {
+    "request": "POST",
+    "header": [ "Content-Type: application/json", "accept: application/json" ],
+    "data": $data
+  });
+  
+  curl.execQuery();
+}
+
+function OnDelete(meta) {}
+----
+
+This function only processes "Observation" documents.
+It extracts a few elements we want to display on in the web console.
+It then uses a `cURL` call to post that data to a REST endpoint on the web server.
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=282s[Eventing Service]
+
+=== Query Indexes
+
+The application relies on a number of {N1QL} queries.
+These would run if you define a primary index, but they would be slow.
+Instead, add three link:https://developer.couchbase.com/documentation/server/current/indexes/gsi-for-n1ql.html[Global Secondary Indexes].
+
+The data used in the application follows the link:https://www.hl7.org/fhir/overview.html[FHIR] specification.
+Records include a `resourceType` field.
+For example, "Observation", "Condition", and "Practitioner" are all resource types.
+The first index optimizes queries against this field.
+
+In the dashboard we show graphs of temperatures.
+The are recorded as "Observation" documents.
+The second index pulls out the main information we care about displaying.
+(Compare the fields here with what gets pushed by the Eventing code.)
+This makes lookups and retrieval of the relevant data fast, since everything we need is stored in the index.
+
+The last index is built against "Location" records.
+This is used to allow us to connect patients with their nearest hospital.
+
+[source,shell]
+----
+# Indexes for query optimization
+cbq -u admin -p password -q --script="CREATE INDEX \`resource-idx\` ON health(resourceType, id);"
+cbq -u admin -p password -q --script="CREATE INDEX \`observation-idx\` ON health(subject.reference, issued DESC, valueQuantity.\`value\`)"
+cbq -u admin -p password -q --script="CREATE INDEX \`location-idx\` ON health(type.coding[0].code) WHERE resourceType = 'Location';"
+----
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=240s[Query Index Creation]
+
+=== Analytics
+
+The application can examine some case history data.
+This kind of free-form analysis is better suited to the new {CAS-}[Couchbase Analytics Service] (currently in preview).
+
+The Analytics Service works by automatically importing data from the operational database buckets into its own special-purpose buckets.
+You then define what are known as shadow datasets.
+Finally, you must issue an instruction to connect the analytics to your operational data.
+After that, queries are done using SQL++, an superset of SQL similar to N1QL.
+You can read more in link:https://developer.couchbase.com/documentation/server/5.5/analytics/primer-beer.html[this tutorial].
+
+All the configuration is done by issuing commands through the analytics query engine.
+Configure the necessary pieces for the demo with the following command.
+
+[source,shell]
+----
+# Analytics Service configuration
+cat scripts/config/analytics | while read query
+do
+  curl -u admin:password --data-urlencode "statement=${query}" http://127.0.0.1:8095/analytics/service
+done
+----
+
+Here are the actual commands being run.
+
+[source,sql]
+----
+CREATE BUCKET ha WITH {"name":"health"}
+CREATE SHADOW DATASET patient ON ha WHERE resourceType = "Patient"
+CREATE SHADOW DATASET condition ON ha WHERE resourceType = "Condition"
+CREATE SHADOW DATASET encounter ON ha WHERE resourceType = "Encounter"
+CONNECT BUCKET ha
+----
+
+You could do this just as well from the query interface on the Couchbase Server web console, using the lines exactly as shown above.
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=380s[Configuring Analytics]
+
+=== Full-Text Search
+
+Couchbase Server Full-Text Search allows language aware matching based both on indexed fields and the input search terms.
+It provides a great deal of power when searching free-form text.
+For this application, we use it to pull out records based on just that: entries in FHIR documents set aside for unstructured notes.
+
+Configure the needed indexes as follows.
+
+[source,shell]
+----
+# Full-Text Search index
+curl -u admin:password -T "scripts/config/fts-index.json" http://127.0.0.1:8094/api/index/diagnosis
+----
+
+The index is too complicated to go through here in full.
+I'll just touch on some main points.
+
+Most importantly, we're doing language aware analysis of the `note` field of an "Observation" document, and the `reason`
+field of an "Encounter" document.
+These are the fields where a care provider might enter free form text.
+
+Other entries are there to pull data in simply to display or for use in faceting.
+Faceting lets a user restrict and refine searches.
+It's a powerful way to allow structured drilling down into data.
+
+Look for a future post going through the index and the FTS code for more details.
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=422s[Full-Text Search]
+
+=== cURL Access Restrictions
+
+{N1QL} queries can include `cURL`-style network calls.
+We use these for pushing updates to the web app, and for obtaining geomapping data via Google.
+
+Since these calls originate from a query service node, they have important security implications.
+Therefore, by default, it's turned off.
+
+We need to authorize calls to the Google endpoint and to an api on the web server.
+Do that with the following command.
+
+[source,shell]
+----
+# cURL site whitelist
+curl -X POST -u admin:password -d "@scripts/config/curl" http://127.0.0.1:8091/settings/querySettings/curlWhitelist
+----
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=354s[cURL Access Restrictions]
+
+== Sync Gateway
+
+{SG} provides the glue between Couchbase Server and the mobile application.
+It also provides some of the business logic.
+In this case, we simply need to connect to Coucbase Server, configure basic authentication, and create a channel for our primary user.
+
+Run Sync Gateway directly as follows.
+
+[source,shell]
+----
+/path/to/couchbase-sync-gateway/bin/sync_gateway sync-gateway/cc-2017-sg-config.json
+----
+
+We're not using a filtered document import here, so this can take a little while the first time to create all the needed meta-data.
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=712s[Sync Gateway]
+
+== Web Client and Server
+
+Install link:https://nodejs.org/en/[Node.js].
+The server requires version 7 or higher.
+I recommend using link:https://github.com/creationix/nvm/blob/master/README.md[nvm] to manage Node versions if you have an existing installation.
+(The nvm installation guide can be found link:https://github.com/creationix/nvm/blob/master/README.md=install-script[here].)
+
+=== Configuring the Web Client
+
+The web client code is under `web/client`.
+Under `src/config` in the client code, update `serverURI` in the `index.js` file to point to your web server.
+This is the host the *web server* is running on.
+This may be different from where you run Couchbase.
+By default it uses `localhost`, so if you plan to run everything on one machine you can just leave it as is.
+
+=== Building the Client
+
+Change directories to `web/client`.
+Install the Node packages.
+
+[source,shell]
+----
+npm install
+----
+
+You can run in one of two modes, development or production.
+Development allows easier debugging, and supports hot reloading, but is more complicated to set up.
+This mode requires running separate servers, one that serves the client pages and the other to expose the API we need.
+
+Here I'm only going to describe running in production mode.
+For the client, this just means running a build.
+
+[source,shell]
+----
+npm run build
+----
+
+When finished, this will copy the final client files over to a subdirectory of the server directory.
+The Node server will pull app content from there.
+
+=== Configuring and Running the Web Server
+
+Change directories to `web/server`.
+Install the Node packages.
+
+[source,shell]
+----
+npm install
+----
+
+The server has a few parameters that need setting.
+I included a package that will pull these either from environment variables or a file named .env in the server directory.
+The parameters break into two groups, those needed for Urban Airship push notifications, and those needed to connect to Couchbase.
+
+The parameters are
+
+* An Urban Airship application key
+* An Urban Airship master secret
+* The Couchbase Server cluster URL
+* The username and password of a user on the CB Server cluster with appropriate privileges
+* A URL for connecting to a Couchbase Server Analytics Service node.
+
+This set of Bash shell commands will create a template for you.
+
+[source,shell]
+----
+cat > .env <<EOF
+UA_APPLICATION_KEY='<your app key>'
+UA_APPLICATION_MASTER_SECRET='<Your app master secret>'
+CLUSTER='couchbase://localhost'
+CLUSTER_USER='admin'
+CLUSTER_PASSWORD='password'
+CLUSTER_CBAS='localhost:8095'
+PORT=8080
+EOF
+----
+
+Alternatively, you can just set environment variables.
+For example, you could leave the Urban Airship parameters out, and configure them like this instead.
+
+[source,shell]
+----
+export UA_APPLICATION_KEY=<your application key>
+export UA_APPLICATION_MASTER_SECRET=<your application master secret>
+----
+
+If you don't want to use the Urban Airship push notification feature, set the UA keys to something arbitrary.
+
+You can now run the server.
+
+[source,shell]
+----
+npm start
+----
+
+Open a browser and navigate to `localhost:8080`.
+You should see the web console.
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=33s[Web Server and Client Setup]
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=75s[Server-Side Urban Airship Configuration]
+
+== Android Mobile Application
+
+Open `mobile/android/CBCHealth in Android Studio to build the application.
+
+The Android mobile app uses Urban Airship for push notifications.
+If you want to include this feature, you must fill out the Urban Airship configuration with your own keys.
+See `mobile/android/CBCHealth/app/src/main/assets/airshipconfig.properties.sample`.
+
+If you don't want to include push notifications, remove the following line from the application's `AndroidManifest.xml`
+file.
+
+[source,xml]
+----
+<meta-data
+  android:name="com.urbanairship.autopilot"
+  android:value="com.couchbase.mobile.notifications.Autopilot" />
+----
+
+By default, this builds a version of the application for use with the Android emulator.
+There's a soft entry dialog for entering temperature readings.
+
+If you want to use the actual patch with a real device, you need to make two changes.
+
+. In `mobile/android/CBCHealth/app/build.gradle` change `def parameters = ".EMULATOR"` to `def parameters = ".DEFAULT"` (See `mobile/android/CBCHealth/app/src/main/java/com/couchbase/mobile/app/launch/Parameters.java` for definitions of these entries)
+. In `mobile/android/CBCHealth/app/src/main/resources/META-INF/services/com.couchbase.mobile.collectors.Collector` change `com.couchbase.mobile.collectors.temperature.ManualEntry` to `com.couchbase.mobile.collectors.temperature.RF430_TMPSNS_EVM`
+
+Related video:
+
+* link:https://www.youtube.com/watch?v=RlSMLkd9vrg&t=749s[Mobile Application]
+
+== Wrapping up
+
+There's a lot going on here.
+The purpose of this post is primarily to get you up and running with a full-featured app you can use to try various aspects of Couchbase out.
+
+Look for deeper dives into the code and configuration coming up.
+
+=== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find other resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}
