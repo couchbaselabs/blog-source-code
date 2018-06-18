@@ -15,7 +15,7 @@ namespace AcidPart2
                 Servers = new List<Uri> { new Uri("http://localhost:8091") }
             });
             cluster.Authenticate("matt", "password");
-            var bucket = cluster.OpenBucket("barns");
+            var bucket = cluster.OpenBucket("farm");
 
             // create two randomized Barn documents
             var random = new Random();
@@ -29,6 +29,7 @@ namespace AcidPart2
             var barn2 = bucket.Get<Barn>(barn2Key, TimeSpan.FromSeconds(30));
             Console.WriteLine($"{barn1.Value.Name} has {barn1.Value.Chickens} chickens.");
             Console.WriteLine($"{barn2.Value.Name} has {barn2.Value.Chickens} chickens.");
+            Console.ReadLine();
 
             // announce that a transaction will happen
             var amountToTransfer = 1;
@@ -36,7 +37,7 @@ namespace AcidPart2
             Console.ReadLine();
 
             // change the 'false,false' to simulate errors to trigger rollback
-            var transactionHelper = new TransactionHelper(bucket, false, false);
+            var transactionHelper = new TransactionHelper(bucket, false, true);
             transactionHelper.Perform(barn1, barn2, amountToTransfer);
 
             cluster.Dispose();
