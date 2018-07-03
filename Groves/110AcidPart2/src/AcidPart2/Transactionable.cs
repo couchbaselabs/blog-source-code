@@ -4,6 +4,6 @@ namespace AcidPart2
 {
     public abstract class Transactionable
     {
-        public List<string> Transactions { get; set; } = new List<string>();
+        public string Transaction { get; set; }
     }
 }

@@ -50,7 +50,7 @@ namespace AcidPart2
                 // #1 switch the transaction to pending - the transaction is now in progress
                 // and a rollback attempt will see "pending" status and know how to proceed
                 // tag::pending[]
-                UpdateWithCas<TransactionRecord>(transaction.Id, x => x.State = TransactionStates.Pending);
+                var transCas = UpdateWithCas<TransactionRecord>(transaction.Id, x => x.State = TransactionStates.Pending, transaction.Document.Cas);
                 // end::pending[]
                 Console.WriteLine($"Switch transaction to {TransactionStates.Pending}");
                 Console.ReadLine();
@@ -59,7 +59,7 @@ namespace AcidPart2
                 //      but it could be made more generic for your use case(s)
                 // #2a update source MINUS amount
                 // tag::updatesource[]
-                UpdateWithCas<Barn>(source.Id, x => { x.Chickens -= amountToTransfer; x.Transactions.Add(transaction.Id); });
+                var sourceCas = UpdateWithCas<Barn>(source.Id, x => { x.Chickens -= amountToTransfer; x.Transaction = transaction.Id; });
                 // end::updatesource[]
                 Console.WriteLine($"Subtract {amountToTransfer} from {source.Value.Name} (and mark transaction {transaction.Id})");
                 Console.ReadLine();
@@ -71,7 +71,7 @@ namespace AcidPart2
 
                 // #2b update destination PLUS amount
                 // tag::updatedestination[]
-                UpdateWithCas<Barn>(destination.Id, x => { x.Chickens += amountToTransfer; x.Transactions.Add(transaction.Id); });
+                var destCas = UpdateWithCas<Barn>(destination.Id, x => { x.Chickens += amountToTransfer; x.Transaction = transaction.Id; });
                 // end::updatedestination[]
                 Console.WriteLine($"Add {amountToTransfer} to {destination.Value.Name} (and mark transaction {transaction.Id})");
                 Console.ReadLine();
@@ -79,7 +79,7 @@ namespace AcidPart2
                 // #3 switch transaction to committed
                 // the transaction is now complete, and needs to be cleaned up
                 // tag::committed[]
-                UpdateWithCas<TransactionRecord>(transaction.Id, x => x.State = TransactionStates.Committed);
+                transCas = UpdateWithCas<TransactionRecord>(transaction.Id, x => x.State = TransactionStates.Committed, transCas);
                 // end::committed[]
                 Console.WriteLine($"Switch transaction to {TransactionStates.Committed}");
                 Console.ReadLine();
@@ -93,8 +93,8 @@ namespace AcidPart2
                 // each document was marked as being part of a transaction
                 // that needs to be cleaned up
                 // tag::removetransactionmarkers[]
-                UpdateWithCas<Barn>(source.Id, x => { x.Transactions.Remove(transaction.Id); });
-                UpdateWithCas<Barn>(destination.Id, x => { x.Transactions.Remove(transaction.Id); });
+                UpdateWithCas<Barn>(source.Id, x => { x.Transaction = null; }, sourceCas);
+                UpdateWithCas<Barn>(destination.Id, x => { x.Transaction = null; }, destCas);
                 // end::removetransactionmarkers[]
                 Console.WriteLine("Remove transactions from barns.");
                 Console.ReadLine();
@@ -104,7 +104,7 @@ namespace AcidPart2
                 // transactions in 'done' status could hypothetically be deleted on a regular basis
                 // but you may want to keep them around for a while just in case
                 // tag::done[]
-                UpdateWithCas<TransactionRecord>(transaction.Id, x => x.State = TransactionStates.Done);
+                UpdateWithCas<TransactionRecord>(transaction.Id, x => x.State = TransactionStates.Done, transCas);
                 // end::done[]
                 Console.WriteLine($"Switch transaction to {TransactionStates.Done}");
                 Console.ReadLine();
@@ -130,10 +130,10 @@ namespace AcidPart2
                     // since the changes were already made to the documents, the amounts
                     // must be swapped back
                     // tag::committedrollback[]
-                    var helper = new TransactionHelper(_bucket, false, false);
-                    helper.Perform(destination, source, 1);
+                    //var helper = new TransactionHelper(_bucket, false, false);
+                    //helper.Perform(destination, source, 1);
                     // end::committedrollback[]
-                    break;
+                    //break;
                 case TransactionStates.Pending:
                     // #1 -> switch to 'cancelling' state
                     // tag::cancelling[]
@@ -146,10 +146,10 @@ namespace AcidPart2
                     // tag::reventbarn1[]
                     UpdateWithCas<Barn>(source.Id, x =>
                     {
-                        if (x.Transactions.Contains(transaction.Id))
+                        if (x.Transaction != null)
                         {
-                            x.Chickens += amountToTransfer;
-                            x.Transactions.Remove(transaction.Id);
+                            x.Chickens += transactionRecord.Value.Amount;
+                            x.Transaction = null;
                         }
                     });
                     // end::reventbarn1[]
@@ -159,10 +159,10 @@ namespace AcidPart2
                     // tag::reventbarn2[]
                     UpdateWithCas<Barn>(destination.Id, x =>
                     {
-                        if (x.Transactions.Contains(transaction.Id))
+                        if (x.Transaction != null)
                         {
-                            x.Chickens -= amountToTransfer;
-                            x.Transactions.Remove(transaction.Id);
+                            x.Chickens -= transactionRecord.Value.Amount;
+                            x.Transaction = null;
                         }
                     });
                     // end::reventbarn2[]
@@ -183,18 +183,20 @@ namespace AcidPart2
         // optimistic locking
         // a CAS value can optionally be passed in
         // tag::UpdateWithCas[]
-        private void UpdateWithCas<T>(string documentId, Action<T> act, ulong? cas = null)
+        private ulong UpdateWithCas<T>(string documentId, Action<T> act, ulong? cas = null)
         {
             var document = _bucket.Get<T>(documentId);
             var content = document.Value;
             act(content);
-            _bucket.Replace(new Document<T>
+            var result = _bucket.Replace(new Document<T>
             {
                 Cas = cas ?? document.Cas,
                 Id = document.Id,
                 Content = content
             });
             // NOTE: could put retr(ies) here
+            // or throw exception when cas values don't match
+            return result.Document.Cas;
         }
         // end::UpdateWithCas[]
     }
