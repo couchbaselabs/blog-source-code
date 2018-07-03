@@ -7,8 +7,8 @@
         Pending = 1,
         Committed = 2,
         Done = 3,
-        Cancelling,
-        Cancelled
+        Cancelling = 4,
+        Cancelled = 5
     }
     // end::TransactionStates[]
 }

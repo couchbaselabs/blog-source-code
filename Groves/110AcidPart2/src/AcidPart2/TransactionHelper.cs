@@ -126,14 +126,6 @@ namespace AcidPart2
             switch (transactionRecord.Value.State)
             {
                 case TransactionStates.Committed:
-                    // create new transaction and swap the targets
-                    // since the changes were already made to the documents, the amounts
-                    // must be swapped back
-                    // tag::committedrollback[]
-                    //var helper = new TransactionHelper(_bucket, false, false);
-                    //helper.Perform(destination, source, 1);
-                    // end::committedrollback[]
-                    //break;
                 case TransactionStates.Pending:
                     // #1 -> switch to 'cancelling' state
                     // tag::cancelling[]
@@ -153,7 +145,7 @@ namespace AcidPart2
                         }
                     });
                     // end::reventbarn1[]
-                    Console.WriteLine($"Add {amountToTransfer} to {source.Value.Name} (and remove transaction {transaction.Id})");
+                    Console.WriteLine($"If necessary: Add {amountToTransfer} to {source.Value.Name} (and remove transaction {transaction.Id})");
                     Console.ReadLine();
 
                     // tag::reventbarn2[]
@@ -166,7 +158,7 @@ namespace AcidPart2
                         }
                     });
                     // end::reventbarn2[]
-                    Console.WriteLine($"Remove {amountToTransfer} from {destination.Value.Name} (and remove transaction {transaction.Id})");
+                    Console.WriteLine($"If necessary: Remove {amountToTransfer} from {destination.Value.Name} (and remove transaction {transaction.Id})");
                     Console.ReadLine();
 
                     // #3 -> switch to cancelled state

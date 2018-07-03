@@ -37,7 +37,7 @@ namespace AcidPart2
             Console.ReadLine();
 
             // change the 'false,false' to simulate errors to trigger rollback
-            var transactionHelper = new TransactionHelper(bucket, false, true);
+            var transactionHelper = new TransactionHelper(bucket, false, false);
             transactionHelper.Perform(barn1, barn2, amountToTransfer);
 
             cluster.Dispose();
