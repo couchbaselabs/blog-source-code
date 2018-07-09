@@ -33,10 +33,12 @@ namespace TicketVip
 
             while (true)
             {
+                // tag::consoleapp[]
                 Console.WriteLine("1 - Simulate a VIP ticket scan.");
                 Console.WriteLine("2 - Simulate a regular joe ticket scan.");
                 Console.WriteLine("Q - End simulation.");
                 var choice = Console.ReadKey().KeyChar;
+                // end::consoleapp[]
                 Console.WriteLine();
                 switch (choice)
                 {
@@ -70,7 +72,9 @@ namespace TicketVip
                 customerId += _rand.Next(11, 45000);
 
             // put the ticket scan document into Couchbase
+            // tag::ticketscan[]
             _bucket.Upsert(ticketScanId, new {CustomerId = customerId, Timestamp = ticketScanTimestamp, Seat = seatInformation });
+            // end::ticketscan[]
 
             Console.WriteLine($"Ticket id '{ticketScanId}' was scanned at '{ticketScanTimestamp}'.");
             if(isVip)
@@ -81,6 +85,7 @@ namespace TicketVip
         // note that if you change the data, you'll need to change SimulateTicketScan
         private static void PopulateVips()
         {
+            // tag::vips[]
             _bucket.Upsert("customer::1", new { Name = "George Clooney" });
             _bucket.Upsert("customer::2", new { Name = "Josh Hutcherson" });
             _bucket.Upsert("customer::3", new { Name = "Darius Rucker" });
@@ -90,11 +95,13 @@ namespace TicketVip
             _bucket.Upsert("customer::7", new { Name = "Nick Goepper" });
             _bucket.Upsert("customer::8", new { Name = "Johnny Bench" });
             _bucket.Upsert("customer::9", new { Name = "Ryan Collins" });
+            // end::vips[]
         }
 
         // this function will create a number of VIP concierges if they don't already exist
         private static void PopulateVipConcierges()
         {
+            // tag::concierges[]
             _bucket.Upsert("concierge::1", new
             {
                 Name = "Matt Groves",
@@ -113,6 +120,7 @@ namespace TicketVip
                 CellNumber = _yourVerifiedNumber,
                 vips = new List<string> { "customer::6", "customer::7", "customer::8" }
             });
+            // end::concierges[]
         }
 
         // this function will create a document containing twilio credentials

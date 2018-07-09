@@ -1,0 +1,143 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Eventing: VIP Notification with Couchbase Functions
+:slug: Eventing-VIP-Notification-Couchbase-Functions
+:focus-keyword: eventing
+:categories: Couchbase Server, .NET
+:tags: Couchbase Server, .NET, eventing, functions
+:heroimage: some new Reds picture?
+
+Eventing is a new service available in Couchbase Server. The Cincinnati Reds are interested in using this feature to more quickly serve their VIP customers. A concierge is assigned to one or more VIPs. When the VIP enters the ballpark, a text message will be sent to the concierge. The concierge can then meet the VIP at their seats.
+
+As a proof of concept, I've created an example that uses Functions (part of Eventing) to send a text message. I'm using a link:https://www.twilio.com/try-twilio[trial account of Twilio] to send the messages. I _don't_ know if the Reds plan to use Twilio or text messages in their production system. But it's free and easy to get started using Twilio, so that's what I decided to use in my proof of concept.
+
+== Eventing review
+
+I'm not going to provide all the details for eventing here. This has been blogged about plenty already by my colleagues. Definitely check out their posts for more details:
+
+* link:https://blog.couchbase.com/eventing/[Introducing Couchbase Eventing Service]
+* link:https://blog.couchbase.com/using-the-curl-function-with-the-couchbase-eventing-service/[Using the cURL Function with the Couchbase Eventing Service]
+* link:https://blog.couchbase.com/detect-sensitive-information-nosql-documents-automatically-couchbase-functions/[Detect Sensitive Information In Your NoSQL Documents Automatically With Couchbase Functions]
+* link:https://blog.couchbase.com/couchbase-data-platform-action-setup-steps/[The Couchbase Data Platform in Action: Step-by-Step Setup]
+
+But the short story is this: Couchbase Functions (part of Eventing) allow you to write JavaScript functions that respond to documents getting created/updated/deleted. Inside of these functions, you can read documents, write documents (to other buckets), execute N1QL queries, and execute a `curl` function to make requests to HTTP endpoints. *Note: The curl construct is still in Development. This feature is intended for Development purposes only and should not be used in Production environments.*
+
+I'm going to put together pieces of those blog posts to create this eventing proof of concept for the Reds.
+
+== Scanning Tickets
+
+The first step is to scan a customer's ticket at the gate. I wrote a program to _simulate_ this. It will create a randomish "ticketscan" document in a "tickets" bucket on Couchbase.
+
+Before scanning tickets, I needed to prepopulate the bucket with some data.
+
+I've decided that customers 1 through 9 are the VIPs, and any other customer is a "regular joe".
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/Program.cs[tag=vips]
+----
+
+_Fun Note: these VIPs are all actual Reds fans!_
+
+I also created 3 concierges and divided up the VIPs amongst them.
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/Program.cs[tag=concierges]
+----
+
+In the above example, I'm assigning customers 1, 2, and 9 to "Matt Groves". This means that George Clooney, Josh Hutcherson, and Ryan Collins are the VIPs that concierge Matt Groves is assigned to take care of.
+
+I'm also storing Twilio credentials in a document. I did this because I'll need the credentials inside of a Couchbase Function, and I didn't want to hard-code them there. The credential document looks like:
+
+[source,JavaScript,indent=0]
+----
+include::src/TicketVip/TicketVip/twiliocredentials.template.json[]
+----
+
+I've created a console app that will create a new "ticketscan" document. When you run it, you can choose to create a VIP scan or a "regular Joe" scan.
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/Program.cs[tag=consoleapp]
+----
+
+A ticketscan document contains only three fields: the ID of the customer document, a timestamp, and a seat number.
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/Program.cs[tag=ticketscan]
+----
+
+You can find the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/111RedsEventingTwilio/src/TicketVip[full source code on Github].
+
+== Eventing function
+
+The core of this eventing example is the function. When I created this function, I called it "notifyConcierge"; I used a "tickets_metadata" bucket (as pictured below). Most importantly, I created an alias for the "tickets" bucket and called it "src". Within the function, this bucket is read-only, but I need it to get customer and concierge information.
+
+image:11101-create-eventing-function.png[Creating a function in eventing]
+
+The link:https://github.com/couchbaselabs/blog-source-code/blob/master/Groves/111RedsEventingTwilio/src/TicketVip/TicketVip/notifyConcierge.js[entire function can be viewed on Github]. Here is the breakdown of the function, step by step:
+
+1 - Is the mutated document a ticketscan? If it is, proceed. If not, this function can ignore it.
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/notifyConcierge.js[tag=isticketscan]
+----
+
+2 - Is the customer who scanned this ticket a VIP? If so, get the concierge's details and proceed. Otherwise, ignore it. Notice the inline N1QL in this part of the function. This is a feature unique to the flavor of JavaScript used in Couchbase functions.
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/notifyConcierge.js[tag=isvip]
+----
+
+3 - Get the details of the VIP.
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/notifyConcierge.js[tag=getvipinfo]
+----
+
+4 - Get Twilio credentials.
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/notifyConcierge.js[tag=gettwilio]
+----
+
+5 - Construct a message (containing VIP's name, seat number, and concierge's name). `data` is the minimum needed to use Twilio's API.
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/notifyConcierge.js[tag=message]
+----
+
+6 - Send a text message to the concierge using Twilio API. *The curl construct is still in Development. This feature is intended for Development purposes only and should not be used in Production environments.*
+
+[source,C#,indent=0]
+----
+include::src/TicketVip/TicketVip/notifyConcierge.js[tag=twilio]
+----
+
+== Eventing in action
+
+Now, whenever a ticketscan document is created or modified, a concierge will be notified on their cell phone. Here's an example of the entire demo, from ticket scan to SMS notification:
+
+image:demo2.gif[Eventing demonstration using SMS]
+
+In this image, I'm creating 4 ticket scans. The first is for a VIP, the next two are for regular Joes, and the last is for a VIP. Two text messages appear. In reality, these would appear on different phones, but I'm sending all the notifications to a single number for testing. _Note: I'm using link:https://www.join.me/[join.me] to show my live Android screen side-by-side with the console)._
+
+If you're running into any issues, the good news is that debugging is available for Functions in Couchbase. You can set breakpoints in the JavaScript and step through it using a tool like Chrome. For more about it, check out the link:https://blog.couchbase.com/eventing/[Eventing announcement post].
+
+== Summary
+
+With this function running in Couchbase's eventing system, every new ticketscan for a VIP will trigger a text message notification. Note that the ticket scanning system doesn't need to know anything about Twilio, as long as the data ends up in Couchbase. Also, if _any other_ system is creating ticketscan documents, the SMS will be triggered there as well. The logic is _close_ to the data.
+
+This wraps up my series of Cincinnati Reds posts (for now). The other two posts in the series were:
+
+* link:https://blog.couchbase.com/nifi-processing-flow-couchbase-server/[Nifi Processing and Flow with Couchbase Server] - This is how the Reds are actually going to put ticket scan data into Couchbase.
+* link:https://blog.couchbase.com/data-visualization-couchbase-knowi/[Data Visualization with Couchbase and Knowi] - This is another use case that the Reds are looking at using ticket scan data for.
+
+Please leave a comment below or find me on link:https://twitter.com/mgroves[Twitter @mgroves]. Go Reds!
