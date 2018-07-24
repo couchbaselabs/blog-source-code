@@ -1,0 +1,11 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Distributed caching with ASP.NET Core
+:slug: Distributed-caching-ASP-NET-Core
+:focus-keyword: caching
+:categories: Couchbase Server, .NET
+:tags: Couchbase Server, .NET, ASP.NET, caching
+:heroimage: TBD
+:abstract: ASP.NET Core is delivering on performance and scalability. A distributed cache brings many benefits to your ASP.NET application, especially when deployed to multiple servers. First, cached data is often retrived faster, reducing the load on the underlying data store. Second, cached data is shared amongst all users without the need for sticky sessions. Finally, anything in the cache will remain there even if the server running ASP.NET is removed or restarted. In this post, Matthew Groves will explore how to setup a distributed cache (using Couchbase Server) and how to interact with it using ASP.NET Core&#39;s Distributed Cache framework.
+
+Caching can help improve the performance of an ASP.NET Core application. *Distributed* caching is helpful when working with an ASP.NET application that’s deployed to a server farm or scalable cloud environment. There are many examples of doing this with a tool like Redis, but in this post I'll show you an alternative. Couchbase Server is a distributed database with a memory-first (or optionally memory-only) storage architecture that makes it ideal for caching. Unlike Redis, it has a suite of richer capabilities that you can use later on as your use cases and your product expands. But for this blog post, I'm going to focus on it's caching capabilities and integration with ASP.NET. You can follow along with all the code samples on link://[Github].
