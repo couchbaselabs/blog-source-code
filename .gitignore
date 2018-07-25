@@ -216,3 +216,4 @@ ModelManifest.xml
 *.mp4
 *.trec
 *.camproj
+/Groves/111RedsEventingTwilio/src/TicketVip/TicketVip/twiliocredentials.json
