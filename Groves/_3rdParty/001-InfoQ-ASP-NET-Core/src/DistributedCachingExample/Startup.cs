@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Couchbase.Extensions.Caching;
+using Couchbase.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace DistributedCachingExample
 {
@@ -23,7 +21,23 @@ namespace DistributedCachingExample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCaching();
+
             services.AddMvc();
+
+            // tag::AddCouchbase[]
+            services.AddCouchbase(opt =>
+            {
+                opt.Servers = new List<Uri>
+                {
+                    new Uri("http://localhost:8091")
+                };
+                opt.Username = "infoq";
+                opt.Password = "password";
+            });
+
+            services.AddDistributedCouchbaseCache("infoqcache", opt => { });
+            // end::AddCouchbase[]
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

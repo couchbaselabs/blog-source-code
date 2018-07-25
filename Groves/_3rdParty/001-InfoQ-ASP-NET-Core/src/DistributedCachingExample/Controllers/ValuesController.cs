@@ -1,44 +1,64 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace DistributedCachingExample.Controllers
 {
-    [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        // GET api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private readonly IDistributedCache _cache;
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // tag::ctor[]
+        public ValuesController(IDistributedCache cache)
         {
-            return "value";
+            _cache = cache;
         }
+        // end::ctor[]
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
+        // tag::getNoCache[]
+        [Route("api/get")]
+        public string Get()
         {
-        }
+            // generate a new string
+            var myString = Guid.NewGuid() + " " + DateTime.Now;
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+            // wait 5 seconds (simulate a slow operation)
+            Thread.Sleep(5000);
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            // return this value
+            return myString;
         }
+        // end::getNoCache[]
+
+        // tag::getWithCache[]
+        [Route("api/getfast")]
+        public string GetUsingCache()
+        {
+            // is the string already in the cache?
+            var myString = _cache.GetString("CachedString1");
+            if (myString == null)
+            {
+                // string is NOT in the cache
+
+                // generate a new string
+                myString = Guid.NewGuid() + " " + DateTime.Now;
+
+                // wait 5 seconds (simulate a slow operation)
+                Thread.Sleep(5000);
+
+                // put the string in the cache
+                _cache.SetString("CachedString1", myString);
+
+                // cache only for 5 minutes
+                // tag::cacheSliding[]
+                // _cache.SetString("CachedString1", myString,
+                //  new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5)});
+                // end::cacheSliding[]
+            }
+
+            return myString;
+        }
+        // end::getWithCache[]
     }
 }

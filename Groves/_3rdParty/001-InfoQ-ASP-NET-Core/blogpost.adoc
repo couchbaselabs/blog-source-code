@@ -8,4 +8,134 @@
 :heroimage: TBD
 :abstract: ASP.NET Core is delivering on performance and scalability. A distributed cache brings many benefits to your ASP.NET application, especially when deployed to multiple servers. First, cached data is often retrived faster, reducing the load on the underlying data store. Second, cached data is shared amongst all users without the need for sticky sessions. Finally, anything in the cache will remain there even if the server running ASP.NET is removed or restarted. In this post, Matthew Groves will explore how to setup a distributed cache (using Couchbase Server) and how to interact with it using ASP.NET Core&#39;s Distributed Cache framework.
 
-Caching can help improve the performance of an ASP.NET Core application. *Distributed* caching is helpful when working with an ASP.NET application that’s deployed to a server farm or scalable cloud environment. There are many examples of doing this with a tool like Redis, but in this post I'll show you an alternative. Couchbase Server is a distributed database with a memory-first (or optionally memory-only) storage architecture that makes it ideal for caching. Unlike Redis, it has a suite of richer capabilities that you can use later on as your use cases and your product expands. But for this blog post, I'm going to focus on it's caching capabilities and integration with ASP.NET. You can follow along with all the code samples on link://[Github].
+Caching can help improve the performance of an ASP.NET Core application. *Distributed* caching is helpful when working with an ASP.NET application that’s deployed to a server farm or scalable cloud environment. There are many examples of doing this with a tool like Redis, but in this post I'll show you an alternative. Couchbase Server is a distributed database with a memory-first (or optionally memory-only) storage architecture that makes it ideal for caching. Unlike Redis, it has a suite of richer capabilities that you can use later on as your use cases and your product expands. But for this blog post, I'm going to focus on it's caching capabilities and integration with ASP.NET. You can follow along with all the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/_3rdParty/001-InfoQ-ASP-NET-Core/src[code samples on Github].
+
+== Benefits of distributed caching
+
+1. *Performance*. A cache stores data in RAM for quick and easy retrieval. It will often be faster to retrieve data from this cache than the original source, especially if it needs to be retrieved repeatedly. This is true for any type of cache, not just distributed.
+
+2. *Shared cache data*. If you are using multiple servers for your ASP.NET application (with a load balancer) and are using caching, your users might be directed to any one of your servers. If the cache data is stored on the web servers themselves, then you need to turn on sticky sessions (which could lead to uneven loads and other networking issues - see this link:https://stackoverflow.com/questions/1553645/pros-and-cons-of-sticky-session-session-affinity-load-blancing-strategy[Stack Overflow answer for more details]).
+
+3. *Durability*. If your ASP.NET Core web servers go down or need to be restarted for any reason, your cached data is unaffected and remains on the distributed cache.
+
+There are multiple tools available to cache data, including Redis, SQL Server, and Couchbase Server. ASP.NET Core provides a consistent interface for any caching technology you wish to use.
+
+== Installing Couchbase
+
+The first step is to get the distribute cache server running. link:https://developer.couchbase.com/documentation/server/current/install/get-started.html[Couchbase Server can be installed] in a number of different ways. You can use Docker or a cloud provider, or you can just install it on your local machine. It's a link:https://www.couchbase.com/downloads[free download] and you can use the free Couchbase Community edition. The Enterprise Edition is also free and unlimited for "pre-production" use, but I'll be using the Community edition in this blog post.
+
+When you install Couchbase, you'll open up your web browser and go through a short wizard. The default settings are fine for this blog post.
+
+--- image ---
+
+Once you've installed Couchbase, create a "bucket". This is where your cached data will be stored. I called my bucket "infoqcache". I created a "Couchbase" bucket. You can also use a "Ephemeral" bucket (which is a memory-only option).
+
+--- image ---
+
+The last step of setting up Couchbase is security. Add a Couchbase user with appropriate permissions to that bucket. I called my user "infoq" and gave it a password of "password" (please use something stronger in production!). In the Enterprise edition, there are a lot of roles to choose from, but for caching they aren't really necessary. "Bucket Full Access" for infoqcache is sufficient.
+
+--- image ---
+
+Make sure you've completed all these installation steps before moving on to ASP.NET. Here are the steps with links to more detailed documentation.
+
+1. Installed Couchbase (Follow the instructions on the link:https://www.couchbase.com/downloads[download] page)
+2. Setup Couchbase (link:https://developer.couchbase.com/documentation/server/current/getting-started/look-at-the-results.html[Explore the Server Configuration])
+3. Created a bucket (link:https://developer.couchbase.com/documentation/server/current/clustersetup/create-bucket.html#page-template-attributes[Creating a Bucket])
+4. Created a user with permission to the bucket. (link:https://developer.couchbase.com/documentation/server/current/security/security-rbac-for-admins-and-apps.html[Creating and Managing Users with the UI])
+
+== Create a new ASP.NET Core Application
+
+I'm going to create a sample ASP.NET WebAPI application to demonstrate the distributed caching capabilities of ASP.NET. This will be a very simple application with two endpoints.
+
+I'm using Visual Studio 2017. From there, I select File->New->Web->ASP.NET Core Web Application.
+
+--- image ---
+
+The next step is to select what kind of ASP.NET Core project template to use. I'm using a barebones "API" with no authentication and no Docker support.
+
+--- image ---
+
+This project has a `ValuesController.cs` file. I'm going to replace most of the code in this class with my own code:
+
+[source,C#,indent=0]
+----
+include::src/DistributedCachingExample/Controllers/ValuesController.cs[tag=getNoCache]
+----
+
+Start that website (Ctrl+F5), and open up a tool like link:https://www.getpostman.com/[Postman], or even just point your browser to localhost /api/get.
+
+--- image ---
+
+This a silly example, but it shows that this endpoint is a) getting some unique string value, and b) taking a long time to do it. This would be a great place to introduce caching to improve latency and performance.
+
+== ASP.NET Core and Couchbase Integration
+
+So far we have an ASP.NET Core application that badly needs caching and a Couchbase Server instance that badly wants to help out. Let's get them to work together.
+
+The first step is to install a package from NuGet. You can use the NuGet UI to search for Couchbase.Extensions.Caching, or you can run this command in the Package Manager Console: `Install-Package Couchbase.Extensions.Caching -Version 1.0.1`. This is an open-source project, and the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/caching.md[full source code is available on Github].
+
+NuGet will install all the packages you need for your ASP.NET Core application to talk to Couchbase Server and to integrate with ASP.NET Core's built-in distributed caching capabilities.
+
+--- image ---
+
+Now open up the `Startup.cs` file in the project. There are a few lines of code that you need to add to the `ConfigureServices` method here.
+
+[source,C#,indent=0]
+----
+include::src/DistributedCachingExample/Startup.cs[tag=AddCouchbase]
+----
+
+(I also added `using Couchbase.Extensions.Caching;` and `using Couchbase.Extensions.DependencyInjection;` at the top of the file, but usually ReSharper adds those for me automatically).
+
+In the above code, `AddCouchbase` and `AddDistributedCouchbaseCache` are extension methods that were added by the Couchbase.Extensions to the built-in ASP.NET Core `IServiceCollection` interface.
+
+With `AddCouchbase`, I'm telling ASP.NET Core how to connect to Couchbase, giving it the user/password I mentioned earlier in the post.
+
+With `AddDistributedCouchbaseCache`, I'm telling ASP.NET Core how to use Couchbase as a distributed cache, specifying the name of the bucket I mentioned earlier in the post.
+
+_Don't forget to add cleanup/tear down code in the `ConfigureServices` method._
+
+== Using ASP.NET Core's distributed caching
+
+Now that we've configured ASP.NET Core to use distributed caching, let's put it to use in a simple example.
+
+The simplest thing we can do with distributed caching is inject it into the `ValuesController` and use a `IDistributedCache` directly.
+
+First, add `IDistributedCache` as a parameter to the constructor.
+
+[source,C#,indent=0]
+----
+include::src/DistributedCachingExample/Controllers/ValuesController.cs[tag=ctor]
+----
+
+Since we already configured the distributed cache in `Startup.cs`, ASP.NET Core knows how to set this parameter (using dependency injection). Now `_cache` can be used in `ValuesController` to get/set values in the cache. I wrote another endpoint called `GetUsingCache`. It will check to see if the value is already cached, and return it. This means that after the first call, it will no longer reach the `Thread.Sleep`.
+
+[source,C#,indent=0]
+----
+include::src/DistributedCachingExample/Controllers/ValuesController.cs[tag=getWithCache]
+----
+
+The first request to /api/getfast will still be slow, but subsequent requests will pull from the cache. If we switch back to the Couchbase console, we'll see that the "infoqcache" bucket now has 1 item.
+
+--- image ---
+
+== Advanced distributed caching
+
+One important thing to point out in `ValuesController` is that none if it depends directly on any Couchbase code. It all depends on the ASP.NET Core libraries. This common interface gives you the ability to use Couchbase distributed caching any place else that uses the standard Microsoft ASP.NET Core libraries.
+
+In the above example, the cached data will live in the cache indefinitely. But you can also specify an experiation for the cache. In this example, the data will be cached for 5 minutes (on a sliding expiration).
+
+[source,C#,indent=0]
+----
+include::src/DistributedCachingExample/Controllers/ValuesController.cs[tag=cacheSliding]
+----
+
+*** maybe insert tag helpers here if that works? ***
+
+*** mention response headers as well? ***
+
+== Summary
+
+ASP.NET Core can work hand-in-hand with Couchbase Server for distributed caching. ASP.NET Core's standard distributed cache interface makes it easy for you start working with the cache. Get your ASP.NET Core distributed applications up to speed with caching.
+
+If you have questions or comments about the Couchbase.Extensions.Caching project, make sure to check out the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/caching.md[GitHub repository] or the link:https://forums.couchbase.com/c/net-sdk[Couchbase .NET SDK forums].
