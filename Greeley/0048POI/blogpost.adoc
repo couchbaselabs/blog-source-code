@@ -1,0 +1,753 @@
+= Tutorial: Build a Points of Interest App with link:https://vuejs.org[Vue.js], link:https://nodejs.org/[Node.js], link:https://expressjs.com[Express], and link:https://www.couchbase.com[Couchbase Server]
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+:toc: macro
+:toc-title: Contents
+
+include::../links.adoc[]
+
+image::F_of_CB.eq.POI.gif[]
+
+image:https://img.shields.io/badge/Couchbase-v5.5.0-red.svg[link=https://www.couchbase.com/downloads] image:https://img.shields.io/badge/License-Apache%202.0-green.svg[link=https://opensource.org/licenses/Apache-2.0]
+
+[discrete]
+== Introduction
+
+In this tutorial, we'll build a full stack application using link:https://vuejs.org[Vue.js], link:https://nodejs.org/[Node.js], link:https://expressjs.com[Express], and link:https://www.couchbase.com[Couchbase Server].
+In addition to those frameworks, we'll use the link:https://developers.google.com/maps/documentation/[Google Maps] and link:https://developer.here.com/develop/rest-apis[Here Places] REST APIs.
+
+toc::[]
+
+== What We'll Build
+
+We're going to create a single-page web app that shows points of interest (POI) around hotels selected from a list of cities.
+The POI will be displayed on an interactive Google map.
+Here's an animation showing the final results.
+
+image::POI.gif[]
+
+There are a few extra twists to show some more advanced techniques.
+
+- The cities are chosen by matching airports that have nearby hotels in the same city.
+- We retrieve the POI using a REST call, but save them in our database.
+- The client side receives data via pushes using link:https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events[server sent events].
+
+Although the code is short, it shows off several techniques with Vue's reactive data binding and property dependency features.
+Combined with some powerful features of Couchbase, we'll have a nice, functioning app with not much work.
+
+== What You Need
+
+The app is built entirely in JavaScript.
+You need just a few things in place to start.
+
+. link:https://nodejs.org/[Node.js] installed
+. {downloads}[Couchbase Server] 5.5.0 or later installed
+
+You'll also need to get keys for the link:https://developers.google.com/maps/documentation/javascript/get-api-key[Google Maps JavaScript API] and the link:https://developer.here.com/develop/rest-apis[HERE REST APIs].
+Both can be used for free (with limitations).
+
+The data for the application comes as a sample built-in to the Couchbase Server distribution.
+
+== Getting Started
+
+We'll build up the structure of the application starting with the web client code.
+Next comes the server side Node + Express code.
+Finally we'll look at the Couchbase Server side.
+
+We'll take a more detailed look at the N1Ql queries, including link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/from.html#topic_rnt_zfk_np__section_ek1_jnx_1db[ANSI Joins].
+This app makes use of the new link:https://developer.couchbase.com/documentation/server/current/eventing/eventing-overview.html[Eventing Service and Functions].
+We'll finish up by looking at the JavaScript code there.
+
+To start, create a new directory where you want to keep the project.
+Open a command prompt and switch to that directory.
+
+== The Web Client Skeleton
+
+=== Generating the Vue.js Client Scaffolding
+
+The web client uses link:https://vuejs.org[Vue.js].
+
+We'll use the Vue CLI to create the base project for us.
+I'm going to show an easy integration between the client and server side with link:https://webpack.js.org/[webpack].
+This will mean rearranging files a little.
+
+Install the Vue CLI using npm if you don't already have it.
+
+[source,shell]
+----
+npm install -g @vue/cli
+----
+
+I like using link:https://getbootstrap.com/[Bootstrap].
+There are at least a couple of projects out there that integrate Boostrap with Vue.
+I chose link:https://bootstrap-vue.js.org/[Bootstrap-Vue].
+This isn't really necessary.
+It's not too hard to remove this dependency if you want.
+
+Create the project boilerplate.
+This is where the simple webpack template comes in.
+The `init` command will ask some questions.
+Using the defaults is fine.
+
+[source,shell]
+----
+npm install -g @vue/cli-init
+vue init bootstrap-vue/webpack-simple client
+----
+
+=== Restructuring and Fixup
+
+Now, switch to the client directory.
+Move the `package.json` and `.gitignore` files created up a level.
+This way they'll be shared across the project.
+
+[source,shell]
+----
+cd client/
+mv package.json .gitignore ..
+----
+
+The webpack configuration has a small bug in it, too.
+Open `webpack.config.js`.
+Under the section that starts with
+
+[source,javascript]
+----
+        test: /\.(png|jpg|gif|svg)$/,
+----
+
+change the options line to read
+
+[source,javascript]
+----
+           name: 'assets/[name].[ext]?[hash]'
+----
+
+=== Install Dependencies and Build
+
+Initialize and install the base dependencies.
+
+[source,shell]
+----
+npm install
+----
+
+Install our other dependencies.
+Many of these are standard packages (morgan, body-parser).
+I use link:https://github.com/axios/axios[axios] for network calls.
+link:https://www.npmjs.com/package/sse-channel[sse-channel] is a nice server sent event package.
+It's a bit more sophisticated and easier to use than others I've tried.
+And there's a package to ease working with Google Maps in Vue called link:https://www.npmjs.com/package/vue2-google-maps[vue2-google-maps].
+
+Install the rest of the dependencies as follows.  This includes what we'll need for the server.
+
+[source,shell]
+----
+npm install --save vue2-google-maps axios express sse-channel dotenv morgan debug cookie-parser body-parser bluebird couchbase
+----
+
+This will give you a functioning Vue-based front end.
+To build it, since we moved `package.json` up a level, we need a tweak the npm script section.
+Edit `package.json` in the project root and change the build line to
+
+[source,json]
+----
+    "build": "cd client && cross-env NODE_ENV=production webpack --progress --hide-modules"
+----
+
+Now in the client do `npm run build`.
+
+You can open the `index.html` file now, but it won't work.
+We'll skip ahead to create the server, or you can try fixing the problem here if you just want to see the stand-alone client.
+
+== The Web Server Skeleton
+
+Navigate back to the project root and prepare the server directory.
+
+[source,shell]
+----
+mkdir server
+cd server
+----
+
+We're going to create the server directly.
+Start the base app by editing a new file `app.js`.
+Paste the following in and save.
+
+[source,javascript]
+----
+const express = require('express');                                                                                               
+                                                                                                                                  
+const debug = require('debug')('poi:server');                                                                                     
+const path = require('path');                                                                                                     
+const logger = require('morgan');                                                                                                 
+const cookieParser = require('cookie-parser');                                                                                    
+const bodyParser = require('body-parser');                                                                                        
+const http = require('http');                                                                                                     
+                                                                                                                                  
+const app = express();                                                                                                            
+                                                                                                                                  
+app.use(logger('dev'));                                                                                                           
+app.use(bodyParser.json());                                                                                                       
+app.use(bodyParser.urlencoded({ extended: false }));                                                                              
+app.use(cookieParser());                                                                                                          
+                                                                                                                                  
+app.use(function(req, res, next) {                                                                                                
+  res.header("Access-Control-Allow-Origin", "*");                                                                                 
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");                                   
+  next();                                                                                                                         
+});                                                                                                                               
+                                                                                                                                  
+app.use(express.static(path.join(__dirname, '../client')));                                                                       
+                                                                                                                                  
+// catch 404 and forward to error handler                                                                                         
+app.use(function(req, res, next) {                                                                                                
+  console.dir(req);                                                                                                               
+  console.dir(res);                                                                                                               
+  let err = new Error('Not Found');                                                                                               
+  err.status = 404;                                                                                                               
+  next(err);                                                                                                                      
+});
+                                                                                                                                 
+// error handler                                                                                                                  
+app.use(function(err, req, res, next) {                                                                                           
+  // set locals, only providing error in development                                                                              
+  res.locals.message = err.message;                                                                                               
+  res.locals.error = req.app.get('env') === 'development' ? err : {};                                                             
+                                                                                                                                  
+  // render the error page                                                                                                        
+  res.status(err.status || 500);                                                                                                  
+  res.render('error');                                                                                                            
+});                                                                                                                               
+                                                                                                                                  
+// HTTP server                                                                                                                    
+http.createServer(app).listen(8080);
+----
+
+This is a simplified version of the final.
+It just serves up the boilerplate client we created earlier.
+
+At this point, you should be able to run `node app.js` in the server directory.
+Open a browser tab and navigate to `http://localhost:8080`.
+You should see something like this.
+
+image::BaseVueClient.png[]
+
+== Fleshing Out the Client and Server
+
+=== The Web Client Code
+
+Now we'll go back and create the real client.
+In the client directory, under the subdirectory `src`, open the file `App.vue`.
+Update it as follows.
+
+[source,javascript]
+----
+include::https://raw.githubusercontent.com/couchbaselabs/points-of-interest/master/client/src/App.vue[]
+----
+
+This is the bulk of the client-side code.
+
+I won't go into detail on the template section or the css.
+I will point out one nice element.
+The Here API returns, among other things, links to icons suitable for use on Maps.
+If you follow the flow through, you'll see the map markers are loading those icons directly using the include URLs.
+
+===== Wiring Up the Vue Databinding
+
+Walking through the script section, you'll see I make heavy use of the reactive capabilities in Vue.
+To understand this part, it will help if you have at least some familiarity with Vue, especially link:https://vuejs.org/v2/guide/computed.html[computed properties and watchers], link:https://vuejs.org/v2/guide/instance.html[data, method, and lifecycle hooks].
+
+We make use of the `mounted` lifecycle callback to add a listener for server sent events, and to initially populate the dropdown list of cities.
+The heavier lifting of the business logic here happens in the database query, as we'll see.
+
+Let's track how selecting a city works.
+Notice every item in the button dropdown is has a click listener bound that sets `selected` to the city data for that entry.
+We have a watch method defined on `selected`.
+Vue also automatically knows that the computed property `display` depends on `selected`.
+
+That means whenever a city gets selected via the dropdown, we get a cascade of activity.
+Changing `selected` causes `display` to be recomputed.
+This, in turn, sets the dropdown button text, since that's bound to `display`.
+The `selected` method in the `watch` section triggers a refresh of the hotel listing table every time a new city is picked.
+
+The table `items` are bound to `destinationsProvider` under `methods`.
+Refreshing the table causes that code to execute.
+Like the original city list, it pulls in the hotels via an asynchronous call to our database through a server REST endpoint.
+
+Vue takes care of a lot here for us.
+For example, the call to refresh the table doesn't receive data right away.
+Vue will rerender the relevant parts of the DOM automatically whenever the REST call returns.
+We don't have to supply any of the wiring, other than specifying the binding between `items` and `destinationProvider`.
+
+==== Completing the Web Client
+
+To finish the client side, we have a couple other shorts steps to do.
+
+We need to import the module to help with Google Maps, and supply a key.
+
+Edit `main.js`.
+Add the an import line and tell Vue to use the new component.
+Here's the final code.
+
+[source,javascript]
+----
+include::https://raw.githubusercontent.com/couchbaselabs/points-of-interest/master/client/src/main.js[]
+----
+
+We load the Google Maps API key from a file `config.js`.
+Create that file and for now add this placeholder code.
+
+[source,javascript]
+----
+export default {
+  googleMapsKey: ''
+}
+----
+
+Build the project again (`npm run build`).
+Start the server, reload the site, and you should see the beginnings of our real client looking like this.
+
+image::RealClientBase.png[]
+
+=== The Web Server Code
+
+Next we'll fill out the server side.
+Our server both feeds the web pages out and exposes the REST API we need.
+The API is mostly just convenience packaging around database functionality.
+
+In the server source, replace our original `app.js` with this.
+
+[source,javascript]
+----
+include::https://raw.githubusercontent.com/couchbaselabs/points-of-interest/master/server/app.js[]
+----
+
+The key differences are the Couchbase Server Node client setup, and wiring in the routes for the REST endpoints.
+There's other additional code for things like serving over both http and https, too.
+We won't look at those parts.
+
+==== Connecting to Couchbase Server
+
+The two blocks of code for connecting to our database are very straightforward.
+
+[source,javascript]
+----
+const couchbase = require('couchbase');
+const cluster = new couchbase.Cluster(process.env.CLUSTER);
+cluster.authenticate(process.env.CLUSTER_USER, process.env.CLUSTER_PASSWORD);
+
+...
+
+app.locals.couchbase = couchbase;
+app.locals.cluster = cluster;
+app.locals.travel = cluster.openBucket('travel-sample');
+app.locals.eventing = cluster.openBucket('eventing');
+----
+
+The first three lines import the Couchbase Node client, create a new cluster object representing a cluster of database nodes, and authenticate to that cluster.
+That initiates the connection to the database.
+
+For convenience, we add references to the client and cluster objects to `app.locals`.
+This makes them globally available.
+
+Finally, the code establishes and saves connections to two buckets.
+{Buckets-}[Buckets] are a high-level organizational structure in Couchbase.
+
+The first bucket we will populate with sample data that comes with Couchbase Server installations.
+For the second bucket, I'm fudging things a little here.
+We need a meta-data bucket for the {CES-}[Eventing Service].
+We need just a couple of extra documents stored, as we'll see, that need to go somewhere besides the main bucket.
+Rather than create a third bucket, I just put them in with the eventing data.
+You wouldn't typically use this shortcut in production.
+
+==== Static Files and API Routes
+
+We have just a few lines of code we need to direct Express to serve our static pages built from the client code and to organize our server data API.
+
+[source,javascript]
+----
+app.use(express.static(path.join(__dirname, '../client')));
+
+const records = require('./routes/records');
+app.use('/records', records);
+const events = require('./routes/events');
+app.use('/events', events);
+----
+
+The boilerplate `index.html` home page for the app adds `dist` to all the file paths.
+This means our static files are actually served from a root directory of `<project path>/client/dist`.
+
+I've separated the data API into two groups, organized under a general `routes` subdirectory.
+There's the endpoints beginning with `records`.
+These will retrieve data from the database.
+
+The `events` route is unique.
+The endpoints are used by both the web client and by the Couchbase Eventing Service.
+
+Let's look at the `records` code first.
+
+==== Database Access API
+
+[source,javascript]
+----
+include::https://raw.githubusercontent.com/couchbaselabs/points-of-interest/master/server/routes/records.js[]
+----
+
+We have three routes defined here, `/destinations`, `/hotels/byCity/:id`, and `/select/geo`.
+They all have the same basic structure.
+We get our database references, use bluebird to create a promise versions of the query method, construct a {N1QL} query, fire it off and return the results.
+
+Let's work through the queries, starting with the simplest.
+
+==== N1QL Queries
+
+We use The `/select/geo` endpoint to store the current hotel choice made by the user.
+Here's the query broken out.
+
+[source,sql]
+----
+UPSERT INTO \`travel-sample\` (KEY, VALUE) VALUES('trigger', ${location})
+----
+
+`UPSERT` will modify a document, or create it if it doesn't already exist.
+We store the geolocation of the chosen hotel in a document with an id of `trigger`.
+That probably sounds odd.
+It will make more sense later, when we get to the Eventing code.
+What we're really interested in isn't just the hotel location, but the points of interest nearby.
+This document will set off the sequence that retrieves those POI.
+Hence the reason for calling the document `trigger`.
+
+Here's an example of the document created.
+
+.trigger
+[source,json]
+----
+{
+  "accuracy": "APPROXIMATE",
+  "lat": 43.9397954,
+  "lon": 4.805895400000054
+}
+----
+
+To understand the `/hotels/byCity/:id` query, first take a look at a couple of example documents.
+
+.hotel_1359
+[source,json]
+----
+{
+  "address": "13-15 Avenue Monclar",
+  "alias": null,
+  "checkin": null,
+  "checkout": null,
+  "city": "Avignon",
+  "country": "France",
+  "description": "Family run hotel overlooking a flowered garden, within a private carpark. Internet wi-fi available in the whole building. Recently renovated rooms with the typical Provencal style. 7 languages spoken. Private taxi service.",
+  "directions": "just behind the central station, which faces the main avenue of downtown and the bus station",
+  "email": null,
+  "fax": "04 26 23 68 31",
+  "free_breakfast": true,
+  "free_internet": false,
+  "free_parking": true,
+  "geo": {
+    "accuracy": "APPROXIMATE",
+    "lat": 43.9397954,
+    "lon": 4.805895400000054
+  },
+  "id": 1359,
+  "name": "Avignon Hotel Monclar",
+  "pets_ok": true,
+  "phone": "+33 4 90 86 20 14",
+  "price": "Double room with ensuite shower and bathroom €30-60, studios and apartments from €75, breakfast €7 can be taken in the garden in season 7:30AM 11AM",
+  "public_likes": ["Vicente Williamson"],
+  "reviews": [...],
+  "state": "Provence-Alpes-Côte d'Azur",
+  "title": "Avignon",
+  "tollfree": null,
+  "type": "hotel",
+  "url": "http://hotel-monclar.com/en",
+  "vacancy": true
+}
+----
+
+.airport_1361
+[source,json]
+----
+{
+  "airportname": "Caumont",
+  "city": "Avignon",
+  "country": "France",
+  "faa": "AVN",
+  "geo": {
+    "alt": 124,
+    "lat": 43.9073,
+    "lon": 4.901831
+  },
+  "icao": "LFMV",
+  "id": 1361,
+  "type": "airport",
+  "tz": "Europe/Paris"
+}
+----
+
+For our hotels table, we need the hotel name, address, geolocation, the airport name, and airport code.
+Obviously that's combining data from both documents.
+We do this using an `INNER JOIN`.
+Here's the query.
+
+[source,sql]
+----
+SELECT hotel.name, hotel.address, airport.airportname, airport.icao, hotel.geo
+FROM `travel-sample` airport
+INNER JOIN `travel-sample` hotel
+  ON hotel.type = 'hotel' AND hotel.city = airport.city
+WHERE airport.type = 'airport'
+  AND airport.city = '${req.params.id}'
+LIMIT 5;
+----
+
+Walking through it, you can see we are able to perform the join using documents from the same bucket.
+I use aliases to make things clearer.
+We use the city from each document to form the join condition.
+Notice I also use the document `type`, both in the join condition, and in the `WHERE` clause.
+The join conditions can be quite sophisticated.
+Read this link:https://blog.couchbase.com/ansi-join-support-n1ql/[blog] post for more details and examples.
+
+Finally, let's examine how we came up with our city list in the first place.
+This is the query for the `/destinations` endpoint.
+
+[source,sql]
+----
+SELECT DISTINCT airport.city as name
+FROM `travel-sample` airport
+INNER JOIN `travel-sample` hotel
+USE HASH(probe)
+  ON hotel.city = airport.city
+WHERE airport.type = 'airport'
+  AND hotel.type = 'hotel';
+----
+
+The only result returned is a list of city names.
+In this case, we're using an inner join effectively as a filter.
+By matching airport cities to hotel cities, we get back a list of only cities that have both.
+
+Inner joins can use two different approaches algorithmically.
+The first join we looked at uses the default nested-loop join.
+
+This last example uses an in-memory hash table.
+This can significantly speed up a join, particularly where one of the two datasets is small.
+We used the link:https://developer.couchbase.com/documentation/server/current/n1ql/n1ql-language-reference/from.html#story-h2-10["USE HASH()"] hint to inform N1QL how we wanted the query optimized.
+There's a "probe" side and a "build" side.
+The hash table is built from the build side data.
+The the join is performed doing lookups from the probe side data.
+
+The hint we gave above tells N1QL to use the hotel data for the probe side in this case.
+I.e. it will build the table from the airport data, then do the hash lookups using the hotel data.
+
+If you haven't before, I encourage you to try these queries directly in the Couchbase Server Query Workbench, part of the web administration console.
+
+==== Server Sent Events
+
+We already mentioned setting up an event listener for link:https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events[server sent events] on the client side.
+These two endpoints show what's needed on the server.
+
+[source,javascript]
+----
+include::https://raw.githubusercontent.com/couchbaselabs/points-of-interest/master/server/routes/events.js[]
+----
+
+The "get" version of the `poi` endpoint is called by the browser when the `EventSource` is constructed.
+You can see we simply add the caller as a client.
+
+We use the "post" version as the go between to send data to the client.
+The `res.send('');` line gives a hint about how this works.
+In the Eventing code, we'll use the N1QL cURL capabilities to push data to this endpoint.
+The empty reply is there to close out that transaction.
+
+The server then forwards the data to any listening clients.
+There are a lot more details.
+If you want to find out more, link:https://www.html5rocks.com/en/tutorials/eventsource/basics/[this article] has good information.
+
+==== Finishing the Server
+
+To finish the server side of our project, create a subdirectory `routes` under the server directory.
+
+Copy the `records` code above into a file under routes called `records.js`.
+Copy the `events` code above into a file called `events.js`.
+And, finally, in the server directory itself, create a new file named `.env`.
+Paste the following configuration parameters there and save.
+(Of course, change any settings as you need.)
+
+[source,shell]
+----
+HTTP_PORT=8080
+HTTPS_PORT=8081
+DEBUG=node,http,poi:*
+CLUSTER='couchbase://localhost:8091'
+CLUSTER_USER=Administrator
+CLUSTER_PASSWORD=password
+----
+
+The server should be ready to go now.
+In the server root directory, run `node app.js`.
+Don't forget to build the client code first.
+
+== The Couchbase Server Eventing Service Code
+
+Here's the last bit of special sauce that makes this app work.
+In version 5.5.0, Couchbase introduced the link:https://blog.couchbase.com/eventing/[Eventing Service].
+This is probably my favorite new feature in the 5.5 release series.
+Couchbase Functions is the first component offered as part of this service.
+In short, Functions let you run code *on the database server* in response to changes in the database.
+
+Functions are written in standard JavaScript, with some link:https://developer.couchbase.com/documentation/server/current/eventing/eventing-language-constructs.html[additions and restrictions].
+To create the function we need, follow these steps.
+
+=== Eventing Meta-Data Bucket
+
+First, create a bucket for the eventing meta-data.
+
+- Open the Couchbase Server console and log in if needed
+- Click "Buckets" in the left side menu
+- Click "Add Bucket" in the upper right corner
+- Enter `eventing` for the bucket name in the dialog that pops up
+- Click "Add Bucket" to finish
+
+=== Adding a Function
+
+Now, configure the function and add the code.
+
+- Click "Eventing" in the left side menu
+- Click "Add Function" in the upper right hand corner
+
+This will bring up a dialog box.
+
+- Select `travel-sample` as the Source Bucket
+- Select `eventing` as the Metadata Bucket
+- Enter `monitor` (or whatever you want) for the Function Name
+- Under "Bindings" set `type` to "Alias", `name` to "travel-sample", and `value` to "db"
+- Click "Next: Add Code"
+
+This will drop you into the code editor.
+It's pre-populated with the function signatures.
+Copy this code in instead.
+
+[source,javascript]
+----
+include::https://gist.githubusercontent.com/HodGreeley/9e25f9072247e180ec5cd764d9048c3b/raw/da1849fe7d3fd06d5688e75ca4474c7dd6d6ac10/monitor.js[]
+----
+
+=== Deploying a Function
+
+To deploy this code, first click "Save", then click "Eventing" in the left side menu again.
+You should see an entry for the function.
+Click anywhere in that bar.
+You should see it expand.
+
+image::DeployFunction.png[]
+
+Click "Deploy", then just click "Deploy Function".
+
+=== Understanding the Function Code
+
+`OnUpdate` gets called any time a document changes.
+It receives the document and document meta-data as parameters.
+
+We're looking for the `trigger` document to change, indicating the selection of a new hotel.
+The first line filters out all other docs based on the document id (sometimes referred to as the document key).
+
+The next line shows a few interesting things.
+Recall `db` is an alias for the travel sample bucket.
+`db['here']` directly retrieves a document with id `here`.
+This is where we will store the credentials needed for the link:https://www.here.com/[HERE] mapping services.
+
+We prepare the URL and data for our request for points of interest.
+Here has a lot of interesting features in their API.
+We're just making a basic request.
+
+With that information in hand, we're ready for our cURL call.
+Building the N1QL query, we see one of the modifications to standard JavaScript: You can write your queries in-line just the way you would construct them in the Query Workbench.
+
+We see another nice detail in the cURL query.
+N1QL provides a convenient syntax for filtering results.
+By adding the path `.results.item` to the end, we grab only the data we want.
+
+We then execute the query and, using that same `db[<key>]` shorthand, update our `poi` document.
+This is an example of using a Function to augment data.
+In another scenario, we might derive our update entirely from records in the database.
+For example, you could fill out all the details of a shopping cart as a customer makes selections.
+
+Finally, with our points of interest in hand, we again use cURL to push the data to our web server endpoint.
+Recall the "post" version of the `poi` API ingests incoming data and pushes it back out to any registered clients.
+Thus we can have the client UI react to database changes without having to poll.
+
+== Final Steps
+
+We're now ready to put this all together.
+You can try out the app as is, but the maps part won't work yet.
+For that, you need a Google Maps API key, and a set of credentials from HERE.
+
+The Maps key goes in the `config.js` file in the client code.
+Save the HERE keys in a document in the `eventing` bucket.
+You can do this directly in the admin console by clicking "Documents" in the left menu, then "Add Document" in the upper right.
+Use this as a template.
+
+.here
+[source,json]
+----
+{
+  "id": "TPxxxxxxxxxxxxxxxxxx",
+  "code": "whsxxxxxxxxxxxxxxxxxxx"
+}
+----
+
+And, last of all, as a security measure, cURL is disabled by default.
+In the admin console, do the following.
+
+- Click "Settings" in the left side menu
+- Click to expand "Advanced Query Settings"
+- Select "Unrestricted" under "CURL() Function Access"
+
+This is *not* what you want for production.
+Instead you would want a whitelist of a select set of URLs.
+This will do for our project, though.
+
+With that, in the web server directory, run `node app.js`.
+Open `localhost:8080` in your browser (or whatever you chose in `.env`) and try it out.
+
+== Source
+
+You can find the source for the whole app on GitHub link:https://github.com/couchbaselabs/points-of-interest[here].
+I've included a script `setup` to simplify prepping everything.
+Just run `./setup` and supply your keys.
+(You may have to make it executable first.)
+You still need to run `npm install` and build the client code.
+
+== Webinar
+
+This application was used as part of a demonstration in a Couchbase webinar.
+You can view a recording of it link:https://event.on24.com/wcc/r/1774871/5A84BC9DF67C6113F8DD95AD7DF71BBA[here].
+Be sure and check out other free link:https://www.couchbase.com/resources/webinars[webinars] in the Couchbase resources area. 
+
+== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}
