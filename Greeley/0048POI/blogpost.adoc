@@ -164,7 +164,7 @@ Edit `package.json` in the project root and change the build line to
 
 [source,json]
 ----
-    "build": "cd client && cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cd client && cross-env NODE_ENV=production webpack --progress --hide-modules && cp index.html dist/"
 ----
 
 Now in the client do `npm run build`.
