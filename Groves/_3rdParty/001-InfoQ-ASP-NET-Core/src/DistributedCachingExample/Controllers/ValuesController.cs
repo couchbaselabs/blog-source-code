@@ -51,10 +51,12 @@ namespace DistributedCachingExample.Controllers
                 _cache.SetString("CachedString1", myString);
 
                 // cache only for 5 minutes
+                /*
                 // tag::cacheSliding[]
-                // _cache.SetString("CachedString1", myString,
-                //  new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5)});
+                 _cache.SetString("CachedString1", myString,
+                  new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5)});
                 // end::cacheSliding[]
+                */
             }
 
             return myString;
