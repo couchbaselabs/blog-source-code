@@ -28,6 +28,8 @@ image:https://img.shields.io/badge/Couchbase-v5.5.0-red.svg[link=https://www.cou
 In this tutorial, we'll build a full stack application using link:https://vuejs.org[Vue.js], link:https://nodejs.org/[Node.js], link:https://expressjs.com[Express], and link:https://www.couchbase.com[Couchbase Server].
 In addition to those frameworks, we'll use the link:https://developers.google.com/maps/documentation/[Google Maps] and link:https://developer.here.com/develop/rest-apis[Here Places] REST APIs.
 
+*Tl;dr* clone the repo link:https://github.com/couchbaselabs/points-of-interest:[here].
+
 toc::[]
 
 == What We'll Build
