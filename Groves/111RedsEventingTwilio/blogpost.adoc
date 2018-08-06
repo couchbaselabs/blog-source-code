@@ -9,7 +9,7 @@
 
 Eventing is a new service available in Couchbase Server. The Cincinnati Reds are interested in using this feature to more quickly serve their VIP customers. A concierge is assigned to one or more VIPs. When the VIP enters the ballpark, a text message will be sent to the concierge. The concierge can then meet the VIP at their seats.
 
-As a proof of concept, I've created an example that uses Functions (part of Eventing) to send a text message. I'm using a link:https://www.twilio.com/try-twilio[trial account of Twilio] to send the messages. I _don't_ know if the Reds plan to use Twilio or text messages in their production system. But it's free and easy to get started using Twilio, so that's what I decided to use in my proof of concept.
+As a proof of concept, I've created an example that uses Functions (part of Eventing) to send a text message. I'm using a link:https://www.twilio.com/try-twilio[trial account of Twilio] to send the messages. I _don't_ know if the Reds plan to use Twilio or text messages in their production system. But it's free and easy to get started using Twilio, so that's what I decided to use in my proof of concept. You can use any messaging/notification service you'd like (instead) as long as it has an HTTP API.
 
 == Eventing review
 
@@ -22,7 +22,7 @@ I'm not going to provide all the details for eventing here. This has been blogge
 
 But the short story is this: Couchbase Functions (part of Eventing) allow you to write JavaScript functions that respond to documents getting created/updated/deleted. Inside of these functions, you can read documents, write documents (to other buckets), execute N1QL queries, and execute a `curl` function to make requests to HTTP endpoints. *Note: The curl construct is still in Development. This feature is intended for Development purposes only and should not be used in Production environments.*
 
-I'm going to put together pieces of those blog posts to create this eventing proof of concept for the Reds.
+I'm going to put together pieces of the above blog posts to create this eventing proof of concept for the Reds.
 
 == Scanning Tickets
 
@@ -46,7 +46,7 @@ I also created 3 concierges and divided up the VIPs amongst them.
 include::src/TicketVip/TicketVip/Program.cs[tag=concierges]
 ----
 
-In the above example, I'm assigning customers 1, 2, and 9 to "Matt Groves". This means that George Clooney, Josh Hutcherson, and Ryan Collins are the VIPs that concierge Matt Groves is assigned to take care of.
+In the above example, I'm assigning customers 1, 2, and 9 to "Matt Groves". This means that George Clooney, Josh Hutcherson, and Ryan Collins are the VIPs that concierge Matt Groves is assigned to take care of. (Replace `_yourVerifiedNumber` with the phone number that you've confirmed with Twilio).
 
 I'm also storing Twilio credentials in a document. I did this because I'll need the credentials inside of a Couchbase Function, and I didn't want to hard-code them there. The credential document looks like:
 
@@ -73,7 +73,7 @@ You can find the link:https://github.com/couchbaselabs/blog-source-code/tree/mas
 
 == Eventing function
 
-The core of this eventing example is the function. When I created this function, I called it "notifyConcierge"; I used a "tickets_metadata" bucket (as pictured below). Most importantly, I created an alias for the "tickets" bucket and called it "src". Within the function, this bucket is read-only, but I need it to get customer and concierge information.
+The core of this eventing example is the function. When I created this function, I called it "notifyConcierge"; I used a "tickets_metadata" bucket (as pictured below). Most importantly, I created an alias for the "tickets" bucket and called it "src". Within the function, this bucket is read-only, but I need it to get customer and concierge information as well as the Twilio credentials.
 
 image:11101-create-eventing-function.png[Creating a function in eventing]
 
