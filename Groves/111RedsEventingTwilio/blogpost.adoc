@@ -1,11 +1,11 @@
 :imagesdir: images
-:meta-description: TBD
-:title: Eventing: VIP Notification with Couchbase Functions
-:slug: Eventing-VIP-Notification-Couchbase-Functions
+:meta-description: Eventing is a new service available in Couchbase Server. The Cincinnati Reds are interested in using this feature to more quickly serve their VIP customers.
+:title: Eventing: Notification with Couchbase Functions
+:slug: Eventing-Notification-Couchbase-Functions
 :focus-keyword: eventing
 :categories: Couchbase Server, .NET
 :tags: Couchbase Server, .NET, eventing, functions
-:heroimage: some new Reds picture?
+:heroimage: 111-hero-cincinnati-reds-vip.jpg from https://www.nationalmuseum.af.mil/Upcoming/Photos/igphoto/2001339275/mediaid/2438863/
 
 Eventing is a new service available in Couchbase Server. The Cincinnati Reds are interested in using this feature to more quickly serve their VIP customers. A concierge is assigned to one or more VIPs. When the VIP enters the ballpark, a text message will be sent to the concierge. The concierge can then meet the VIP at their seats.
 
@@ -125,7 +125,7 @@ include::src/TicketVip/TicketVip/notifyConcierge.js[tag=twilio]
 
 Now, whenever a ticketscan document is created or modified, a concierge will be notified on their cell phone. Here's an example of the entire demo, from ticket scan to SMS notification:
 
-image:demo2.gif[Eventing demonstration using SMS]
+image:11102-function-sending-text-message.gif[Eventing demonstration using SMS]
 
 In this image, I'm creating 4 ticket scans. The first is for a VIP, the next two are for regular Joes, and the last is for a VIP. Two text messages appear. In reality, these would appear on different phones, but I'm sending all the notifications to a single number for testing. _Note: I'm using link:https://www.join.me/[join.me] to show my live Android screen side-by-side with the console)._
 
