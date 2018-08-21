@@ -1,4 +1,4 @@
-= Couchbase Connect Fall 2017 Demo
+= The Couchbase Data Platform in Action: Step-by-Step Setup
 Hod Greeley <https://blog.couchbase.com>
 :doctype: article
 :encoding: utf-8
