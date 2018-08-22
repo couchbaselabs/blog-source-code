@@ -1,0 +1,179 @@
+= The Couchbase Data Platform in Action: Eventing/Functions
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+include::../links.adoc[]
+
+image::F_of_CB-785x400.png[]
+
+This post will dive into the use of the {CES} in the Couchbase Silicon Valley 2017 link:https://youtu.be/-U_UjqnhMBI[technical keynote demonstration] application.
+
+If you aren't already familiar with the demo or {CES}, take a look at the resources at the end of this post. The source code for the entire application set is {cc17repo-}[available on GitHub].
+
+== Introduction
+
+In the demo, we use a mobile phone with NFC to read temperatures from a battery-less patch.
+The readings get stored as a link:https://www.hl7.org/fhir/observation.html[FHIR Observation Resource] in JSON using {CBL}.
+These documents then get synced to a {CBS} cluster via {SG}.
+
+The web client has a dashboard designed to track patient information in near real time.
+This presents a couple of pretty common challenges.  How do we:
+
+* Update the dashboard based on records written by another part of the system 
+* Efficiently transfer the necessary information
+
+Let's take a look at how the Eventing Service helps with both of these.
+
+== Pushing Updates to the Client
+
+Even without an link:https://en.wikipedia.org/wiki/Active_database[active database], you can do this at least a couple of different ways.
+For example, we could work out a way to post the readings to a message queue, or poll the database.
+Both approaches have drawbacks.
+
+* Adding a message queue introduces more infrastructure complexity and opportunities for failure.
+* Polling is, well, polling.
+
+Instead, we handled this using https://developer.couchbase.com/documentation/server/5.5/eventing/eventing-overview.html[Couchbase Functions], a feature of the Eventing Service.
+Functions listen for changes in the database.
+(Technically, Functions process a link:https://blog.couchbase.com/couchbases-history-everything-dcp/[Couchbase Database Change Protocol] feed.)
+You then write two callbacks in JavaScript, `OnUpdate` and `OnDelete`, that get invoked for every document creation/update  and deletion event, respectively.
+This lets you implement reactive code that runs directly in your cluster.
+
+(On a side note, we could have solved this using link:https://developer.couchbase.com/documentation/mobile/current/guides/sync-gateway/server-integration/index.html[Sync Gateway web hooks].
+This approach has some aspects in common with the technique we did use.
+It has several trade-offs, but that's a topic for a different post.)
+
+== Data Efficiency
+
+The mobile app creates documents based on temperature readings that need to record a slew of related information.footnote:[See link:https://github.com/couchbaselabs/connect-fall-2017-demo/blob/master/mobile/android/CBCHealth/app/src/main/java/com/couchbase/mobile/app/temperature/TemperatureActivity.java[TemperatureActivity.java]]
+For the dashboard, we only need a small subset of that data.
+We could retrieve the whole document with a key/value lookup.
+That would be fast, but means transferring data we don't care about.
+It's easy enough to use a {N1QL} query to pare down the data.
+While N1QL is incredibly efficient, this still means processing through your query nodes.
+
+With Functions, you get a copy of the document with each update.
+Naturally you can extract the data you want from there quite easily.
+Since Eventing is an link:https://www.couchbase.com/multi-dimensional-scalability-overview[independent service], you can scale the resources you dedicate to your Functions separately from the rest of your cluster.
+
+== The Code
+
+The actual code involved here is pretty straightforward.
+
+=== Couchbase Functions
+
+Here's the Functions part.
+You set add this either through the Eventing panel of the Couchbase Server console, or via a REST call.footnote:[Find complete setup details link:https://blog.couchbase.com/couchbase-data-platform-action-setup-steps/[here]]
+
+[source,javascript]
+----
+function OnUpdate(doc, meta) {
+  if (doc.resourceType != 'Observation') return;
+  
+  let reference = doc.subject.reference;
+  let url = "http://localhost:8080/events/" + reference.substr(9);
+  let data = JSON.stringify({
+    "reference": doc.subject.reference,
+    "code": doc.code.coding[0].code,
+    "recordedAt": doc.issued,
+    "value": doc.valueQuantity.value
+  });
+    
+  let curl = SELECT CURL($url, {
+    "request": "POST",
+    "header": [ "Content-Type: application/json", "accept: application/json" ],
+    "data": $data
+  });
+  
+  curl.execQuery();
+}
+
+function OnDelete(meta) {}
+----
+
+In the FHIR specification, documents all have a `resourceType`.
+We only look at "Observation" resources, so the first check filters on that.
+
+Next, we extract the UUID of the patient from the subject reference field.
+That gets used in routing on the web app server side.  (See the next section for more on this.)
+
+Then we create a JSON string with only the subject reference, a code indicating the type of observation made, the date this particular one was taken, and the measurement value.
+That's the only data we need to pass.
+
+Finally, we make use of the {cURL-}[cURL] capability in N1QL to POST that data to the app server REST endpoint.
+
+=== Web Server REST Endpoint
+
+The app server is written in link:https://nodejs.org[Node] using link:https://expressjs.com[Express].
+We defined a link:https://expressjs.com/en/guide/routing.html[route] in Express to create the endpoint used in the cURL call in the Functions code.
+
+Here's the code.
+
+[source,javascript]
+----
+router.post('/:id', function(req, res, next) {
+  res.send('');
+
+  if (sse[req.params.id] === undefined) return; // Not listening yet
+
+  sse[req.params.id](`event: update\ndata: { "values": [${JSON.stringify(req.body)}]}\n\n`);
+});
+
+module.exports = router;
+----
+
+Express let's you define a portion of a route, and then hang it off of a longer path when wiring things together.
+Hence all you see here is the end part of the route specification.
+The `:id` element tells Express to take the last segment of the URL and feed it to our callback as a parameter.
+Recall here we add the patient UUID as the last part of the URL path.
+So that's what the `id` parameter gets set to.
+
+Having triggered this route with our cURL call, we need to get the information pushed out to the web client.
+We could have used web sockets.
+Instead, we chose to use link:https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events[server-sent events].
+SSEs are lighter weight than web sockets, and work well for this purpose.
+We'll go into SSEs further in another post.
+For now, just think of it as a message channel that uses a very simple format.
+
+That gives us what we need to know to understand the callback code.
+The first line specifies the route.
+The second line sends an empty response, to close out the cURL session.
+Next we check whether the server-sent events channel has been set up yet.
+This happens via a call from the client.
+If the SSE channel is ready, we tag our data as an "update" event, and send out the same JSON we received.
+
+== Conclusion
+
+Functions are probably my favorite new feature in Couchbase Server 5.5.
+We looked at one example here, and you can see it doesn't take much to get started.
+There are a lot of other uses cases to look at, too.
+Deploying business logic right along side data, with easy scaling, all without adding infrastructure, that's pretty cool stuff.
+
+== Resources
+
+For background on the application, view the video of the keynote link:https://youtu.be/-U_UjqnhMBI[here], along with these other link:https://blog.couchbase.com/tag/Connect-SV-2017-Demo/[posts].
+
+You can read an excellent introduction to {CES} in link:https://blog.couchbase.com/eventing/[this post].
+I also highly recommend checking out this video from Couchbase Connect NYC 2018: link:https://youtu.be/SXa6PJEuaHY[Do More With Change – Introducing Couchbase Eventing]
+
+=== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}
