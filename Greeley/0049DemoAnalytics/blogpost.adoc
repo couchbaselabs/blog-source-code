@@ -237,7 +237,7 @@ We won't go through an entire plan.
 Instead, let's take a look at the difference that hint makes.
 Here's a side-by-side diff of the the same query, with and without the hint.
 
-image:PlanDiff.png[]
+image:https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/0049DemoAnalytics/images/PlanDiff.png[]
 
 We can see the core of the difference the hint makes in lines 41-45.
 As promised, we can see the version without the hint uses hashing, while the one with the hint can instead use a B-tree search.
@@ -302,6 +302,8 @@ Once we have the data in this form, the second loop iterates over the stats and 
 The rest of the Analytics code and queries are all very similar to the parts we've examined.
 For further information and examples, take a look at the Analytics primer link:https://developer.couchbase.com/documentation/server/current/analytics/primer-beer.html[here].
 It uses sample data distributed with every version of Couchbase.
+
+For more on this sample application, view the video of the keynote link:https://youtu.be/-U_UjqnhMBI[here], along with these other link:https://blog.couchbase.com/tag/Connect-SV-2017-Demo/[posts].
 
 == Postscript
 
