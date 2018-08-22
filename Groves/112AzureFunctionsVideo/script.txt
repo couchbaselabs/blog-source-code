@@ -1,0 +1,266 @@
+Today I'm going to show you how to write an Azure Function
+and how to get it talking with a Couchbase Server cluster
+
+If you haven't heard of Couchbase before today, don't worry,
+I'll give you some links at the end of the video to learn more
+about it. For now, all you need to know is that Couchbase is a
+NoSQL database that's fast, flexible, and can scale very well.
+
+Data is stored in Couchbase as JSON, and each of these JSON documents
+has a key to identify it.
+
+There's a lot more that Couchbase can do, but that's all you need to know
+for now.
+
+---
+
+You don't even have to use any Azure credit to follow along
+Because I'll be running both Couchbase Server and Azure Functions
+on my local machine. This means you can develop locally without spending
+any money and deploy globally into any Azure data center.
+
+First, let's get Couchbase setup.
+I've already installed Couchbase Server Enterprise 5.5, though any version
+of Couchbase 5.0 or newer should work fine. You can download Couchbase and install
+it on your machine by going to couchbase.com/downloads, or you can install from
+the Azure Marketplace or you can install it with AKS using the Couchbase Kubernetes operator,
+or you can even use custom VMs.
+
+I'll create a new bucket here that I want my azure functions to talk to.
+A bucket is just a collection of JSON documents.
+I'll call it azurefunctions, and I'll make it the minimum size. Don't worry
+too much about the details here for now.
+
+I also need to create a user that has access to this bucket
+I'll name it 'matt' and give it a 'password' and 'application access'
+permission. If you're using community, you'll have to pick a higher level
+role.
+
+So now couchbase is all ready to be used by azure functions as a database. 
+
+----
+
+the next step I'm going to do is create a couple of azure functions
+
+one of these functions will be able to create documents in couchbase
+the other will be able to retrieve them from couchbase
+
+open visual studio
+
+file -> new -> project
+visual c# -> cloud -> azure functions
+
+C:\zproj\blog\Groves\112AzureFunctionsVideo\
+AzureFunctionsVideo
+
+I'll post this source code to github
+
+Next step is to select what kind of functions to create
+I'm going to use v2 Preview and HTTP trigger
+again, don't worry too much about the details now
+but I'm just going to create azure functions that can be called via an HTTP request
+there are other types of functions you can explore later
+
+access rights: anonymous (meaning that no authentication or authorization is requied to use these functions)
+
+this will create a basic shell of a hello world azure functions project for you
+it has one function called "Function1"
+
+[ctrl+f5 to run it]
+
+it's going to tell us the URL to execute this azure function
+
+[open postman, execute request]
+
+it's not talking to Couchbase yet, it's just manipulating strings
+
+----
+
+let's take a step back and talk about what azure functions are
+
+Azure Functions are Microsoft’s answer to Amazon’s Lambdas or Google’s Cloud Functions
+(also known as “serverless” architecture). They give you a way to write small pieces of code, 
+and let Azure handle the underlying servers, deployments, scaling, and execution that are involved
+in running that code. Azure will only bill you for the time that functions are executed.
+
+----
+
+Now let's write the 'get' and 'set' functions that interact with Couchbase.
+
+Let's start by adding the Couchbase .NET SDK to the project.
+
+[use nuget]
+
+Next, comment out this 'run' function that visual studio generated.
+
+When working with Couchbase and C#, it's good to model your document as a C# class.
+I'll create a very simple model called MyDocument
+
+    public class MyDocument
+    {
+        public string Name { get; set; }
+        public int ShoeSize { get; set; }
+        public decimal Balance { get; set; }
+    }
+
+documents are stored as JSON, so they *can* be much more complex, containing arrays and nested objects, etc
+
+next let's create a function to create a new document
+it will be expecting a payload that matches the MyDocument class I just
+created. It will create a Guid as the document key, and it will store the document in the bucket
+I created earlier in this video.
+
+        [FunctionName("SetDoc")]
+        public static IActionResult SetDoc([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] MyDocument doc)
+        {
+            var id = Guid.NewGuid().ToString();
+
+            Bucket.Value.Insert(id, doc);
+
+            return new OkObjectResult($"New document inserted with ID {id}");
+        }
+
+no validation or business logic, just a simple passthrough
+		
+where should this bucket object come from? notice that this function is static
+all this code is isolated away from the underlying server by Azure
+which means that we have to consider that this function may be running for the first time
+so, I could create a Couchbase Cluster object and get a bucket with that object
+	
+	         var cluster = new Cluster(new ClientConfiguration
+            {
+                Servers = new List<Uri> { new Uri("http://localhost:8091") }
+            });
+            cluster.Authenticate("matt", "password");
+            var Bucket = cluster.OpenBucket("azurefunctions");
+	
+	...
+	
+	            cluster.Dispose();
+
+if I did this, a new cluster object would be created and disposed every single time
+this would work, but it's not the way you should do it
+a cluster object is expensive to create, and this would mean that your azure function
+would take a huge performance hit every time
+instead, a cluster should be created as few times as possible
+
+we don't have complete control, because of the way azure functions abstracts away
+servers from us, but we do have some control
+
+so let's instead store this bucket as a static member of the class
+which means that as long as azure functions keeps reusing this object,
+it won't have to create the cluster every time
+
+so ideally, I want the cluster to be created if necessary, and only if necessary
+in a thread safe way
+
+to do this, we can use .NET's Lazy class
+
+        private static readonly Lazy<IBucket> Bucket = new Lazy<IBucket>(() =>
+        {
+            var uri = "http://localhost:8091";
+            var bucketName = "azurefunctions";
+            var username = "matt";
+            var password = "password";
+            var cluster = new Cluster(new ClientConfiguration
+            {
+                Servers = new List<Uri> { new Uri(uri) }
+            });
+            cluster.Authenticate(username, password);
+            return cluster.OpenBucket(bucketName);
+        });
+
+go to postman, show SetDoc example
+look at Couchbase UI to see that it's empty
+execute postman
+document shows up in couchbase
+
+[close azure functions window]
+
+----
+
+let's go back to that lazy object
+I hardcoded a bunch of values
+but I think I'd rather have those in a config file
+to setup config locally, just open up local.settings.json
+which is a json config file
+
+inside of values:
+      "couchbaseUri": "http://localhost:8091",
+      "couchbaseBucketName": "azurefunctions",
+      "couchbaseUsername": "matt",
+      "couchbasePassword" : "password" 
+
+then instead of hardcoding, I can pull from the config
+	  
+            var uri = Environment.GetEnvironmentVariable("couchbaseUri");
+            var bucketName = Environment.GetEnvironmentVariable("couchbaseBucketName");
+            var username = Environment.GetEnvironmentVariable("couchbaseUsername");
+            var password = Environment.GetEnvironmentVariable("couchbasePassword");
+
+go through postman again
+[close azure functions window]
+
+----
+
+next, let's create a function to retrieve documents from the bucket
+	
+        [FunctionName("GetDoc")]
+        public static IActionResult GetDoc([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequest req)
+        {
+            string id = req.Query["id"];
+
+            var doc = Bucket.Value.Get<MyDocument>(id);
+
+            return new OkObjectResult(doc.Value);
+        }
+
+[walk through with postman]
+		
+so now we have an azure function to create a doc
+and an azure function to get a doc
+we can do a lot more with couchbase, like updating, deleteing,
+executing SQL queries, full text search queries, analytics, and more
+but this is enough to get you started with azure functions
+	
+----
+
+[show resources slide]
+
+be sure to sign up for the couchbase community directory
+at community.couchbase.com - this is the place to find other
+couchbase experts, champions, and community members like yourself.
+
+I'll see you there!
+
+azure functions: https://docs.microsoft.com/en-us/azure/azure-functions/
+couchbase: https://developer.couchbase.com/documentation/server/current/getting-started/do-a-quick-install.html
+couchbase .NET docs: https://developer.couchbase.com/documentation/server/current/sdk/dotnet/start-using-sdk.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

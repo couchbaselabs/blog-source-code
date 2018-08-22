@@ -1,0 +1,31 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Azure Functions with Couchbase Server (video)
+:slug: Azure-Functions-Couchbase-Server-video
+:focus-keyword: azure functions
+:categories: Couchbase Server, .NET
+:tags: Couchbase Server, .NET, azure, azure functions, serverless, cloud
+:heroimage: azure cloud
+
+Azure Functions allow you to use "serverless" architecture on Microsoft Azure. All you do is write the code, and Azure Functions takes care of the servers for you.
+
+== Azure Functions
+
+In this video, I'm going to show you how to write Azure Functions that interact with Couchbase Server.
+
++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/RwQR2gspzYk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
++++
+
+To follow along, you can find the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/112AzureFunctionsVideo/AzureFunctionsVideo[full source code for this example on Github].
+
+== Your Next Steps
+
+I've been blogging about Azure and Couchbase all year. If you're interested in learning more, check out these other blog posts:
+
+* link:https://blog.couchbase.com/serverless-architecture-cloud-computing/[Serverless Architecture with Cloud Computing]
+* link:https://blog.couchbase.com/scaling-couchbase-server-azure/[Scaling Couchbase Server on Azure]
+* link:https://blog.couchbase.com/test-drive-trying-couchbase-azure-free/[Test Drive: Trying Couchbase on Azure for Free]
+* Azure Functions and link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchbase-server/[Lazy Initialization with Couchbase Server]
+
+If you want to learn more about how others in the Couchbase community are using Azure, sign up for the link:https://community.couchbase.com[Couchbase Community Directory] today.
