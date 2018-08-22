@@ -13,11 +13,19 @@ Hod Greeley <https://blog.couchbase.com>
 :categories: 
 :tags: 
 :heroimage: 
+:toc: macro
+:toc-title: Contents
+:sqlpp: SQL++
+
 include::../links.adoc[]
 
 image::
 
-=== Postscript
+image:https://img.shields.io/badge/Couchbase-v5.5.0-red.svg[link=https://www.couchbase.com/downloads] 
+
+toc::[]
+
+== Postscript
 
 [%hardbreaks]
 Couchbase is open source and {downloads}[free to try out].

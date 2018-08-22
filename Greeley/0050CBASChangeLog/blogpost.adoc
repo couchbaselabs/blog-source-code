@@ -1,0 +1,69 @@
+= Changes to the Couchbase Analytics Service
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+:toc: macro
+:toc-title: Contents
+:sqlpp: SQL++
+
+include::../links.adoc[]
+
+image::couchbase-inner-sql++.svg[]
+
+image:https://img.shields.io/badge/Couchbase-v5.5.0-red.svg[link=https://www.couchbase.com/downloads] 
+
+toc::[]
+
+The {CAS-}[Couchbase Analytics Service] uses the link:https://developer.couchbase.com/documentation/server/current/analytics/1_intro.html[{sqlpp}] query language.
+{sqlpp} is an modern query language designed to work with semi-structured data and the JSON data model.
+{sqlpp} is backwards-compatible with SQL.
+ 
+The Coucbase Analytics Service is currently in developer preview.
+As such, there are occasional breaking changes between releases.
+This post serves to document those changes.
+
+== 6.0
+
+=== Data Definition Language
+
+- Bucket association is now automatic
++
+Previous versions required explicit association between Analytics buckets and Couchbase Server buckets.
+For example, `CREATE BUCKET ha WITH {"name":"health"}`.
+Analytics buckets now automatically mirror Server buckets, e.g. in the previous example other Analytics DDL commands can refer to a bucket `health` without any extra configuration.
++
+- Dataset definitions no longer require the `SHADOW
++
+Preview releases before version 5.5 required the `SHADOW` keyword.
+It is optional in v5.5.
+It is an error to include it in v6.0.
+The syntax for creating datasets is therefore `CREATE DATASET ((dataverse_name.)? dataset_name)? ON bucket_name (WHERE where_exp)?`.
++
+- `CONNECT/DISCONNECT BUCKET` have been replaced by `CONNECT/DISCONNECT LINK`
++
+The connect and disconnect commands activate/deactivate dataset processing of data from Server buckets.
+The new full syntax is `CONNECT LINK     (dataverse_name.)? Local (, (dataverse_name.)? Local)*`.
+This will connect all datasets in a dataverse.
++
+
+
+== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
