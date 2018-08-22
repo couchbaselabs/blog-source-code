@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: Azure Functions allow you to use "serverless" architecture on Microsoft Azure. All you do is write the code, and Azure Functions takes care of the servers for you.
 :title: Azure Functions with Couchbase Server (video)
 :slug: Azure-Functions-Couchbase-Server-video
 :focus-keyword: azure functions
