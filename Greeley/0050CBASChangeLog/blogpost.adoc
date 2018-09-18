@@ -43,7 +43,7 @@ Previous versions required explicit association between Analytics buckets and Co
 For example, `CREATE BUCKET ha WITH {"name":"health"}`.
 Analytics buckets now automatically mirror Server buckets, e.g. in the previous example other Analytics DDL commands can refer to a bucket `health` without any extra configuration.
 +
-- Dataset definitions no longer require the `SHADOW
+- Dataset definitions no longer require the `SHADOW` keyword
 +
 Preview releases before version 5.5 required the `SHADOW` keyword.
 It is optional in v5.5.
