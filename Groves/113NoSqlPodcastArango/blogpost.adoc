@@ -1,0 +1,24 @@
+:imagesdir: images
+:meta-description: ArangoDb is the focus of the latest episode of The NoSQL Database Podcast. Max Neunhoeffer joins as the special guest to talk about this multi-model NoSQL document database.
+:title: NDP Episode #23: Max Neunhoeffer on ArangoDb
+:slug: NDP-Episode-Max-Neunhoeffer-ArangoDb
+:focus-keyword: ArangoDb
+:categories: Couchbase Server
+:tags: NoSQL, graph, arangodb, arango
+:heroimage: avocados - Creative Commons https://www.flickr.com/photos/146966953@N02/29470624136
+
+ArangoDb is the focus of the latest episode of The NoSQL Database Podcast. Max Neunhoeffer joins as the special guest to talk about this multi-model NoSQL document database.
+
+The previous episode of the podcast was link:https://blog.couchbase.com/ndp-episode-22-couchbase-engagement-nosql-database/[Couchbase, the Engagement NoSQL Database with Justin Michaels].
+
+This is a special episode of the podcast! Nic Raboy will no longer be hosting the show, so this is my first episode as the host. Nic joins as a special guest to make sure we have a smooth transition.
+
+Episode 23 can be found on all the major podcasting networks such as iTunes and Pocket Casts. I've also embedded the recording below.
+
++++
+<audio class="wp-audio-shortcode" id="audio-4516-1" preload="none" style="width: 100%;" controls="controls"><source type="audio/mpeg" src="http://traffic.libsyn.com/nosql/NDP023MaxNeunhoefferArangoDb.mp3?_=1" /><a href="http://traffic.libsyn.com/nosql/NDP023MaxNeunhoefferArangoDb.mp3">http://traffic.libsyn.com/nosql/NDP023MaxNeunhoefferArangoDb.mp3</a></audio>
++++
+
+If you have any questions for Max, Nic, or myself, you can catch us on Twitter at link:https://twitter.com/neunhoef[@neunhoef], link:https://twitter.com/nraboy[@nraboy] and link:https://twitter.com/mgroves[@mgroves]
+
+If you're interested in learning more about Couchbase Server and the Engagement NoSQL Database, check out the Couchbase Developer Portal.
