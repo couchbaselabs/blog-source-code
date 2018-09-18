@@ -56,7 +56,7 @@ Make sure you've completed all these installation steps before moving on to ASP.
 
 I'm going to create a sample ASP.NET Core API application to show the distributed caching capabilities of ASP.NET Core. This will be a small, simple application with two endpoints.
 
-I'm using Visual Studio 2017. From there, I select File->New->Web->ASP.NET Core Web Application.
+I'm using Visual Studio 2017. From there, I select File->New->Project->Web->ASP.NET Core Web Application.
 
 image:00104-file-new.png[Visual Studio new project]
 
@@ -64,7 +64,9 @@ The next step is to select what kind of ASP.NET Core project template to use. I'
 
 image:00105-new-project-wizard.png[New project wizard]
 
-This project has a `ValuesController.cs` file. I'm going to replace most of the code in this class with my own code. Here is the first endpoint that I will create. It doesn't use any caching, and has a `Thread.Sleep` to simulate high-latency data access (imagine replacing that `Thread.Sleep` with a call to a slow web-service or a complex database query).
+This project has a `ValuesController.cs` file. I'm going to replace most of the code in this class with my own code. I'm also going to remove the `Route` attribute from the class in favor of individual `Route` attributes on each method.
+
+Here is the first endpoint that I will create. It doesn't use any caching, and has a `Thread.Sleep` to simulate high-latency data access (imagine replacing that `Thread.Sleep` with a call to a slow web-service or a complex database query).
 
 [source,C#,indent=0]
 ----
@@ -81,7 +83,7 @@ This a trivial example, but it shows that this endpoint is a) getting some uniqu
 
 We now have an ASP.NET Core application that needs caching and a Couchbase Server instance that wants to help out. Let's get them to work together.
 
-The first step is to install a package from NuGet. You can use the NuGet UI to search for Couchbase.Extensions.Caching, or you can run this command in the Package Manager Console: `Install-Package Couchbase.Extensions.Caching -Version 1.0.1`. This is an open-source project, and the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/caching.md[full source code is available on Github].
+The first step is to install a package from NuGet. You can use the NuGet UI to search for Couchbase.Extensions.Caching, or you can run this command in the Package Manager Console: `Install-Package Couchbase.Extensions.Caching -Version 1.0.2`. This is an open-source project, and the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/caching.md[full source code is available on Github].
 
 NuGet will install all the packages you need for your ASP.NET Core application to talk to Couchbase Server and to integrate with ASP.NET Core's built-in distributed caching capabilities.
 
