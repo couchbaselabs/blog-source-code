@@ -1,0 +1,177 @@
+:imagesdir: images
+:meta-description: TBD 
+:title: Azure Key Vault for Credentials
+:slug: Azure-Key-Vault-Credentials
+:focus-keyword: azure key vault
+:categories: Couchbase Server, .NET
+:tags: Couchbase Server, .NET, azure, security
+:heroimage: azure blue sky cloud again
+
+Azure Key Vault is a mechanism for you to store and manage sensitive information in Azure. Once the information is stored, it can be accessed by Azure services that you specify (and ONLY Azure services that you specify).
+
+In this blog post, I'm going to show you how to use Azure Key Vault to store Couchbase Server credentials and access them from an Azure Function.
+
+This blog post will be building on earlier blog posts about Couchbase on Azure, so you may want to review them before proceeding:
+
+* link:https://blog.couchbase.com/azure-getting-started-easy-free/[Azure: Getting Started is Easy and Free]
+* link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchbase-server/[Azure Functions and Lazy Initialization with Couchbase Server]
+* link:https://blog.couchbase.com/azure-functions-couchbase-server-video/[Azure Functions with Couchbase Server (video)]
+* Those should be enough to get you up to speed, but there are many more link:https://blog.couchbase.com/tag/azure/[blog posts involving Azure]
+
+As always, if you want to follow along, you can find the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/114AzureKeyVault/src[completed source on GitHub].
+
+== Installation and Setup of Couchbase Server
+
+The rest of this post assumes you have a Couchbase Server setup on Azure. You can follow the above links to learn about this process (it's easy!).
+
+In my setup for this blog post, I created a cluster (which required you to create administrator credentials) and a single bucket called "mybucket".
+
+I'm using Couchbase Enterprise Edition 5.5.2 since that's the easiest to setup on Azure. The Community edition and older versions of Couchbase should work just fine as well.
+
+== Creating an Azure Key Vault
+
+An Azure Key Vault can be created with the Azure Portal UI, or you can create it link:https://docs.microsoft.com/en-us/azure/key-vault/key-vault-manage-with-cli2[with the command line]. In an earlier post on using the link:https://blog.couchbase.com/aks-couchbase-kubernetes-operator/[Couchbase Kubernetes Operator with Azure], I also used the command line. You may want to review that if you've not used the link:https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli[Azure command line] utility before.
+
+The first step only ever needs to be done one time per Azure subscription. Assuming your command line is set to the subscription you want, register the Azure Key Vault with that subscription with this command:
+
+[source,PowerShell,indent=0]
+----
+PS C:\> az provider register -n Microsoft.KeyVault
+----
+
+The next step is to create a vault. With this command you need to specify a resource group. I created a resource group in advance called "KeyVaultDemo". I also decided to use the North Central US region of Azure.
+
+[source,PowerShell,indent=0]
+----
+PS C:\> az keyvault create --name 'MyCouchbaseKeyVault' --resource-group KeyVaultDemo --location 'North Central US'
+----
+
+Azure will take a few moments to finish, but the process is asynchronous, so you will be returned to the command line right away. The command line will tell you how to check on the progress.
+
+Now that you have an Azure Key Vault created, you can start putting your secrets in it. I'm going to store 4 pieces of information in my vault with these 4 commands:
+
+[source,PowerShell,indent=0]
+----
+PS C:\> az keyvault secret set --vault-name 'MyCouchbaseKeyVault' --name 'cbUsername' --value 'cbAdminUsername'
+PS C:\> az keyvault secret set --vault-name 'MyCouchbaseKeyVault' --name 'cbPassword' --value 'r6#Y%2^XXXXX'
+PS C:\> az keyvault secret set --vault-name 'MyCouchbaseKeyVault' --name 'cbBucketName' --value 'mybucket'
+PS C:\> az keyvault secret set --vault-name 'MyCouchbaseKeyVault' --name 'cbClusterUri' --value 'http://52.162.XXX.XXX:8091'
+----
+
+_(Note: I redacted some of the secret information using X's)_
+
+You can browse your secrets in the Azure Portal.
+
+image:11401-azure-key-vault-ui.png[Azure Portal UI showing the Azure Key Vault]
+
+== Benefits of Azure Key Vault
+
+Before we go any further, let's talk about _why_ you'd want to use Azure Key Vault.
+
+In previous blog posts, I stored the Couchbase credentials as app settings. Compared to app settings, Azure Key Vault gives you the following capabilities:
+
+* App Settings are stored as plain text. Azure Key Vault stores them encrypted.
+* Each application has its own app settings. With Azure Key Vault, each of your applications can share a single key vault.
+* Azure Key Vault stores a version history of values, and each secret has an (optional) activation date and expiration date.
+
+Azure Key Vault doesn't _replace_ app settings. Azure Key Vault is best used when you want to securely store sensitive information (like credentials/passwords/API keys) and/or use them across multiple services.
+
+== Getting Azure Functions ready for Azure Key Vault
+
+In a link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchbase-server/[previous blog post on Azure Functions], I stored the Couchbase credentials in app settings. Now that I have those credentials in an Azure Key Vault, I'm going to change my Azure Functions code to use the Azure Key Vault instead.
+
+First, I created an Azure Functions service. You can create this from the Azure Portal UI, or from Visual Studio or Visual Studio Code directly. This time, I used Visual Studio Code (for more information, check out the link:https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions[Azure Functions extension]). I happened to name my Azure Functions service **cbkeyvaultdemo**.
+
+Next, I made note of the URIs for each of the secrets that I created. I have 4 secrets, so I need 4 URIs (they are labelled as "Secret Identifier" as in this screenshot):
+
+image:11402-azure-key-vault-uris.png[Azure Key Vault URIs]
+
+I created 4 constants and pasted these values into my code. (You may want to eventually store these in the app settings).
+
+[source,C#,indent=0]
+----
+include::src/HttpKeyVaultDemo.cs[tag=uris]
+----
+
+The next step is to install a couple of packages with NuGet: link:https://www.nuget.org/packages/Microsoft.Azure.Services.AppAuthentication[Microsoft.Azure.Services.AppAuthentication] and link:https://www.nuget.org/packages/Microsoft.Azure.KeyVault/[Microsoft.Azure.KeyVault]. Here's an example of installing those packages with the command line:
+
+[source,PowerShell,indent=0]
+----
+C:\> dotnet add package Microsoft.Azure.Services.AppAuthentication
+C:\> dotnet add package Microsoft.Azure.KeyVault
+----
+
+== Getting Secrets from Azure Key Vault
+
+The next step is to write some code to fetch the secret values from the Azure Key Vault. I created a small helper function that I could reuse:
+
+[source,C#,indent=0]
+----
+include::src/HttpKeyVaultDemo.cs[tag=GetSecret]
+----
+
+As before, I'll be using link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchbase-server/[Lazy initialization] in this Azure function. Here's what it looks like when using app settings (before):
+
+[source,C#,indent=0]
+----
+private static readonly Lazy<IBucket> Bucket = new Lazy<IBucket>(() =>
+{
+	var uri = Environment.GetEnvironmentVariable("couchbaseUri");
+	var bucketName = Environment.GetEnvironmentVariable("couchbaseBucketName");
+	var username = Environment.GetEnvironmentVariable("couchbaseUsername");
+	var password = Environment.GetEnvironmentVariable("couchbasePassword");
+
+	var cluster = new Cluster(new ClientConfiguration
+	{
+		Servers = new List<Uri> { new Uri(uri) }
+	});
+	cluster.Authenticate(username, password);
+	return cluster.OpenBucket(bucketName);
+});
+----
+
+And here's how it looks when I switch it to use the `GetBucket` helper method (after):
+
+[source,C#,indent=0]
+----
+include::src/HttpKeyVaultDemo.cs[tag=lazy]
+----
+
+One important thing to note about this helper function. Getting secrets from Azure Key Vault is an asynchronous operation. However, `Lazy` expects a synchronous lambda. One option is to use Stephen Cleary's link:https://github.com/StephenCleary/AsyncEx/wiki/AsyncLazy[AsyncLazy]. Another option (which is what I did) is to call an asynchronous method synchronously by using `.Result`.
+
+**Where did `client` come from?** Easy, I added `private static HttpClient client = new HttpClient();` to the class. You can link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/114AzureKeyVault/src[check out the full source code on GitHub].
+
+I mainly followed this excellent blog post by Jeff Hollan called link:https://medium.com/statuscode/getting-key-vault-secrets-in-azure-functions-37620fd20a0b[Getting Key Vault Secrets in Azure Functions] (except he stored an EventHub connection string and I'm storing Couchbase credentials).
+
+== Authorization
+
+You might be asking: Matt, why did you publish the real URIs in your sample code?
+
+It's because the URIs themselves are not sensitive secrets. Only services that are authorized by Azure can actually get useful information from these URIs.
+
+To authorize this Azure Function service, you need to do two things:
+
+1. **Enable a managed service identity** for the Azure Functions service. This is as easy as clicking "Managed service identity" in the Azure portal and changing an "off" to an "on".
+
+image:11403-managed-service-identity.png[Managed Service Identity]
+
+[start=2]
+2. **Add an access policy to your Azure Key Vault**. Simply find the Azure Key Vault in the Azure portal UI, click "Access policies" under settings, and add a new access policy. You can define fine-grained permissions for accessing Key, Secret, and Certificates (which can also be stored in the Azure Key Vault). I only needed "Get" permissions, so my access policy was very simple:
+
+image:11404-access-policy.png[Access policy]
+
+That's it. But without this important step, no person and no application will be allowed to fetch a key from the key vault.
+
+== Summary and Next Steps
+
+Instead of deploying Azure Functions (or other application services) with Couchbase credentials stored in the application settings, we can now put those credentials (and any other sensitive information) into an Azure Key Vault.
+
+We give application(s) permission to access the secrets in the vault, and Azure will prevent anyone else from getting those secrets.
+
+The application(s) pull the secrets from the Azure Key Vault.
+
+If you have any questions about this blog post, feel free to leave a comment below or find me on link:https://twitter.com/mgroves[Twitter @mgroves].
+
+If you are using Couchbase with Azure, the entire link:https://community.couchbase.com/[Couchbase Community] would love to hear from your experience. Or, if you are just getting into Couchbase with Azure, you can also link:https://community.couchbase.com/[find and ask other community members] for their advice or high-level recommendations.
+
+If you have a specific technical question about Couchbase, please check out the link:https://forums.couchbase.com/[Couchbase Forums].
