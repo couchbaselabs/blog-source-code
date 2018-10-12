@@ -1,0 +1,22 @@
+:imagesdir: images
+:meta-description: Linq is the focus of the latest episode of The NoSQL Database Podcast. Brant Burnett joins as the special guest to talk about all things Linq and Linq with NoSQL.
+:title: NDP Episode #24: Brant Burnett on Linq
+:slug: NDP-Episode-24-Brant-Burnett-Linq
+:focus-keyword: linq
+:categories: Couchbase Server, .NET
+:tags: linq, .net, .net core, entity framework, EF, nhibernate, or/m
+:heroimage: linq hotel - https://commons.wikimedia.org/wiki/File:Linq_hotel.jpg by Jeremy Thompson licensed through Creative Commons
+
+Linq is the focus of the latest episode of The NoSQL Database Podcast. Brant Burnett joins as the special guest to talk about all things Linq and Linq with NoSQL.
+
+I'm also joined by special co-host Jeff Morris, an engineer who specializes in the Couchbase .NET SDK.
+
+The previous episode of the podcast was link:https://blog.couchbase.com/ndp-episode-max-neunhoeffer-arangodb/[Max Neunhoeffer on ArangoDb].
+
+Episode 24 can be found on all the major podcasting networks such as iTunes and Pocket Casts. I've also embedded the recording below.
+
+[embed]http://traffic.libsyn.com/nosql/NDP024BrantBurnettLinq.mp3[/embed]
+
+If you have any questions for Brant, Jeff, or myself, you can catch us on Twitter at link:https://twitter.com/btburnett3[@btburnett3], link:https://twitter.com/jeffrysmorris[@jeffrysmorris] and link:https://twitter.com/mgroves[@mgroves]
+
+If you're interested in learning more about Couchbase Server, check out the link:https://community.couchbase.com[Couchbase Developer Portal].
