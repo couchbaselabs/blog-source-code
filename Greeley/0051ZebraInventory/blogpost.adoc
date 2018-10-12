@@ -1,0 +1,234 @@
+= Offline Inventory Scanning with Zebra DataWedge and Couchbase Mobile
+Hod Greeley <https://blog.couchbase.com>
+:doctype: article
+:encoding: utf-8
+:sectanchors:
+:imagesdir: images
+:source-highlighter: pygments
+:toc-title: Table of Contents
+:icons: font
+:meta-description: 
+:slug: 
+:focus-keyword: 
+:categories: 
+:tags: 
+:heroimage: 
+:toc: macro
+:toc-title: Contents
+:sqlpp: SQL++
+
+include::../links.adoc[]
+
+:figure-caption!:
+.Screenshot
+image::application.png[Screenshot, 200, align="left"]
+
+image:https://img.shields.io/badge/Couchbase%20Server-v5.5-red.svg[link=https://www.couchbase.com/downloads] 
+image:https://img.shields.io/badge/Sync%20Gateway-v2.1-red.svg[link=https://www.couchbase.com/downloads]
+image:https://img.shields.io/badge/Couchbase%20Lite-v2.1-red.svg[link=https://www.couchbase.com/downloads]
+
+[discrete]
+== Introduction
+
+link:https://www.zebra.com/us/en.html[Zebra Technologies](TM) is a global leader in barcode printing, mobile computing, data capture, and related capabilities.
+Zebra offers a complete line of ruggedized handheld computers with built-in bar code scanners.
+These Android-based devices have a wide range of applications including delivery tracking, assisted selling, and asset management, to name a few.
+
+Many of these applications fit perfectly with the {CBM-}[Couchbase Mobile] stack supplying the backing data platform.
+Since Couchbase Lite is a true, full-fledged NoSQL database, you have the performance of on-device data combined with easy off-device synchronization.
+
+To demonstrate one use case, we built a sample inventory scanning application. 
+
+The data consists of information about a fictitious set of books.
+Scanning ISBN bar codes pulls up the information from the link:https://www.couchbase.com/products/lite[Couchbase Lite] embedded database.
+It relies on the link:https://www.zebra.com/us/en/products/software/mobile-computers/datawedge.html[Zebra DataWedge] service for ISBN barcode scanning.
+
+The entire application, along with sample data, is available on GitHub link:https://github.com/HodGreeley/Zebra-Inventory[here].
+This post will examine the code.
+To see the demo in action, and to find out more about Zebra and Couchbase, watch this Zebra DEVTALK webinar.
+
+video::SZpOIdtjfws[youtube,width=640,height=360]
+
+toc::[]
+
+== Overview
+
+The application consists of a single Activity.
+Couchbase Lite gets integrated as a library in the project.
+The application gets installed without any data.
+We store the inventory data on Couchbase Server.
+The device data will get populated at run time using a two-way replication.
+
+DataWedge runs as a separate component on the device.
+The API is driven entirely off Intents.
+We trigger scanning by broadcasting an intent, and data comes back via one.
+To enable this, you associate a DataWedge profile with your application.
+(This way DataWedge can, among other things, target the app specifically when returning a result.)
+
+The code (aside from the UI work) consists of setting up the database, starting a replication, and adding a scan trigger button.
+When the scan results returns (recall it's an ISBN), the app queries the database for the book details and displays them.
+(As a side note, we use RxJava to handle multi-threading.)
+
+== The Zebra DataWedge Profile
+
+DataWedge makes elegant use of the Android Intent system.
+This requires configuration of a profile.
+These screenshots show the options used here.
+
+[.float-group]
+--
+:figure-caption!:
+.Enable Scanning
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/0051ZebraInventory/images/profile_1.png[Enable Scanning, 200, align="center", float="left"]
+:figure-caption!:
+.Enable Intents
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/0051ZebraInventory/images/profile_2.png[Enable Intents, 200, align="center", float="left"]
+--
+
+Note in particular the "Intent action" setting.
+We'll need the same string in the application itself.
+
+== Initializing the Database and Starting Replication
+
+To keep the app compact, we initialize the database in the `onCreate` method in the `ScanActivity` class.
+We also set up the replication there.
+
+[source,java]
+----
+// com/couchbase/mobile/zebra/ScanActivity.java
+
+try {
+    DatabaseConfiguration config = new DatabaseConfiguration(getApplicationContext());
+    database = new Database("inventory", config);
+
+    Endpoint targetEndpoint = new URLEndpoint(new URI("ws://localhost:4984/inventory"));
+    ReplicatorConfiguration repConfig = new ReplicatorConfiguration(database, targetEndpoint)
+            .setReplicatorType(ReplicatorConfiguration.ReplicatorType.PUSH_AND_PULL)
+            .setAuthenticator(new BasicAuthenticator("user", "password"))
+            .setContinuous(true);
+    Replicator replicator = new Replicator(repConfig);
+    replicator.start();
+} catch(CouchbaseLiteException | URISyntaxException ex) {
+    ex.printStackTrace();
+}
+----
+
+This is all straight-forward.
+The endpoint is the address of our Sync Gateway instance.
+Setting the replication to `continuous` causes Couchbase to constantly update the database in the background.
+
+== Soft Scan Button
+
+Zebra devices have dedicated hardware to trigger scanning.
+We added a button in the UI to do so as well.
+The callback for button clicks shows how to use the DataWedge intent-based API.
+Just fill the intent with a few key strings, and let Android handle the rest.
+
+[source,java]
+----
+softScanButton.setOnClickListener(view -> {
+    Intent intent = new Intent();
+    intent.setAction(DATAWEDGE_ACTION);
+    intent.putExtra(DATAWEDGE_SOFT_SCAN_TRIGGER, DATAWEDGE_TOGGLE_SCANNING);
+    sendBroadcast(intent);
+});
+----
+
+== Receiving Scan Results
+
+Once triggered, the scanner lights up and will capture data in the background.
+If successful, the barcode information is returned, also using an intent.
+
+We configured DataWedge to deliver the intent using `startActivity`.
+This is where the `Intent action` setting comes into play from the profile.
+We set an intent filter in our Android manifest to match the string from that setting.
+
+By default, this would normally create a new instance of the corresponding activity.
+Here, we just want to keep the same activity going and let it process the result.
+We do that by setting the activity launch mode to `singleTop`.
+
+This means the intent will get delivered via the `onNewIntent` method.
+This doesn't affect the original intent that started the activity in the first place.
+We use a common pattern of resetting the activity's intent to the new on in `onNewIntent`, and then processing it in `onResume`.
+
+== Setting Up the Query
+
+Inside `onResume`, we do a check to see the intent matches what we expected.
+After that we pull out the ISBN number and perform our query.
+
+Couchbase Lite uses a builder-style interface to create queries.
+The API is designed to map directly to a SQL statement.
+Here, the equivalent SQL would be `SELECT * FROM inventory WHERE isbn = "<scan result>";`, where `<scan result>` represents the string handed back to us.
+
+That translates to this code.
+
+[source,java]
+----
+String isbn = intent.getStringExtra(DATAWEDGE_INTENT_DATA);
+
+...
+
+Query query = QueryBuilder
+        .select(SelectResult.all())
+        .from(DataSource.database(database))
+        .where(Expression.property("isbn").equalTo(Expression.string(isbn)));
+----
+
+This dynamic query capability was added in Couchbase Lite 2.0.
+It's based on Couchbase's N1QL query language, which is a superset of SQL.
+For a deeper introduction to queries in Couchbase Lite, I recommend reading link:https://blog.couchbase.com/sql-for-json-query-interface-couchbase-mobile/[this blog post].
+
+== Query Execution and Results
+
+With the query object in hand, we execute it and retrieve the results as a list.
+We expect each ISBN to correspond to a single book.
+If successful, we show a thumbnail of the book cover and other information.
+If the book is missing or we get more than one result, we show an error in place of the book cover.
+This code is wrapped using RxJava so the query runs on a background thread.
+
+[source,java]
+----
+try {
+    results = query.execute().allResults();
+} catch(CouchbaseLiteException ex) {
+    source.onError((ex));
+}
+
+if (0 == results.size()) {
+    info = warning("Missing");
+} else if (1 < results.size()) {
+    info = warning("Duplicate");
+} else {
+    Dictionary result = results.get(0).getDictionary(database.getName());
+    info = result.toMap();
+
+    InputStream is = result.getBlob("cover").getContentStream();
+    Bitmap thumbnail = BitmapFactory.decodeStream(is);
+    info.put("thumbnail", thumbnail);
+}
+----
+
+We retrieve the whole document contents as a Dictionary object.
+(Dictionaries are immutable data structures with map-like semantics defined by Couchbase Lite.)
+We need to convert the book cover image, attached as a blob, to a bitmap.
+For convenience, we convert the dictionary to a map, create the bitmap, and add it the map.
+That gets passed on to the UI code.
+
+== Wrapping Up
+
+The GitHub repo for this project has all the extras needed to run it.
+There's a Sync Gateway configuration file, set to talk to a local instance of Couchbase Server.
+You can also find a PDF with some sample barcodes.
+
+To learn more about integrating barcode scanning into your app visit https://developer.zebra.com.
+
+== Postscript
+
+[%hardbreaks]
+Couchbase is open source and {downloads}[free to try out].
+*Get started* with {start}[sample code, example queries, tutorials, and more].
+Find more resources on our {portal}[developer portal].
+Follow us on Twitter {CouchbaseDev}.
+You can post questions on our {forums}.
+We actively participate on {SO}.
+Hit me up on Twitter with any questions, comments, topics you'd like to see, etc. {HodGreeley}
