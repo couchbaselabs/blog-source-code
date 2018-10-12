@@ -79,10 +79,10 @@ These screenshots show the options used here.
 --
 :figure-caption!:
 .Enable Scanning
-image::profile_1.png[Enable Scanning, 200, align="center", float="left"]
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/0051ZebraInventory/images/profile_1.png[Enable Scanning, 200, align="center", float="left"]
 :figure-caption!:
 .Enable Intents
-image::profile_2.png[Enable Intents, 200, align="center", float="left"]
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/0051ZebraInventory/images/profile_2.png[Enable Intents, 200, align="center", float="left"]
 --
 
 Note in particular the "Intent action" setting.
