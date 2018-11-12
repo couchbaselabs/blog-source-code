@@ -1,13 +1,13 @@
 :imagesdir: images
-:meta-description: TBD 
+:meta-description: Azure Key Vault is a mechanism for you to store and manage sensitive information in Azure. Azure Key Vault can store sensitive information like Couchbase credentials.
 :title: Azure Key Vault for Credentials
 :slug: Azure-Key-Vault-Credentials
 :focus-keyword: azure key vault
-:categories: Couchbase Server, .NET
+:categories: Couchbase Server, .NET, Cloud
 :tags: Couchbase Server, .NET, azure, security
 :heroimage: azure blue sky cloud again
 
-Azure Key Vault is a mechanism for you to store and manage sensitive information in Azure. Once the information is stored, it can be accessed by Azure services that you specify (and ONLY Azure services that you specify).
+Azure Key Vault is a mechanism for you to store and manage sensitive information in Azure. Once Azure Key Vaults stores the information, Azure services that you specify (and ONLY Azure services that you specify) can access it.
 
 In this blog post, I'm going to show you how to use Azure Key Vault to store Couchbase Server credentials and access them from an Azure Function.
 
@@ -32,7 +32,7 @@ I'm using Couchbase Enterprise Edition 5.5.2 since that's the easiest to setup o
 
 An Azure Key Vault can be created with the Azure Portal UI, or you can create it link:https://docs.microsoft.com/en-us/azure/key-vault/key-vault-manage-with-cli2[with the command line]. In an earlier post on using the link:https://blog.couchbase.com/aks-couchbase-kubernetes-operator/[Couchbase Kubernetes Operator with Azure], I also used the command line. You may want to review that if you've not used the link:https://docs.microsoft.com/en-us/cli/azure/get-started-with-azure-cli[Azure command line] utility before.
 
-The first step only ever needs to be done one time per Azure subscription. Assuming your command line is set to the subscription you want, register the Azure Key Vault with that subscription with this command:
+The first step only needs executed once per Azure subscription. Assuming your command line is set to the subscription you want, register the Azure Key Vault with that subscription with this command:
 
 [source,PowerShell,indent=0]
 ----
@@ -46,7 +46,7 @@ The next step is to create a vault. With this command you need to specify a reso
 PS C:\> az keyvault create --name 'MyCouchbaseKeyVault' --resource-group KeyVaultDemo --location 'North Central US'
 ----
 
-Azure will take a few moments to finish, but the process is asynchronous, so you will be returned to the command line right away. The command line will tell you how to check on the progress.
+Azure will take a few moments to finish (but the process is asynchronous, so the command line prompt will appear immediately). The command line will tell you how to check on the progress.
 
 Now that you have an Azure Key Vault created, you can start putting your secrets in it. I'm going to store 4 pieces of information in my vault with these 4 commands:
 
@@ -70,7 +70,7 @@ Before we go any further, let's talk about _why_ you'd want to use Azure Key Vau
 
 In previous blog posts, I stored the Couchbase credentials as app settings. Compared to app settings, Azure Key Vault gives you the following capabilities:
 
-* App Settings are stored as plain text. Azure Key Vault stores them encrypted.
+* App Settings stores values as plain text. Azure Key Vault stores them encrypted.
 * Each application has its own app settings. With Azure Key Vault, each of your applications can share a single key vault.
 * Azure Key Vault stores a version history of values, and each secret has an (optional) activation date and expiration date.
 
@@ -82,7 +82,7 @@ In a link:https://blog.couchbase.com/azure-functions-lazy-initialization-couchba
 
 First, I created an Azure Functions service. You can create this from the Azure Portal UI, or from Visual Studio or Visual Studio Code directly. This time, I used Visual Studio Code (for more information, check out the link:https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions[Azure Functions extension]). I happened to name my Azure Functions service **cbkeyvaultdemo**.
 
-Next, I made note of the URIs for each of the secrets that I created. I have 4 secrets, so I need 4 URIs (they are labelled as "Secret Identifier" as in this screenshot):
+Next, I made note of the URIs for each of the secrets that I created. I have 4 secrets, so I need 4 URIs ("Secret Identifier" as in this screenshot):
 
 image:11402-azure-key-vault-uris.png[Azure Key Vault URIs]
 
@@ -156,11 +156,11 @@ To authorize this Azure Function service, you need to do two things:
 image:11403-managed-service-identity.png[Managed Service Identity]
 
 [start=2]
-2. **Add an access policy to your Azure Key Vault**. Simply find the Azure Key Vault in the Azure portal UI, click "Access policies" under settings, and add a new access policy. You can define fine-grained permissions for accessing Key, Secret, and Certificates (which can also be stored in the Azure Key Vault). I only needed "Get" permissions, so my access policy was very simple:
+2. **Add an access policy to your Azure Key Vault**. Simply find the Azure Key Vault in the Azure portal UI, click "Access policies" under settings, and add a new access policy. You can define fine-grained permissions for accessing Key, Secret, and Certificates (which Azure Key Vault can also store, by the way). I only needed "Get" permissions, so my access policy was very simple:
 
 image:11404-access-policy.png[Access policy]
 
-That's it. But without this important step, no person and no application will be allowed to fetch a key from the key vault.
+That's it. But without this important step, the key vault will allow no person or application to fetch a key.
 
 == Summary and Next Steps
 
