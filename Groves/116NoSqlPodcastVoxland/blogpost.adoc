@@ -1,0 +1,22 @@
+:imagesdir: images
+:meta-description: Liquibase is the focus of the latest episode of The NoSQL Database Podcast. Nathan Voxland joins as the special guest to talk about source control for your database.
+:title: NDP Episode #25: Nathan Voxland on Liquibase
+:slug: NDP-Episode-25-Nathan-Voxland-Liquibase
+:focus-keyword: liquibase
+:categories: Couchbase Server, Java, Data Modeling
+:tags: source control, liquibase, java
+:heroimage: 
+
+Liquibase is the focus of the latest episode of The NoSQL Database Podcast. Nathan Voxland joins as the special guest to talk about source control for your database.
+
+I'm also joined by special co-host Denis Rosa, a developer advocate who is working to add Couchbase support to Liquibase.
+
+The previous episode of the podcast was link:https://blog.couchbase.com/ndp-episode-24-brant-burnett-linq/[Brant Burnett on Linq].
+
+Episode 25 can be found on all the major podcasting networks such as iTunes and Pocket Casts. I've also embedded the recording below.
+
+[embed]http://traffic.libsyn.com/nosql/NDP025NathanVoxlandLiquibase.mp3[/embed]
+
+If you have any questions for Nathan, Denis, or myself, you can catch us on Twitter at link:https://twitter.com/nvoxland[@nvoxland], link:https://twitter.com/deniswsrosa[@deniswsrosa] and link:https://twitter.com/mgroves[@mgroves]
+
+If you're interested in learning more about Couchbase, check out the link:https://community.couchbase.com[Couchbase Developer Portal].
