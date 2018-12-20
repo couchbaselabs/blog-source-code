@@ -14,7 +14,7 @@ Get the https://marketplace.visualstudio.com/items?itemName=joaompinto.asciidoct
 Add this to user or workspace settings to allow importing of content via URI
 
 [source]
-"AsciiDoc.html_generator": "asciidoctor -a allow-uri-read -o-"
+"asciidoc.html_generator": "asciidoctor -a allow-uri-read -o-"
 
 To output html5 instead of xhtml, add `-b html5`
 
