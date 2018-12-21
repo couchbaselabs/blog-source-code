@@ -19,13 +19,13 @@ Hod Greeley <https://blog.couchbase.com>
 
 include::../links.adoc[]
 
-image::
+image::https://raw.githubusercontent.com/couchbaselabs/blog-source-code/master/Greeley/0052RxListener/images/ReactiveX_Logo.png[]
 
 image:https://img.shields.io/badge/Couchbase%20Lite-v2.1-red.svg[link=https://www.couchbase.com/downloads]
 
-toc::[]
-
 In this post, I'll show how to convert a callback-based listener style API to a reactive one with RxJava 2.
+
+toc::[]
 
 == Introduction
 
@@ -50,12 +50,12 @@ Although I did later discover a link:https://stackoverflow.com/a/41870888/968231
 
 A full discussion of the internals could, not surprisingly, fill a book.
 In this post I'll just cover the core.
-There's is code with several experiments to help understand details.
+There's code with several experiments to help understand details.
 That's too much for one write-up, so we'll save that for another time.
 
 == Objective
 
-To be more explicit, we will look at taking listener callback interface, common in event-driven programming, and wrapping into an `Observable`.
+To be more explicit, we will look at taking a listener callback interface, common in event-driven programming, and wrapping into an `Observable`.
 
 That is, how do we go from
 
@@ -185,10 +185,12 @@ Compute: object java.lang.Object@28d25987 on thread main
 
 Everything is happening in series on the main thread.
 Not super interesting, for all that effort.
-We haven't yet leveraged the full power of RxJava yet.
+We haven't leveraged the full power of RxJava yet.
 For those familiar with RxJava, you'll know how easy it is to make the code run asynchronously.
+That's something interesting with quirks I didn't expect.
+Again, something to explore in another post.
 
-=== Commentary: Learning RxJava
+== Commentary: Learning RxJava
 
 When I originally decided to write this post, I wanted to talk about the things I learned while studying some of the internals of RxJava.
 In the end, it became far too much for one article.
