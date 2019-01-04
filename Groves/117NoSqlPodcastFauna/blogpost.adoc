@@ -1,0 +1,20 @@
+:imagesdir: images
+:meta-description: FaunaDb is the focus of the latest episode of The NoSQL Database Podcast. Chris Anderson joins to talk about RAFT and ACID in Fauna.
+:title: NDP Episode #26: Chris Anderson on ACID and RAFT in FaunaDb
+:slug: NDP-Episode-26-Chris-Anderson-ACID-RAFT-FaunaDb
+:focus-keyword: faunadb
+:categories: Java
+:tags: fauna, faunadb, java, acid, raft, podcast, nosql
+:heroimage: 1170-hero-fauna-birds.jpg - licensed under Creative Commons from https://www.flickr.com/photos/vintage_illustration/42877211461 by Rawpixel Ltd
+
+FaunaDb is the focus of the latest episode of The NoSQL Database Podcast. Chris Anderson joins as the special guest to talk about RAFT and ACID in a NoSQL database.
+
+The previous episode of the podcast was link:https://blog.couchbase.com/ndp-episode-25-nathan-voxland-liquibase/[Nathan Voxland on Liquibase].
+
+Episode 26 can be found on all the major podcasting networks such as iTunes and Pocket Casts. I've also embedded the recording below.
+
+[embed]http://traffic.libsyn.com/nosql/NDP026ChrisAndersonFauna.mp3[/embed]
+
+If you have any questions for Chris or myself, you can catch us on Twitter at link:https://twitter.com/jchris[@jchris] and link:https://twitter.com/mgroves[@mgroves]
+
+If you're interested in learning more about Couchbase, check out the link:https://community.couchbase.com[Couchbase Developer Portal].
