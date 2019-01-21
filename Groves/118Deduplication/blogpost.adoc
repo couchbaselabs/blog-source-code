@@ -1,15 +1,15 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: User deduplication is an important activity for anyone managing user related data. Couchbase Eventing is a new option for effective deduplication.
 :title: Real Time User Deduplication with Couchbase Eventing
 :slug: Real-Time-User-Deduplication-Couchbase-Eventing
 :focus-keyword: deduplication
-:categories: Couchbase Server
-:tags: Couchbase Server, eventing
-:heroimage: TBD
+:categories: Eventing, Couchbase Server
+:tags: Couchbase Server, eventing, javascript
+:heroimage: Pete Rose Baseballs by David Berkowitz - licensed through Creative Commons - https://www.flickr.com/photos/davidberkowitz/6006921869
 
 User deduplication is an important activity for anyone managing a corpus of user related data. In some cases you may end up with multiple versions of the same user in your database. This can happen for any number of reasons: poor data management, mismatched user data, user or system error, etc. What is also common is the aggregation of user information from many different systems. You may have your main user dataset, but also want to enrich it with third party data like social media, ticketing or registration systems, or maybe even additional user information from other silos within your own organization.
 
-image:headshot.jpg[] 
+image:11801-headshot-andy-deduplication.jpg[Andy Kruth headshot] 
 
 _This is a guest blog post written by Andy Kruth. Andy Kruth is a Principal Consultant at link:https://www.linkedin.com/company/avalon-consulting-llc[Avalon Consulting, LLC] where he focuses on architecture and development of Big Data systems as well as NoSQL solutions. This post was influenced by work done for The Cincinnati Reds. Although the following example may seem simple, it is based off of a much more complex application put together for the Reds in which user data from several facets of the Reds business was deduplicated to a single Account and Household dataset._
 
