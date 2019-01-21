@@ -1,0 +1,192 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Real Time User Deduplication with Couchbase Eventing
+:slug: Real-Time-User-Deduplication-Couchbase-Eventing
+:focus-keyword: deduplication
+:categories: Couchbase Server
+:tags: Couchbase Server, eventing
+:heroimage: TBD
+
+User deduplication is an important activity for anyone managing a corpus of user related data. In some cases you may end up with multiple versions of the same user in your database. This can happen for any number of reasons: poor data management, mismatched user data, user or system error, etc. What is also common is the aggregation of user information from many different systems. You may have your main user dataset, but also want to enrich it with third party data like social media, ticketing or registration systems, or maybe even additional user information from other silos within your own organization.
+
+image:headshot.jpg[] 
+
+_This is a guest blog post written by Andy Kruth. Andy Kruth is a Principal Consultant at link:https://www.linkedin.com/company/avalon-consulting-llc[Avalon Consulting, LLC] where he focuses on architecture and development of Big Data systems as well as NoSQL solutions. This post was influenced by work done for The Cincinnati Reds. Although the following example may seem simple, it is based off of a much more complex application put together for the Reds in which user data from several facets of the Reds business was deduplicated to a single Account and Household dataset._
+
+Whatever the case is, deduplicating your user information into a concise and accurate dataset is a common activity. A traditional approach to accomplishing this is to simply run all of your user information through an application to match up records based on your defined heuristics and spit out a single dataset. While this "works" it is often an action that you have to perform in batch on a regular basis -- or at least regularly against whatever deltas you may be able to capture. But the downside to this approach is that whenever batch or scheduled actions are used there is substantial potential for stale data results.
+
+With the introduction of link:https://blog.couchbase.com/eventing/[Couchbase Eventing], you now have a new option for effective deduplication, and it's real-time! I'll refrain from the general info on Eventing that has already been discussed thoroughly in several other publications (see link:https://blog.couchbase.com/eventing/[here], and link:https://blog.couchbase.com/eventing-best-practices/[here], and link:https://blog.couchbase.com/eventing-notification-couchbase-functions/[here]). Instead this post will focus on a simple example of how you may develop a real-time deduplication engine using Couchbase Eventing. Let's get started.
+
+## The Bucket Setup
+
+For this demonstration you will need a total of 4 buckets:
+
+* metadata - this is your obligatory metadata bucket that holds all the information to run your Eventing Functions.
+* staging - this bucket will act as a landing zone for all of your user data.
+* fieldindex - this bucket is going to act as an index of field information we need to match users together
+* users - this bucket is our final product: a concise user dataset
+
+## The Function Setup
+
+When we create our deduplication function (I named mine "dedupe"), point the metadata bucket at "metadata" and the source bucket at "staging". You will also need to define two aliases: "users" you can point at the users bucket and "fieldindex" you can point at the fieldindex bucket.
+
+## The Function Code
+
+For this demonstration we will consider a very simple deduplication scenario: We want a concise list of users based on their email address and for each user, a list of all the original documents that contain that email for auditing purposes later on.
+
+For this example we will be working with very simple documents. Here is one to give you an idea:
+
+[source,JavaScript,indent=0]
+----
+"test::1" {
+	"email": "abc@abc.com"
+}
+----
+
+The Function code in full looks like:
+
+[source,JavaScript,indent=0]
+----
+function OnUpdate(doc, meta) {
+    var email = getEmailFromDoc(doc)
+    
+    if (email != null) {
+        var user = getUserFromEmail(email)
+        var userDoc = {}
+
+        if (user != null) {
+            userDoc = users[user]
+            userDoc.matches = userDoc.matches.concat([meta.id])
+        } else {
+            userDoc = doc
+            userDoc.userid = meta.id
+            userDoc.created = Date.now()
+            userDoc.matches = [meta.id]
+        }
+        
+        users[userDoc.userid] = userDoc
+        addEmailToFieldIndex(email, userDoc.userid)
+    } else {
+        // doc does not have an email and is not valid for deduplication
+    }
+}
+
+function getEmailFromDoc(doc) {
+    for (var key in doc) {
+        var field = key.toLowerCase()
+
+        if (field.includes("email")) {
+            return doc[key]
+        }
+    }
+    
+    return null
+}
+
+function getUserFromEmail(email) {
+    try {
+        return fieldindex["email::" + email].userid
+    } catch (e) {
+        // user was not found, let's just return null
+    }
+    
+    return null
+}
+
+function addEmailToFieldIndex(email, user) {
+    fieldindex["email::" + email] = {"userid": user}
+}
+----
+
+## Parsing the Document
+
+We start in the OnUpdate(doc, meta) function. This function gets called for every mutation to documents in the staging bucket, AKA whenever one of our raw documents is added or updated. The first step is to determine the email address of the incoming document. To do this, we have a small helper function: getEmailFromDoc(doc). This function simply iterates through all of the field names of the document in search of one that contains the string "email", we then return that value. In this function you can also opt to look for specific field names. You need to keep in mind that if you have multiple sources of data here, each source may use different field names, so a generalized approach above may work for you.
+
+## Finding a Match
+
+With the email address in hand, it is time to move on. If we don't have an email we are simply disregarding the document in this example. Assuming we successfully obtained an email address the next step is to retrieve our canonical user from the "users" bucket if that user already exists. To do this we have a second helper function: getUserFromEmail(email). This function utilizes our "fieldindex" bucket which we will simply use as a key value look up for emails. We search the "fieldindex" bucket for a document that matches our email. You will notice that we prepend the keys in the "fieldindex" with a datatype, this will allow you to add in more data types later and not get confused! If we find the email in "fieldindex" then we return the associated userid, otherwise just null.
+
+## Deduplication
+
+Back in the OnUpdate function, if we were successful in finding an existing userid then we retrieve that existing user from the "users" bucket and simply add our current documents meta.id to the list of matching documents. If we do not find an existing userid, then we have to create a new user. To do this we simply start with the original document and add in a few fields including a created timestamp and the start of a matches field which will hold a list of documents matching this users email.
+
+After obtaining or creating a new user document we store that document in the "users" bucket. We need a meta.id to store the user under. In this example we are simply using the meta.id of the original document that spawns this user, but you might choose something else, it's up to you. If the user existed already it will simply be overwritten.
+
+## Indexing the User
+
+Lastly, we have to update our "fieldindex" bucket so that future documents with this email address can be properly identified. To do this we use our final helper function: addEmailToFieldIndex(email, user). This function simply writes the given email as a key and the given userid as the document body into the "fieldindex" bucket.
+
+And that's it! *In just 50 lines of code you have the beginnings of a real-time user deduplication engine.* Let's test it.
+
+## Testing the Function
+
+After deploying this Function we can test it by creating a few documents in our "staging" bucket.
+
+First let's create a baseline user. Create a new document in the "staging" bucket that looks like this:
+
+[source,JavaScript,indent=0]
+----
+"test::1" {
+	"email": "abc@abc.com"
+}
+----
+
+You should be able to see the immediate effects in the "fieldindex" and "users" buckets. In "fieldindex" we have our key/value document created:
+
+[source,JavaScript,indent=0]
+----
+email::abc@abc.com {
+	"userid":"test::1"
+}
+----
+
+Notice that it is simply the email pointing to a userid which in this case is the meta.id from our first original document: test::1.
+
+Next, look at the "users" bucket. Here we have the new user that was created:
+
+[source,JavaScript,indent=0]
+----
+test::1 {
+	"email":"abc@abc.com",
+	"userid":"test::1",
+	"created":1546531965825,
+	"matches":["test::1"]
+}
+----
+
+Notice that we have the original email address, as well as some additional fields including a full list of matching documents (which at this point is just our first document).
+
+Let's add some more documents to test our edge cases. Add the following two documents to the "staging" bucket:
+
+[source,JavaScript,indent=0]
+----
+test::2 {
+	"name":"Tavi"
+}
+
+test::3 {
+	"useremail":"abc@abc.com"
+}
+----
+
+The test::2 document does not have an email field and merely serves to test the fact that we are disregarding documents that do not have an email.
+
+The test::3 document tests a couple things. First, the email field is called "useremail" but this should be caught without problems because of our general way to find email fields. Second, it has a matching email! Let's check our "users" bucket and see how things turned out. We still only have the one user, but the document is slightly different:
+
+[source,JavaScript,indent=0]
+----
+test::1 {
+	"email":"abc@abc.com",
+	"userid":"test::1",
+	"created":1546531965825,
+	"matches":["test::1", "test::3"]
+}
+----
+
+Notice here that the only difference is that we now have a reference to the test::3 document in our matches field. Hurray! We successfully deduped those documents.
+
+## Conclusion
+
+As shown above the new Couchbase Eventing system can be used to create a real-time user deduplication engine. Although this example was extremely simplified, javascript (the language of choice for Eventing Functions) is extremely versatile and you can do just about anything you want.
+
+A more fully functional deduplication engine may take into account many more fields then just user emails. It may use much more complex heuristics to match documents together. You may even consider a second level of matching where you group specific users into Households based on their identifying information. All of this is up to you, but with Couchbase Eventing real-time deduplication is made easy.
