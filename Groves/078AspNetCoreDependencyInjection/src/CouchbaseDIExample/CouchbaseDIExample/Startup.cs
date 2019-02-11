@@ -32,13 +32,15 @@ namespace CouchbaseDIExample
             // Add framework services.
             services.AddMvc();
 
-            /*
             // you can hardcode the config
             // tag::noconfig[]
+            /*
             services.AddCouchbase(client =>
             {
                 client.Servers = new List<Uri> { new Uri("http://localhost:8091")};
                 client.UseSsl = false;
+                client.Username = "Administrator";
+                client.Password = "password";
             });
             // end::noconfig[]
             */
@@ -52,9 +54,9 @@ namespace CouchbaseDIExample
             // tag::namedbucket[]
             services
                 .AddCouchbase(Configuration.GetSection("Couchbase"))
-                .AddCouchbaseBucket<ITravelSampleBucketProvider>("travel-sample", "password");
+                .AddCouchbaseBucket<ITravelSampleBucketProvider>("travel-sample");
             // end::namedbucket[]
-
+            
             // tag::moredi[]
             services.AddTransient<IEmailService, MyEmailService>();
             services.AddTransient<IComplexService, ComplexService>();
@@ -66,9 +68,6 @@ namespace CouchbaseDIExample
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime applicationLifetime)
         // end::Configure[]
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

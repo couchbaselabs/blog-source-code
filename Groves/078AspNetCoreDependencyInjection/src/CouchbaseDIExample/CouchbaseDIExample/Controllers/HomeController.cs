@@ -16,7 +16,7 @@ namespace CouchbaseDIExample.Controllers
 
         public HomeController(IBucketProvider bucketProvider)
         {
-            _bucket = bucketProvider.GetBucket("travel-sample", "password");
+            _bucket = bucketProvider.GetBucket("travel-sample");
         }
         // end::inject[]
 
