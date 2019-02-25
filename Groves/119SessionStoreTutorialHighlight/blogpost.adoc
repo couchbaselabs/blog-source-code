@@ -1,22 +1,24 @@
 :imagesdir: images
-:meta-description: Session storage is one of the cornerstones of a scalable web application. In this tutorial, you'll see why Couchbase Server is the perfect choice for your session storage needs.
+:meta-description: Session storage is a cornerstone of a scalable web application. In this tutorial, you'll see why Couchbase Server is perfect for your session storage needs.
 :title: Session Storage with ASP.NET: New Tutorial
 :slug: Session-Storage-ASPNET-New-Tutorial
 :focus-keyword: session storage
 :categories: Couchbase Server
-:tags: Couchbase Server, .NET, ASP.NET, session
-:heroimage: maybe https://www.flickr.com/photos/usaghumphreys/8701694888?
+:tags: Couchbase Server, .NET, ASP.NET, session, tutorial
+:heroimage: Law Day Mock Trial by USAG-Humphreys, licensed through Creative Commons  https://www.flickr.com/photos/usaghumphreys/8701694888
 
-Session storage is one of the cornerstones of a scalable web application. Couchbase Server has been a performant, scalable, flexible session storage choice since the beginning. Beyond simply storing and retrieving session quickly, Couchbase Server also provides tools for exploring and mining session data for valuable insights. There are also open-source projects for more easily integrating Couchbase with your web framework of choice. So, if you're building web applications and need a scalable session store, read on, because we've just published a tutorial that will help you link:https://docs.couchbase.com/tutorials/session-storage/aspnet.html[get started with ASP.NET session storage].
+Session storage is one of the cornerstones of a scalable web application. Couchbase Server is a performant, scalable, and flexible session storage choice. Beyond simply storing and retrieving session quickly, Couchbase Server also provides tools for exploring and mining session data for valuable insights. There are also open-source projects for more easily integrating Couchbase with your web framework of choice. So, if you're building web applications and need a scalable session store, read on, because we've just published a tutorial that will help you link:https://docs.couchbase.com/tutorials/session-storage/aspnet.html[get started with ASP.NET session storage].
+
+_Side note: the documentation team at Couchbase has been hard at work creating a new searchable link:https://docs.couchbase.com/tutorials/index.html["tutorials" section]. It's open source, it looks great, and I'm really excited about it! Keep an eye on that page, because there are a lot more tutorials to come this year!_
 
 == Session storage
 
-Typically, when a user logs in to a site, for example, they start a "session". The session and the user are correlated by giving a cookie to the user’s web browser with a lookup value that directly corresponds to session storage on the server side. By default, ASP.NET and ASP.NET Core store this data in memory on the web server.
+When a user logs in to or visits a site, they start a "session". The session and the user are correlated by giving a cookie to the user's web browser with a lookup value that directly corresponds to session storage on the server side. ASP.NET and ASP.NET Core often store this data in memory on the web server.
 
-For small sites or single server deployments, that might be okay. For larger deployments, it could be problematic for at least two reasons:
+For small sites and/or single server deployments, that might be okay. For larger deployments, it could be problematic for at least two reasons:
 
 * If the web server goes down or is restarted, that session information is wiped out.
-* "Sticky sessions" mean that a user is stuck to a single server, which can lead to unbalanced loads.
+* "Sticky sessions" mean that a user is "stuck" to a single server, which can lead to unbalanced loads over time.
 
 Another approach is to store session data separately from the web servers.
 
@@ -30,7 +32,7 @@ image:11901-session-storage-architecture.png[Session storage architecture]
 
 There are many choices for tools to support session storage, but Couchbase Server offers some unique capabilities:
 
-**Memory-first (or memory only) storage.** Once a Session starts, is is often read or written on every page request. With Couchbase, you can read/write data at the speed of memory.
+**Memory-first (or memory only) storage.** Once a Session starts, it is often read or written on every page request. With Couchbase, you can read/write data at the speed of memory.
 
 **Ease of scaling.** Couchbase's shared-nothing architecture means that scaling up is not complicated. There's no single "master" node to constrain operations.
 
@@ -52,4 +54,4 @@ ORDER BY SUM(i.Quantity) DESC
 
 If you are a .NET developer, you can follow along with the link:https://docs.couchbase.com/tutorials/session-storage/aspnet.html[complete session storage tutorial] right now. If you are using other frameworks or languages, session storage tutorials are coming soon!
 
-If you have any questions or feedback for this tutorial, you can find me on linK:https://twitter.com/mgroves[Twitter @mgroves]. As with everything in Couchbase documentation, this tutorial is open source and link:https://blog.couchbase.com/documentation-contribution-improvements/[pull requests for improvements] are welcome!
+If you have any questions or feedback for this tutorial, you can find me on link:https://twitter.com/mgroves[Twitter @mgroves]. As with everything in Couchbase documentation, this tutorial is open source and link:https://blog.couchbase.com/documentation-contribution-improvements/[pull requests for improvements] are welcome!
