@@ -1,15 +1,15 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: Kafka is a streaming platform that can be used to stream records to and from data centers. In this post, we'll stream data from MySQL to Couchbase.
 :title: Kafka Connect from MySQL to Couchbase with Debezium
 :slug: Kafka-Connect-MySQL-Couchbase-Debezium
 :focus-keyword: kafka
 :categories: Couchbase Server, Connectors
 :tags: Couchbase Server, connectors, kafka, debezium, mysql
-:heroimage: TBD
+:heroimage: 121-hero-queueing.jpg Waiting in line at a food store by David Shankbone, licensed through Creative Commons https://commons.wikimedia.org/wiki/File:Waiting_in_line_at_a_food_store.JPG
 
-Kafka is a streaming platform that can be used to stream records to (Kafka sink) and from (Kafka source) data centers. Couchbase has created and supports a link:https://docs.couchbase.com/kafka-connector/3.4/index.html[Kafka connector] that allows you to easily use Couchbase as a source or a sink.
+Kafka is a streaming platform that can be used to stream records to (Kafka sink) and from (Kafka source) data centers. Couchbase has created and supports a Kafka link:https://docs.couchbase.com/kafka-connector/3.4/index.html[connector] that allows you to easily use Couchbase as a source or a sink.
 
-I've been working on a complete tutorial for a link:https://www.couchbase.com/solutions/customer-360[Customer 360] use case. Here's a high level diagram:
+I've been working on a complete tutorial for a link:https://www.couchbase.com/solutions/customer-360[Customer 360] use case. One part of it involves Kafka. Here's a high level diagram:
 
 image:12101-customer-360-full-diagram.jpg[Customer 360 ingestion digram]
 
@@ -21,7 +21,7 @@ image:12102-customer-360-focused-diagram.jpg[Customer 360 diagram focused on Kaf
 
 I started out not knowing much about Kafka, but I was able to piece together a working proof of concept by using:
 
-* link:https://www.docker.com/[Docker]. You will need to have Docker installed to complete this tutorial. _You may eventually want to move all of this into docker-compose or (more likely) link:https://docs.couchbase.com/operator/current/overview.html[Kubernetes]._
+* link:https://www.docker.com/[Docker]. You will need to have Docker installed to complete this tutorial. _You may eventually want to move all of this into docker-compose or (more likely) link:https://docs.couchbase.com/operator/current/overview.html[Kubernetes]._ I am building all of the architecture in this post, but in your enterprise there will be at least some parts that are already deployed.
 * link:https://debezium.io/docs/tutorial/[Debezium's quick start tutorial] - Debezium is the connector I chose to use to configure a MySQL database as a *source*.
 * link:https://hub.docker.com/_/couchbase[Couchbase Docker quickstart] - to run a simple Couchbase cluster within Docker
 * Couchbase Kafka link:https://docs.couchbase.com/kafka-connector/3.4/quickstart.html[connector quick start tutorial] - This tutorial shows how to setup Couchbase as either a Kafka sink or a Kafka source.
@@ -43,7 +43,7 @@ Run a Zookeeper image (this is required for Kafka):
 
 `docker run -it --rm --name zookeeper -p 2181:2181 -p 2888:2888 -p 3888:3888 debezium/zookeeper:0.9`
 
-Run a Kafka image:
+Run a Kafka image (linked to Zookeeper):
 
 `docker run -it --rm --name kafka -p 9092:9092 --link zookeeper:zookeeper debezium/kafka:0.9`
 
@@ -51,11 +51,11 @@ Start a MySQL database (Debezium supplies a Docker image that already contains s
 
 `docker run -it --rm --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=debezium -e MYSQL_USER=mysqluser -e MYSQL_PASSWORD=mysqlpw debezium/example-mysql:0.9`
 
-At this point, you can connect to the MySQL database. The Debezium tutorial provides another Docker image for that, or you can use the MySQL tool of your choice. You don't need to do this right now, but eventually you'll want to connect to it and insert/update data to test the process end-to-end.
+After this, you can connect to the MySQL database using the above credentials. The Debezium tutorial provides another Docker image for doing that, or you can use the MySQL tool of your choice. You don't need to do this right now, but eventually you'll want to connect to it and insert/update data to test the process end-to-end.
 
 == Preparing Kafka Connectors
 
-At this point in my journey, I must diverge slightly from the Debezium tutorial. That tutorial shows you how to start a Debezium MySQL Connector (with another Docker image and a REST request). However, I want to introduce the Couchbase Kafka Connector at this point.
+At this point in my journey, I must diverge slightly from the Debezium tutorial. That tutorial shows you how to start a Debezium MySQL Connector (with another Docker image and a REST request). However, I want to introduce the Couchbase Kafka Connector.
 
 The easiest way to do this is to create a custom Docker image. This will use the Debezium Kafka connect image as a base, and simply add the Couchbase Kafka Connect JAR file to it. To do this, create a text file called `Dockerfile`:
 
@@ -66,7 +66,7 @@ include::code/Dockerfile[]
 
 Once you've done that, build the image: `docker build . --tag couchbasedebezium`. I called the image `couchbasedebezium`, but you can call it whatever you like. After this completes, run `docker images`, and `couchbasedebezium` should appear in your local repository:
 
-[source]
+[source,Powershell,indent=0]
 ----
 PS C:\myfolder> docker images
 REPOSITORY                             TAG                 IMAGE ID            CREATED             SIZE
@@ -156,7 +156,7 @@ This configuration is largely pulled from the link:https://docs.couchbase.com/ka
 
 == Data is now flowing
 
-At this point, data should be flowing into your Couchbase bucket. Connect to Couchbase, and you'll see 4 documents in the staging bucket (this corresponds to the 4 rows of data in the MySQL sample database). Add or update data in the MySQL database and more records will start to roll into the Couchbase bucket automatically.
+Now, data should be flowing into your Couchbase bucket. Connect to Couchbase, and you'll see 4 documents in the staging bucket (this corresponds to the 4 rows of data in the MySQL sample database). Add or update data in the MySQL database and more records will start to roll into the Couchbase bucket automatically.
 
 I went through this whole process on my link:https://www.twitch.tv/matthewdgroves[Live Code stream on Twitch]. If you'd like to see this whole process in action, I've cut together a highlight reel to show all the steps:
 
@@ -166,9 +166,9 @@ I went through this whole process on my link:https://www.twitch.tv/matthewdgrove
 
 == Resources and next steps
 
-Now that you've completed this tutorial, there are a few different directions you can go to continue exploring.
+Now that you've completed this tutorial, there are other directions you can go to continue exploring.
 
-* Orchestration: this sample contains a lot of Docker images that are run manually. In a production environment, you'd likely want to orchestrate and scale all these pieces with something like Kubernetes. There is a link:https://docs.couchbase.com/operator/current/overview.html[Kubernetes operator for Couchbase Enterprise].
+* Orchestration: this sample contains a lot of Docker images that are run manually. In a production environment, you'd likely want to orchestrate and scale some or all of these pieces with something like Kubernetes. There is a link:https://docs.couchbase.com/operator/current/overview.html[Kubernetes operator for Couchbase Enterprise].
 * Customer 360: Streaming data from a MySQL database into Couchbase is just one step in this direction. A Customer 360 application will likely be pulling data from a variety of other databases. Stay tuned to the Couchbase Blog and the Couchbase Tutorials for more information on building a Customer 360 ingestion architecture.
 
 If you have questions for me, you can reach me on link:https://twitter.com/mgroves[Twitter @mgroves], leave a comment below, or tune in to my next link:https://www.twitch.tv/matthewdgroves[Live Code stream].
