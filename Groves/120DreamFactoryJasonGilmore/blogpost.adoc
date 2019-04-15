@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: DreamFactory helps building and maintaining a database APIs to save you time and money.
+:meta-description: DreamFactory help you to build and maintain a database APIs to save you time and money. Let's get started with DreamFactory and Couchbase.
 :title: Generating Couchbase APIs with DreamFactory
 :slug: Generating-Couchbase-API-DreamFactory
 :focus-keyword: dreamfactory
@@ -7,11 +7,19 @@
 :tags: Couchbase Server, API, php
 :heroimage: TBD
 
+_This is a guest post written by W. Jason Gilmore (http://www.wjgilmore.com) the CTO of DreamFactory, Inc., an open source API automation and management platform. Prior to joining DreamFactory he spent much of his career as a consultant and developer, helping teams around the globe build amazing software solutions. Jason is a prolific writer on the subject of web technologies with almost a dozen books and more than 300 articles to his credit. He serves as a special technical advisor for several startups based in Ohio and New York._
+
+image:12001-jason-headshot-400.jpg[Jason Gilmore]
+
 Modern organizations are under tremendous pressure to efficiently process and incorporate data into every initiative. In fact, the emphasis placed upon extracting, compiling, analyzing, and disseminating information is such that an entirely new field of study known as *data science* has emerged to make sense of it all (for those of you thinking this sounds suspiciously academic, take note that Harvard Business Review called data science link:https://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century[The Sexiest Job of the 21st Century].
+
+== The Need for APIs
 
 In addition to formalizing the data management process, IT teams have increasingly embraced heterogeneous database environments and API-driven development in an effort to ensure data can be ingested, processed, and distributed with minimal friction. Gone are the days when an entire organization standardizes upon a particular database vendor; instead, it's now commonplace for enterprises to embrace a mixture of both commercial and open source SQL and NoSQL solutions. 
 
 Of course, there must be some sane way to manage data as it flows through these databases, and that's where APIs come in. Because databases must often be queried from a variety of applications (iOS, web, etc.), developers have in recent years eschewed application-specific libraries in preference for APIs. By creating and plugging into a uniform API, developers can focus on the application itself rather than database-related plumbing.
+
+== Enter DreamFactory
 
 Or at least that's the idea. The reality is, building and maintaining a database API is an extraordinarily time-consuming and costly endeavor. While an experienced team can build a CRUD API interface in perhaps a few weeks, they often don't take into consideration the many additional requisite features necessary for API management. Capabilities such as authentication and authorization, request volume limiting, caching, and logging are often not considered when planning an API, and figuring out how to implement these capabilities in a piecemeal fashion can be extraordinarily difficult and costly.
 
@@ -23,19 +31,19 @@ link:https://www.dreamfactory.com/[DreamFactory] is an API automation and manage
 
 DreamFactory supports a total of 18 databases, including MySQL, Oracle, Microsoft SQL Server, and... Couchbase! Generating an API is very straightforward, requiring only the provision of a desired API name and Couchbase server credentials. To create an API, you'll begin by logging into the DreamFactory web administration interface. You'll be able to access DreamFactory's key features via the navigational bar:
 
-image:services-navbar.png[]
+image:12002-services-navbar.png[DreamFactory navigational bar]
 
 Create the service by clicking on `Services` then `Create`, then choose `Couchbase` from the `Database` category:
 
-image:service-select.png[]
+image:12003-service-select.png[Select the Couchbase database service]
 
 Next you'll choose an API name, and set a label and description. The name is particularly important, because as you'll see this will serve as a namespace of sorts for your generated API. The label and description are just for reference purposes within the administration interface:
 
-image:service-couchbase-config.png[]
+image:12004-service-couchbase-config.png[Couchbase configuration in DreamFactory]
 
 After completing these fields, click on the `Config` tab and supply your Couchbase credentials:
 
-image:service-couchbase-config2.png[]
+image:12005-service-couchbase-config2.png[Completed Couchbase configuration in DreamFactory]
 
 In addition to the `Host`, `Port`, `Username` and `Password` fields, you can optionally cap the number of records returned by a `GET` request, and enable data caching for a set period of time. For the purposes of this tutorial I'll leave those options untouched and just generate the API by pressing the `Save` button.
 
@@ -43,25 +51,27 @@ In addition to the `Host`, `Port`, `Username` and `Password` fields, you can opt
 
 Once the API has been generated, you can navigate to the `API Docs` interface to experiment with it. DreamFactory generates Swagger documentation for each API, and administrators can provide users with restricted access to this documentation. Select the new API, and you'll be presented with a list of all available endpoints:
 
-image:api-docs-list.png[]
+image:12006-api-docs-list.png[API endpoints created by DreamFactory]
 
 Choose the `GET /_schema` endpoint and press the `Try it out` button. Because Swagger documentation is interactive, you can learn how the API works without having to jump straight into code, which can greatly decrease frustration. Pressing `Try it out` will enable the various parameter fields associated with this endpoint:
 
-image:api-docs-schema.png[]
+image:12007-api-docs-schema.png[Detailed information about an API endpoint]
 
 _NOTE: Because of the breadth of supported databases, and the importance placed on providing a uniform database API interface regardless of the underlying database type, DreamFactory uses generic terms for referring to database-related structures. Logically, these terms don't always map exactly to database-specific terminology. For instance Couchbase uses the term *bucket* to represent a database, whereas DreamFactory uses the generic term *schema* for this representation._
 
 Press the `Execute` button and the API endpoint will be queried, returning all available buckets. Couchbase users will be familiar with the `travel-sample` bucket returned in the following response:
 
-image:api-docs-schema-response.png[]
+image:12008-api-docs-schema-response.png[Example of a response from an API endpoint]
+
+== Accessing data from the API
 
 Next, scroll down to the `GET /_table/{table_name}` endpoint to retrieve records (documents) from the `travel-sample` bucket. The process for doing so is similar to that used for retrieving the buckets; you'll select the endpoint, press `Try it out`, and then enter any desired API endpoint parameters. As you can see from the below screenshot, this endpoint supports quite a few parameters:
 
-image:api-docs-get-table.png[]
+image:12009-api-docs-get-table.png[API documentation]
 
 When it comes to selecting records, DreamFactory supports everything you'd typically do when querying a database. You can select specific fields, join tables, filter records, apply limits and offsets, and so forth. For this example let's just keep it simple and scroll down to the bottom of the parameter list and enter `travel-sample` into the `table_name` parameter. Press `Execute` and you'll see the following results:
 
-image:api-docs-get-results.png[]
+image:12010-api-docs-get-results.png[Couchbase results through DreamFactory]
 
 == Generating a Restricted API Key
 
@@ -69,17 +79,17 @@ The API Docs interface is great for learning more about how an API works, howeve
 
 To create a role, navigate to the `Roles` tab, and press `Create`. You'll assign a role name and description, and then click the `Access` tab. It's here where the magic happens. In the following screenshot you'll see I've selected the `couchbase` API (service), and set `Component` to `_table/travel-sample/*`, meaning the role can only access this particular data set. Further, I've set `Access` to `GET`, meaning this will be a read-only role:
 
-image:create-role.png[]
+image:12011-create-role.png[Create a DreamFactory role]
 
 There are a few other interesting features here, however for the sake of brevity I suggest just pressing `Save` to generate the role.
 
 Next, click on the `Apps` tab to generate an API key. Press the `Create` button and you'll be presented with the following interface:
 
-image:create-application.png[]
+image:12012-create-application.png[Create a DreamFactory application]
 
 Here you'll supply an application name and description. You'll also choose a role for this API key, and in this example I've selected the newly generated `couchbase` role. Finally, for the `App Location` I've selected `No storage required` because I'll be connecting to the API from a remote location such as a web application. Press `Save` and you'll be returned to the application key listing:
 
-image:couchbase-api-key.png[]
+image:12013-couchbase-api-key.png[Create a key for secure DreamFactory API access]
 
 Congratulations, you've just created a restricted read-only API key! Now let's use that key to talk to the Couchbase bucket.
 
@@ -87,7 +97,7 @@ Congratulations, you've just created a restricted read-only API key! Now let's u
 
 With your API key in hand, it's time to interact with the API from outside of the DreamFactory interface. For the purposes of this example I'll use the link:https://insomnia.rest/[Insomnia REST client] however you're free to use link:https://www.getpostman.com/[Postman], another API client, or certainly can build out a simple web or iPhone interface. In the following screenshot I've queried the `/api/v2/couchbase/_table/travel-sample` endpoint, and on the right-side of the interface you can see the results:
 
-image:insomnia.png[]
+image:12014-insomnia.png[Using Insomnia to interact with the REST API]
 
 Of particular importance here is the `X-DreamFactory-Api-Key` header! It's here where the API key is supplied. Neglecting to supply the key will result in a `400` status code with an error message pertaining to a missing key. Additionally, if this key attempts to access a restricted table or perform an action (insert, update, etc) that hasn't been expressly allowed within the role definition, a `401` unauthorized status code will be returned.
 
