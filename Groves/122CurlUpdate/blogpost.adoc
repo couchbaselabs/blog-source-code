@@ -1,0 +1,70 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Using cURL with the Eventing Service: Update
+:slug: Using-cURL-Eventing-Service-Update
+:focus-keyword: curl
+:categories: Couchbase Server, Eventing
+:tags: Couchbase Server, eventing, functions, curl
+:heroimage: TBD
+
+CURL is a utility function that has been available as a Developer Preview feature in link:https://docs.couchbase.com/server/current/eventing/eventing-overview.html[Couchbase Eventing Functions]. It has been in developer preview and was not recommended for production. We are listening to feedback to improve usability, and we have several new enhancements coming up:
+
+1. Automatic parsing of common types of data
+2. Automatic marshaling of common types of data
+3. Ability to access HTTP request and response headers
+4. Ability to handle HTTPS connections
+5. Support for session cookies
+6. Additional authentication types supported
+
+There are some changes to CURL coming in Couchbase Server 6.5. This blog post will give you a small preview of what's coming in 6.5. It also serves as a reference point for some older blog posts that were using the old CURL API.
+
+If you are interested in trying an early build of Couchbase Server 6.5 before the beta release in summer 2019, please contact mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com].
+
+== Eventing 6.5 Specification
+
+There are improvements and enhancements coming to Eventing in Couchbase Server 6.5. You can read the entire link:https://github.com/couchbase/eventing/blob/master/docs/specification-65.pdf[Eventing 6.5 Specification on GitHub]. For this post, I want to highlight CURL, which has changed considerably from its first developer preview.
+
+== URL alias Bindings for CURL
+
+To use CURL in an event, you must create a URL alias in the Function Settings. Specify the base URL that you will be making a call to with CURL. For instance, I want to make calls to the link:https://openweathermap.org/[Open Weather Map] API. The base URL for the link:https://openweathermap.org/current[API] is *\https://samples.openweathermap.org*. In Function Settings, I added a binding:
+
+* URL alias (binding type)
+* weatherUrl (binding name)
+* \https://samples.openweathermap.org (binding value)
+
+image:12201-function-settings-curl.png[Function settings, including URL for curl]
+
+I also added a bucket alias binding to the *demo* bucket, which is also the source bucket. This allows me to read and write from the *demo* bucket.
+
+== Function code
+
+I created a very simple Eventing function that will run whenever a document is changed, then retrieve the weather from OpenWeatherMap and finally save the weather data to the document.
+
+[source,JavaScript,indent=0]
+----
+function OnUpdate(doc, meta) {
+    var request = {
+        path: '/data/2.5/weather',
+        params: {
+            'q' : 'London,uk',
+            'appid' : 'b6907d289e10d714a6e88b30761fae22'
+        }
+    };
+    var response = curl('GET', weatherUrl, request);
+    if(response.status == 200) {
+        var obj = thisbucket[meta.id];
+        obj.weather = response.body;
+        thisbucket[meta.id] = obj;
+    }
+}
+----
+
+Notice that the curl method in this code takes three arguments:
+
+* The HTTP method (`GET` in this example)
+* The URL alias binding (`weatherUrl`)
+* A request object (`request`). In this example, it's very simple with only a `path` and a `params` value, but you can also add `headers`, `body`, and `encoding`. Make sure to check out the link:https://github.com/couchbase/eventing/blob/master/docs/specification-65.pdf[entire specification].
+
+== Next steps
+
+If you've been using curl in developer preview, it's important that you update to use this new and improved curl. If you're interested in trying an early build of Couchbase Server 6.5 which contains the new curl function before the beta release in summer, please contact mailto:matthew.groves@couchbase.com[matthew.groves@couchbase.com].
