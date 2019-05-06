@@ -1,11 +1,11 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: CURL is a utility function that has been available as a Developer Preview feature in Couchbase Eventing. Improvements are coming in the next release.
 :title: Using cURL with the Eventing Service: Update
 :slug: Using-cURL-Eventing-Service-Update
 :focus-keyword: curl
 :categories: Couchbase Server, Eventing
 :tags: Couchbase Server, eventing, functions, curl
-:heroimage: TBD
+:heroimage: 122-hero-curl.jpg licensed through Creative Commons https://www.maxpixel.net/Cheese-Curls-Curls-Food-Junk-Food-Cheese-218233
 
 CURL is a utility function that has been available as a Developer Preview feature in link:https://docs.couchbase.com/server/current/eventing/eventing-overview.html[Couchbase Eventing Functions]. It has been in developer preview and was not recommended for production. We are listening to feedback to improve usability, and we have several new enhancements coming up:
 
