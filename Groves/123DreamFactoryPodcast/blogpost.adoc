@@ -4,7 +4,7 @@
 :slug: NDP-Episode-27-Jason-Gilmore-DreamFactory
 :focus-keyword: dreamfactory
 :categories: Couchbase Server
-:tags: podcast, nosql, api, dreamfactory, customer 360
+:tags: podcast, nosql, api, dreamfactory, customer 360, php
 :heroimage: 123-hero-dreamfactory-lamp.jpg licensed via Creative Commons from https://www.maxpixel.net/Smoke-White-Background-Hand-Lamp-Magic-3110679
 
 DreamFactory is the focus of the latest episode of The NoSQL Database Podcast. Jason Gilmore joins as the special guest to talk about using DreamFactory to generate and manage APIs over (among other things) databases.
@@ -15,14 +15,14 @@ Episode 27 can be found on all the major podcasting networks such as iTunes and 
 
 Some topics covered:
 
-* 00:00 - Introduction to Jason
-* 00:00 - Introduction to DreamFactory
-* 00:00 - NoSQL with DreamFactory
-* 00:00 - Use Case Discussion
-* 00:00 - Addition non-database integrations/transformations
-* 00:00 - Business logic in DreamFactory
-* 00:00 - Customer 360 Use Case
-* 00:00 - "Lightning Round" of technical topics: performance, indexing, logging/monitoring, profiling
+* 00:48 - Introduction to Jason
+* 02:51 - Introduction to DreamFactory
+* 12:52 - NoSQL with DreamFactory
+* 16:10 - Use Case Discussion
+* 22:42 - Addition non-database integrations/transformations
+* 30:27 - Business logic in DreamFactory
+* 35:04 - Customer 360 Use Case
+* 43:03 - "Lightning Round" of technical topics: performance, indexing, logging/monitoring, profiling
 
 And don't forget to check out Jason Gilmore's guest post here on the Couchbase blog: link:https://blog.couchbase.com/generating-couchbase-api-dreamfactory/[
 Generating Couchbase APIs with DreamFactory]
@@ -35,13 +35,13 @@ Other resources:
 * link:https://twitter.com/dfsoftwareinc/[DreamFactory on Twitter]
 * Jason was kind enough to share his email address within the episode
 
+[embed]http://traffic.libsyn.com/nosql/NDP027JasonGilmoreDreamFactory.mp3[/embed]
+
 For more on the Customer 360 use case:
 
 * link:https://www.couchbase.com/solutions/customer-360[Couchbase can deliver a single view of your data with one platform]
 * I've been building a Customer 360 tutorial, live on link:https://www.twitch.tv/matthewdgroves[Twitch - MatthewDGroves] (link:http://bit.ly/grovestube[archived videos on YouTube]). I plan to have Jason on the live stream at some point in the future to show DreamFactory in action.
 * Watch the link:https://docs.couchbase.com/tutorials/index.html[Couchbase Tutorials] page for the Customer 360 Data Ingestion tutorial.
-
-[embed]http://traffic.libsyn.com/nosql/....mp3[/embed]
 
 If you have any questions for Jason or myself, you can catch us on Twitter at link:https://twitter.com/wjgilmore[@wjgilmore] and link:https://twitter.com/mgroves[@mgroves]
 
