@@ -1,0 +1,102 @@
+:imagesdir: images
+:meta-description: TBD
+:title: User Profiles with Couchbase: New Tutorials
+:slug: User-Profiles-Couchbase-Tutorials
+:focus-keyword: user profile
+:categories: Couchbase Server
+:tags: Couchbase Server, .NET, ASP.NET, tutorial, user profile
+:heroimage: TBD
+
+User Profile is a common paradigms in software architecture. It is meant to centralize the code responsible for managing user's data. With the increasing popularity of microservices, software architects have started to create a single service to consolidate this task, which is commonly referred to as a User Profile Store.
+
+We've recently created two tutorials to help you get started building your own user profile system:
+
+* link:https://docs.couchbase.com/tutorials/profile-store/java.html[Using Couchbase Server to Build a User Profile Store (Java)]
+* link:https://docs.couchbase.com/tutorials/profile-store/dotnet.html[Using Couchbase Server to Build a User Profile Store (.NET)]
+
+_This content is part of the new searchable link:https://docs.couchbase.com/tutorials["tutorials" section]. It's open source, and the content is starting to grow!_
+
+== User Profile
+
+A User Profile consists of user-related data. Common data stored in a User Profile Store are the user’s name, login, password, addresses, preferences, security roles, security groups, etc.
+
+Why is Couchbase a good fit for user profile storage? The user is quite often the most frequently accessed data, and it will potentially impact the performance of the whole system.
+
+Some of the key non-functional requirements of a successful system that are covered in these tutorials are:
+
+* *Strong Consistency*
+* *High read and write throughput*
+* *Caching*
+* *A flexible data model*
+* *Easy and fast querying*
+* *Natural-Language matching*
+* *High Scalability*
+* *High Availability*
+
+== Step-by-step
+
+In these tutorials, you'll create a basic User Profile service step-by-step. These steps include:
+
+* Setting up a new project (Spring or ASP.NET)
+* Representing a user profile as a class
+* Creating a repository to access user profiles
+* Querying the user profile database with appropriate indexes
+* Search users with Full Text Search
+* Storing user events asynchronously (RxJava or async/await)
+* Configuring replication between data centers
+
+== Java and .NET Tutorials
+
+That sounds like a lot of ground to cover, but these tutorials start with a simple profile and expand from there. These tutorials cover .NET and Java from idiomatic points of view, showing the strengths of the language/tooling that you're already familiar with.
+
+With Java, you'll be using the Spring framework, so the beginnings of a repository are as simple as creating two classes:
+
+[source,Java,indent=0]
+----
+@Data
+@Document
+public class UserEntity {
+    @Id
+    private String id;
+    @NotNull
+    @Size(max = 2, min=2)
+    private String countryCode;
+    @NotNull
+    private String username;
+    @NotNull
+    private String password;
+}
+
+@N1qlPrimaryIndexed
+@N1qlSecondaryIndexed(indexName = "userEntity")
+public interface UserEntityRepository extends CouchbasePagingAndSortingRepository<UserEntity, String> {
+
+}
+----
+
+In C# and .NET, async/await are first-class keywords that make easy work of asynchronous programming necessary for storing a batch of events in a user profile system:
+
+[source,C#,indent=0]
+----
+public async Task AddEventsAsync(List<UserEvent> events)
+{
+    var tasks = events.Select(e => _bucket.InsertAsync(e.Id, new
+    {
+        e.CreatedDate,
+        e.EventType,
+        e.UserId,
+        e.Type
+    }));
+    await Task.WhenAll(tasks);
+}
+----
+
+== Next Steps
+
+For more details, head over to the complete tutorial of your choice.
+
+If you are a .NET developer, you can follow along with the link:https://docs.couchbase.com/tutorials/profile-store/dotnet.html[.NET User Profile Tutorial].
+
+If you are a Java developer, you can follow along with the link:https://docs.couchbase.com/tutorials/profile-store/java.html[Java User Profile Tutorial]
+
+If you have any questions or feedback for this tutorial, you can find me on link:https://twitter.com/mgroves[Twitter @mgroves] for .NET questions or Denis Rosa on link:https://twitter.com/deniswsrosa[Twitter @deniswsrosa]. As with everything in Couchbase documentation, this tutorial is open source and link:https://blog.couchbase.com/documentation-contribution-improvements/[pull requests for improvements] are welcome!
