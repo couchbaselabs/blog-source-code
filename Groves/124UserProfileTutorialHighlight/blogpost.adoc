@@ -1,15 +1,15 @@
 :imagesdir: images
-:meta-description: TBD
-:title: User Profiles with Couchbase: New Tutorials
-:slug: User-Profiles-Couchbase-Tutorials
+:meta-description: User Profile is a common paradigm in software architecture. It is meant to centralize the code responsible for managing user's data.
+:title: User Profile with Couchbase: New Tutorials
+:slug: User-Profile-Couchbase-Tutorials
 :focus-keyword: user profile
 :categories: Couchbase Server
-:tags: Couchbase Server, .NET, ASP.NET, tutorial, user profile
-:heroimage: TBD
+:tags: Couchbase Server, .NET, ASP.NET, tutorial, Java, Spring, user profile, C#
+:heroimage: 124-hero-user-profile.jpg Human Silhouettes licensed through Creative Commons https://www.maxpixel.net/Human-Silhouettes-Crowd-Group-Of-People-Personal-2718833
 
-User Profile is a common paradigms in software architecture. It is meant to centralize the code responsible for managing user's data. With the increasing popularity of microservices, software architects have started to create a single service to consolidate this task, which is commonly referred to as a User Profile Store.
+User Profile is a common paradigm in software architecture. It is meant to centralize the code responsible for managing user's data. With the increasing popularity of microservices, software architects have started to create a single service to consolidate this task.
 
-We've recently created two tutorials to help you get started building your own user profile system:
+We've recently created two tutorials to help you get started building your own system:
 
 * link:https://docs.couchbase.com/tutorials/profile-store/java.html[Using Couchbase Server to Build a User Profile Store (Java)]
 * link:https://docs.couchbase.com/tutorials/profile-store/dotnet.html[Using Couchbase Server to Build a User Profile Store (.NET)]
@@ -18,11 +18,9 @@ _This content is part of the new searchable link:https://docs.couchbase.com/tuto
 
 == User Profile
 
-A User Profile consists of user-related data. Common data stored in a User Profile Store are the user’s name, login, password, addresses, preferences, security roles, security groups, etc.
+A User Profile consists of user-related data. Common data stored includes the user's name, login, password, addresses, preferences, security roles, security groups, etc.
 
-Why is Couchbase a good fit for user profile storage? The user is quite often the most frequently accessed data, and it will potentially impact the performance of the whole system.
-
-Some of the key non-functional requirements of a successful system that are covered in these tutorials are:
+Why is Couchbase a good fit for this use case? The user is quite often the most frequently accessed data, and it will potentially impact the performance of the whole system. Some of the key non-functional requirements of a successful system that Couchbase can provide:
 
 * *Strong Consistency*
 * *High read and write throughput*
@@ -33,17 +31,19 @@ Some of the key non-functional requirements of a successful system that are cove
 * *High Scalability*
 * *High Availability*
 
-== Step-by-step
+== User Profile Step-by-step
 
 In these tutorials, you'll create a basic User Profile service step-by-step. These steps include:
 
-* Setting up a new project (Spring or ASP.NET)
-* Representing a user profile as a class
-* Creating a repository to access user profiles
-* Querying the user profile database with appropriate indexes
-* Search users with Full Text Search
-* Storing user events asynchronously (RxJava or async/await)
-* Configuring replication between data centers
+1. Setting up a new project (Spring or ASP.NET)
+2. Representing a profile as a class
+3. Creating a repository to access profiles
+4. Querying the data with appropriate indexes
+5. Search users with Full Text Search
+6. Storing user events asynchronously (RxJava or async/await)
+7. Configuring replication between data centers
+
+If you're just starting a user profile service, you can start at step 1. If you are looking to enhance an existing system, you can start at a later step.
 
 == Java and .NET Tutorials
 
@@ -74,7 +74,7 @@ public interface UserEntityRepository extends CouchbasePagingAndSortingRepositor
 }
 ----
 
-In C# and .NET, async/await are first-class keywords that make easy work of asynchronous programming necessary for storing a batch of events in a user profile system:
+In C# and .NET, async/await are first-class keywords that make easy work of asynchronous programming necessary for storing a batch of events in a profile:
 
 [source,C#,indent=0]
 ----
@@ -99,4 +99,4 @@ If you are a .NET developer, you can follow along with the link:https://docs.cou
 
 If you are a Java developer, you can follow along with the link:https://docs.couchbase.com/tutorials/profile-store/java.html[Java User Profile Tutorial]
 
-If you have any questions or feedback for this tutorial, you can find me on link:https://twitter.com/mgroves[Twitter @mgroves] for .NET questions or Denis Rosa on link:https://twitter.com/deniswsrosa[Twitter @deniswsrosa]. As with everything in Couchbase documentation, this tutorial is open source and link:https://blog.couchbase.com/documentation-contribution-improvements/[pull requests for improvements] are welcome!
+If you have any questions or feedback for this tutorial, you can find me on link:https://twitter.com/mgroves[Twitter @mgroves] for .NET questions or Denis Rosa on link:https://twitter.com/deniswsrosa[Twitter @deniswsrosa] for Java questions. As with everything in Couchbase documentation, this tutorial is open source and link:https://blog.couchbase.com/documentation-contribution-improvements/[pull requests for improvements] are welcome!
