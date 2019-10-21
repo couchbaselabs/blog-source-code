@@ -1,0 +1,26 @@
+:imagesdir: images
+:meta-description: Couchbase Developer Advocacy Team has created a questionnaire to learn more about the Couchbase developer ecosystem from the perspective of our developers.
+:title: Answer this Questionnaire and Win Prizes!
+:slug: Answer-Couchbase-Questionnaire-Win-Prizes
+:focus-keyword: questionnaire
+:categories: Community
+:tags: community, questionnaire, survey
+:heroimage: 125-hero-survey-questionnaire.jpg public domain https://www.maxpixel.net/Feedback-Online-Survey-User-Customer-Experience-3239623
+
+The Couchbase Developer Advocacy Team has created a questionnaire to link:http://bit.ly/couchbasesurvey[learn more about the Couchbase developer ecosystem] from the perspective of our developers.
+
+*This survey is open to EVERYONE in the Couchbase community*: whether you've been a Couchbase customer for years or you're a developer trying out Couchbase for the first time.
+
+link:http://bit.ly/couchbasesurvey[
+image:12501-questionnaire-screenshot.png[The Couchbase Community Questionnaire]]
+
+As a thank you for taking this survey, we are giving away some INCREDIBLE prizes to four randomly selected participants (subject to laws, geography). If you respond by OCTOBER 31st, 2019 you could become the proud owner of one of the following:
+
+* link:https://www.amazon.com/gp/product/B07GMV1X1K/[C64 Mini retro gaming console]
+* link:https://www.amazon.com/gp/product/B07QJ2117B/[JBL Waterproof Ultra Portable Bluetooth speaker]
+* link:https://www.amazon.com/gp/product/B07CYZYNQH/[Rocketbook Smart Reusable Notebook]
+* link:https://www.amazon.com/gp/product/B0765KL7B8[Decrypto Board Game]
+
+We'd love to hear more about the technology you're using, the team you're a part of, your thoughts about Couchbase and NoSQL, and more.
+
+link:http://bit.ly/couchbasesurvey[Couchbase Community Questionnaire] is now open.
