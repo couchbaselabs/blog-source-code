@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  couchbase:
+    image: couchbase:enterprise-6.0.3
+    volumes:
+    - "./couchbase:/opt/couchbase/var" # local folder where couchbase data stored
+    ports:
+    - "8091:8091" # Allows local access to mgmt UI
+  hellomicroservice:
+    image: ${DOCKER_REGISTRY-}hellomicroservice
+    build:
+      context: .
+      dockerfile: HelloMicroservice/Dockerfile
+    environment:
+      Couchbase__Servers__0: http://couchbase:8091/ # Reference to the "couchbase" service name on line 4
+    depends_on:
+    - couchbase # Reference to the "couchbase" service name on line 4
+    command: ["./wait-for-it.sh", "http://couchbase:8091"]
