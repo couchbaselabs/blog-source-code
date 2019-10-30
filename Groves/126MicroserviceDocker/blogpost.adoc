@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: 
+:meta-description: ASP.NET Core Microservices will be responsible for a single "vertical" slice of an overall application/service architecture.
 :title: ASP.NET Core Microservices: Getting Started
 :slug: ASP-NET-Core-Microservices-Getting-Started
 :focus-keyword: ASP.NET Core Microservices
@@ -14,7 +14,7 @@ ASP.NET Core Microservices: applications that will be responsible for a single "
 There are a lot of link:https://microservices.io/[opinions and recommendations] about what microservices are, when to use microservices vs a monolith, and more.
 
 ++++
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Microservices <a href="https://t.co/3xYWUgP2QW">pic.twitter.com/3xYWUgP2QW</a></p>&mdash; David Neal 🥓🥑 (@reverentgeek) <a href="https://twitter.com/reverentgeek/status/884470574667501569?ref_src=twsrc%5Etfw">July 10, 2017</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+https://twitter.com/reverentgeek/status/884470574667501569
 ++++
 
 This article is not going to tackle those questions in full. Instead, we're just going to try to link:https://chrisrichardson.net/post/antipatterns/2019/04/09/antipattern-flying-before-walking.html[walk before we can fly].
@@ -37,7 +37,7 @@ For my ASP.NET Core Microservice, I made these decisions in Visual Studio as wel
 * Web application MVC (This generates some basic HTML for display purposes, but you could just as easily use an API project instead)
 * ASP.NET Core 3 (the latest ASP.NET Core at the time of writing)
 * Configure for HTTPS (not strictly necessary, but a good idea)
-* Enable Docker support (not strictly necessary as we will use docker-compose for this tutorial, but eventually you will want this if you plan to deploy your service as a container).
+* Enable Docker support
 
 image:12602-visual-studio-wizard.png[Visual Studio new project wizard]
 
@@ -51,7 +51,7 @@ Right click on the *project*, and click "Add" and then "Container Orchestrator S
 
 image:12603-add-container-orch.png[Add Container O]
 
-Keep in mind that the sole purpose of this project is to start development for a proof of concept for ASP.NET Core Microservices. This is why I'm choosing "Docker Compose", even though I may eventually want to *deploy* to Kubernetes.
+Keep in mind that the sole purpose of this project is to start development for a proof of concept for ASP.NET Core Microservices. Docker-compose is easier to deal with than Kubernetes for local machine development. This is why I'm choosing the "Docker Compose" option, even though I may eventually want to *deploy* to Kubernetes.
 
 image:12604-docker-compose.png[Docker Compose]
 
