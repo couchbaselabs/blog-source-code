@@ -33,7 +33,7 @@ I'm using *ASP.NET Core* because it's a cross-platform, open source framework. A
 
 I'll be using Visual Studio for this blog post, but you can achieve the same effect (with perhaps a little more work) in Visual Studio Code or plain old command line.
 
-Create a new ASP.NET Core project. I called mine HelloMicroservice (and the link://[full source code is available on GitHub] for your reference.
+Create a new ASP.NET Core project. I called mine HelloMicroservice (and the link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/126MicroserviceDocker/src/HelloMicroservice[full source code is available on GitHub] for your reference.
 
 image:12601-visual-studio-new-project.png[New project in Visual Studio]
 
@@ -132,7 +132,7 @@ Let's break down each of these parts:
 In this example, I'm using link:https://github.com/vishnubob/wait-for-it[`wait-for-it.sh`], a script that will wait for the given host/port to become available. In the stock Couchbase Server Docker image, it will take a few seconds for Couchbase Server to actually start, so this script will wait until that happens to proceed.
 
 ****
-Using wait-for-it *is optional*, but when you're right in the middle of development, this may save you some headaches. (Note that I did not include wait-for-it.sh in my link://[sample GitHub repo]).
+Using wait-for-it *is optional*, but when you're right in the middle of development, this may save you some headaches. (Note that I did not include wait-for-it.sh in my link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/126MicroserviceDocker/src/HelloMicroservice[sample GitHub repo]).
 ****
 
 Finally, to make the ASP.NET Core project talk to Couchbase, I used the link:https://blog.couchbase.com/dependency-injection-aspnet-couchbase/[Dependency Injection Extension] from NuGet:
