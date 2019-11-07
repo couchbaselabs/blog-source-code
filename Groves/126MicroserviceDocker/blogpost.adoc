@@ -5,7 +5,7 @@
 :focus-keyword: ASP.NET Core Microservices
 :categories: Couchbase Server, .NET
 :tags: microservices, asp.net core, asp.net, docker, docker-compose
-:heroimage: TBD
+:heroimage: 126-hero-microservices-tilt-shift.png, Tiltshift, outside Waterloo station https://www.flickr.com/photos/cloudsoup/2148928955
 
 ASP.NET Core Microservices: applications that will be responsible for a single "vertical" slice of an overall application/service architecture.
 
@@ -19,8 +19,13 @@ https://twitter.com/reverentgeek/status/884470574667501569
 
 This article is not going to tackle those questions in full. Instead, we're just going to try to link:https://chrisrichardson.net/post/antipatterns/2019/04/09/antipattern-flying-before-walking.html[walk before we can fly].
 
-Let's consider that we're exploring microservices, and we want to take advantage of polyglot persistence to use a NoSQL database (Couchbase) for a particular use case. For our project, we're going to look at a link:https://microservices.io/patterns/data/database-per-service.html[Database per service] pattern, and use Docker (docker-compose) to manage the database for the ASP.NET Core Microservices link:https://blog.couchbase.com/proof-of-concept-move-relational/[proof of concept].
- (NoSQL document databases like Couchbase are good for an link:https://resources.couchbase.com/sdr/couchbase-use-cases[ever-expanding variety of use cases] including Profile Management, Content Management, Personalization, and much more). This blog post will be using Couchbase Server, but you can apply the basics here to the other databases in your microservices architecture as well.
+Let's consider that we're exploring microservices architecture, and we want to take advantage of polyglot persistence to use a NoSQL database (Couchbase) for a particular use case. For our project, we're going to look at a link:https://microservices.io/patterns/data/database-per-service.html[Database per service] pattern, and use Docker (docker-compose) to manage the database for the ASP.NET Core Microservices link:https://blog.couchbase.com/proof-of-concept-move-relational/[proof of concept].
+
+****
+NoSQL document databases like Couchbase are good for an link:https://resources.couchbase.com/sdr/couchbase-use-cases[ever-expanding variety of use cases] including Profile Management, Content Management, Personalization, and much more.
+****
+ 
+This blog post will be using Couchbase Server, but you can apply the basics here to the other databases in your microservices architecture as well.
 
 I'm using *ASP.NET Core* because it's a cross-platform, open source framework. Additionally, link:https://visualstudio.microsoft.com/[Visual Studio] (while not required) will give us a few helpful tools for working with Docker and link:https://docs.docker.com/compose/[docker-compose]. But again, you can apply the basics here to any web framework or programming language of your choice.
 
@@ -84,11 +89,11 @@ The basics of what you need are:
 
 * `couchbase:` This starts a service definition named "couchbase" (you can name it something else if you'd like)
 * `image: couchbase:enterprise-6.0.3` The image to use for this service. It's always a good idea to be explicit and use a tag like this, otherwise it may default to the "latest" image, which isn't necessarily what you want.
-* `ports:` This defines which port(s) to expose _outside_ of Docker. I'm exposing only 8091, because that is the Couchbase UI port (see also: link:https://docs.couchbase.com/server/current/install/install-ports.html[Network and Firewall Requirements])
+* `ports:` This defines which port number(s) to expose _outside_ of Docker. I'm exposing only 8091, because that is the Couchbase UI port numbers (see also: link:https://docs.couchbase.com/server/current/install/install-ports.html[Network and Firewall Requirements])
 
 The `volumes:` isn't strictly necessary. However, using a volume means that even when the couchbase image stops running, the data files in `/opt/couchbase/var` will be saved to the host computer (your computer's file system) and can be mounted again the next time you run the image. This means that any data you put in couchbase will still be there the next time you run the image.
 
-If you hit CTRL+F5 to run Docker Compose, _both_ the hellomicroservice _and_ the couchbase image will be run. They don't have anything to do with each other (yet) other than they are running side-by-side inside of Docker. If you open a command line and run `docker ps`, you should see something like this:
+If you hit CTRL+F5 to run the application, Docker Compose will start orchestration, including _both_ the hellomicroservice _and_ the couchbase image. They don't have anything to do with each other (yet) other than they are running side-by-side inside of Docker. If you open a command line and run `docker ps`, you should see something like this:
 
 [source,PowerShell,indent=0]
 ----
@@ -124,7 +129,11 @@ Let's break down each of these parts:
 * `depends_on` This is how docker-compose will know which order to start the services.
 * `command` A command to execute once the service starts.
 
-In this example, I'm using link:https://github.com/vishnubob/wait-for-it[`wait-for-it.sh`], a script that will wait for the given host/port to become available. In the stock Couchbase Server Docker image, it will take a few seconds for Couchbase Server to actually start, so this script will wait until that happens to proceed. *This is optional*, but when you're right in the middle of development, this may save you some headaches. (Note that I did not include wait-for-it.sh in my link://[sample GitHub repo]).
+In this example, I'm using link:https://github.com/vishnubob/wait-for-it[`wait-for-it.sh`], a script that will wait for the given host/port to become available. In the stock Couchbase Server Docker image, it will take a few seconds for Couchbase Server to actually start, so this script will wait until that happens to proceed.
+
+****
+Using wait-for-it *is optional*, but when you're right in the middle of development, this may save you some headaches. (Note that I did not include wait-for-it.sh in my link://[sample GitHub repo]).
+****
 
 Finally, to make the ASP.NET Core project talk to Couchbase, I used the link:https://blog.couchbase.com/dependency-injection-aspnet-couchbase/[Dependency Injection Extension] from NuGet:
 
