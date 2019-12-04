@@ -1,0 +1,52 @@
+---
+seo
+---
+keywords:
+    deployment
+    microservices
+    aks
+    azure
+    asp.net core
+    orchestration
+potential keyword focii:
+
+-------
+content
+-------
+
+follow tutorial (https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough):
+az aks create --resource-group twitchChatBotRG --name twitchChatBotCluster --node-count 3 --node-vm-size Standard_B2s --enable-addons monitoring --generate-ssh-keys
+az aks get-credentials --resource-group helloMicroserviceGroup --name helloMicroserviceAks
+
+kubectl create -f admission.yaml
+kubectl create -f crd.yaml
+kubectl create -f operator-role.yaml
+kubectl create -f operator-service-account.yaml
+kubectl create -f operator-role-binding.yaml
+kubectl create -f operator-deployment.yaml
+kubectl create -f secret.yaml
+kubectl create -f couchbase-cluster.yaml (takes about 3 min for a single node)
+kubectl create -f hello-microservice.yaml
+
+port forwarding:
+kubectl port-forward <pod name> 1111:1111
+kubectl port-forward cb-hellomicroservices-0000 8891:8091
+kubectl port-forward hello-microservice-app-deployment-8487dfd45d-ntlvl 5000:80
+
+view UI/dashboard:
+az aks browse --resource-group helloMicroserviceGroup --name helloMicroserviceAks
+
+expose service:
+https://blogs.msdn.microsoft.com/najib/2017/05/27/web-api-with-docker-and-kubernetes/
+kubectl expose deployments hello-microservice-app-deployment --port=80 --type=LoadBalancer
+kubectl get services (get IP address, go to http://<ip address>)
+
+links:
+https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough
+https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard
+https://github.com/deniswsrosa/microservices-on-kubernetes (associated blog post(s))
+
+links for SEO:
+https://docs.microsoft.com/en-us/azure/aks/
+https://kubernetes.io/
+link back to asp.net core microservices post

@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: hello-microservice-app-deployment
+spec:
+  selector:
+    matchLabels:
+      app: hello-microservice-app
+  replicas: 1 # tells deployment to run # pods matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: hello-microservice-app
+    spec:
+      containers:
+      - name: hello-microservice-app
+        image: mattgroves/hellomicroservice
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: server
+        env:
+        - name: Couchbase__Username
+          valueFrom:
+            secretKeyRef:
+              name: cb-hellomicroservices-auth
+              key: username
+        - name: Couchbase__Password
+          valueFrom:
+            secretKeyRef:
+              name: cb-hellomicroservices-auth
+              key: password
+        - name: Couchbase__Servers__0
+          value: http://cb-hellomicroservices:8091
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
