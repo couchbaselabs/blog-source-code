@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Couchbase.Extensions.DependencyInjection;
+using Couchbase.Extensions.DnsDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using Newtonsoft.Json;
 
 namespace HelloMicroservice
 {
@@ -32,6 +25,7 @@ namespace HelloMicroservice
 
             // tag::ConfigureServices[]
             services.AddCouchbase(Configuration.GetSection("Couchbase"));
+            services.AddCouchbaseDnsDiscovery();
             // end::ConfigureServices[]
         }
 

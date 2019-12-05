@@ -13,7 +13,7 @@ services:
       context: .
       dockerfile: HelloMicroservice/Dockerfile
     environment:
-      Couchbase__Servers__0: http://couchbase:8091/ # Reference to the "couchbase" service name on line 4
+      Couchbase__ConnectionString: "couchbase://couchbase"
     depends_on:
     - couchbase # Reference to the "couchbase" service name on line 4
     command: ["./wait-for-it.sh", "http://couchbase:8091"]

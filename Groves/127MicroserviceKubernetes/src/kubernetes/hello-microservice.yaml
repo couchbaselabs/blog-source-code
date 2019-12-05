@@ -30,8 +30,8 @@ spec:
             secretKeyRef:
               name: cb-hellomicroservices-auth
               key: password
-        - name: Couchbase__Servers__0
-          value: http://cb-hellomicroservices:8091
+        - name: Couchbase__ConnectionString
+          value: couchbase://cb-hellomicroservices-srv
         resources:
           requests:
             cpu: 100m
