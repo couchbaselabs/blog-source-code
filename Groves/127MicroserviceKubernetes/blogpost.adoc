@@ -15,7 +15,7 @@ https://twitter.com/CarmenCrincoli/status/1158772188402475010
 
 In that previous blog post, an ASP.NET Core microservice using Couchbase was created using docker-compose for local deployment and development purposes. Once ready for production, services are often deployed to managed Kubernetes services like link:https://docs.microsoft.com/en-us/azure/aks/[AKS], link:https://aws.amazon.com/eks/[EKS], link:https://cloud.google.com/kubernetes-engine/[GKE], etc.
 
-This tutorial contains some steps that are Azure AKS specific, but the bulk of this material can be applied to any Kubernetes cluster.
+This ASP.NET Core Kubernetes tutorial contains some steps that are Azure AKS specific, but the bulk of this material can be applied to any Kubernetes cluster.
 
 == ASP.NET Core Kubernetes Tutorial overview
 
@@ -54,9 +54,8 @@ Once the image is built, it will appear in your local Docker image repository. Y
 ----
 PS C:\Users\mgroves> docker images
 REPOSITORY                             TAG                 IMAGE ID            CREATED             SIZE
-hellomicroservice                      dev                 394211295bfc        30 minutes ago      207MB
-mattstwitchbotweb                      latest              417e7194114c        2 weeks ago         215MB
-mattgroves/mattstwitchbotweb           latest              417e7194114c        2 weeks ago         215MB
+mattgroves/hellomicroservice           latest              b2387e47a826        3 weeks ago         213MB
+hellomicroservice                      latest              b2387e47a826        3 weeks ago         213MB
 ----
 
 The next step is to link:https://docs.docker.com/engine/reference/commandline/push/[push this image out to Docker hub] (please review if you've not used Docker hub before). I pushed my image to Docker with the `docker push mattgroves/hellomicroservice` command. You will most likely want to tag your images with release numbers to make sure that Kubernetes is pulling the exact version you want to deploy.
@@ -65,9 +64,15 @@ If you want to skip this step, you can use my Docker image as an example: link:h
 
 == Write YAML files for deployment
 
-Now that you have published a Docker image, we can start to write the YAML files for a Kubernetes deployment. This tutorial will not cover everything there is to know about Kubernetes, but it will point out noteworthy sections as much as possible.
+Now that you have published a Docker image, we can start to write the YAML files for a Kubernetes deployment. This tutorial will not cover everything there is to know about Kubernetes, but it will point out noteworthy sections as much as possible. For this tutorial, there will be three total YAML files created to be along with the YAML files that ship with the Couchbase Operator.
 
-Let's start by creating a YAML file for the ASP.NET Core microservice itself:
+Each of these YAML files corresponds to a Kubernetes resource. Kubernetes will orchestrate the cluster based on what resources you create in the cluster.
+
+The ASP.NET Core Microservice resource and the Couchbase Cluster resource will each result in one or more link:https://kubernetes.io/docs/concepts/workloads/pods/pod/["pods"] being created on the Kubernetes cluster. Other types of resources are link:https://kubernetes.io/docs/concepts/configuration/secret/["secrets"] (to manage and store sensitive information) and link:https://kubernetes.io/docs/concepts/services-networking/service/["services"] (to expose a set of pods), and many others.
+
+=== ASP.NET Core Microservice
+
+Let's start by creating a YAML file for the ASP.NET Core microservice deployment itself:
 
 [source,YAML,indent=0]
 ----
@@ -75,9 +80,12 @@ include::src/kubernetes/hello-microservice.yaml[]
 ----
 
 Notes on hello-microservice.yaml:
-* `spec.replicas`: This tells Kubernetes how many pods of this service to create. To start with, 1 is fine, but as you scale, you will need more pods (and a LoadBalancer, which will be covered later).
+
+* `spec.replicas`: This tells Kubernetes how many pods of this service to create. To start with, 1 is fine, but as you scale, you will need more pods (and likely a LoadBalancer, which will be covered later).
 * `spec.template.spec.containers.image`: This tells Kubernetes which images to use. In my case, mattgroves/hellomicroservice is the one built earlier in this tutorial and deployed to Docker hub
-* `env`: These are variables that will be set as environment variables. I'm passing a Username, Password, and ConnectionString to the ASP.NET Core microservice, much like was done in the previous blog post. Most on the Couchbase__ConnectionString and DNS SRV later.
+* `env`: These define environment variables for each container. Instead of hardcoding these credentials in the image, I'm passing a Username, Password, and ConnectionString to the ASP.NET Core microservice, much like was done in the previous blog post. More on the Couchbase__ConnectionString and DNS SRV later.
+
+=== Couchbase Cluster
 
 Next, here's a YAML file for the database, which uses the link:https://www.couchbase.com/products/cloud/kubernetes[Couchbase Kubernetes Operator]:
 
@@ -89,8 +97,11 @@ include::src/kubernetes/couchbase-cluster.yaml[]
 This YAML file by itself isn't enough to use the Operator, but the Operator installation will come later in this tutorial. Also note that while the Operator pattern is an increasingly common and effective way to manage stateful software in Kubernetes, the YAML will vary based on which database you are using (i.e. this YAML will only work for Couchbase Server).
 
 Notes on couchbase-cluster.yaml:
+
 * `spec.version`: this specifies which Couchbase container image to use. I'm using the beta2 release. As of this writing, the operator only works with the Enterprise version. This may change soon.
 * `spec.cluster`, `spec.buckets`, `spec.servers`: these define various settings for the Couchbase Server cluster. Please link:https://docs.couchbase.com/operator/current/overview.html[consult the documentation for the full listing] of settings. This example file only covers a handful.
+
+=== Couchbase "secrets"
 
 I've also created a "secret" resource. Secrets are where configuration information like credentials, passwords, authorization tokens, etc, can be stored and managed with the Kubernetes API itself.
 
@@ -202,7 +213,21 @@ A service can also be created by using `kubectl expose`. For instance, I can exp
 
 `kubectl expose deployments hello-microservice-app-deployment --port=80 --type=LoadBalancer`
 
-When the service is created, it will create an external IP address. You can view service information with `kubectl get services`. Open that IP address in a web browser, and it will be load balanced access to the pods in your deployment. As you scale up or down, the service will remain the same and continue to provide access.
+When the service is created, it will create an external IP address. You can view service information with `kubectl get services`.
+
+[source,PowerShell,indent=0]
+----
+PS C:\Users\mgroves> kubectl get services
+NAME                                TYPE           CLUSTER-IP    EXTERNAL-IP   PORT(S)                          AGE
+cb-hellomicroservice                ClusterIP      None          <none>        8091/TCP,18091/TCP               17d
+cb-hellomicroservice-srv            ClusterIP      None          <none>        11210/TCP,11207/TCP              17d
+cb-hellomicroservice-ui             NodePort       10.0.194.12   <none>        8091:30624/TCP,18091:31169/TCP   17d
+couchbase-operator-admission        ClusterIP      10.0.218.95   <none>        443/TCP                          17d
+kubernetes                          ClusterIP      10.0.0.1      <none>        443/TCP                          17d
+hello-microservice-app-deployment   LoadBalancer   10.0.6.87     20.NN.NN.21   80:32710/TCP                     13s
+----
+
+Open that IP address in a web browser (20.NN.NN.21 in my example), and it will be load balanced access to the pods in your deployment. As you scale up or down (i.e. change the number of replicas), the service will remain the same and continue to provide access.
 
 == Kubernetes dashboard
 
