@@ -1,63 +1,247 @@
----
-seo
----
-keywords:
-    deployment
-    microservices
-    aks
-    azure
-    asp.net core
-    orchestration
-potential keyword focii:
+:imagesdir: images
+:meta-description: TBD
+:title: ASP.NET Core Kubernetes Tutorial: Deploying to AKS
+:slug: ASP-NET-Core-Kubernetes-Tutorial-Deploying-AKS
+:focus-keyword: ASP.NET Core Kubernetes Tutorial
+:categories: Couchbase Server, .NET
+:tags: microservices, asp.net core, asp.net, docker, docker-compose, kubernetes, aks
+:heroimage: TBD
 
--------
-content
--------
+ASP.NET Core Kubernetes tutorial will be covered in this blog post, as a follow-up to link:https://blog.couchbase.com/asp-net-core-microservices-getting-started/[ASP.NET Core Microservices: Getting Started].
 
-intro tweet?: https://twitter.com/CarmenCrincoli/status/1158772188402475010
+++++
+https://twitter.com/CarmenCrincoli/status/1158772188402475010
+++++
 
-follow tutorial (https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough):
-1. az group create --name helloMicroserviceGroup --location eastus
-2. az aks create --resource-group helloMicroserviceGroup --name helloMicroserviceAks --node-count 3 --node-vm-size Standard_B2s --enable-addons monitoring --generate-ssh-keys
-3. az aks get-credentials --resource-group helloMicroserviceGroup --name helloMicroserviceAks
+In that previous blog post, an ASP.NET Core microservice using Couchbase was created using docker-compose for local deployment and development purposes. Once ready for production, services are often deployed to managed Kubernetes services like link:https://docs.microsoft.com/en-us/azure/aks/[AKS], link:https://aws.amazon.com/eks/[EKS], link:https://cloud.google.com/kubernetes-engine/[GKE], etc.
 
+This tutorial contains some steps that are Azure AKS specific, but the bulk of this material can be applied to any Kubernetes cluster.
+
+== ASP.NET Core Kubernetes Tutorial overview
+
+In this ASP.NET Core Kubernetes tutorial, I'll walk through these steps:
+
+* Build a Docker image and push it to Docker hub
+* Create an AKS cluster on Azure
+* Deploy an ASP.NET Core microservice to AKS
+* Deploy Couchbase Server to it using a Kubernetes operator
+
+Additionally, I'm going to cover some optional, but very helpful topics:
+
+* Using DNS SRV to allow the ASP.NET Core microservice to locate its database
+* Setting up port forwarding with kubectl to get tunnel access to AKS pods
+* Viewing the Kubernetes dashboard on AKS
+* Setting up a Load Balancer service in Kubernetes to expose the ASP.NET Core microservice to the internet
+
+Prerequisites to get the most out of this tutorial:
+
+* Docker installed, some basic knowledge of Docker and Docker Hub
+* Visual Studio installed, although this isn't strictly necessary
+* An Azure account (if you don't have one, you can link:https://azure.microsoft.com/en-us/free/[sign up now and get $200 in credit] for free). If you want to use EKS, GKE, etc, you can still follow along in this tutorial, but you'll need to substitute a few steps on your own.
+* kubectl (for Kubernetes) installed
+
+== Build Docker image
+
+Kubernetes deployments use container images. There are many options for private container registries (like link:https://azure.microsoft.com/en-us/services/container-registry/[Azure Container Registry]), but to keep things simple for this tutorial, I'll be using plain old link:https://hub.docker.com/[Docker Hub].
+
+First, I'll start by building a Docker image from the ASP.NET Core Microservice I created in the previous blog post. From Visual Studio, this is as easy as right-clicking on Dockerfile and selecting "Build Docker Image".
+
+image:12701-docker-build-visual-studio.png[Visual Studio Build Docker Image]
+
+Once the image is built, it will appear in your local Docker image repository. You can see this repository from the command line by using "docker images":
+
+[source,PowerShell,indent=0]
+----
+PS C:\Users\mgroves> docker images
+REPOSITORY                             TAG                 IMAGE ID            CREATED             SIZE
+hellomicroservice                      dev                 394211295bfc        30 minutes ago      207MB
+mattstwitchbotweb                      latest              417e7194114c        2 weeks ago         215MB
+mattgroves/mattstwitchbotweb           latest              417e7194114c        2 weeks ago         215MB
+----
+
+The next step is to link:https://docs.docker.com/engine/reference/commandline/push/[push this image out to Docker hub] (please review if you've not used Docker hub before). I pushed my image to Docker with the `docker push mattgroves/hellomicroservice` command. You will most likely want to tag your images with release numbers to make sure that Kubernetes is pulling the exact version you want to deploy.
+
+If you want to skip this step, you can use my Docker image as an example: link:https://hub.docker.com/repository/docker/mattgroves/hellomicroservice[mattgroves/hellomicroservice].
+
+== Write YAML files for deployment
+
+Now that you have published a Docker image, we can start to write the YAML files for a Kubernetes deployment. This tutorial will not cover everything there is to know about Kubernetes, but it will point out noteworthy sections as much as possible.
+
+Let's start by creating a YAML file for the ASP.NET Core microservice itself:
+
+[source,YAML,indent=0]
+----
+include::src/kubernetes/hello-microservice.yaml[]
+----
+
+Notes on hello-microservice.yaml:
+* `spec.replicas`: This tells Kubernetes how many pods of this service to create. To start with, 1 is fine, but as you scale, you will need more pods (and a LoadBalancer, which will be covered later).
+* `spec.template.spec.containers.image`: This tells Kubernetes which images to use. In my case, mattgroves/hellomicroservice is the one built earlier in this tutorial and deployed to Docker hub
+* `env`: These are variables that will be set as environment variables. I'm passing a Username, Password, and ConnectionString to the ASP.NET Core microservice, much like was done in the previous blog post. Most on the Couchbase__ConnectionString and DNS SRV later.
+
+Next, here's a YAML file for the database, which uses the link:https://www.couchbase.com/products/cloud/kubernetes[Couchbase Kubernetes Operator]:
+
+[source,YAML,indent=0]
+----
+include::src/kubernetes/couchbase-cluster.yaml[]
+----
+
+This YAML file by itself isn't enough to use the Operator, but the Operator installation will come later in this tutorial. Also note that while the Operator pattern is an increasingly common and effective way to manage stateful software in Kubernetes, the YAML will vary based on which database you are using (i.e. this YAML will only work for Couchbase Server).
+
+Notes on couchbase-cluster.yaml:
+* `spec.version`: this specifies which Couchbase container image to use. I'm using the beta2 release. As of this writing, the operator only works with the Enterprise version. This may change soon.
+* `spec.cluster`, `spec.buckets`, `spec.servers`: these define various settings for the Couchbase Server cluster. Please link:https://docs.couchbase.com/operator/current/overview.html[consult the documentation for the full listing] of settings. This example file only covers a handful.
+
+I've also created a "secret" resource. Secrets are where configuration information like credentials, passwords, authorization tokens, etc, can be stored and managed with the Kubernetes API itself.
+
+[source,YAML,indent=0]
+----
+include::src/kubernetes/secret.yaml[]
+----
+
+This secret contains the credentials that I want Couchbase (as well as the ASP.NET Core microservice) to use. The values are encoded in base64 (actual values in the comments). These example credentials are NOT sufficient for a real deployment: please change them to something harder to guess.
+
+Note the `metadata.name` is "cb-hellomicroservices-auth". Look back to hello-microservice.yaml and couchbase-cluster.yaml to see how these secrets are referenced.
+
+== DNS SRV
+
+Look back to hello-microservice.yaml again. Under `env`, notice the name/value pair of "Couchbase__ConnectionString" and "couchbase://cb-hellomicroservices-srv". Instead of giving ASP.NET Core IP address or URLs of Couchbase Server nodes, I'm using a connection string to direct it to a link:https://support.dnsimple.com/articles/srv-record/[DNS SRV entry].
+
+In a Couchbase Cluster, the actual pods running Couchbase have potential to change their names on a regular basis. Therefore, it's recommended to use DNS SRV to locate the Couchbase service. Fortunately, the Couchbase Autonomous Operator creates a DNS SRV entry for us automatically.
+
+We'll soon be able to see it in the Kubernetes Dashboard, but in the meantime, just note that it will be the name of the Couchbase Cluster plus "-srv". So in our case, it's "cb-hellomicroservices-srv".
+
+I've made one minor change to the ASP.NET Core Microservice since the previous blog post: I'm now using the link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/dns-srv.md[Couchbase.Extensions.DnsDiscovery] library.
+
+Besides adding this library from NuGet, and using ConnectionString instead of Server in appsettings.json, the only other change that needs to be made is to `AddCouchbaseDnsDiscovery` within the `ConfigureServices` method.
+
+[source,C#,indent=0]
+----
+include::src/HelloMicroservice/HelloMicroservice/Startup.cs[tag=ConfigureServices]
+----
+
+It's as easy as that. For more about DNS SRV, check out link:https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#srv-records[SRV records] in the Kubernetes documentation.
+
+== Deployment to AKS
+
+At this point, we're ready to deploy to AKS. To review, here are the ingredients we have so far:
+
+1. ASP.NET Core Docker image on Docker Hub
+2. YAML file for the ASP.NET Core deployment
+3. YAML file for the Couchbase Cluster deployment
+4. YAML file for the Couchbase secrets (referenced by 2 and 3)
+
+To deploy to AKS, I followed the link:https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough[Quickstart: Deploy an Azure Kubernetes Service cluster using the Azure CLI] in the Microsoft documentation. Here is a brief summary of the steps I followed:
+
+(If you want to use your local command line, make sure you have link:https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest[azure-cli] installed. Otherwise, you can use the link:https://shell.azure.com/[Azure Cloud Shell]).
+
+First, login to Azure: `az login`. You will be prompted to enter your credentials in your web browser.
+
+After you have logged in, first create a "resource group". This is an organization group within Azure. Specify a data center (I used eastus).
+
+`az group create --name helloMicroserviceGroup --location eastus`
+
+Next, create an AKS cluster using the resource group you just created. There are many options for this. To keep this exercise relatively low cost and simple, I chose to create 3 nodes using the Standard_B2s VM size. For production deployments of Couchbase, you will likely need/want more powerful sizes.
+
+`az aks create --resource-group helloMicroserviceGroup --name helloMicroserviceAks --node-count 3 --node-vm-size Standard_B2s --enable-addons monitoring --generate-ssh-keys`
+
+This step will take some time to run. Expect Azure to take around 10 minutes to setup this Kubernetes AKS cluster.
+
+Once the cluster is created, use `get-credentials` to let kubectl know which cluster it will be using.
+
+`az aks get-credentials --resource-group helloMicroserviceGroup --name helloMicroserviceAks`
+
+At this point, it's time to *create* some Kubernetes resources. The first six YAML files can be downloaded under "Kubernetes" link:https://www.couchbase.com/downloads[couchbase.com/downloads].
+
+[source,PowerShell,indent=0]
+----
 kubectl create -f admission.yaml
 kubectl create -f crd.yaml
 kubectl create -f operator-role.yaml
 kubectl create -f operator-service-account.yaml
 kubectl create -f operator-role-binding.yaml
 kubectl create -f operator-deployment.yaml
+----
+
+Next, use the three YAML files that were created in this tutorial:
+
+[source,PowerShell,indent=0]
+----
 kubectl create -f secret.yaml
-kubectl create -f couchbase-cluster.yaml (takes about 3 min for a single node)
+kubectl create -f couchbase-cluster.yaml
 kubectl create -f hello-microservice.yaml
+----
 
-port forwarding:
-kubectl port-forward <pod name> 1111:1111
-kubectl port-forward cb-hellomicroservices-0000 8891:8091
-kubectl port-forward hello-microservice-app-deployment-8487dfd45d-ntlvl 5000:80
+To see the state of your Kubernetes pods, use `kubectl get pods`. The Couchbase pods will take a few minutes to become ready.
 
-DNS SRV:
-From Brant: You should be able to put your connection string as "couchbase://cb-hellomicroservices-srv".  The cb-hello-microservices-srv should be creating a DNS entry for "_couchbase._tcp.cb-hello-microservices-srv.default.svc.cluster.local". However, your DNS suffix for your pods, if in the same namespace, should already be "default.svc.cluster.local", so that part shouldn't be required. _couchbase._tcp is automatically prepended by the .NET extension, so you leave that part off, too.
+== Port forwarding
 
-https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#srv-records
+In the above deployment, none of the Kubernetes deployments are actually exposed outside of Kubernetes. One way we can check to make sure the microservice is working is by using the `kubectl port-forward` command. This will create a localhost "tunnel" to the given pod.
 
-view UI/dashboard:
-az aks browse --resource-group helloMicroserviceGroup --name helloMicroserviceAks
+For example, let's create a tunnel from localhost port 5000 to the ASP.NET Core microservice running on port 80:
 
-expose service:
-https://blogs.msdn.microsoft.com/najib/2017/05/27/web-api-with-docker-and-kubernetes/
-kubectl expose deployments hello-microservice-app-deployment --port=80 --type=LoadBalancer
-kubectl get services (get IP address, go to http://<ip address>)
+`kubectl port-forward <hello-microservice-app-deployment-...> 5000:80`
 
-when you're done don't forget to delete the resource group if you don't need it anymore, and save your money!
-az group delete --name helloMicroserviceGroup
+At this point, you can access the microservice by using \http://locahost:5000 in your browser.
 
-links:
-https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough
-https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard
-https://github.com/deniswsrosa/microservices-on-kubernetes (associated blog post(s))
+Similarly, you can setup a tunnel to the built-in web based Couchbase Server UI:
 
-links for SEO:
-https://docs.microsoft.com/en-us/azure/aks/
-https://kubernetes.io/
-link back to asp.net core microservices post
+`kubectl port-forward cb-hellomicroservices-0000 8091:8091`
+
+And now you can access the Couchbase cluster by using \http://localhost:8091.
+
+The port-forward command can be helpful to developers and operations, but keep reading to see how to expose a Kubernetes service to the internet.
+
+== Expose service with Load Balancer
+
+While port-forwarding can give us access to pods outside of the Kubernetes cluster, what happens when the pods inevitably crash, die and are reborn with new IP addresses, pod names, etc? Kubernetes allows us to link:https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/[create "services"] to address one or more pods logically.
+
+A service can be specified in the YAML files, just as the deployments are.
+
+A service can also be created by using `kubectl expose`. For instance, I can expose a load balancer service that provides access to however many ASP.NET Core pods that my deployment has created:
+
+`kubectl expose deployments hello-microservice-app-deployment --port=80 --type=LoadBalancer`
+
+When the service is created, it will create an external IP address. You can view service information with `kubectl get services`. Open that IP address in a web browser, and it will be load balanced access to the pods in your deployment. As you scale up or down, the service will remain the same and continue to provide access.
+
+== Kubernetes dashboard
+
+Kubernetes has its own UI dashboard than can be useful to get a visualization of the big picture without having to remember a bunch of command lines commands. To access the link:https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard[Kubernetes dashboard for AKS]:
+
+Create a ClusterRoleBinding for the Kubernetes dashboard to enable access:
+
+`kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard`
+
+Then, use Azure's aks browse to start the dashboard:
+
+`az aks browse --resource-group helloMicroserviceGroup --name helloMicroserviceAks`
+
+This should also automatically trigger your web browser to open the dashboard:
+
+image:12702-kubernetes-dashboard-aks.png[Kubernetes Dashboard on AKS]
+
+From the dashboard, you can view all the pods, services, secrets, nodes, and more.
+
+== Next steps
+
+If you have been following along on AKS, don't forget to remove the resource group when you are done. Otherwise, it will continue to run on your Azure account and charge you for compute time. You can remove the entire resource group from this tutorial with one command:
+
+`az group delete --name helloMicroserviceGroup`
+
+There was a lot of ground covered in this ASP.NET Core Kubernetes tutorial, but hopefully enough to point you in the right direction and get you started with a "Hello, world" example.
+
+As in the last blog post, this ASP.NET Core Kubernetes tutorial is a product of a couple of live coding streams on Twitch. You can view link:https://www.youtube.com/watch?v=CJsC6RDd9yw[part 1] and link:https://www.youtube.com/watch?v=vJz5TUy1Vdw[part 2] on YouTube. And if you have questions, you're welcome to stop by the link:https://twitch.tv/matthewdgroves[live stream on Twitch] next time and chat!
+
+Kubernetes is a very broad topic. There are a lot of directions you could go from here. Here are a few links that you might want to check out:
+
+* From link:https://docs.microsoft.com/en-us/azure/aks/[Microsoft AKS docs]:
+** link:https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough[Quickstart: Deploy an Azure Kubernetes Service cluster using the Azure CLI]
+** link:https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard[Access the Kubernetes web dashboard in Azure Kubernetes Service]
+* From my colleague Denis Rosa, link:https://github.com/deniswsrosa/microservices-on-kubernetes[Microservices on Kubernetes] example and his blog post on link:https://blog.couchbase.com/elastic-microservices-with-kubernetes-and-spring-boot/[Building Elastic Microservices with Kubernetes and Spring Boot]
+* From link:https://kubernetes.io/[Kubernetes]:
+** link:https://kubernetes.io/docs/tutorials/kubernetes-basics/expose/expose-intro/[Using a Service to Expose Your App
+]
+** link:https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/[Connecting Applications with Services], which mentions LoadBalancer
+* Reminder that this ASP.NET Core Kubernetes tutorial is a follow-up to my earlier post, link:https://blog.couchbase.com/asp-net-core-microservices-getting-started/
+[ASP.NET Core Microservices: Getting Started]. If you haven't read that already, you may be missing some context.
+* Twilio also published a link:https://www.twilio.com/blog/cloud-native-asp-net-core-deploy-azure-kubernetes-service-docker[similar blog post] a few months ago which uses the Azure Container Registry.
