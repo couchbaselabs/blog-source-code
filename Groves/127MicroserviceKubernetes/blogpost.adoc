@@ -1,11 +1,11 @@
 :imagesdir: images
-:meta-description: TBD
-:title: ASP.NET Core Kubernetes Tutorial: Deploying to AKS
-:slug: ASP-NET-Core-Kubernetes-Tutorial-Deploying-AKS
+:meta-description: This ASP.NET Core Kubernetes tutorial includes: building a Docker image, creating an AKS cluster, deploying a microservice, deploying Couchbase Server
+:title: ASP.NET Core Kubernetes Tutorial for AKS
+:slug: ASP-NET-Core-Kubernetes-Tutorial-AKS
 :focus-keyword: ASP.NET Core Kubernetes Tutorial
-:categories: Couchbase Server, .NET
-:tags: microservices, asp.net core, asp.net, docker, docker-compose, kubernetes, aks
-:heroimage: TBD
+:categories: Couchbase Server, Kubernetes, .NET
+:tags: microservices, asp.net core, asp.net, docker, docker-compose, kubernetes, aks, tutorial
+:heroimage: https://www.peakpx.com/575232/white-flowers-tilt-shift-lens-photography/3840x2160-wallpaper or https://www.flickr.com/photos/leecannon/5575699352/
 
 ASP.NET Core Kubernetes tutorial will be covered in this blog post, as a follow-up to link:https://blog.couchbase.com/asp-net-core-microservices-getting-started/[ASP.NET Core Microservices: Getting Started].
 
@@ -46,7 +46,7 @@ Kubernetes deployments use container images. There are many options for private 
 
 First, I'll start by building a Docker image from the ASP.NET Core Microservice I created in the previous blog post. From Visual Studio, this is as easy as right-clicking on Dockerfile and selecting "Build Docker Image".
 
-image:12701-docker-build-visual-studio.png[Visual Studio Build Docker Image]
+image:12701-docker-build-visual-studio.png[ASP.NET Core Kubernetes tutorial: Visual Studio Build Docker Image]
 
 Once the image is built, it will appear in your local Docker image repository. You can see this repository from the command line by using "docker images":
 
