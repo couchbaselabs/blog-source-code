@@ -5,7 +5,7 @@
 :focus-keyword: ASP.NET Core Kubernetes Tutorial
 :categories: Couchbase Server, Kubernetes, .NET
 :tags: microservices, asp.net core, asp.net, docker, docker-compose, kubernetes, aks, tutorial
-:heroimage: https://www.peakpx.com/575232/white-flowers-tilt-shift-lens-photography/3840x2160-wallpaper or https://www.flickr.com/photos/leecannon/5575699352/
+:heroimage: https://www.peakpx.com/575232/white-flowers-tilt-shift-lens-photography/3840x2160-wallpaper
 
 ASP.NET Core Kubernetes tutorial will be covered in this blog post, as a follow-up to link:https://blog.couchbase.com/asp-net-core-microservices-getting-started/[ASP.NET Core Microservices: Getting Started].
 
@@ -84,6 +84,7 @@ Notes on hello-microservice.yaml:
 * `spec.replicas`: This tells Kubernetes how many pods of this service to create. To start with, 1 is fine, but as you scale, you will need more pods (and likely a LoadBalancer, which will be covered later).
 * `spec.template.spec.containers.image`: This tells Kubernetes which images to use. In my case, mattgroves/hellomicroservice is the one built earlier in this tutorial and deployed to Docker hub
 * `env`: These define environment variables for each container. Instead of hardcoding these credentials in the image, I'm passing a Username, Password, and ConnectionString to the ASP.NET Core microservice, much like was done in the previous blog post. More on the Couchbase__ConnectionString and DNS SRV later.
+* You can also use "service.namespace" if the Couchbase cluster lives in another namespace.
 
 === Couchbase Cluster
 
@@ -99,7 +100,7 @@ This YAML file by itself isn't enough to use the Operator, but the Operator inst
 Notes on couchbase-cluster.yaml:
 
 * `spec.version`: this specifies which Couchbase container image to use. I'm using the beta2 release. As of this writing, the operator only works with the Enterprise version. This may change soon.
-* `spec.cluster`, `spec.buckets`, `spec.servers`: these define various settings for the Couchbase Server cluster. Please link:https://docs.couchbase.com/operator/current/overview.html[consult the documentation for the full listing] of settings. This example file only covers a handful.
+* `spec.cluster`, `spec.buckets`, `spec.servers`: these define various settings for the Couchbase Server cluster. Please link:https://docs.couchbase.com/operator/current/couchbase-cluster-config.html[consult the documentation for the full listing] of settings. This example file only covers a handful.
 
 === Couchbase "secrets"
 
@@ -166,8 +167,8 @@ At this point, it's time to *create* some Kubernetes resources. The first six YA
 
 [source,PowerShell,indent=0]
 ----
-kubectl create -f admission.yaml
 kubectl create -f crd.yaml
+kubectl create -f admission.yaml
 kubectl create -f operator-role.yaml
 kubectl create -f operator-service-account.yaml
 kubectl create -f operator-role-binding.yaml
@@ -259,6 +260,7 @@ As in the last blog post, this ASP.NET Core Kubernetes tutorial is a product of 
 
 Kubernetes is a very broad topic. There are a lot of directions you could go from here. Here are a few links that you might want to check out:
 
+* This tutorial uses version 1.2 of the Couchbase Kubernetes operator. The YAML for version 2.0 (coming soon) will be different.
 * From link:https://docs.microsoft.com/en-us/azure/aks/[Microsoft AKS docs]:
 ** link:https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough[Quickstart: Deploy an Azure Kubernetes Service cluster using the Azure CLI]
 ** link:https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard[Access the Kubernetes web dashboard in Azure Kubernetes Service]
