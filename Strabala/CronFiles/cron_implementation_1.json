@@ -2,7 +2,7 @@
 Create a basic cron system using Eventing allows a recurring function to execute activity
 a specified tie every day.  We used the 'travel-sample' and placed a control document 
 of type == "recurring_event" for this example.  Note for testing uncomment out the line 
-after TEST_ONLY.  Important you will need to alias 'travel-sample'  to 'ts' when you add 
+after TEST_ONLY.  Important you will need to alias 'travel-sample' to 'ts' when you add 
 this function into Eventing.
 
 Test Doc: 
@@ -41,20 +41,20 @@ N1QL : Adjust time of trigger
     UPDATE `travel-sample` SET hour = 11 AND min = 30 WHERE type="recurring_event" AND id=1 ;
 
 N1QL : Adjust logging	        
-    UPDATE `travel-sample` SET logging = 0 WHERE type="recurring_event" AND id=1 ;
+    UPDATE `travel-sample` SET verbose = 0 WHERE type="recurring_event" AND id=1 ;
 
 N1QL : Delete the schedule	    
     DELETE FROM `travel-sample` WHERE type="recurring_event" AND id=1 ;
          
 The action is important it 'should' exist in this Eventing Function if could be any 
-Javascript name e.g. MyFunc and you must implement is as say doCronActionA(doc) where doc 
+JavaScript name e.g. MyFunc and you must implement is as say doCronActionA(doc) where doc 
 will be the currently active item of type = 'recurring_event' read from the source bucket
-when the timer is fired.  This should return  true or false used for loggin purposes.  If
+when the timer is fired.  This should return  true or false used for logging purposes.  If
 the action does not exist it is an error and a warning is logged and the timer is disabled.
 
 In 6.5+ add a new cron like daily function just pause the active handler insert your new 
 function doCronActionB(doc) {...} then Resume the eventing handler.  The nice thing is if
-a time was to be fired will the fucntion was paused it will NOT be lost, when you resume 
+a time was to be fired will the function was paused it will NOT be lost, when you resume 
 the function it will be processed.
 */
 
@@ -173,7 +173,7 @@ function OnUpdate(doc, meta) {
 
 function getNextRecurringDate(hour_str, min_str) {
 
-  // Note Javascript Dates are in milliseconds
+  // Note JavaScript Dates are in milliseconds
   var date_now = new Date();
   var date_ret = new Date();
 
@@ -244,7 +244,7 @@ function getNextRecurringDate(hour_str, min_str) {
     date_ret.setMinutes(min);
     date_ret.setHours(hour);
     if (date_ret.getTime() < date_now.getTime()) {
-      // schedule for tommorow
+      // schedule for tomorrow
       date_ret.setDate(date_ret.getDate() + 1);
     }
   } else {
@@ -253,7 +253,7 @@ function getNextRecurringDate(hour_str, min_str) {
     return null;
   }
 
-  // Most likely redundent, note we don't apply this to '*4X' or '*2X' 
+  // Most likely redundant, note we don't apply this to '*4X' or '*2X' 
   if ((date_ret.getTime() + (1 * 5 * 1000)) < date_now.getTime()) {
     // schedule for 5 seconds in the future 
     date_ret.setTime(date_now.getTime() + 5);
@@ -333,7 +333,7 @@ function RecurringCallback(doc) {
   var hour = doc.hour;
   var min = doc.min;
 
-  var date_timer = getNextRecurringDat(hour, min);
+  var date_timer = getNextRecurringDate(hour, min);
   if (curDoc.verbose >= 3) {
     log("RecurringCallback (sched date) " + date_timer);
     log('RecurringCallback create recurring timer for id ', id);
