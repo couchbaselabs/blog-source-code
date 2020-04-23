@@ -64,7 +64,7 @@ function doCronActionA(doc) {
   // check that doc has desired values
   if (doc.type !== "recurring_event" || doc.active != true) return;
   if (doc.verbose >= 1)
-    log(doc.action + ' user action via controlled by ', doc.type + '::' + doc.id);
+    log(doc.action + ' user action controlled by ', doc.type + '::' + doc.id);
   // this is a 6.5 N1QL query (feature not available prior to 6.5)
   try {
     // Create an embedded N1QL iterator by issuing a SELECT statement to get the
@@ -123,7 +123,7 @@ function doCronActionB(doc) {
   // check that doc has desired values
   if (doc.type !== "recurring_event" || doc.active != true) return;
   if (doc.verbose >= 1)
-    log(doc.action + ' user action via controlled by ', doc.type + '::' + doc.id);
+    log(doc.action + ' user action controlled by ', doc.type + '::' + doc.id);
 
   // YOUR LOGIC HERE
 
@@ -134,7 +134,7 @@ function doCronActionC(doc) {
   // check that doc has desired values
   if (doc.type !== "recurring_event" || doc.active != true) return;
   if (doc.verbose >= 1)
-    log(doc.action + ' user action via controlled by ', doc.type + '::' + doc.id);
+    log(doc.action + ' user action controlled by ', doc.type + '::' + doc.id);
 
   // YOUR LOGIC HERE
 
@@ -164,7 +164,7 @@ function OnUpdate(doc, meta) {
   var date_timer = getNextRecurringDate(hour, min);
   if (doc.verbose >= 3) {
     log("OnUpdate (sched date) " + date_timer);
-    log('OnUpdate create recuring timer for id ', id);
+    log('OnUpdate create recurring timer for id ', id);
   }
 
   // Schedule an Eventing timer
