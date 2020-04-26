@@ -155,7 +155,7 @@ function OnUpdate(doc, meta) {
 
   // Do an eval check the JavaScript function exists. The eval occurs in a common 
   // utility function shared with RecurringCallback
-  if (!verifyFunctoinExistsViaEval(doc, id)) {
+  if (!verifyFunctionExistsViaEval(doc, id)) {
     // doc.action did not exist, we have already logged the issue
     return;
   }
@@ -262,7 +262,7 @@ function getNextRecurringDate(hour_str, min_str) {
   return date_ret;
 }
 
-function verifyFunctoinExistsViaEval(curDoc, id) {
+function verifyFunctionExistsViaEval(curDoc, id) {
   var result = null;
   // check for function if missing this is invalid return result
   result = eval("typeof " + curDoc.action + " === 'function';");
@@ -315,7 +315,7 @@ function RecurringCallback(doc) {
 
   // First eval check the JavaScript function exists.  The eval occurs in a common 
   // utility function shared with RecurringCallback
-  if (!verifyFunctoinExistsViaEval(curDoc, id)) {
+  if (!verifyFunctionExistsViaEval(curDoc, id)) {
     // curDoc.action did not exist, we have already logged the issue
     return;
   }
