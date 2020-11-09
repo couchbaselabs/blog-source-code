@@ -1,0 +1,26 @@
+:imagesdir: images
+:meta-description: Couchbase Documentation Team and Developer Advocacy Team have created a survey to get your feedback and help us improve our documentation.
+:title: Documentation Survey Open Now: Win Prizes!
+:slug: Documentation-Survey-Open-Now-Win-Prizes
+:focus-keyword: survey
+:categories: Community, Couchbase SDK, Couchbase Server
+:tags: community, questionnaire, survey, documentation
+:heroimage: https://www.pexels.com/photo/batch-books-document-education-357514/
+
+The Couchbase Documentation Team and Couchbase Developer Advocacy Team has joined forces to create a survey to link:http://bit.ly/docsSurvey[listen to your opinions on documentation] with the goal of better understanding how to improve!
+
+*This survey is open to EVERY developer who uses Couchbase*: whether you've been a Couchbase customer for years or you're a developer trying out Couchbase for the first time.
+
+link:http://bit.ly/docsSurvey[
+image:12801-documentation-survey.png[Couchbase Documentation Survey]]
+
+As a thank you for taking this survey, we are giving away some more amazing prizes to four randomly selected participants (subject to laws, geography). If you respond by March 31st, 2020 you could win one of the following:
+
+* link:https://www.amazon.com/LEGO-at-St-Raider-Building-540Piece/dp/B07Q2WB3D3[LEGO Star Wars AT-ST from The Mandalorian]
+* link:https://www.amazon.com/LEGO-Darth-Vader-75534-Building/dp/B075NRZ1HR[LEGO Star Wars Darth Vader]
+* link:https://www.amazon.com/LEGO-Star-Wars-Strikes-Building/dp/B07JN74TJ2[LEGO Star Wars Echo Base]
+* link:https://topatoco.com/collections/kc/products/kcg-tfdog-plush?variant=31171799941231["This is Fine" plush dog (and son)]. My personal favorite.
+
+At the end of survey, you will be asked if you would like to participate in a live, interactive exercise involving the documentation. If you choose to participate in that, you will receive a guaranteed reward of $200 (upon successful completion).
+
+link:http://bit.ly/docsSurvey[Couchbase Developer Documentation Survey] is now open.
