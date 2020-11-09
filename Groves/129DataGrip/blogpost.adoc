@@ -1,0 +1,153 @@
+:imagesdir: images
+:meta-description: TBD
+:title: DataGrip Setup for Couchbase
+:slug: DataGrip-Setup-Couchbase
+:focus-keyword: datagrip
+:categories: Couchbase Server, N1QL
+:tags: datagrip, jetbrains, tooling, IDE, n1ql, query
+:heroimage: TBD
+
+DataGrip from JetBrains has added NoSQL Couchbase support. It was first made available in their 2020.3 EAP (link:https://www.jetbrains.com/datagrip/nextversion/[Early Access Preview]) 
+
++++
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">DataGrip 2020.3 EAP is Open!<br><br>– Couchbase support<br>– Grants<br>– More powerful value editor <br>– Opening transposed tables<br>– Two new extractors: One-Row and SQL-Insert-Multirow<br>– The Welcome screen is back<br><br>...and more!<a href="https://t.co/SLa6Bywa6W">https://t.co/SLa6Bywa6W</a> <a href="https://t.co/pEV5fIJkaZ">pic.twitter.com/pEV5fIJkaZ</a></p>&mdash; JetBrains DataGrip (@datagrip) <a href="https://twitter.com/datagrip/status/1311677456785584128?ref_src=twsrc%5Etfw">October 1, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
++++
+
+This is a very exciting release. In this blog post, I'm going to introduce DataGrip and show you how to get started using DataGrip's NoSQL capabilities with Couchbase. As of right now, this functionality is all still in EAP, but it will soon be available in the link:https://www.jetbrains.com/datagrip/[main release of DataGrip].
+
+== What is DataGrip?
+
+JetBrains DataGrip is an IDE designed for SQL developers and database professionals. It allows you to write SQL in an intelligent query console with autocomplete, connect to multiple database servers/clusters, run queries, and much more.
+
+It's built on the IntelliJ IDEA platform, one of the top IDE platforms in the world. Rider, PhpStorm, PyCharm, WebStorm, and more are all built on the same excellent foundation as DataGrip.
+
+== DataGrip Support for Couchbase
+
+DataGrip has been gradually adding support for NoSQL databases, along side the typical array of relational database support (PostgreSQL, SQLite, Azure SQL, etc).
+
+Couchbase support is a natural fit for an IDE that focuses on SQL development. Despite being a "NoSQL" database, Couchbase has had its own full SQL implementation for years (called link:https://www.couchbase.com/n1ql[N1QL]).
+
+Other NoSQL databases like Redis, Elasticsearch, OrientDB, DynamoDB, and more link:https://youtrack.jetbrains.com/issue/DBE-41[may be in the cards for the future].
+
+== How does DataGrip connect to Couchbase?
+
+JetBrains has created their own JDBC Driver for DataGrip. This JDBC driver supports N1QL with some extensions for basic bucket management. You can check out the source code for the link:https://github.com/DataGrip/couchbase-jdbc-driver[Couchbase N1QL JDBC Driver on Github].
+
+This driver is automatically installed and updated from within DataGrip, as you'll see later in the "getting started" section.
+
+(If you're looking for ODBC/JDBC connectors for integration with tools other than DataGrip, don't forget to check out link:https://docs.couchbase.com/server/current/connectors/odbc-jdbc-drivers.html[Couchbase ODBC and JDBC Drivers] from CData).
+
+== Getting Started - A Short DataGrip Tutorial
+
+In this short tutorial, you'll see how to get started using DataGrip to query data from Couchbase with N1QL. You'll see:
+
+* How to setup Couchbase as a new datasource in DataGrip
+* How to execute a N1QL query in DataGrip
+* Some basic DataGrip features like autocomplete and data extractors.
+
+=== Install Couchbase locally
+
+There are many ways to link:https://docs.couchbase.com/server/current/install/get-started.html[deploy Couchbase Server]:
+
+* On-Premises (Non-Cloud) - Windows / Linux / Mac
+* VMs / containers / cloud - Docker / Kubernetes / AWS / Azure / etc
+* DBaaS - link:https://www.couchbase.com/cloud[Couchbase Cloud]
+
+For local development, I prefer to install it via a Docker container. You can do the same by following this quick start: link:https://developer.couchbase.com/docker-image-manual-cb65/[Couchbase Server CE Docker Container - Example Manual Configuration].
+
+Any of these methods should work fine with DataGrip. Make sure that Couchbase Server is accessible from wherever you intend to run DataGrip (i.e. your laptop) and that all the link:https://docs.couchbase.com/server/current/install/install-ports.html#table-ports-communication-path[necessary ports are opened].
+
+Finally, for this tutorial, I'll be using the link:https://docs.couchbase.com/server/current/rest-api/rest-sample-buckets.html[travel-sample] sample bucket.
+
+=== Download and Install DataGrip EAP
+
+At the current time, DataGrip with Couchbase support is link:https://www.jetbrains.com/datagrip/nextversion/[EAP (Early Access Preview)]. The JetBrains EAP program doesn't require you to purchase a license. EAP versions do expire.
+
+Click "Download" next to the latest EAP build and follow DataGrip's instructions to install. If you've never used DataGrip before, I recommend checking out the DataGrip link:https://www.jetbrains.com/datagrip/quick-start/[Quick Start Guide].
+
+=== DataGrip Setup for Couchbase
+
+Now that DataGrip is installed, let's connect it to Couchbase Server.
+
+You can click File -> New -> Data Source -> Couchbase Query, or you can click the "+" in the Database pane, then Data Source -> Couchbase Query.
+
+image:12901-datagrip-new-data-source.png[New Data Source in DataGrip]
+
+Configure the connection to Couchbase using the following values:
+
+* *Name*: couchbase-local
+* *Host*: localhost
+* *Port*: 11210 (link:https://docs.couchbase.com/server/current/install/install-ports.html#table-ports-communication-path[More information on Couchbase port numbers], make sure that ports 8091-8096 and 11210 are all open)
+* *Database User*: Administrator (if you followed the guide)
+* *Password*: password (if you followed the guide)
+* *Default bucket*: travel-sample
+
+image:12902-datagrip-add-data-source.png[New Data Source in DataGrip]
+
+It's a good idea to click "Test Connection" to make sure the connection is working, the DataGrip setup is correct, all the correct ports are open, and everything is ready before proceeding.
+
+If this is your first time connecting to Couchbase from DataGrip, you may be prompted to download the JDBC driver. Click "Download Driver Files" to proceed.
+
+image:12903-download-driver-files.png[New Data Source in DataGrip]
+
+When there are driver updates, you can also install them directly from DataGrip.
+
+=== Test Drive DataGrip against a Couchbase cluster
+
+At this point, couchbase-local should appear in the DataGrip Database pane. "travel-sample" should also appear. If it does not, try a right-click and then "Refresh".
+
+image:12904-database-pane-couchbase.png[Couchbase in the Database window pane]
+
+As you start to explore DataGrip, remember that this is an EAP. The version you're using may be slightly different. link:https://youtrack.jetbrains.com/issue/DBE-11834[Enhancements are coming soon] to better help you navigate Couchbase buckets and the data in them. If you find any bugs or think of ideas for enhancements, create a link:https://youtrack.jetbrains.com/issues/DBE[DataGrip issue on JetBrains's YouTrack site].
+
+Now, let's try running a N1QL query. Right click on travel-sample -> New -> Query Console. This will give you a workspace to start writing your N1QL (SQL for JSON). Here's an example you can copy/paste into DataGrip:
+
+[source,SQL,indent=0]
+----
+SELECT t.*
+FROM `travel-sample` t
+WHERE t.type = 'route'
+LIMIT 10;
+----
+
+Click the green "Execute" button to run the query.
+
+The results will appear in the DataGrip output window in "table" format. However, Couchbase is still returning JSON data. You can click the "eye" icon above the DataGrip output window to change to "text" view to see the raw JSON.
+
+image:12905-text-view.png[DataGrip text view]
+
+Also notice that you can change the results view from JSON to HTML, Markdown, XML, etc.
+
+image:12906-formats.png[Couchbase in the Database window pane]
+
+=== Autocomplete
+
+Another great thing about DataGrip is autocomplete and autosuggestion (sometimes referred to as IntelliSense in other tools like Visual Studio).
+
+Let's try typing out the query instead of copy/pasting it. Along the way, you'll get helpful, time-saving suggestions which you can autocomplete by pressing TAB.
+
+image:12907-datagrip-autosuggest.gif[DataGrip autosuggest with Couchbase N1QL]
+
+== Summary
+
+If you're experienced with Couchbase, you know that much of what is being demonstrated here can already be done already with Couchbase's built-in link:https://docs.couchbase.com/server/current/tools/query-workbench.html[Query Workbench], link:https://docs.couchbase.com/server/current/cli/cbq-tool.html[cbq], and even the relatively new experimental link:http://couchbase.sh/[Couchbase Shell project].
+
+But this tutorial is just scratching the surface of what DataGrip can do. Like all JetBrains products that I've used, DataGrip just makes my development experience smoother.
+
+Plus, if you're working on a project or a team that uses multiple database technologies, you don't have to leave DataGrip to work with them. You can do all your database work in one place.
+
++++
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">I&#39;m loving <a href="https://twitter.com/datagrip?ref_src=twsrc%5Etfw">@datagrip</a> more the more I use it. Check this out: I can access 3 <a href="https://twitter.com/hashtag/Couchbase?src=hash&amp;ref_src=twsrc%5Etfw">#Couchbase</a> clusters, a SQL Azure instance, a SQLite file, and a Postgres instance all in the same IDE. <a href="https://t.co/x1G6HqHmws">pic.twitter.com/x1G6HqHmws</a></p>&mdash; Matthew D. Groves (@mgroves) <a href="https://twitter.com/mgroves/status/1321842771502706688?ref_src=twsrc%5Etfw">October 29, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
++++
+
+== What's next?
+
+Download the link:https://www.jetbrains.com/datagrip/nextversion/[DataGrip EAP 2020.3] now and try it out with Couchbase now. Or check to see if link:https://www.jetbrains.com/datagrip/[DataGrip 2020.3] has been released. If you think you've found a bug, issue, or area for improvement within DataGrip, make sure to link:link:https://youtrack.jetbrains.com/issues/DBE[submit your issue to JetBrains]. If you have a technical question about Couchbase, post it to the link:https://forums.couchbase.com/[Couchbase Forums].
+
+Follow link:https://twitter.com/datagrip[DataGrip on Twitter] for all the latest news.
+
+If you're new to Couchbase's N1QL (SQL for JSON), you can check out an link:https://query-tutorial.couchbase.com/[interactive web-based sandbox] tutorial right now.
+
+Also check out link:http://couchbase.sh/[Couchbase Shell], which supports not on N1QL, but also key/value access, fake data generation, and more.
+
+Finally, if you want to get started developing with Couchbase, check out the link:https://developer.couchbase.com/[Couchbase Developer Portal].
