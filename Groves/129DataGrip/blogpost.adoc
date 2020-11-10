@@ -5,7 +5,7 @@
 :focus-keyword: datagrip
 :categories: Couchbase Server, N1QL
 :tags: datagrip, jetbrains, tooling, IDE, n1ql, query
-:heroimage: TBD
+:heroimage: 129-herodata-grip.jpg
 
 DataGrip from JetBrains has added NoSQL Couchbase support. It was first made available in their 2020.3 EAP (link:https://www.jetbrains.com/datagrip/nextversion/[Early Access Preview]) 
 
