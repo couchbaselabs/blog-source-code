@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: DataGrip, the JetBrains IDE for database developers, is adding Couchbase support. You'll see how to connect query, and enjoy all that DataGrip has to offer.
 :title: DataGrip Setup for Couchbase
 :slug: DataGrip-Setup-Couchbase
 :focus-keyword: datagrip
@@ -13,13 +13,13 @@ DataGrip from JetBrains has added NoSQL Couchbase support. It was first made ava
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">DataGrip 2020.3 EAP is Open!<br><br>– Couchbase support<br>– Grants<br>– More powerful value editor <br>– Opening transposed tables<br>– Two new extractors: One-Row and SQL-Insert-Multirow<br>– The Welcome screen is back<br><br>...and more!<a href="https://t.co/SLa6Bywa6W">https://t.co/SLa6Bywa6W</a> <a href="https://t.co/pEV5fIJkaZ">pic.twitter.com/pEV5fIJkaZ</a></p>&mdash; JetBrains DataGrip (@datagrip) <a href="https://twitter.com/datagrip/status/1311677456785584128?ref_src=twsrc%5Etfw">October 1, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 +++
 
-This is a very exciting release. In this blog post, I'm going to introduce DataGrip and show you how to get started using DataGrip's NoSQL capabilities with Couchbase. As of right now, this functionality is all still in EAP, but it will soon be available in the link:https://www.jetbrains.com/datagrip/[main release of DataGrip].
+This is a very exciting release. In this blog post, I'm going to introduce DataGrip and show you how to get started using its NoSQL capabilities with Couchbase. As of right now, this functionality is all still in EAP, but it will soon be available in the link:https://www.jetbrains.com/datagrip/[main release of DataGrip].
 
 == What is DataGrip?
 
 JetBrains DataGrip is an IDE designed for SQL developers and database professionals. It allows you to write SQL in an intelligent query console with autocomplete, connect to multiple database servers/clusters, run queries, and much more.
 
-It's built on the IntelliJ IDEA platform, one of the top IDE platforms in the world. Rider, PhpStorm, PyCharm, WebStorm, and more are all built on the same excellent foundation as DataGrip.
+It's built on the IntelliJ IDEA platform, one of the top IDE platforms in the world. Rider, PhpStorm, PyCharm, WebStorm, and more are all built on the same excellent foundation.
 
 == DataGrip Support for Couchbase
 
@@ -41,9 +41,9 @@ This driver is automatically installed and updated from within DataGrip, as you'
 
 In this short tutorial, you'll see how to get started using DataGrip to query data from Couchbase with N1QL. You'll see:
 
-* How to setup Couchbase as a new datasource in DataGrip
-* How to execute a N1QL query in DataGrip
-* Some basic DataGrip features like autocomplete and data extractors.
+* How to setup Couchbase as a new datasource
+* How to execute a N1QL query
+* Some basic features like autocomplete and data extractors.
 
 === Install Couchbase locally
 
@@ -63,11 +63,11 @@ Finally, for this tutorial, I'll be using the link:https://docs.couchbase.com/se
 
 At the current time, DataGrip with Couchbase support is link:https://www.jetbrains.com/datagrip/nextversion/[EAP (Early Access Preview)]. The JetBrains EAP program doesn't require you to purchase a license. EAP versions do expire.
 
-Click "Download" next to the latest EAP build and follow DataGrip's instructions to install. If you've never used DataGrip before, I recommend checking out the DataGrip link:https://www.jetbrains.com/datagrip/quick-start/[Quick Start Guide].
+Click "Download" next to the latest EAP build and follow DataGrip's instructions to install. If you've never used DataGrip before, I recommend checking out the link:https://www.jetbrains.com/datagrip/quick-start/[Quick Start Guide].
 
 === DataGrip Setup for Couchbase
 
-Now that DataGrip is installed, let's connect it to Couchbase Server.
+After installing DataGrip, let's connect it to Couchbase Server.
 
 You can click File -> New -> Data Source -> Couchbase Query, or you can click the "+" in the Database pane, then Data Source -> Couchbase Query.
 
@@ -86,7 +86,7 @@ image:12902-datagrip-add-data-source.png[New Data Source in DataGrip]
 
 It's a good idea to click "Test Connection" to make sure the connection is working, the DataGrip setup is correct, all the correct ports are open, and everything is ready before proceeding.
 
-If this is your first time connecting to Couchbase from DataGrip, you may be prompted to download the JDBC driver. Click "Download Driver Files" to proceed.
+If this is your first time connecting to Couchbase from DataGrip, you may see a prompt to download the JDBC driver. Click "Download Driver Files" to proceed.
 
 image:12903-download-driver-files.png[New Data Source in DataGrip]
 
@@ -122,7 +122,7 @@ image:12906-formats.png[Couchbase in the Database window pane]
 
 === Autocomplete
 
-Another great thing about DataGrip is autocomplete and autosuggestion (sometimes referred to as IntelliSense in other tools like Visual Studio).
+Another great thing about DataGrip is autocomplete and autosuggestion (like IntelliSense in Visual Studio).
 
 Let's try typing out the query instead of copy/pasting it. Along the way, you'll get helpful, time-saving suggestions which you can autocomplete by pressing TAB.
 
