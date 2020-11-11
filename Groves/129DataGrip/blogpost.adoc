@@ -17,7 +17,7 @@ This is a very exciting release. In this blog post, I'm going to introduce DataG
 
 == What is DataGrip?
 
-JetBrains DataGrip is an IDE designed for SQL developers and database professionals. It allows you to write SQL in an intelligent query console with autocomplete, connect to multiple database servers/clusters, run queries, and much more.
+JetBrains DataGrip is an IDE designed for SQL developers and database professionals. With it, you can write SQL in an intelligent query console with autocomplete, connect to multiple database servers/clusters, run queries, and much more.
 
 It's built on the IntelliJ IDEA platform, one of the top IDE platforms in the world. Rider, PhpStorm, PyCharm, WebStorm, and more are all built on the same excellent foundation.
 
@@ -98,7 +98,7 @@ At this point, couchbase-local should appear in the DataGrip Database pane. "tra
 
 image:12904-database-pane-couchbase.png[Couchbase in the Database window pane]
 
-As you start to explore DataGrip, remember that this is an EAP. The version you're using may be slightly different. link:https://youtrack.jetbrains.com/issue/DBE-11834[Enhancements are coming soon] to better help you navigate Couchbase buckets and the data in them. If you find any bugs or think of ideas for enhancements, create a link:https://youtrack.jetbrains.com/issues/DBE[DataGrip issue on JetBrains's YouTrack site].
+As you start to explore DataGrip, remember that this is an EAP. The experience of those reading this months from now may be slightly different. link:https://youtrack.jetbrains.com/issue/DBE-11834[Enhancements are coming soon] to better help you navigate Couchbase buckets and the data in them. If you find any bugs or think of ideas for enhancements, create a link:https://youtrack.jetbrains.com/issues/DBE[DataGrip issue on JetBrains's YouTrack site].
 
 Now, let's try running a N1QL query. Right click on travel-sample -> New -> Query Console. This will give you a workspace to start writing your N1QL (SQL for JSON). Here's an example you can copy/paste into DataGrip:
 
@@ -124,7 +124,7 @@ image:12906-formats.png[Couchbase in the Database window pane]
 
 Another great thing about DataGrip is autocomplete and autosuggestion (like IntelliSense in Visual Studio).
 
-Let's try typing out the query instead of copy/pasting it. Along the way, you'll get helpful, time-saving suggestions which you can autocomplete by pressing TAB.
+Let's try typing out the query instead of copy/pasting it. Along the way, you'll get helpful, time-saving suggestions which you can autocomplete by pressing TAB. Here's an example animation:
 
 image:12907-datagrip-autosuggest.gif[DataGrip autosuggest with Couchbase N1QL]
 
@@ -142,12 +142,12 @@ Plus, if you're working on a project or a team that uses multiple database techn
 
 == What's next?
 
-Download the link:https://www.jetbrains.com/datagrip/nextversion/[DataGrip EAP 2020.3] now and try it out with Couchbase now. Or check to see if link:https://www.jetbrains.com/datagrip/[DataGrip 2020.3] has been released. If you think you've found a bug, issue, or area for improvement within DataGrip, make sure to link:link:https://youtrack.jetbrains.com/issues/DBE[submit your issue to JetBrains]. If you have a technical question about Couchbase, post it to the link:https://forums.couchbase.com/[Couchbase Forums].
+Download the link:https://www.jetbrains.com/datagrip/nextversion/[DataGrip EAP 2020.3] and try it out with Couchbase. Or check to see if link:https://www.jetbrains.com/datagrip/[DataGrip 2020.3] has been released. If you think you've found a bug, issue, or area for improvement within DataGrip, make sure to link:https://youtrack.jetbrains.com/issues/DBE[submit your issue to JetBrains]. If you have a technical question about Couchbase, post it to the link:https://forums.couchbase.com/[Couchbase Forums].
 
 Follow link:https://twitter.com/datagrip[DataGrip on Twitter] for all the latest news.
 
 If you're new to Couchbase's N1QL (SQL for JSON), you can check out an link:https://query-tutorial.couchbase.com/[interactive web-based sandbox] tutorial right now.
 
-Also check out link:http://couchbase.sh/[Couchbase Shell], which supports not on N1QL, but also key/value access, fake data generation, and more.
+Also check out link:http://couchbase.sh/[Couchbase Shell], which supports not only N1QL, but also key/value access, fake data generation, and more.
 
 Finally, if you want to get started developing with Couchbase, check out the link:https://developer.couchbase.com/[Couchbase Developer Portal].
