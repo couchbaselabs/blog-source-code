@@ -7,7 +7,7 @@
 :tags: microservices, asp.net core, asp.net, docker, docker-compose, kubernetes, aks, tutorial
 :heroimage: https://www.peakpx.com/575232/white-flowers-tilt-shift-lens-photography/3840x2160-wallpaper
 
-ASP.NET Core Kubernetes tutorial will be covered in this blog post, as a follow-up to link:https://blog.couchbase.com/asp-net-core-microservices-getting-started/[ASP.NET Core Microservices: Getting Started].
+ASP.NET Core Kubernetes tutorial will be covered in this blog post, as a follow-up to link:https://blog.couchbase.com/asp-net-core-microservices-getting-started/[ASP.NET Core Microservices: Getting Started]. In this follow-up, we'll see how to get .NET on Kubernetes.
 
 ++++
 https://twitter.com/CarmenCrincoli/status/1158772188402475010
@@ -15,34 +15,34 @@ https://twitter.com/CarmenCrincoli/status/1158772188402475010
 
 In that previous blog post, an ASP.NET Core microservice using Couchbase was created using docker-compose for local deployment and development purposes. Once ready for production, services are often deployed to managed Kubernetes services like link:https://docs.microsoft.com/en-us/azure/aks/[AKS], link:https://aws.amazon.com/eks/[EKS], link:https://cloud.google.com/kubernetes-engine/[GKE], etc.
 
-This ASP.NET Core Kubernetes tutorial contains some steps that are Azure AKS specific, but the bulk of this material can be applied to any Kubernetes cluster.
+This ASP.NET Core Kubernetes example tutorial contains some steps that are Azure AKS specific, but the bulk of this material can be applied to any Kubernetes cluster.
 
 == ASP.NET Core Kubernetes Tutorial overview
 
 In this ASP.NET Core Kubernetes tutorial, I'll walk through these steps:
 
 * Build a Docker image and push it to Docker hub
-* Create an AKS cluster on Azure
-* Deploy an ASP.NET Core microservice to AKS
+* Create an AKS (Kubernetes) cluster on Azure
+* Deploy an .NET Core microservice to Kubernetes (AKS)
 * Deploy Couchbase Server to it using a Kubernetes operator
 
 Additionally, I'm going to cover some optional, but very helpful topics:
 
-* Using DNS SRV to allow the ASP.NET Core microservice to locate its database
+* Using DNS SRV to allow the ASP.NET Core microservice to locate its database (this will make the Kubernetes database connection string easier)
 * Setting up port forwarding with kubectl to get tunnel access to AKS pods
-* Viewing the Kubernetes dashboard on AKS
-* Setting up a Load Balancer service in Kubernetes to expose the ASP.NET Core microservice to the internet
+* Viewing the Kubernetes dashboard on AKS (this is separate from the Azure Kubernetes dashboard, but they provide similar information)
+* Setting up a Load Balancer service in Kubernetes to expose the ASP.NET Core microservice to the internet (how the AKS load balancer is implemented is actually an implementation detail of the Kubernetes API--it could be sticky, round-robin, etc)
 
 Prerequisites to get the most out of this tutorial:
 
 * Docker installed, some basic knowledge of Docker and Docker Hub
 * Visual Studio installed, although this isn't strictly necessary
 * An Azure account (if you don't have one, you can link:https://azure.microsoft.com/en-us/free/[sign up now and get $200 in credit] for free). If you want to use EKS, GKE, etc, you can still follow along in this tutorial, but you'll need to substitute a few steps on your own.
-* kubectl (for Kubernetes) installed
+* kubectl (for Kubernetes) installed - to let us deploy YAML files to manage AKS microservices (and GKE, EKS, minikube, etc)
 
 == Build Docker image
 
-Kubernetes deployments use container images. There are many options for private container registries (like link:https://azure.microsoft.com/en-us/services/container-registry/[Azure Container Registry]), but to keep things simple for this tutorial, I'll be using plain old link:https://hub.docker.com/[Docker Hub].
+We will use container images to deploy .NET Core to Kubernetes. There are many options for private container registries (like link:https://azure.microsoft.com/en-us/services/container-registry/[Azure Container Registry]), but to keep things simple for this tutorial, I'll be using plain old link:https://hub.docker.com/[Docker Hub].
 
 First, I'll start by building a Docker image from the ASP.NET Core Microservice I created in the previous blog post. From Visual Studio, this is as easy as right-clicking on Dockerfile and selecting "Build Docker Image".
 
@@ -64,15 +64,15 @@ If you want to skip this step, you can use my Docker image as an example: link:h
 
 == Write YAML files for deployment
 
-Now that you have published a Docker image, we can start to write the YAML files for a Kubernetes deployment. This tutorial will not cover everything there is to know about Kubernetes, but it will point out noteworthy sections as much as possible. For this tutorial, there will be three total YAML files created to be along with the YAML files that ship with the Couchbase Operator.
+Now that you have published a Docker image, we can start to write the YAML files for a Kubernetes deployment. This is not a full Kubernetes YAML tutorial, but we'll look at noteworthy sections as much as possible. For this tutorial, there will be three total YAML files created to be along with the YAML files that ship with the Couchbase Operator.
 
 Each of these YAML files corresponds to a Kubernetes resource. Kubernetes will orchestrate the cluster based on what resources you create in the cluster.
 
 The ASP.NET Core Microservice resource and the Couchbase Cluster resource will each result in one or more link:https://kubernetes.io/docs/concepts/workloads/pods/pod/["pods"] being created on the Kubernetes cluster. Other types of resources are link:https://kubernetes.io/docs/concepts/configuration/secret/["secrets"] (to manage and store sensitive information) and link:https://kubernetes.io/docs/concepts/services-networking/service/["services"] (to expose a set of pods), and many others.
 
-=== ASP.NET Core Microservice
+=== ASP.NET Core Microservices
 
-Let's start by creating a YAML file for the ASP.NET Core microservice deployment itself:
+Let's start by creating a YAML file for the ASP.NET Core microservice deployment itself. While this will deploy an ASP.NET Core Kubernetes example, note that you can use it with any container--it's not limited to .NET Core.
 
 [source,YAML,indent=0]
 ----
@@ -260,15 +260,13 @@ As in the last blog post, this ASP.NET Core Kubernetes tutorial is a product of 
 
 Kubernetes is a very broad topic. There are a lot of directions you could go from here. Here are a few links that you might want to check out:
 
-* This tutorial uses version 1.2 of the Couchbase Kubernetes operator. The YAML for version 2.0 (coming soon) will be different.
+* This tutorial uses version 1.2 of the Couchbase Kubernetes operator. The link:https://docs.couchbase.com/operator/current/howto-couchbase-create.html[operator is now in version 2.1], so some of the YAML may be different.
 * From link:https://docs.microsoft.com/en-us/azure/aks/[Microsoft AKS docs]:
 ** link:https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough[Quickstart: Deploy an Azure Kubernetes Service cluster using the Azure CLI]
 ** link:https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard[Access the Kubernetes web dashboard in Azure Kubernetes Service]
-* From my colleague Denis Rosa, link:https://github.com/deniswsrosa/microservices-on-kubernetes[Microservices on Kubernetes] example and his blog post on link:https://blog.couchbase.com/elastic-microservices-with-kubernetes-and-spring-boot/[Building Elastic Microservices with Kubernetes and Spring Boot]
+* From my colleague Denis Rosa, link:https://www.youtube.com/watch?v=PLAwcExtLVw[Databases on Kubernetes: Why you should care]
 * From link:https://kubernetes.io/[Kubernetes]:
 ** link:https://kubernetes.io/docs/tutorials/kubernetes-basics/expose/expose-intro/[Using a Service to Expose Your App
 ]
 ** link:https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/[Connecting Applications with Services], which mentions LoadBalancer
-* Reminder that this ASP.NET Core Kubernetes tutorial is a follow-up to my earlier post, link:https://blog.couchbase.com/asp-net-core-microservices-getting-started/
-[ASP.NET Core Microservices: Getting Started]. If you haven't read that already, you may be missing some context.
-* Twilio also published a link:https://www.twilio.com/blog/cloud-native-asp-net-core-deploy-azure-kubernetes-service-docker[similar blog post] a few months ago which uses the Azure Container Registry.
+* Reminder that this ASP.NET Core Kubernetes tutorial is a follow-up to my earlier post, link:https://blog.couchbase.com/asp-net-core-microservices-getting-started/[ASP.NET Core Microservices: Getting Started]. If you haven't read that already, you may be missing some context.
