@@ -1,0 +1,221 @@
+:imagesdir: images
+:meta-description: TBD
+:title: SQL to NoSQL: Automated Migration
+:slug: sql-nosql-automated-migration
+:focus-keyword: TBD
+:categories: Couchbase Server, .NET, N1QL
+:tags: ACID, SQL Server, Postgres, PostgreSQL
+:heroimage: TBD
+
+SQL to NoSQL seems like a contradiction, but thanks to advances and innovations in Couchbase Server's NoSQL database, it's becoming easier.
+
+In this post, I'll introduce you to a tool called link:https://github.com/mgroves/SqlServerToCouchbase[SqlServerToCouchbase], an open-source attempt at an automated tool to help you "translate" a Microsoft SQL Server database into a Couchbase Server database.
+
+Before starting, keep in mind that moving between any two databases (SQL to NoSQL _or_ SQL to SQL) is much like translating between two languages. There are automations like Babelfish, Google Translate, and so on. These are very helpful tools for getting started, but aren't substitutes for (eventually) immersing yourself in the language.
+
++++
+<blockquote class="twitter-tweet"><p lang="und" dir="ltr"><a href="https://twitter.com/hashtag/googletranslatefails?src=hash&amp;ref_src=twsrc%5Etfw">#googletranslatefails</a> <a href="https://twitter.com/hashtag/overs%C3%A6ttelsesfejl?src=hash&amp;ref_src=twsrc%5Etfw">#oversættelsesfejl</a> <a href="https://t.co/SNNoGHBD1Q">pic.twitter.com/SNNoGHBD1Q</a></p>&mdash; EgoLibris (@egolibris) <a href="https://twitter.com/egolibris/status/864846974859849728?ref_src=twsrc%5Etfw">May 17, 2017</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
++++
+
+Beyond the translation of syntax, there's also the idioms and culture that surrounds any technology. No automation tool can capture all of the nuance, but let's give it a try to see how far we can go.
+
+== SQL to NoSQL planning
+
+If you're considering migrating data from SQL Server to Couchbase (or any relational database to Couchbase), the first step is to come to agreement on your high-level goals and plans. There are multiple paths to take, and each trades-off risk, effort, and benefits. Here are a few examples:
+
+[%header,cols="1,6,1,1,1"]
+|==================
+| Level | Description | Risk | Effort | Benefits
+| 1 | **Rewrite**: No migration, write the whole thing over | 5/5 | 5/5 | ⭐⭐⭐⭐⭐
+| 2 | **Redesign Schema**: Keep your business logic, rewrite your data layer and schema, totally redesign your schema with a NoSQL-optimized model | 4/5 | 4/5 | ⭐⭐⭐⭐
+| 3 | **Refactor First**: Keep everything but refactor your data logic and RDBMS schema into a NoSQL-optimized model | 4/5 | 3/5 | ⭐⭐⭐⭐
+| 4 | **Optimize Later**: Host your schema with as few changes as possible, get the application running on the new technology, refactor/optimize the schema as necessary for performance
+ | 3/5 | 4/5 | ⭐⭐⭐
+| 5 | **Just Host It**: Host your schema with as few changes as possible. | 2/5 | 2/5 | ⭐⭐
+|==================
+
+Historically, NoSQL databases have focused on "Level 1" rebuilding or greenfield projects. While that approach achieves the most benefit from NoSQL from the beginning, rebuilds are always expensive and risky.
+
+However, Couchbase Server, along with new capabilities coming in Couchbase Server 7 (you can download link:https://www.couchbase.com/downloads[Couchbase 7 beta right now]), allows a level 5 (followed by level 4) approach that reduces the risk and cost of trying out NoSQL. You won't necessarily reap *all* the benefits of NoSQL right away, but getting started is easier than ever.
+
+== Google Translate for SQL to NoSQL
+
+Most developers and database users are familiar with relational databases. Schemas, tables, rows and columns, SQL queries, ACID transactions. Couchbase's query language (N1QL) has long recognized that SQL is the _lingua franca_ of databases. N1QL currently provides full SQL capabilities, including JOINs, robust indexing, aggregation, CTEs, and more. This makes it relatively straightforward for SQL developers to be productive even as newcomers to Couchbase's NoSQL offering.
+
+TIP: Check out link:https://www.techvalidate.com/product-research/couchbase/charts/2A1-8B3-4BC[Why Developers Value Couchbase] and other independent research from TechValidate.
+
+What if most of the other relational concepts could be translated and mapped as easily? Let's look at how SQL Server concepts could be mapped to Couchbase Server concepts.
+
+[%header]
+|==================
+| SQL Server | Couchbase Server | Notes
+| Server | Cluster | One of the primary benefits of NoSQL is scalability and high availability that clustering provides.
+| Catalog/Database | Bucket | Couchbase buckets also provide a built-in cache for improved performance
+| Schema | Scope | Schema is often just "dbo" in SQL Server, but not always.
+| Table | Collection | Collections are more flexible: no pre-defined columns or constraints
+| Row | Document | JSON instead of flat data
+| tSQL | N1QL | N1QL is not "SQL-like", it's a full SQL implementation with JSON extensions, sometimes called SQL++
+| Primary Key | Document Key | Primary keys must be unique per-table, document keys must be unique per collection
+| Index | Index | SQL: Indexes on column(s), Couchbase: Indexes on JSON field(s)
+|==================
+
+With this mapping as a baseline, can we write a program to automatically translate the contents of a SQL Server database to a Couchbase Server database?
+
+I believe we can get most of the way there, and I've created an open-source project called link:https://github.com/mgroves/SqlServerToCouchbase[SqlServerToCouchbase] to do just that.
+
+== Database/Catalog to Bucket
+
+I'm going to use the link:https://docs.microsoft.com/en-us/sql/samples/adventureworks-install-configure#download-backup-files[AdventureWorks] samples provided by Microsoft in SQL Server. I'll be migrating to a Couchbase 7 database (link:couchbase.com/downloads[currently in beta], but will likely be RTM this year).
+
+image:13002-sql-server-adventureworks.png[SQL Server with AdventureWorks]
+
+You can create a bucket manually in Couchbase Server, or you can have the utility create the bucket for you automatically.
+
+image:13003-couchbase-adventureworks.png[AdventureWorks bucket in Couchbase]
+
+== Schema to Scope
+
+In SQL Server, a link:https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/ownership-and-user-schema-separation-in-sql-server[schema] is like a "namespace" that allows you to group objects (like tables) together for organization/security purposes. For example, AdventureWorks contains schemas like HumanResources, Person, Production, etc.
+
+Many projects don't really use schema other than the default "dbo" schema. However, a schema might be used to group data for a specific microservice or a specific tenant in a multi-tenant app.
+
+image:13004-sql-server-schemas.png[SQL Server schemas]
+
+In Couchbase 7, there is a very similar concept called link:https://docs.couchbase.com/server/7.0/learn/data/scopes-and-collections.html["scope"]. It provides the same organization and security benefits for microservices or multi-tenancy.
+
+image:13005-couchbase-scopes.png[Couchbase scopes]
+
+Based on your preferences, the SqlServerToCouchbase utility can create scopes based on the schemas in SQL Server, or it can ignore them and put everything in a schema called "_default" (which is roughly equivalent to "dbo"). In the above example, I've elected to create scopes for each AdventureWorks schema.
+
+== Table to Collection
+
+In SQL Server, a table is a strictly enforced relation (hence "link:https://en.wikipedia.org/wiki/Relational_model[relational]" database) that organizes data together.
+
+image:13006-sql-server-table.png[SQL Server table]
+
+In Couchbase, there is no strictly enforced relation, but in Couchbase 7, there is a concept of a link:https://docs.couchbase.com/server/7.0/learn/data/scopes-and-collections.html["collection"]. While this will be unable to enforce any constraints on the data (other than a unique document key, analogous to a primary key), it can still provide the same level of data organization.
+
+The SqlServerToCouchbase utility will create a collection for each table that it finds. If you elected to create scopes in the previous step, those collections will be placed inside of the appropriate scope.
+
+image:13007-couchbase-collection.png[Couchbase collection]
+
+TIP: Table names in SQL Server are allowed to be much longer than collection names in Couchbase Server. So, if you are migrating a database with long table names, you will have to explicitly provide a new, shorter collection name.
+
+== Index to Index
+
+SQL Server allows you to create indexes on tables for one or more columns.
+
+Couchbase Server also allows you to link:https://docs.couchbase.com/server/current/n1ql/n1ql-intro/queriesandresults.html#indexes[create indexes] on collections for one or more JSON fields.
+
+The SqlServerToCouchbase utility will do a direct translation of the SQL Server indexes.
+
+For instance, an index on SQL Server:
+
+```
+CREATE INDEX SalesTaxRate_StateProvinceID_TaxType ON Sales.SalesTaxRate
+(
+	StateProvinceID ASC,
+	TaxType ASC
+)
+```
+
+will become an index on Couchbase Server:
+
+```
+CREATE INDEX sql_SalesTaxRate_StateProvinceID_TaxType ON AdventureWorks2016.Sales.SalesTaxRate(StateProvinceID, TaxType)
+```
+
+Couchbase will translate all indexes, but the level of SQL Server indexing may be too high or too low, depending on the queries that you plan to execute. Fortunately, Couchbase Server 6.6 and newer has a built-in link:https://docs.couchbase.com/server/current/tools/query-workbench.html#index-advisor[Index Advisor] (a standalone link:https://index-advisor.couchbase.com/indexadvisor[web-based version is also available]), that will recommend indexes for any N1QL query you want.
+
+You can also use the link:https://docs.couchbase.com/server/current/manage/monitor/monitoring-indexes.html[Couchbase Index monitor] to check the Index Request Rate (among other index characteristics). This may help you to identify indexes that you no longer need.
+
+== Row to Document
+
+Once the appropriate scopes and collections are in place, the SqlServerToCouchbase utility can be used to get all the rows of data from each table and write them into JSON documents in each collection.
+
+image:13001-sql-server-address-row.png[]
+
+For the most part, the data types supported by SQL Server link:https://blog.couchbase.com/couchbase-for-oracle-developers-part-4-data-types/[map well to JSON] data types. Some examples:
+
+[%header]
+|===
+| SQL Server data type | JSON data type
+| char, varchar, nvarchar, etc | string
+| integer, decimal, float, real, etc | number
+| bit | boolean
+| date, datetime, time, etc | string
+|===
+
+In addition, there are some specialized SQL Server data types that the SqlServerToCouchbase utility is also able to handle.
+
+For instance, SQL Server's `geography` type becomes a nested JSON object with properties like "Lat" and "Long" and "Z". Here's the translated document for the row of data in the above screenshot.
+
+[source,JavaScript]
+----
+{
+  "AddressID": 1,
+  "AddressLine1": "1970 Napa Ct.",
+  "AddressLine2": null,
+  "City": "Bothell",
+  "StateProvinceID": 79,
+  "PostalCode": "98011",
+  "SpatialLocation": {
+    "IsNull": false,
+    "STSrid": 4326,
+    "Lat": 47.7869921906598,
+    "Long": -122.164644615406,
+    "Z": null,
+    "M": null,
+    "HasZ": false,
+    "HasM": false
+  },
+  "rowguid": "9aadcb0d-36cf-483f-84d8-585c2d4ec6e9",
+  "ModifiedDate": "2007-12-04T00:00:00"
+}
+----
+
+If there is a specific data type that you're curious about, try the SqlServerToCouchbase utility and see what happens. If it's not translating the data how you'd expect, link:https://github.com/mgroves/SqlServerToCouchbase/issues[please create an issue on GitHub].
+
+== User to user
+
+SQL Server supports a variety of user types, security roles, and permissions at the database, schema, and table levels.
+
+Couchbase Server has role-based authentication (RBAC) that also allows a variety of permissions to be set at the bucket, scope, and collection levels.
+
+The SqlServerToCouchbase utility will create matching users and do its best to translate the permissions as much as possible.
+
+AdventureWorks does not contain any examples of users with fine-grained permissions. I created my own to represent a subset of permissions for a few tables in the Person schema.
+
+image:13008-sql-server-user-permissions-security.png[SQL Server user permissions at the table level]
+
+The corresponding user in Couchbase will have similar permissions:
+
+image:13009-couchbase-user-permissions-security.png[Couchbase user permissions at the collection level]
+
+While SQL Server has only one API for working with data (tSQL), Couchbase has multiple: N1QL, key/value, full text search, analytics, and more. Hence the number of permissions translated to the user in Couchbase is larger. As you move up to "level 4", these can be tweaked as necessary.
+
+WARNING: Users, authentication, authorization, and security is an area where caution and manual review should definitely be exercised. Do not leave this step to be completely automated until you are sure the outcome is what you want.
+
+== Next Steps
+
+The "translation" utility will create a Couchbase Server translation of your SQL Server database. However, it's currently unable to translate any client code. That's a difficult problem for any database migration, not just SQL Server to NoSQL. However, keep an eye on this blog for future articles about migrating SQL queries and client code!
+
+In the meantime, some of the steps you'll need to look into:
+
+* You'll need to change the data access in your client to use a Couchbase SDK. For instance, if you're using ADO.NET, Dapper, PetaPoco, etc, you'll can use the link:https://docs.couchbase.com/dotnet-sdk/current/hello-world/start-using-sdk.html[Couchbase .NET SDK].
+
+* Using Entity Framework? Check out the link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase project].
+
+* Couchbase does support ACID transactions! For .NET, link:https://www.nuget.org/packages/Couchbase.Transactions/1.0.0-beta.1[Couchbase.Transactions] are currently in beta. In Couchbase 7, N1QL also supports link:https://docs.couchbase.com/server/7.0/n1ql/n1ql-language-reference/begin-transaction.html[`BEGIN/COMMIT/ROLLBACK TRANSACTION`]
+
+* Couchbase's N1QL is a full SQL implementation. However, like all SQL dialects, there are differences between N1QL and tSQL. A few queries may work as is, but in most cases there are likely to be syntax difference. Check out the in-browser link:https://query-tutorial.couchbase.com/tutorial/[interactive N1QL tutorial].
+
+* Looking for a similar approach with MySQL? Check out link:https://blog.couchbase.com/hands-on-migration-from-relational-to-collections/[Hands-on Migration From Relational to Collections] for a similar approach that uses Python / CLI.
+
+* Looking for a similar approach with PostgreSQL? Check out link:https://github.com/metonymic-smokey/couchgres/tree/main/migrate[Couchgres], a community-supported open-source project that uses a similar approach with Golang / CLI.
+
+== Summary
+
+Couchbase Server 7 is set to be the biggest, most important release of Couchbase Server. Keep an eye on the Couchbase blog for more articles like this, designed to help you in your SQL to NoSQL journey.
+
+Couchbase Server 7 beta is available right now for you to link:https://www.couchbase.com/downloads[download and try out]. Since this is a beta, any feedback or questions you have are much appreciated: check out the link:https://forums.couchbase.com/c/beta-support[Beta Support section] on the Couchbase forums for Couchbase 7 and other beta/preview releases.
