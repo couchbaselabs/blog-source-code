@@ -9,7 +9,7 @@
 
 SQL to NoSQL seems like a contradiction, but thanks to advances and innovations in Couchbase Server's NoSQL database, it's becoming easier.
 
-In this post, I'll introduce you to a tool called link:https://github.com/mgroves/SqlServerToCouchbase[SqlServerToCouchbase], an open-source attempt at an automated tool to help you "convert" a Microsoft SQL Server database into a Couchbase Server database. Along the way, we'll look at data migration strategies, comparisons between SQL and NoSQL terms, and trade-offs between the two types of databases. So even if you aren't using SQL Server or Couchbase Server, this article can help you in your conversion efforts.
+In this post, I'll introduce you to a tool called link:https://github.com/mgroves/SqlServerToCouchbase[SqlServerToCouchbase], an open-source attempt at an automated tool to help you "convert" a Microsoft SQL Server database into a Couchbase Server database. Along the way, we'll look at data migration strategies, comparisons between SQL and NoSQL terms, and trade-offs between the two types of databases. **Even if you aren't using SQL Server or Couchbase Server**, this article can help you in your conversion efforts.
 
 Before starting, keep in mind that moving between any two databases (SQL to NoSQL _or_ SQL to SQL) is much like translating between two languages. There are automations like Babelfish, Google Translate, and so on. These are very helpful tools for getting started, but aren't substitutes for (eventually) immersing yourself in the language.
 
@@ -34,11 +34,11 @@ If you're considering migrating data from SQL Server to Couchbase (or any relati
 | 5 | **Just Host It**: Host your schema with as few changes as possible. | 2/5 | 2/5 | ⭐⭐
 |==================
 
-Historically, NoSQL databases have focused on "Level 1" rebuilding or greenfield projects. While that approach achieves the most benefit from NoSQL from the beginning, rebuilds are always expensive and risky.
+Historically, NoSQL databases have focused on "Level 1" rebuilding or greenfield projects. While that approach captures the most benefit from NoSQL from the beginning, rebuilds are always expensive and risky.
 
 However, Couchbase Server, along with new capabilities coming in Couchbase Server 7 (you can download link:https://www.couchbase.com/downloads[Couchbase 7 beta right now]), allows a level 5 (followed by level 4) approach that reduces the risk and cost of trying out NoSQL. You won't necessarily reap *all* the benefits of NoSQL right away, but getting started is easier than ever.
 
-== Google Translate to convert from SQL to NoSQL
+== Convert from SQL to NoSQL
 
 Most developers and database users are familiar with relational databases. Schemas, tables, rows and columns, SQL queries, ACID transactions. Couchbase's query language (N1QL) has long recognized that SQL is the _lingua franca_ of databases. N1QL currently provides full SQL capabilities, including JOINs, robust indexing, aggregation, CTEs, and more. This makes it relatively straightforward for SQL developers to be productive even as newcomers to Couchbase's NoSQL offering.
 
@@ -66,6 +66,8 @@ I believe we can get most of the way there, and I've created an open-source proj
 == Database/Catalog to Bucket
 
 I'm going to use the link:https://docs.microsoft.com/en-us/sql/samples/adventureworks-install-configure#download-backup-files[AdventureWorks] samples provided by Microsoft in SQL Server. I'll be migrating to a Couchbase 7 database (link:couchbase.com/downloads[currently in beta], but will likely be RTM this year).
+
+NOTE: I'm using AdventureWorks2016 because that's what version of SQL Server I happen to have available. Most older and newer versions should work okay, but if you run into any problems, link:https://github.com/mgroves/SqlServerToCouchbase[please create a GitHub issue]!
 
 image:13002-sql-server-adventureworks.png[SQL Server with AdventureWorks]
 
@@ -173,17 +175,13 @@ The SqlServerToCouchbase utility will do a direct conversion of the SQL Server i
 For instance, an index on SQL Server:
 
 ```
-CREATE INDEX SalesTaxRate_StateProvinceID_TaxType ON Sales.SalesTaxRate
-(
-	StateProvinceID ASC,
-	TaxType ASC
-)
+CREATE INDEX SalesTaxRate_StateProvinceID_TaxType ON AdventureWorks2016.Sales.SalesTaxRate (StateProvinceID, TaxType)
 ```
 
 will become an index on Couchbase Server:
 
 ```
-CREATE INDEX sql_SalesTaxRate_StateProvinceID_TaxType ON AdventureWorks2016.Sales.SalesTaxRate(StateProvinceID, TaxType)
+CREATE INDEX sql_SalesTaxRate_StateProvinceID_TaxType ON AdventureWorks2016.Sales.SalesTaxRate (StateProvinceID, TaxType)
 ```
 
 Couchbase will convert all indexes, but the level of SQL Server indexing may be too high or too low, depending on the queries that you plan to execute. Fortunately, Couchbase Server 6.6 and newer has a built-in link:https://docs.couchbase.com/server/current/tools/query-workbench.html#index-advisor[Index Advisor] (a standalone link:https://index-advisor.couchbase.com/indexadvisor[web-based version is also available]), that will recommend indexes for any N1QL query you want.
@@ -267,11 +265,11 @@ In the meantime, some of the steps you'll need to look into:
 
 * You'll need to change the data access in your client to use a Couchbase SDK. For instance, if you're using ADO.NET, Dapper, PetaPoco, etc, you'll can use the link:https://docs.couchbase.com/dotnet-sdk/current/hello-world/start-using-sdk.html[Couchbase .NET SDK].
 
-* Using Entity Framework? Check out the link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase project]. (If you are using Java, check out link:https://spring.io/projects/spring-data-couchbase[Spring Data Couchbase]. If you're using Node, check out Ottoman.)
+* Using Entity Framework? Check out the link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase project]. (If you are using Java, check out link:https://spring.io/projects/spring-data-couchbase[Spring Data Couchbase].)
 
 * Couchbase does support ACID transactions! For .NET, link:https://www.nuget.org/packages/Couchbase.Transactions/1.0.0-beta.1[Couchbase.Transactions] are currently in beta. In Couchbase 7, N1QL also supports link:https://docs.couchbase.com/server/7.0/n1ql/n1ql-language-reference/begin-transaction.html[`BEGIN/COMMIT/ROLLBACK TRANSACTION`]
 
-* Couchbase's N1QL is a full SQL implementation. However, like all SQL dialects, there are differences between N1QL and tSQL. A few queries may work as is, but in most cases there are likely to be syntax difference. Check out the in-browser link:https://query-tutorial.couchbase.com/tutorial/[interactive N1QL tutorial].
+* Couchbase's N1QL is a full SQL implementation. However, like all SQL dialects, there are differences between N1QL and tSQL. A few queries may work as is, but in most cases there are likely to be syntax differences. Check out the in-browser link:https://query-tutorial.couchbase.com/tutorial/[interactive N1QL tutorial].
 
 * Looking for a similar approach with MySQL? Check out link:https://blog.couchbase.com/hands-on-migration-from-relational-to-collections/[Hands-on Migration From Relational to Collections] for a similar approach that uses Python / CLI.
 
@@ -281,4 +279,4 @@ In the meantime, some of the steps you'll need to look into:
 
 Couchbase Server 7 is set to be the biggest, most important release of Couchbase Server. Keep an eye on the Couchbase blog for more articles like this, designed to help you in your SQL to NoSQL journey.
 
-Couchbase Server 7 beta is available right now for you to link:https://www.couchbase.com/downloads[download and try out]. Since this is a beta, any feedback or questions you have are much appreciated: check out the link:https://forums.couchbase.com/c/beta-support[Beta Support section] on the Couchbase forums for Couchbase 7 and other beta/preview releases.
+Couchbase Server 7 beta is available right now for you to link:https://www.couchbase.com/downloads[download and try out]. Since this is a beta, any feedback or questions you have are much appreciated: check out the link:https://forums.couchbase.com/c/beta-support[Beta Support section] on the Couchbase forums for Couchbase Server 7 and other beta/preview releases.
