@@ -1,5 +1,5 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: SQL to NoSQL can be at least partially automated thanks to new features available in Couchbase Server 7, currently in beta.
 :title: SQL to NoSQL: Automated Migration
 :slug: sql-nosql-automated-migration
 :focus-keyword: SQL to NoSQL
@@ -14,7 +14,7 @@ In this post, I'll introduce you to a tool called link:https://github.com/mgrove
 Before starting, keep in mind that moving between any two databases (SQL to NoSQL _or_ SQL to SQL) is much like translating between two languages. There are automations like Babelfish, Google Translate, and so on. These are very helpful tools for getting started, but aren't substitutes for (eventually) immersing yourself in the language.
 
 +++
-<blockquote class="twitter-tweet"><p lang="und" dir="ltr"><a href="https://twitter.com/hashtag/googletranslatefails?src=hash&amp;ref_src=twsrc%5Etfw">#googletranslatefails</a> <a href="https://twitter.com/hashtag/overs%C3%A6ttelsesfejl?src=hash&amp;ref_src=twsrc%5Etfw">#oversættelsesfejl</a> <a href="https://t.co/SNNoGHBD1Q">pic.twitter.com/SNNoGHBD1Q</a></p>&mdash; EgoLibris (@egolibris) <a href="https://twitter.com/egolibris/status/864846974859849728?ref_src=twsrc%5Etfw">May 17, 2017</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+https://twitter.com/egolibris/status/864846974859849728
 +++
 
 Beyond the translation of syntax, there's also the idioms and culture that surrounds any technology. No automation tool can capture all of the nuance, but let's give it a try to see how far we can go.
@@ -42,7 +42,7 @@ However, Couchbase Server, along with new capabilities coming in Couchbase Serve
 
 Most developers and database users are familiar with relational databases. Schemas, tables, rows and columns, SQL queries, ACID transactions. Couchbase's query language (N1QL) has long recognized that SQL is the _lingua franca_ of databases. N1QL currently provides full SQL capabilities, including JOINs, robust indexing, aggregation, CTEs, and more. This makes it relatively straightforward for SQL developers to be productive even as newcomers to Couchbase's NoSQL offering.
 
-TIP: Check out link:https://www.techvalidate.com/product-research/couchbase/charts/2A1-8B3-4BC[Why Developers Value Couchbase] and other independent research from TechValidate.
+**Tip**: Check out link:https://www.techvalidate.com/product-research/couchbase/charts/2A1-8B3-4BC[Why Developers Value Couchbase] and other independent research from TechValidate.
 
 What if most of the other relational concepts could be translated and converted as easily? Let's look at how SQL Server concepts could be mapped to Couchbase Server concepts.
 
@@ -67,7 +67,7 @@ I believe we can get most of the way there, and I've created an open-source proj
 
 I'm going to use the link:https://docs.microsoft.com/en-us/sql/samples/adventureworks-install-configure#download-backup-files[AdventureWorks] samples provided by Microsoft in SQL Server. I'll be migrating to a Couchbase 7 database (link:couchbase.com/downloads[currently in beta], but will likely be RTM this year).
 
-NOTE: I'm using AdventureWorks2016 because that's what version of SQL Server I happen to have available. Most older and newer versions should work okay, but if you run into any problems, link:https://github.com/mgroves/SqlServerToCouchbase[please create a GitHub issue]!
+**Note**: I'm using AdventureWorks2016 because that's what version of SQL Server I happen to have available. Most older and newer versions should work okay, but if you run into any problems, link:https://github.com/mgroves/SqlServerToCouchbase[please create a GitHub issue]!
 
 image:13002-sql-server-adventureworks.png[SQL Server with AdventureWorks]
 
@@ -101,7 +101,7 @@ The SqlServerToCouchbase utility will create a collection for each table that it
 
 image:13007-couchbase-collection.png[Couchbase collection]
 
-TIP: Table names in SQL Server are allowed to be much longer than collection names in Couchbase Server. So, if you are migrating a database with long table names, you will have to explicitly provide a new, shorter collection name.
+**Tip**: Table names in SQL Server are allowed to be much longer than collection names in Couchbase Server. So, if you are migrating a database with long table names, you will have to explicitly provide a new, shorter collection name.
 
 == What about converting the SQL query?
 
@@ -186,7 +186,7 @@ CREATE INDEX sql_SalesTaxRate_StateProvinceID_TaxType ON AdventureWorks2016.Sale
 
 Couchbase will convert all indexes, but the level of SQL Server indexing may be too high or too low, depending on the queries that you plan to execute. Fortunately, Couchbase Server 6.6 and newer has a built-in link:https://docs.couchbase.com/server/current/tools/query-workbench.html#index-advisor[Index Advisor] (a standalone link:https://index-advisor.couchbase.com/indexadvisor[web-based version is also available]), that will recommend indexes for any N1QL query you want.
 
-NOTE: Couchbase Server does NOT allow the equivalent of full table scans (i.e. primary indexes) by default. The SqlServerToCouchbase utility does not create primary indexes for each collection. If you attempt to run a query and get an error message like "No index available on keyspace", this is your cue to try to use the Index Advisor. 
+**Note**: Couchbase Server does NOT allow the equivalent of full table scans (i.e. primary indexes) by default. The SqlServerToCouchbase utility does not create primary indexes for each collection. If you attempt to run a query and get an error message like "No index available on keyspace", this is your cue to try to use the Index Advisor. 
 
 You can also use the link:https://docs.couchbase.com/server/current/manage/monitor/monitoring-indexes.html[Couchbase Index monitor] to check the Index Request Rate (among other index characteristics). This may help you to identify indexes that you no longer need.
 
@@ -255,7 +255,7 @@ image:13009-couchbase-user-permissions-security.png[Couchbase user permissions a
 
 While SQL Server has only one API for working with data (tSQL), Couchbase has multiple: N1QL, key/value, full text search, analytics, and more. Hence the number of permissions converted to the user in Couchbase is larger. As you move up to "level 4", these can be tweaked as necessary.
 
-WARNING: Users, authentication, authorization, and security is an area where caution and manual review should definitely be exercised. Do not leave this step to be completely automated until you are sure the outcome is what you want.
+**Warning**: Users, authentication, authorization, and security is an area where caution and manual review should definitely be exercised. Do not leave this step to be completely automated until you are sure the outcome is what you want.
 
 == Next Steps
 
