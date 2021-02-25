@@ -5,7 +5,7 @@
 :focus-keyword: SQL to NoSQL
 :categories: Couchbase Server, .NET, N1QL
 :tags: ACID, SQL Server, Postgres, PostgreSQL
-:heroimage: TBA, request in to creative 
+:heroimage: 130-hero-sql-to-nosql-handoff.jpg
 
 SQL to NoSQL seems like a contradiction, but thanks to advances and innovations in Couchbase Server's NoSQL database, it's becoming easier.
 
