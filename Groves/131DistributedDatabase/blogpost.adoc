@@ -1,0 +1,98 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Distributed Databases: An Overview
+:slug: distributed-databases-overview
+:focus-keyword: distributed databases
+:categories: Couchbase Architecture, Couchbase Server, 
+:tags: architecture, distributed, distributed database, distributed databases
+:heroimage: TBD
+
+Distributed Databases apply the principles of distributed computing to storing data. The simplest definition of a distributed database is one which stores data on two (or more) different servers connected by a network that can be accessed and managed as if it was a single database server.
+
+This is opposed to the traditional single server model of a database, which exists on one server.
+
+The primary benefits of distributed databases include:
+
+* Clustering to handle load (horizontal scaling)
+* High availability (if one server goes offline, the remaining servers stay online and available)
+* Replication (to support high availability and/or to support disaster recovery)
+
+Among distributed databases, there are many different options, topoligies, and methods to distributed the load between the servers.
+
+== Horizontal Scaling
+
+A traditional single-server database model is constrained to one machine. Historically, a single database server that serves a relatively small set of applications and data has been fine. However, when exposed to a large, public user base, the only way to increase capacity of these servers is to upgrade them to more expensive server. Move the database software to another single machine with more memory, more disk space, more processors. This is known as "vertical scaling". The drawback to this approach is that it may require downtime, and there's a ceiling on the performance that can be obtained from a single machine. (See Herb Sutter's link:http://www.gotw.ca/publications/concurrency-ddj.htm[The Free Lunch is Over]).
+
+image:13101-vertical-scaling.png[Vertical scaling]
+
+Unfortunately, many databases, especially relational (RDBMS) databases were not originally architected to be distributed and clustered.
+
+Distributed databases were architected from the start to support elastic scalability. Need to add more resources to handle more load? Install the database software on 1 or more additional machines and add it to the cluster.
+
+image:13102-distributed-database-horizontal-scaling.png[Distributed Database horizontal scaling]
+
+With this approach, inexpensive commodity machines can be added to the cluster when necessary, and just as easily removed when no longer needed.
+
+== Distributed Database Architecture
+
+For databases, there are two popular approaches for distributing data: primary/secondary (historically called link:https://en.wikipedia.org/wiki/Master/slave_(technology)[master/slave]) and link:https://en.wikipedia.org/wiki/Shared-nothing_architecture[shared-nothing] (sometimes called masterless).
+
+=== Primary/Secondary Architecture
+
+In a primary/secondary archicture, there is a designated "primary" server. All data is stored on this server, and all data operations are routed to this server. There are then one or more "secondary" servers. These servers will receive data updates from the primary in order to stay in sync and store a complete replica of the data.
+
+If the primary server goes offline (crashes), one of the secondary servers will be appointed as the new primary server.
+
+image:13103-primary-secondary.png[Primary/Secondary aka Master/Slave]
+
+This architecture is often used to provide high availability to traditional, non-distributed databases. However, this architecture doesn't do much to address to issue of increased load. In order to accomplish that, _sharding_ must be used.
+
+=== Shared-nothing
+
+Shared-nothing architecture involves splitting the data up into partitions usually called "shards". Each shard lives on an individual server (node) in the cluster. For example, if there are 300 records and 3 nodes, each node would (ideally) store 100 records. Each additional node could further partition the data and continue spread out the load as necessary.
+
+image:13104-shared-nothing-distributed-databases.png[Distributed database shared nothing]
+
+Shards are also replicated between the nodes to maintain high availability. For instance, if Node 1 contains Active Shard A, then Node 2 would contain a Replica Shard A, and so on.
+
+Then, if Node 3 goes offline, the Replicas from Shard C are promoted to Active in order to keep the distributed database cluster online (as a whole).
+
+image:13105-distributed-database-failover.png[Distributed database high availability]
+
+The nature of relational databases is to store individual rows of data together in a tightly coupled table. This makes sharding difficult, and this is why so-called NoSQL databases are often used where clustering, high-availability, and replication are critical. NoSQL trades off strictly coupled data that cannot exist outside a table in exchange for independent data that can exist in any given shard in a cluster.
+
+== Distributed Database Examples
+
+Depending on the distributed database that you use, sharding may be completely automatic or require considerable effort to plan and maintain.
+
+Let's look at two examples of popular NoSQL distributed databases and how they differ:
+
+=== Couchbase Server
+
+Couchbase Server is a distributed NoSQL database that stores data as individual pieces of JSON data called documents. Each document has a unique key.
+
+Each document exists within a shard (called link:https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/vbuckets.html[vBuckets] in Couchbase), each each shard is assigned to a node. A Couchbase cluster has a fixed amount of 1024 total vBuckets.
+
+image:13106-couchbase-shards-vbuckets.png[Couchbase distributed database shards]
+
+Couchbase _automatically_ assigns a document to vBucket based on its key (using a CRC32 hashing algorithm). There is no need for developers, DBAs, or DevOps to create and manage sharding. All the shards remain in balance and the data is evenly distributed. There will be no "hot spots": one node storing much larger amounts of data than other nodes. And because data distribution is handled in this way, there is no need for any query routing or facade to stand between a client and a Couchbase Server cluster.
+
+=== MongoDB
+
+MongoDB is also a distributed NoSQL database. It also stores data as individual pieces in a format _similar_ to JSON called BSON. Each document has a unique key.
+
+MongoDB takes a different approach to sharding. In order to shard data, you must select a shard key (consisting of one or more pieces of BSON data). For instance, you might consider sharding data by "last name" and "zip code".
+
+Once you've defined a shard key, each client request must then be routed though another server that's running a "query router". This query router will refer to yet another server called a "config server". It can then determine which server that the desired shard is on.
+
+image:13107-manual-shard.png[Manual sharding]
+
+The sharding process is not automatic and shard keys must be carefully chosen and periodically reviewed in order to avoid bottlenecks and hot spots.
+
+=== Summary
+
+These are just two notable distributed database examples. There are many more examples that all take a variety of approaches.
+
+What they all have in common is that they store data on network connected servers. 
+
+Interested in the automatic sharding approach that Couchbase Server is taking? That's just scratching the surface of what Couchbase can do. With a built-in memory-first architecture, full text search, SQL querying capabilities, and more, Couchbase is a complete data platform. link:https://www.couchbase.com/downloads[Download Couchbase Server today] and give it a try.
