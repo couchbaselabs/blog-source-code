@@ -61,7 +61,7 @@ Then, if Node 3 goes offline, the cluster promotes the replicas from Shard C to 
 
 image:13105-distributed-database-failover.png[Distributed database high availability]
 
-The nature of relational databases is to store individual rows of data together in a tightly coupled table. This makes distributed sql databases difficult. This is why organizations often choose NoSQL where clustering, high-availability, and replication are critical. NoSQL trades off strictly coupled data that cannot exist outside a table in exchange for independent data that can exist in any given shard in a cluster.
+The nature of relational databases is to store individual rows of data together in a tightly coupled table. This makes distributed SQL databases difficult. This is why organizations often choose NoSQL where clustering, high-availability, and replication are critical. NoSQL trades off strictly coupled data that cannot exist outside a table in exchange for independent data that can exist in any given shard in a cluster.
 
 == Distributed Database Examples
 
