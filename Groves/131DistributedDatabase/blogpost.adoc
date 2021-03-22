@@ -5,7 +5,7 @@
 :focus-keyword: distributed databases
 :categories: Couchbase Architecture, Couchbase Server, 
 :tags: architecture, distributed, distributed database, distributed databases, distributed db
-:heroimage: TBD
+:heroimage: 130-hero-distributed-database.jpg
 
 Distributed Databases apply the principles of distributed computing to storing data. The simplest example is a database which stores data on two (or more) servers connected by a network. This "cluster" can be accessed and managed as if it was a single database server.
 
