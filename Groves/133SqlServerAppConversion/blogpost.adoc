@@ -1,0 +1,474 @@
+:imagesdir: images
+:meta-description: TBD
+:title: SQL and NoSQL comparison: ASP.NET application
+:slug: SQL-NoSQL-comparison-ASPNET-application
+:focus-keyword: SQL and NoSQL comparison
+:categories: Couchbase Server, .NET, N1QL
+:tags: ACID, SQL Server, ASP.NET
+:heroimage: TBD
+
+This SQL and NoSQL comparison is the next step after converting your SQL Server database to Couchbase. In link:https://blog.couchbase.com/sql-to-nosql-automated-migration/[the previous post], I copied AdventureWorks from SQL Server to Couchbase.
+
+In this post, I'm going to show an ASP.NET Core application that uses SQL Server, and how that same application would use Couchbase. If you'd like to follow along, you can check out the link:https://github.com/mgroves/SqlServerToCouchbase[SqlServerToCouchbase project] on GitHub.
+
+Unlike the previous post, I'm making no attempt at an "automatic" conversion of an application. Instead, think of this more as a SQL and NoSQL comparison at the application level.
+
+== ASP.NET SQL Server Applications
+
+I created a very simple ASP.NET Core REST API style application. I used Entity Framework, but if you're using Dapper, ADO.NET, NHibernate, etc, you should still be able to follow along.
+
+Each endpoint returns JSON. I've also added Swashbuckle to the project, so you can issue requests right from your browser via OpenAPI.
+
+== ASP.NET Couchbase Server Application
+
+The Couchbase version of the application returns the same data, because it's using the same SQL Server AdventureWorks data.
+
+In the application, I'm using the link:https://docs.couchbase.com/dotnet-sdk/current/hello-world/start-using-sdk.html[Couchbase .NET SDK] and link:https://docs.couchbase.com/dotnet-sdk/current/howtos/distributed-acid-transactions-from-the-sdk.html[Couchbase Transactions] libraries. (You could use link:https://github.com/couchbaselabs/Linq2Couchbase[Linq2Couchbase] as a type of Entity Framework replacement).
+
+Otherwise, the application is the same, providing a SQL and NoSQL comparison (and contrast). The endpoints are returning JSON, and Swashbuckle is installed.
+
+There's one controller in each sample. Let's go through each endpoint in the controller and perform a SQL and NoSQL comparison.
+
+== SQL to NoSQL Comparison: Get by ID
+
+Let's start with the `GetPersonByIdAsync` endpoint. Given a person ID, this endpoint returns the Person data for the given ID.
+
+=== SQL Server
+
+Here's the SQL Server example using Entity Framework:
+
+[source,C#,indent=0]
+----
+[HttpGet("/person/{personId}")]
+public async Task<IActionResult> GetPersonByIdAsync(int personId)
+{
+    var person = await _context.Persons
+        .SingleOrDefaultAsync(p => p.BusinessEntityID == personId);
+
+    return Ok(person);
+}
+----
+
+I also wrote another version of this method, called `GetPersonByIdRawAsync` which uses a "raw" SQL query.  This query is very similar to the one that Entity Framework (above) ultimately generates, and it's similar to a Dapper approach.
+
+[source,C#,indent=0]
+----
+[HttpGet("/personRaw/{personId}")]
+public async Task<IActionResult> GetPersonByIdRawAsync(int personId)
+{
+    var person = await _context.Persons
+        .FromSqlRaw(@"SELECT * FROM Person.Person WHERE BusinessEntityID = {0}", personId)
+        .SingleOrDefaultAsync();
+
+    return Ok(person);
+}
+----
+
+Note that either way, a SQL query is being executed.
+
+With N1QL, we could query the data in Couchbase in a very simlar way. Here's the `GetPersonByIdRawAsync` in the Couchbase project:
+
+[source,C#,indent=0]
+----
+[HttpGet("/personRaw/{personId}")]
+public async Task<IActionResult> GetPersonByIdRawAsync(int personId)
+{
+    var bucket = await _bucketProvider.GetBucketAsync();
+    var cluster = bucket.Cluster;
+    var personResult = await cluster.QueryAsync<Person>(@"
+        SELECT p.* FROM AdventureWorks2016.Person.Person p WHERE p.BusinessEntityID = $personId",
+        new QueryOptions().Parameter("personId", personId));
+    return Ok(await personResult.Rows.SingleOrDefaultAsync());
+}
+----
+
+(There's an extra step going from "bucket" to "cluster". This could be skipped, but I use bucket elsewhere in the controller, so I left it in).
+
+However, using a N1QL query involves some extra overhead (indexing, query parsing, etc). With Couchbase, if we already know the Person ID, we can skip a N1QL query and do a direct key/value (K/V) lookup.
+
+=== Get by ID with K/V
+
+The key is already known; it's given as an argument. So, instead of using SQL, let's do a key/value lookup. I did this in an endpoint method called `GetPersonByIdAsync`:
+
+[source,C#,indent=0]
+----
+[HttpGet("/person/{personId}")]
+public async Task<IActionResult> GetPersonByIdAsync(int personId)
+{
+    var bucket = await _bucketProvider.GetBucketAsync();
+    var scope = await bucket.ScopeAsync("Person");
+    var coll = await scope.CollectionAsync("Person");
+    var personDoc = await coll.GetAsync(personId.ToString());
+    return Ok(personDoc.ContentAs<Person>());
+}
+----
+
+Unlike SQL Server, Couchbase supports a variety of APIs to interact with data. In this case, the key/value lookup will be pulling the Person document directly from memory. There's no need to parse a SQL query or use any indexing. Key/value lookups in Couchbase will often be measured in microseconds.
+
+My advice: use the key/value lookup whenever you can.
+
+== Get an expanded entity by ID
+
+Data can be complex and span multiple tables (or multiple documents in the case of Couchbase). Depending on which tools you are using, you may have some functionality that can load related entities.
+
+For instance, with Entity Framework, you can use an `Include` to pull in related entites, as shown in this `GetPersonByIdExpandedAsync` example:
+
+[source,C#,indent=0]
+----
+[HttpGet("/personExpanded/{personId}")]
+public async Task<IActionResult> GetPersonByIdExpandedAsync(int personId)
+{
+    var person = await _context.Persons
+        .Include(p => p.EmailAddresses)
+        .SingleOrDefaultAsync(p => p.BusinessEntityID == personId);
+    
+    return Ok(person);
+}
+----
+
+Behind the scenes, Entity Framework may generate a JOIN and/or multiple SELECT queries to make this happen.
+
+This is where any O/RM (not just Entity Framework) can be dangerous. Make sure to use a tool like SQL profiler to see what queries are actually being run.
+
+For the Couchbase sample, I'm not using Entity Framework, but instead I can use the link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/nest.html[NEST syntax] that's part of the N1QL extensions on the SQL standard. Here's how it the Couchbase version of `GetPersonByIdExpandedAsync` looks:
+
+[source,C#,indent=0]
+----
+[HttpGet("/personExpanded/{personId}")]
+public async Task<IActionResult> GetPersonByIdExpandedAsync(int personId)
+{
+    var bucket = await _bucketProvider.GetBucketAsync();
+    var cluster = bucket.Cluster;
+    var personResult = await cluster.QueryAsync<Person>(@"
+        SELECT p.*, EmailAddresses
+        FROM AdventureWorks2016.Person.Person p
+        NEST AdventureWorks2016.Person.EmailAddress EmailAddresses ON EmailAddresses.BusinessEntityID = p.BusinessEntityID
+        WHERE p.BusinessEntityID = $personId",
+        new QueryOptions().Parameter("personId", personId));
+    return Ok(await personResult.Rows.SingleOrDefaultAsync());
+}
+----
+
+NEST is a kind of JOIN that puts the JOINed data into a nested JSON object. Instead of using an O/RM to map the data, this data can be directly serialized into C# objects.
+
+== Paging query
+
+Let's look at an example where we do NOT have a single key to look up a piece of data. Let's look at a method that returns a "page" of results (perhaps to populate a UI grid or list).
+
+=== Paging in SQL Server
+
+Here's the SQL Server version of `GetPersonsPageAsync`:
+
+[source,C#,indent=0]
+----
+[HttpGet("/persons/page/{pageNum}")]
+public async Task<IActionResult> GetPersonsPageAsync(int pageNum)
+{
+    var pageSize = 10;
+    var personPage = await _context.Persons
+        .OrderBy(p => p.LastName)
+        .Skip(pageNum * pageSize)
+        .Take(pageSize)
+        .Select(p => new { p.BusinessEntityID, p.FirstName, p.LastName })
+        .ToListAsync();
+    return Ok(personPage);
+}
+----
+
+With Entity Framework, `OrderBy`, `Skip`, and `Take` are typically used for paging. If we open up SQL Server Profiler, the SQL this generates looks something like this:
+
+[source,SQL,indent=0]
+----
+exec sp_executesql N'SELECT [p].[BusinessEntityID], [p].[FirstName], [p].[LastName]
+FROM [Person].[Person] AS [p]
+ORDER BY [p].[LastName]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_0 ROWS ONLY',N'@__p_0 int',@__p_0=10
+----
+
+`OFFSET ... ROWS FETCH NEXT ...` is the syntax being used for paging here.
+
+=== Paging in Couchbase
+
+Paging syntax always varies between SQL implementations. Couchbase leans more towards Oracle/MySQL syntax in this regard. Here's the Couchbase version of `GetPersonsPageAsync`:
+
+[source,SQL,indent=0]
+----
+[HttpGet("/persons/page/{pageNum}")]
+public async Task<IActionResult> GetPersonsPageAsync(int pageNum)
+{
+    var pageSize = 10;
+    var bucket = await _bucketProvider.GetBucketAsync();
+    var bucketName = bucket.Name;
+    var cluster = bucket.Cluster;
+
+    var personPage = await cluster.QueryAsync<Person>($@"
+        SELECT p.LastName, p.BusinessEntityID, p.FirstName
+        FROM `{bucketName}`.Person.Person p
+        WHERE p.LastName IS NOT MISSING
+        ORDER BY p.LastName
+        LIMIT {pageSize} OFFSET {(pageNum * pageSize)}
+    ");
+
+    return Ok(await personPage.Rows.ToListAsync());
+}
+----
+
+In this case, `LIMIT ... OFFSET ...` is being used.
+
+I also want to point out the `WHERE p.LastName IS NOT MISSING`. Because Couchbase is a NoSQL database, the query engine cannot assume that `LastName` will be in every document, even with `ORDER BY p.LastName`. So, by adding this `WHERE` clause, the query now knows which index to use. Without this, the query will take much, much longer to run.
+
+== Update with an ACID transaction
+
+With the relational-style model that we're using in both SQL Server and Couchbase for this example, ACID transactions will be important for both applications. 
+
+In these examples, there is a `PersonUpdateApi` which will allow the user to update *both* a person's name and their email address. Since this data is in two separate tables/rows (SQL Server) or two separate documents (Couchbase), we want this to be an all-or-nothing, atomic operation.
+
+NOTE: An ID is specified for both (to simplify the API), since it's possible (but rare in this dataset) for a person to have multiple email addresses.
+
+=== ACID with Entity Framework
+
+Here's an example of an ACID transaction using Entity Framework to update both a row of data in the Person table and a row of data in the EmailAddress table. 
+
+[source,C#,indent=0]
+----
+[HttpPut("/person")]
+public async Task<IActionResult> UpdatePurchaseOrderAsync(PersonUpdateApi personUpdateApi)
+{
+    var transaction = await _context.Database.BeginTransactionAsync();
+
+    try
+    {
+        // find the person
+        var person = await _context.Persons
+            .Include(p => p.EmailAddresses)
+            .SingleOrDefaultAsync(p => p.BusinessEntityID == personUpdateApi.PersonId);
+
+        // update name
+        person.FirstName = personUpdateApi.FirstName;
+        person.LastName = personUpdateApi.LastName;
+
+        // get the particular email address and update it
+        // if the supplied ID is invalid, this will throw an exception
+        var email = person.EmailAddresses.Single(e =>
+            e.EmailAddressID == personUpdateApi.EmailAddressId);
+        email.EmailAddress = personUpdateApi.EmailAddress;
+
+        await _context.SaveChangesAsync();
+
+        // commit transaction
+        await transaction.CommitAsync();
+
+        return Ok($"Person {personUpdateApi.PersonId} name and email updated.");
+    }
+    catch (Exception ex)
+    {
+        await transaction.RollbackAsync();
+        return BadRequest("Something went wrong, transaction rolled back");
+    }
+}
+----
+
+Note the four main parts of a transaction:
+
+1. Begin transaction (`_context.Database.BeginTransactionAsync();`)
+2. `try`/`catch`
+3. Commit transaction (`await transaction.CommitAsync();`)
+4. Rollback transaction in the `catch` (`transaction.RollbackAsync();`)
+
+=== ACID with a Couchbase transaction
+
+With Couchbase, the API is slightly different, but the same steps are all there:
+
+[source,C#,indent=0]
+----
+[HttpPut("/person")]
+public async Task<IActionResult> UpdatePurchaseOrderAsync(PersonUpdateApi personUpdateApi)
+{
+    // setup bucket, cluster, and collections
+    var bucket = await _bucketProvider.GetBucketAsync();
+    var scope = await bucket.ScopeAsync("Person");
+    var personColl = await scope.CollectionAsync("Person");
+    var emailColl = await scope.CollectionAsync("EmailAddress");
+
+    // create transaction
+    var cluster = bucket.Cluster;
+    var transaction = Transactions.Create(cluster,
+        TransactionConfigBuilder.Create()
+            .DurabilityLevel(DurabilityLevel.None)
+            .Build());
+
+    try
+    {
+        await transaction.RunAsync(async (context) =>
+        {
+            // update person and email documents
+            // based on values passed in API object
+            var personKey = personUpdateApi.PersonId.ToString();
+            var emailKey = personKey + "::" + personUpdateApi.EmailAddressId.ToString();
+            var person = await context.GetAsync(personColl, personKey);
+            var email = await context.GetAsync(emailColl, emailKey);
+
+            var personDoc = person.ContentAs<dynamic>();
+            var emailDoc = email.ContentAs<dynamic>();
+
+            personDoc.FirstName = personUpdateApi.FirstName;
+            personDoc.LastName = personUpdateApi.LastName;
+            emailDoc.EmailAddress = personUpdateApi.EmailAddress;
+
+            await context.ReplaceAsync(person, personDoc);
+            await context.ReplaceAsync(email, emailDoc);
+        });
+        return Ok($"Person {personUpdateApi.PersonId} name and email updated.");
+    }
+    catch (Exception ex)
+    {
+        return BadRequest("Something went wrong, transaction rolled back.");
+    }
+}
+----
+
+The same main steps are:
+
+1. Begin transaction (`transaction.RunAsync( ... )`)
+2. `try`/`catch`
+3. Commit transaction (implied, but `context.CommitAsync()` could be used)
+4. Rollback transaction (again, implied, but `context.RollbackAsync()` could be used).
+
+In both cases, we have an ACID transaction. *Unlike* SQL Server, however, we can *later* optimize and consolidate the data in Couchbase to reduce the amount of ACID transactions that we need and increase performance.
+
+== Stored Procedure
+
+Stored procedures are a sometimes controversial topic. Generally speaking, they can contain a lot of functionality and logic.
+
+=== Stored Procedure in SQL Server
+
+I've created a stored procedured called "ListSubcomponents" (you can view the link:https://github.com/mgroves/SqlServerToCouchbase[full details on GitHub]). With Entity Framework, you can use `FromSqlRaw` to execute it and map the results to C# objects. I've created a psuedo-entity C# object called `ListSubcomponents` that's used just for this sproc:
+
+[source,C#,indent=0]
+----
+// sproc example - see ExampleStoredProcedure.sql
+[HttpGet("/getListSubcomponents/{listPriceMin}/{listPriceMax}")]
+public async Task<IActionResult> GetListSubcomponents(decimal listPriceMin, decimal listPriceMax)
+{
+    var listPriceMinParam = new SqlParameter("@ListPriceMin", SqlDbType.Decimal) {Value = listPriceMin };
+    var listPriceMaxParam = new SqlParameter("@ListPriceMax", SqlDbType.Decimal) {Value = listPriceMax };
+
+    var result = await _context.ListSubcomponents
+        .FromSqlRaw("EXECUTE dbo.ListSubcomponents @ListPriceMin, @ListPriceMax", listPriceMinParam, listPriceMaxParam)
+        .ToListAsync();
+
+    return Ok(result);
+}
+----
+
+The stored procedure has two parameters.
+
+=== Couchbase User-defined function
+
+Couchbase doesn't have anything called a "stored procedure" (yet), but it does have something called a user-defined function (UDF) that can also contain complex logic when necessary.
+
+I created a UDF called `ListSubcomponents` (which you can also link:https://github.com/mgroves/SqlServerToCouchbase[view on GitHub]) which matches the functionality of the SQL Server sproc.
+
+Here's how to execute that UDF from ASP.NET:
+
+[source,C#,indent=0]
+----
+// sproc example - see ExampleStoredProcedure.sql
+[HttpGet("/getListSubcomponents/{listPriceMin}/{listPriceMax}")]
+public async Task<IActionResult> GetListSubcomponents(decimal listPriceMin, decimal listPriceMax)
+{
+    var bucket = await _bucketProvider.GetBucketAsync();
+    var cluster = bucket.Cluster;
+
+    var options = new QueryOptions();
+    options.Parameter("$listPriceMin", listPriceMin);
+    options.Parameter("$listPriceMax", listPriceMax);
+
+    var result = await cluster.QueryAsync<ListSubcomponent>(
+        "SELECT l.* FROM ListSubcomponents($listPriceMin, $listPriceMax) l", options);
+
+    return Ok(await result.Rows.ToListAsync());
+}
+----
+
+Invoking it in Couchbase with two parameters is very similar to using FromSqlRaw with Entity Framework.
+
+== Performance Comparison
+
+Now that I've converted the app over to use Couchbase, does the new version run at least as fast as the old SQL Server version?
+
+It's a complicated question to answer because:
+
+* I haven't made ANY optimizations to the data model. I'm still using the literal conversion of data from the link:https://blog.couchbase.com/sql-to-nosql-automated-migration/[the previous post].
+
+* Data access can vary wildly from use case to use case.
+
+* Environments can vary wildly from person to person, company to company.
+
+However, I wanted to do some 'back of the envelope' load testing, just for sanity checking purposes.
+
+I ran both applications on my local machine, and I used link:https://ngrok.com[ngrok] to expose them to the internet. I then used link:https://loader.io/[loader.io] (which I found to be an excellent tool for load testing with concurrency). I then ran some quick performance tests against only the 'paging' endpoint. This is the endpoint I'm most concerned about for performance, and I also think it's the most "apples to apples" among the endpoints.
+
+=== Load testing results
+
+Here's the results of the SQL Server application:
+
+image:13301-sql-server-loader-performance.png[SQL Server performance testing]
+
+And here's the results of the Couchbase Server application:
+
+image:13302-couchbase-server-loader-performance.png[Couchbase Server performance testing]
+
+=== Intepreting the results
+
+This is not meant to be a benchmark or a point of data saying "Couchbase is faster than SQL Server".
+
+It is only meant to be a sanity check. If I'm not getting at least as good performance under load as I was before, maybe I'm doing something wrong. This is a crucial benefit to the link:https://blog.couchbase.com/proof-of-concept-move-relational/[proof of concept]  process. Even though Couchbase, especially Couchbase 7, is very relational-friendly, there are still differences and nuances between *every* database, and this process will help you identify the differences that matter most to you and your project.
+
+If you are looking for more robust benchmarks, here are some resources that you can check out:
+
+* link:https://www.couchbase.com/benchmarks[Benchmark Reports from Altoros] (3rd party)
+* link:https://blog.couchbase.com/nosql-dbaas-benchmarks-couchbase-dynamodb-mongodb/[Cloud Benchmarks]
+* Couchbase Server link:http://showfast.sc.couchbase.com/#/timeline/Linux/kv/max_ops/all["ShowFast" benchmarks]
+
+== Conclusion
+
+The conversion and comparison of the application code, combined with some very basic load testing shows me that I can:
+
+* Host a relational data model as-is, no modeling changes
+
+* Convert ASP.NET endpoint(s) over to use the Couchbase SDK
+
+* Expect at least as good performance to start, with plenty of room to scale and improve, at a low risk.
+
+Your use case may vary, but also remember that during this conversion, Couchbase has given me:
+
+* Easy link:https://docs.couchbase.com/server/7.0/introduction/why-couchbase.html#scale-out-archi[horizontal scalability]
+* link:https://docs.couchbase.com/server/7.0/introduction/why-couchbase.html#ha[High availability]
+* link:https://docs.couchbase.com/server/7.0/introduction/why-couchbase.html#mem-first-archi[Built-in caching]
+* link:https://docs.couchbase.com/server/7.0/introduction/why-couchbase.html#core-db-engine[Schema flexibility] (which is probably why you're looking to use Couchbase in the first place).
+
+== Appendix
+
+Here is a succint guide to the conversions that I made in the application.
+
+[options="header"]
+|====
+| SQL Server operation | Couchbase operation
+| Read/write one row/entity | link:https://docs.couchbase.com/dotnet-sdk/current/howtos/kv-operations.html[Key/value lookup(s)]
+| Read/write multiple rows/pages | link:https://docs.couchbase.com/dotnet-sdk/current/howtos/n1ql-queries-with-sdk.html[N1QL query]
+| SELECT one entity with related entities | N1QL query with link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/nest.html[NEST]
+| BeginTransaction | link:https://docs.couchbase.com/dotnet-sdk/current/howtos/distributed-acid-transactions-from-the-sdk.html[Transaction.Create]
+| Stored Procedure | link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/userfun.html[UDF] (link:https://docs.couchbase.com/server/7.0/eventing/eventing-overview.html[Eventing] may also be useful here)
+|====
+
+Reminders:
+
+1. Switch to key/value API when you can
+2. Make sure to use indexing, indexing plan visualization, and index advisor when writing N1QL
+3. Use an ACID transaction (only) when you need to
+4. Think about your performance goals, establish a way to test
+
+== Next steps
+
+Check out link:https://www.couchbase.com/downloads[Couchbase Server 7, currently in beta], today. It's a free download. Try loading your relational data into it, converting a few endpoints over, and see if the process works for you.
