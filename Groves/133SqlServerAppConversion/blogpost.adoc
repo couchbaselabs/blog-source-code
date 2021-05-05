@@ -1,11 +1,11 @@
 :imagesdir: images
-:meta-description: TBD
+:meta-description: This SQL and NoSQL comparison shows the application code and queries for both SQL Server and Couchbase, including paging, SQL, load testing.
 :title: SQL and NoSQL comparison: ASP.NET application
 :slug: SQL-NoSQL-comparison-ASPNET-application
 :focus-keyword: SQL and NoSQL comparison
-:categories: Couchbase Server, .NET, N1QL
+:categories: Couchbase Server, .NET, N1QL, Transactions
 :tags: ACID, SQL Server, ASP.NET
-:heroimage: TBD
+:heroimage: (in progress)
 
 This SQL and NoSQL comparison is the next step after converting your SQL Server database to Couchbase. In link:https://blog.couchbase.com/sql-to-nosql-automated-migration/[the previous post], I copied AdventureWorks from SQL Server to Couchbase.
 
@@ -29,7 +29,7 @@ Otherwise, the application is the same, providing a SQL and NoSQL comparison (an
 
 There's one controller in each sample. Let's go through each endpoint in the controller and perform a SQL and NoSQL comparison.
 
-== SQL to NoSQL Comparison: Get by ID
+== SQL and NoSQL Comparison: Get by ID
 
 Let's start with the `GetPersonByIdAsync` endpoint. Given a person ID, this endpoint returns the Person data for the given ID.
 
@@ -129,6 +129,8 @@ public async Task<IActionResult> GetPersonByIdExpandedAsync(int personId)
 Behind the scenes, Entity Framework may generate a JOIN and/or multiple SELECT queries to make this happen.
 
 This is where any O/RM (not just Entity Framework) can be dangerous. Make sure to use a tool like SQL profiler to see what queries are actually being run.
+
+NOTE: O/RMs can help, but in a SQL to NoSQL comparison, it's important to remember that impedence mismatch is much less of a problem in the NoSQL world.
 
 For the Couchbase sample, I'm not using Entity Framework, but instead I can use the link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/nest.html[NEST syntax] that's part of the N1QL extensions on the SQL standard. Here's how it the Couchbase version of `GetPersonByIdExpandedAsync` looks:
 
@@ -275,6 +277,8 @@ Note the four main parts of a transaction:
 3. Commit transaction (`await transaction.CommitAsync();`)
 4. Rollback transaction in the `catch` (`transaction.RollbackAsync();`)
 
+This is an important feature where a SQL and NoSQL comparison has changed in recent years. With Couchbase, ACID transactions are possible now.
+
 === ACID with a Couchbase transaction
 
 With Couchbase, the API is slightly different, but the same steps are all there:
@@ -336,7 +340,7 @@ The same main steps are:
 
 In both cases, we have an ACID transaction. *Unlike* SQL Server, however, we can *later* optimize and consolidate the data in Couchbase to reduce the amount of ACID transactions that we need and increase performance.
 
-== Stored Procedure
+== Stored Procedures: a SQL and NoSQL comparison
 
 Stored procedures are a sometimes controversial topic. Generally speaking, they can contain a lot of functionality and logic.
 
@@ -393,7 +397,7 @@ public async Task<IActionResult> GetListSubcomponents(decimal listPriceMin, deci
 
 Invoking it in Couchbase with two parameters is very similar to using FromSqlRaw with Entity Framework.
 
-== Performance Comparison
+== Performance - SQL to NoSQL Comparison
 
 Now that I've converted the app over to use Couchbase, does the new version run at least as fast as the old SQL Server version?
 
@@ -407,19 +411,19 @@ It's a complicated question to answer because:
 
 However, I wanted to do some 'back of the envelope' load testing, just for sanity checking purposes.
 
-I ran both applications on my local machine, and I used link:https://ngrok.com[ngrok] to expose them to the internet. I then used link:https://loader.io/[loader.io] (which I found to be an excellent tool for load testing with concurrency). I then ran some quick performance tests against only the 'paging' endpoint. This is the endpoint I'm most concerned about for performance, and I also think it's the most "apples to apples" among the endpoints.
+I ran both applications on my local machine, and I used link:https://ngrok.com[ngrok] to expose them to the internet. I then used link:https://loader.io/[loader.io] (which I found to be an excellent tool for load testing with concurrency). I then ran some quick performance tests against only the 'paging' endpoint. This is the endpoint I'm most concerned about for performance, and I also think it's the most "apples to apples" SQL and NoSQL comparison among the endpoints.
 
-=== Load testing results
+=== Load testing SQL and NoSQL comparison
 
 Here's the results of the SQL Server application:
 
-image:13301-sql-server-loader-performance.png[SQL Server performance testing]
+image:13301-sql-server-loader-performance.png[SQL and NoSQL comparison - SQL Server load testing]
 
 And here's the results of the Couchbase Server application:
 
-image:13302-couchbase-server-loader-performance.png[Couchbase Server performance testing]
+image:13302-couchbase-server-loader-performance.png[SQL and NoSQL comparison - Couchbase Server load testing]
 
-=== Intepreting the results
+=== Intepreting the results of the SQL and NoSQL comparison load test
 
 This is not meant to be a benchmark or a point of data saying "Couchbase is faster than SQL Server".
 
@@ -433,7 +437,7 @@ If you are looking for more robust benchmarks, here are some resources that you 
 
 == Conclusion
 
-The conversion and comparison of the application code, combined with some very basic load testing shows me that I can:
+The SQL and NoSQL comparison and conversion of the application code, combined with some very basic load testing shows me that I can:
 
 * Host a relational data model as-is, no modeling changes
 
@@ -450,7 +454,7 @@ Your use case may vary, but also remember that during this conversion, Couchbase
 
 == Appendix
 
-Here is a succint guide to the conversions that I made in the application.
+Here is a succint guide to the SQL and NoSQL comparison that I made in the application.
 
 [options="header"]
 |====
