@@ -66,7 +66,7 @@ public async Task<IActionResult> GetPersonByIdRawAsync(int personId)
 
 Note that either way, a SQL query is being executed.
 
-With N1QL, we could query the data in Couchbase in a very simlar way. Here's the `GetPersonByIdRawAsync` in the Couchbase project:
+With N1QL, we could query the data in Couchbase in a very similar way. Here's the `GetPersonByIdRawAsync` in the Couchbase project:
 
 [source,C#,indent=0]
 ----
@@ -88,7 +88,7 @@ However, using a N1QL query involves some extra overhead (indexing, query parsin
 
 === Get by ID with K/V
 
-The key is already known; it's given as an argument. So, instead of using SQL, let's do a key/value lookup. I did this in an endpoint method called `GetPersonByIdAsync`:
+The key is already known; it's given as an argument. Instead of using SQL, let's do a key/value lookup. I did this in an endpoint method called `GetPersonByIdAsync`:
 
 [source,C#,indent=0]
 ----
@@ -111,7 +111,7 @@ My advice: use the key/value lookup whenever you can.
 
 Data can be complex and span multiple tables (or multiple documents in the case of Couchbase). Depending on which tools you are using, you may have some functionality that can load related entities.
 
-For instance, with Entity Framework, you can use an `Include` to pull in related entites, as shown in this `GetPersonByIdExpandedAsync` example:
+For instance, with Entity Framework, you can use an `Include` to pull in related entities, as shown in this `GetPersonByIdExpandedAsync` example:
 
 [source,C#,indent=0]
 ----
@@ -128,11 +128,11 @@ public async Task<IActionResult> GetPersonByIdExpandedAsync(int personId)
 
 Behind the scenes, Entity Framework may generate a JOIN and/or multiple SELECT queries to make this happen.
 
-This is where any O/RM (not just Entity Framework) can be dangerous. Make sure to use a tool like SQL profiler to see what queries are actually being run.
+This is where any O/RM (not just Entity Framework) can be dangerous. Make sure to use a tool like SQL Profiler to see what queries are actually being run.
 
-NOTE: O/RMs can help, but in a SQL to NoSQL comparison, it's important to remember that impedence mismatch is much less of a problem in the NoSQL world.
+NOTE: O/RMs can help, but in a SQL to NoSQL comparison, it's important to remember that impedance  mismatch is much less of a problem in the NoSQL world.
 
-For the Couchbase sample, I'm not using Entity Framework, but instead I can use the link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/nest.html[NEST syntax] that's part of the N1QL extensions on the SQL standard. Here's how it the Couchbase version of `GetPersonByIdExpandedAsync` looks:
+For the Couchbase sample, I'm not using Entity Framework, but instead I can use the link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/nest.html[NEST syntax] that's part of the N1QL extensions on the SQL standard. Here's how the Couchbase version of `GetPersonByIdExpandedAsync` looks:
 
 [source,C#,indent=0]
 ----
@@ -217,7 +217,7 @@ public async Task<IActionResult> GetPersonsPageAsync(int pageNum)
 
 In this case, `LIMIT ... OFFSET ...` is being used.
 
-I also want to point out the `WHERE p.LastName IS NOT MISSING`. Because Couchbase is a NoSQL database, the query engine cannot assume that `LastName` will be in every document, even with `ORDER BY p.LastName`. So, by adding this `WHERE` clause, the query now knows which index to use. Without this, the query will take much, much longer to run.
+I also want to point out the `WHERE p.LastName IS NOT MISSING`. Because Couchbase is a NoSQL database, the query engine cannot assume that `LastName` will be in every document, even with `ORDER BY p.LastName`. By adding this `WHERE` clause, the query now knows which index to use. Without this, the query will take much longer to run.
 
 == Update with an ACID transaction
 
@@ -277,7 +277,7 @@ Note the four main parts of a transaction:
 3. Commit transaction (`await transaction.CommitAsync();`)
 4. Rollback transaction in the `catch` (`transaction.RollbackAsync();`)
 
-This is an important feature where a SQL and NoSQL comparison has changed in recent years. With Couchbase, ACID transactions are possible now.
+This is an important feature where a SQL and NoSQL comparison has changed in recent years. With Couchbase, ACID transactions are now possible.
 
 === ACID with a Couchbase transaction
 
@@ -346,7 +346,7 @@ Stored procedures are a sometimes controversial topic. Generally speaking, they 
 
 === Stored Procedure in SQL Server
 
-I've created a stored procedured called "ListSubcomponents" (you can view the link:https://github.com/mgroves/SqlServerToCouchbase[full details on GitHub]). With Entity Framework, you can use `FromSqlRaw` to execute it and map the results to C# objects. I've created a psuedo-entity C# object called `ListSubcomponents` that's used just for this sproc:
+I've created a stored procedure called "ListSubcomponents" (you can view the link:https://github.com/mgroves/SqlServerToCouchbase[full details on GitHub]). With Entity Framework, you can use `FromSqlRaw` to execute it and map the results to C# objects. I've created a pseudo-entity C# object called `ListSubcomponents` that's used just for this sproc:
 
 [source,C#,indent=0]
 ----
@@ -399,35 +399,37 @@ Invoking it in Couchbase with two parameters is very similar to using FromSqlRaw
 
 == Performance - SQL to NoSQL Comparison
 
-Now that I've converted the app over to use Couchbase, does the new version run at least as fast as the old SQL Server version?
+Now that I've converted the app to use Couchbase, does the new version run at least as fast as the old SQL Server version?
 
 It's a complicated question to answer because:
 
-* I haven't made ANY optimizations to the data model. I'm still using the literal conversion of data from the link:https://blog.couchbase.com/sql-to-nosql-automated-migration/[the previous post].
+* I haven't made ANY optimizations to the data model. I'm still using the literal conversion of data from link:https://blog.couchbase.com/sql-to-nosql-automated-migration/[the previous post].
 
 * Data access can vary wildly from use case to use case.
 
 * Environments can vary wildly from person to person, company to company.
 
-However, I wanted to do some 'back of the envelope' load testing, just for sanity checking purposes.
+However, I wanted to do some 'back of the envelope' load testing as a sanity check.
 
-I ran both applications on my local machine, and I used link:https://ngrok.com[ngrok] to expose them to the internet. I then used link:https://loader.io/[loader.io] (which I found to be an excellent tool for load testing with concurrency). I then ran some quick performance tests against only the 'paging' endpoint. This is the endpoint I'm most concerned about for performance, and I also think it's the most "apples to apples" SQL and NoSQL comparison among the endpoints.
+I ran both applications on my local machine, and I used link:https://ngrok.com[ngrok] to expose them to the Internet. I then used link:https://loader.io/[loader.io] (an excellent tool for load testing with concurrency). I then ran some quick performance tests against only the 'paging' endpoint. This is the endpoint I'm most concerned about for performance, and I also think it's the most "apples to apples" SQL and NoSQL comparison among the endpoints.
 
 === Load testing SQL and NoSQL comparison
 
-Here's the results of the SQL Server application:
+Here are the results of the SQL Server application:
 
 image:13301-sql-server-loader-performance.png[SQL and NoSQL comparison - SQL Server load testing]
 
-And here's the results of the Couchbase Server application:
+And here are the results of the Couchbase Server application:
 
 image:13302-couchbase-server-loader-performance.png[SQL and NoSQL comparison - Couchbase Server load testing]
 
-=== Intepreting the results of the SQL and NoSQL comparison load test
+=== Interpreting the results of the SQL and NoSQL comparison load test
 
-This is not meant to be a benchmark or a point of data saying "Couchbase is faster than SQL Server".
+This is not meant to be a benchmark or data point saying "Couchbase is faster than SQL Server".
 
-It is only meant to be a sanity check. If I'm not getting at least as good performance under load as I was before, maybe I'm doing something wrong. This is a crucial benefit to the link:https://blog.couchbase.com/proof-of-concept-move-relational/[proof of concept]  process. Even though Couchbase, especially Couchbase 7, is very relational-friendly, there are still differences and nuances between *every* database, and this process will help you identify the differences that matter most to you and your project.
+It is only meant to be a sanity check.
+
+If I'm not getting at least as good performance under load as I was before, maybe I'm doing something wrong. This is a crucial benefit to the link:https://blog.couchbase.com/proof-of-concept-move-relational/[proof of concept]  process. Even though Couchbase, especially Couchbase 7, is very relational-friendly, there are still differences and nuances between *every* database, and this process will help you identify the differences that matter most to you and your project.
 
 If you are looking for more robust benchmarks, here are some resources that you can check out:
 
@@ -441,11 +443,11 @@ The SQL and NoSQL comparison and conversion of the application code, combined wi
 
 * Host a relational data model as-is, no modeling changes
 
-* Convert ASP.NET endpoint(s) over to use the Couchbase SDK
+* Convert ASP.NET endpoint(s) to use the Couchbase SDK
 
 * Expect at least as good performance to start, with plenty of room to scale and improve, at a low risk.
 
-Your use case may vary, but also remember that during this conversion, Couchbase has given me:
+Your use case may vary, but also remember that during this conversion, Couchbase gave us:
 
 * Easy link:https://docs.couchbase.com/server/7.0/introduction/why-couchbase.html#scale-out-archi[horizontal scalability]
 * link:https://docs.couchbase.com/server/7.0/introduction/why-couchbase.html#ha[High availability]
@@ -454,7 +456,7 @@ Your use case may vary, but also remember that during this conversion, Couchbase
 
 == Appendix
 
-Here is a succint guide to the SQL and NoSQL comparison that I made in the application.
+Here is a succinct guide to the SQL and NoSQL comparison that I made in the application.
 
 [options="header"]
 |====
@@ -469,10 +471,10 @@ Here is a succint guide to the SQL and NoSQL comparison that I made in the appli
 Reminders:
 
 1. Switch to key/value API when you can
-2. Make sure to use indexing, indexing plan visualization, and index advisor when writing N1QL
+2. Use indexing, indexing plan visualization, and index advisor when writing N1QL
 3. Use an ACID transaction (only) when you need to
-4. Think about your performance goals, establish a way to test
+4. Think about performance goals, and establish a way to test
 
 == Next steps
 
-Check out link:https://www.couchbase.com/downloads[Couchbase Server 7, currently in beta], today. It's a free download. Try loading your relational data into it, converting a few endpoints over, and see if the process works for you.
+Check out link:https://www.couchbase.com/downloads[Couchbase Server 7, currently in beta], today. It's a free download. Try loading your relational data into it, converting a few endpoints, and see if the process works for you.
