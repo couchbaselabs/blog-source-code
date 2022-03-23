@@ -1,0 +1,74 @@
+:imagesdir: images
+:meta-description: TBD
+:title: ASP.NET Core CRUD with NoSQL: Part 1
+:slug: asp-net-crud-nosql
+:focus-keyword: asp.net crud nosql, asp.net crud
+:categories: Couchbase Server, .NET
+:tags: ASP.NET, C#
+:heroimage: TBD
+
+== CRUD: R is for Read
+
+Let's start with a simple endpoint to get all the items in the list (let's call it GetAll).
+
+[source,C#,indent=0]
+----
+    [HttpGet]
+    [Route("api/getall")]
+    public async Task<IActionResult> GetAll()
+    {
+
+    }
+----
+
+The easiest way to do this is to write a SQL++ query (SQL for JSON, supported by Couchbase). Let's try out a query in Couchbase's Query Workbench.
+
+[source,SQL,indent=0]
+----
+SELECT META(w).id, w.* FROM demo._default.wishlist w;
+----
+	
+This query fails, because there is no matching index.
+Let's create an index on this collection.
+
+[source,SQL,indent=0]
+----
+CREATE PRIMARY INDEX ix_wishlist ON demo._default.wishlist;
+----
+
+Now run the query again, and it works.
+
+So, let's code this in C#. Go back to the GetAll method.
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Controllers/GiftsController.cs[tag=getall]
+----
+
+Some notes:
+* ScanConsistency - I'm not going to go into much detail, check out the documentation for more on scanconsistency options. 	The short version is that this will give us the most complete results. But the tradeoff is a bit of a performance penalty. For this small demo application we won't even notice.
+* Make sure you have the following `using`s:
+
+[source,C#,indent=0]
+----
+		using AspNetCoreTutorial.Models;
+		using Microsoft.AspNetCore.Mvc;
+		using Couchbase;
+		using Couchbase.Query;
+		using Couchbase.Extensions.DependencyInjection;
+----
+
+From Visual Studio, Ctrl+F5 will start the app. You should see an OpenAPI / Swagger page in your browser.
+
+*** openapi screenshot ***
+
+(Ignore WeatherForecast, that just came with the Visual Studio template).
+
+Try out the `/api/getall` example:
+
+*** screenshot ***
+
+
+== Maybe part 3?
+
+Next: build another "R" (read) endpoint to retrieve a single wishlist item. And another endpoint to delete a single wishlist item.

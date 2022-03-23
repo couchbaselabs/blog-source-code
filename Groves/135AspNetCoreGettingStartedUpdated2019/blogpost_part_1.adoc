@@ -1,0 +1,151 @@
+:imagesdir: images
+:meta-description: TBD
+:title: ASP.NET Core CRUD with NoSQL: Part 1
+:slug: asp-net-crud-nosql
+:focus-keyword: asp.net crud nosql, asp.net crud
+:categories: Couchbase Server, .NET
+:tags: ASP.NET, C#
+:heroimage: TBD
+
+Let's build an ASP.NET Core CRUD with NoSQL application.
+
+I'll be creating a basic CRUD HTTP API (CRUD is Create, Read, Update, Delete). This API will be operating on a gift wishlist: all the items I want you to buy me for my birthday. I won't be building a UI, but you could use this API with the client-side framework of your choice (like React or Blazor, etc).
+
+This first post will include all the project setup and configuration. The next posts will build out the actual CRUD endpoints.
+
+== Developer tools you'll need
+
+I'm using Visual Studio 2022 (Enterprise), but you should be able to follow along okay with JetBrains Rider, VSCode, or whatever you normally use. (If you need help, I'm happy to assist!)
+
+I'm also using Couchbase Capella, which is the DBaaS (database as a service) Couchbase offering.
+
+I've already signed up for a trial account. You can too, go to: https://cloud.couchbase.com/sign-up
+
+The *travel-sample* bucket is already loaded when you deploy your trial cluster. But I'm using link:https://docs.couchbase.com/cloud/clusters/data-service/manage-buckets.html[another bucket that I created] called "demo".
+
+image:13501-capella-buckets.png[Capella list of buckets]
+
+Inside that bucket, there's a _default scope, so I'll use that. And inside that scope, I've created a "wishlist" collection. (link:https://docs.couchbase.com/cloud/clusters/data-service/scopes-collections.html[Learn more about scopes and collections in Capella])
+
+image:13502-wishlist-collection.png[Capella list of collections]
+
+== CRUD credentials
+
+You'll also need to link:https://docs.couchbase.com/cloud/clusters/manage-database-users.html[create database credentials] with read/write access to everything in the 'demo' bucket.
+
+image:13503-create-credentials.png[Capella add database credentials]
+
+Finally, link:https://docs.couchbase.com/cloud/clusters/allow-ip-address.html[whitelist the IP address] that you will be compiling and running your app from, so that you can connect.
+
+image:13504-whitelist-ip-capella.png[Capella IP address whitelist]
+
+== Start an ASP.NET Core app
+
+In Visual Studio, select File->New ->Project->ASP.NET Core Web API. I called it *AspNetCoreTutorial*.
+
+image:13506-visual-studio-new-web-api.png[Visual Studio new project]
+
+I'm using .NET 6, and all the other defaults are fine
+(notice that OpenAPI, aka Swagger, is enabled).
+
+image:13507-visual-studio-web-api-information.png[Visual Studio new project additional information]
+
+This process creates a basic shell site.
+
+Next, let's use NuGet to add the Couchbase .NET SDK (CouchbaseNetClient).
+
+image:13508-nuget-couchbase.png[NuGet Couchbase]
+
+=== Notes on the .NET SDK
+
+The Couchbase .NET SDK allows us to connect to a Couchbase Cluster. Couchbase is a distributed database, so typically there are several servers (called "nodes") in a group (called a "cluster") that all act together. A cluster has one or more "buckets", which as you saw earlier, contains scopes, which
+contain collections, which then contain documents.
+
+The data in a bucket is distributed amongst the nodes in the cluster, but it's treated as a single logical entity by the SDK.
+
+Within a collection, each link:https://docs.couchbase.com/cloud/clusters/data-service/manage-documents.html[document] has a unique "key" and a JSON "value".
+
+For the trial version of Capella, there will only be a single node. However, this doesn't affect your code: when nodes are added, the SDK is smart enough to be able to find them on its own.
+
+link:https://docs.couchbase.com/cloud/clusters/sizing.html[In production, you will typically have at least three nodes], possibly a few buckets, and as many scopes
+and collections as you need (within reason).
+
+== Dependency Injection
+
+I'm also going to add the Couchbase.Extensions.DependencyInjection NuGet package (Couchbase.Extensions.DependencyInjection). This will provide extensions method to easily add Couchbase capabilities to ASP.NET Core's built-in dependency injection.
+
+(This package makes it easier to use Couchbase with ASP.NET Core, but it is optional).
+
+== Connect ASP.NET Core to Couchbase Capella
+
+Let's write some code in the ASP.NET app to connect to the Capella cluster.
+
+In Program.cs, use the extension method on services:
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Program.cs[tag=addservice]
+----
+
+(In this example, I'm hardcoding the connection information, but you can also use the configuration in appsettings.json instead).
+			
+One more step: when the application stops, I need it to release any Couchbase resources that .NET is using.
+
+You can register code to execute on lifetime events, such as ApplicationStopped.
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Program.cs[tag=cleanup]
+----
+
+Now, ASP.NET Core's dependency injection system will automatically inject the Couchbase objects when we want them.
+
+== Data Modeling
+
+Before we write more code, let's think about the data model. It's going to be a very simple model: just the name of an item for the wishlist.
+
+In a NoSQL document database, each piece of data has a key and a JSON value. The key can just be a GUID for our purposes (you could also make it a more meaningful key if you wanted). Each item on the wishlist has a "name", so there's going to be a name field.
+
+I'll create a C# class to represent an item:
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Models/WishlistItem.cs[tag=wishlistitem]
+----
+
+A really simple model, but because Couchbase does not require a pre-defined schema, adding more fields can be as easy as adding them right here in the C# class.
+
+Let's go ahead and "prime" the database with a couple of Wishlist items.
+
+Navigate to the wishlist collection in Couchbase Capella and add a couple of documents.
+
+The first document will have a key "3ca6e87e-c3a6-4637-989d-33cbca5002b5", and I'll give it a name of "Recliner". The second document will have a key "31c9cc33-8dfe-440c-bd1b-bb038939d2e0", I'll give it a name of "Joey Votto Jersey".
+
+image:13509-json-documents-capella.png[JSON documents in Capella]
+
+You can add other documents if you'd like, but we will eventually build an app where documents are added/changed via the ASP.NET Core app.
+
+== Controller for NoSQL CRUD actions
+
+Next, create an ASP.NET Controller for my CRUD operations. I call it "GiftsController".
+
+In the constructor, specify an IBucketProvider parameter. This is an object that can be used to get a Bucket from the Couchbase DependencyInjection module. I will use it to get a Bucket object for the "demo" bucket.
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Controllers/GiftsController.cs[tag=controllerstart]
+
+    // ...
+}
+----
+
+You can execute the app at this point, just to verify that the connection works. There won't be any endpoints yet (except the WeatherForecast example that Microsoft put in as an example).
+
+== What's next?
+
+We now have an ASP.NET Core project, connected to Couchbase Capella. In the next blog post, we'll get into creating the actual CRUD endpoints.
+
+In the meantime, you can:
+
+* link:https://cloud.couchbase.com/sign-up[Sign up for a Capella free-trial]
+* Check out the link:https://couchbase.live/examples/basic-dotnet-kv-get[Couchbase Playground for .NET] examples that you can run right in the browser.
