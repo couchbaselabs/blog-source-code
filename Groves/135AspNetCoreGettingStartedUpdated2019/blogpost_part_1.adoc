@@ -9,23 +9,23 @@
 
 Let's build an ASP.NET Core CRUD with NoSQL application.
 
-I'll be creating a basic CRUD HTTP API (CRUD is Create, Read, Update, Delete). This API will be operating on a gift wishlist: all the items I want you to buy me for my birthday. I won't be building a UI, but you could use this API with the client-side framework of your choice (like React or Blazor, etc).
+I'll be creating a basic CRUD HTTP API (CRUD is Create, Read, Update, Delete). This API will be operating on a gift wishlist: all the items I want for my birthday. I won't be building a UI, but you could use this API with the client-side framework of your choice (like React or Blazor, etc).
 
 This first post will include all the project setup and configuration. The next posts will build out the actual CRUD endpoints.
 
 == Developer tools you'll need
 
-I'm using Visual Studio 2022 (Enterprise), but you should be able to follow along okay with JetBrains Rider, VSCode, or whatever you normally use. (If you need help, I'm happy to assist!)
+I'm using Visual Studio 2022 (Enterprise), but you should be able to follow along with JetBrains Rider, VSCode, or whatever you normally use. (If you need help, I'm happy to assist!)
 
-I'm also using Couchbase Capella, which is the DBaaS (database as a service) Couchbase offering.
+I'm also using link:https://cloud.couchbase.com/sign-up[Couchbase Capella], which is Couchbase's DBaaS (DataBase as a Service) offering.
 
-I've already signed up for a trial account. You can too, go to: https://cloud.couchbase.com/sign-up
+I've already signed up for a trial account. You can, too, at: https://cloud.couchbase.com/sign-up
 
 The *travel-sample* bucket is already loaded when you deploy your trial cluster. But I'm using link:https://docs.couchbase.com/cloud/clusters/data-service/manage-buckets.html[another bucket that I created] called "demo".
 
 image:13501-capella-buckets.png[Capella list of buckets]
 
-Inside that bucket, there's a _default scope, so I'll use that. And inside that scope, I've created a "wishlist" collection. (link:https://docs.couchbase.com/cloud/clusters/data-service/scopes-collections.html[Learn more about scopes and collections in Capella])
+Inside that bucket, there's a _default scope, so I'll use that. Inside that scope, I've created a "wishlist" collection. (link:https://docs.couchbase.com/cloud/clusters/data-service/scopes-collections.html[Learn more about scopes and collections in Capella])
 
 image:13502-wishlist-collection.png[Capella list of collections]
 
@@ -35,7 +35,7 @@ You'll also need to link:https://docs.couchbase.com/cloud/clusters/manage-databa
 
 image:13503-create-credentials.png[Capella add database credentials]
 
-Finally, link:https://docs.couchbase.com/cloud/clusters/allow-ip-address.html[whitelist the IP address] that you will be compiling and running your app from, so that you can connect.
+Finally, link:https://docs.couchbase.com/cloud/clusters/allow-ip-address.html[whitelist the IP address] that you will be compiling and running your app from, so you can connect.
 
 image:13504-whitelist-ip-capella.png[Capella IP address whitelist]
 
@@ -58,10 +58,10 @@ image:13508-nuget-couchbase.png[NuGet Couchbase]
 
 === Notes on the .NET SDK
 
-The Couchbase .NET SDK allows us to connect to a Couchbase Cluster. Couchbase is a distributed database, so typically there are several servers (called "nodes") in a group (called a "cluster") that all act together. A cluster has one or more "buckets", which as you saw earlier, contains scopes, which
-contain collections, which then contain documents.
+The Couchbase .NET SDK allows us to connect to a Couchbase cluster. Couchbase is a distributed database, so typically there are several servers (called "nodes") in a group (called a "cluster") that all act together. A cluster has one or more "buckets", which as you saw earlier, contains scopes, which
+contain collections, which contain documents.
 
-The data in a bucket is distributed amongst the nodes in the cluster, but it's treated as a single logical entity by the SDK.
+The data in a bucket is distributed among the nodes in the cluster, but it's treated as a single logical entity by the SDK.
 
 Within a collection, each link:https://docs.couchbase.com/cloud/clusters/data-service/manage-documents.html[document] has a unique "key" and a JSON "value".
 
@@ -72,7 +72,7 @@ and collections as you need (within reason).
 
 == Dependency Injection
 
-I'm also going to add the Couchbase.Extensions.DependencyInjection NuGet package (Couchbase.Extensions.DependencyInjection). This will provide extensions method to easily add Couchbase capabilities to ASP.NET Core's built-in dependency injection.
+I'm also going to add the Couchbase.Extensions.DependencyInjection NuGet package (Couchbase.Extensions.DependencyInjection). This will provide extension methods to easily add Couchbase capabilities to ASP.NET Core's built-in dependency injection.
 
 (This package makes it easier to use Couchbase with ASP.NET Core, but it is optional).
 
@@ -127,7 +127,7 @@ You can add other documents if you'd like, but we will eventually build an app w
 
 == Controller for NoSQL CRUD actions
 
-Next, create an ASP.NET Controller for my CRUD operations. I call it "GiftsController".
+Next, I create an ASP.NET Controller for my CRUD operations. I call it "GiftsController".
 
 In the constructor, specify an IBucketProvider parameter. This is an object that can be used to get a Bucket from the Couchbase DependencyInjection module. I will use it to get a Bucket object for the "demo" bucket.
 
