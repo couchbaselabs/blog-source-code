@@ -6,10 +6,119 @@
 :categories: Couchbase Server, .NET
 :tags: ASP.NET, C#
 :heroimage: TBD
+:livesqllink: https://couchbase.live/examples/basic-sql++-basics
 
-== CRUD: R is for Read
+CRUD stands for Create, Read, Update, and Delete. In part 2, we'll look at R for Read, and build an ASP.NET Core endpoint to read data from Couchbase using SQL.
 
-Let's start with a simple endpoint to get all the items in the list (let's call it GetAll).
+Make sure to read {link:asp-net-core-crud-with-nosql-part-1}[part 1 of this series], which covers setup and configuration of your ASP.NET Core "wishlist" project.
+
+== SQL{plus}{plus} to read
+
+Couchbase is unique among NoSQL databases in that it supports a {livesqllink}[full SQL implementation] (called SQL{plus}{plus}, née N1QL) to query JSON data.
+
+SQL{plus}{plus} is not a watered-down "SQL-like" language. With SQL{plus}{plus}, you have link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/join.html[JOINs], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/with.html[CTEs/WITH], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/update.html[UPDATE], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/insert.html[INSERT], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/delete.html[DELETE], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/merge.html[MERGE], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/groupby.html[aggregation/GROUP BY], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/begin-transaction.html[BEGIN/COMMIT/ROLLBACK], and more.
+
+On top of that (the "{plus}{plus}"), you also get features to deal with JSON data, like link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/datatypes.html#datatype-missing[MISSING], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/nest.html[NEST], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/arrayfun.html[ARRAY_* functions], link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/objectfun.html[OBJECT_* functions], and more.
+
+For this simple CRUD application, we'll use a SQL{plus}{plus} `SELECT` query (and index) to return *all* items from my wishlist.
+
+== Writing your first SQL{plus}{plus} query
+
+First, let's try writing a SQL{plus}{plus} query to get all wishlist items right in the link:https://docs.couchbase.com/cloud/clusters/query-service/query-workbench.html[Capella Query Workbench].
+
+To start with, try:
+
+[source,SQL,indent=0]
+----
+SELECT * FROM demo._default.wishlist;
+----
+
+When you do this, you should get an error message. Something like:
+
+----
+`no index available on keyspace default:demo._default.wishlist that matches your query. Use CREATE PRIMARY INDEX` ...
+----
+
+This is expected behavior. (Most) SQL{plus}{plus} queries in Couchbase will not run unless there is at least one index available for them.
+
+No problem. Create a simple link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/createprimaryindex.html[`PRIMARY INDEX`] with a command like this:
+
+[source,SQL,indent=0]
+----
+CREATE PRIMARY INDEX `ix_wishlist` ON `demo`.`_default`.`wishlist`
+----
+
+Primary indexes are generally not meant to be used in a typical production environment, but they are very helpful for a development environment, since they guarantee that *any* SQL{plus}{plus} query will run on the indexed collection (though not as efficient as a properly indexed collection). Once you start creating more complex SQL{plus}{plus} queries, you can use the link:https://docs.couchbase.com/cloud/clusters/query-service/query-workbench.html#index-advisor["Advise" button on the Query Workbench] to get suggestions of more efficient indexes to create (and you should avoid using `SELECT *` whenever you can 😆).
+
+After creating the index, retry the above `SELECT` query again, and the results should look like this:
+
+[source,JavaScript,indent=0]
+----
+[
+  {
+    "wishlist": {
+      "name": "Skyline Chili T-Shirt"
+    }
+  },
+  {
+    "wishlist": {
+      "name": "Joey Votto jersey"
+    }
+  }
+]
+----
+
+Almost there. Try imagining this array of objects being serialized to a C# `List<WishlistItem>`. It wouldn't quite work, because the objects are nested with the collection name. So, I've gotten into a habit of aliasing the collections, like this:
+
+[source,SQL,indent=0]
+----
+SELECT w.* FROM demo._default.wishlist w;
+----
+
+Which produces the result:
+
+[source,JavaScript,indent=0]
+----
+[
+  {
+    "name": "Skyline Chili T-Shirt"
+  },
+  {
+    "name": "Joey Votto jersey"
+  }
+]
+----
+
+Looking good, but there's still something missing. Where are those GUIDs that we used for the document keys? Couchbase doesn't store them as data; it stores them as *metadata*. SQL{plus}{plus} provides the `META()` function to query metadata. Use `META().id` like this:
+
+[source,SQL,indent=0]
+----
+SELECT META(w).id, w.* FROM demo._default.wishlist w;
+----
+
+And that finally gives us a result of:
+
+[source,JavaScript,indent=0]
+----
+[
+  {
+    "id": "2dab198b-1836-4409-9bdf-17275a2b2462",
+    "name": "Skyline Chili T-Shirt"
+  },
+  {
+    "id": "31c9cc33-8dfe-440c-bd1b-bb038939d2e0",
+    "name": "Joey Votto jersey"
+  }
+]
+----
+
+This will serialize nicely into `WishlistItem` objects, using the class created in part 1.
+
+== Using SQL{plus}{plus} in ASP.NET Core
+
+Let's get that SQL{plus}{plus} query we just wrote into an ASP.NET Core endpoint.
+
+In GiftsController, create a endpoint called GetAll:
 
 [source,C#,indent=0]
 ----
@@ -21,33 +130,29 @@ Let's start with a simple endpoint to get all the items in the list (let's call 
     }
 ----
 
-The easiest way to do this is to write a SQL++ query (SQL for JSON, supported by Couchbase). Let's try out a query in Couchbase's Query Workbench.
+To execute SQL{plus}{plus}, we need to get an object of type `Cluster`. SQL{plus}{plus} runs at the cluster level (not bucket, or scope, or collection, since it may need to `JOIN`/`UNION` between them). We could go back and add link:https://docs.couchbase.com/dotnet-sdk/current/howtos/managing-connections.html#injecting-the-couchbase-cluster[`ClusterProvider`] as a constructor parameter. If this endpoint was going to only work with SQL{plus}{plus}, that would be a good idea. However, let's stick with what we created in part 1. We have an object of type `BucketProvider`. From that object, you can get a object of type `Cluster`:
 
-[source,SQL,indent=0]
+[source,C#,indent=0]
 ----
-SELECT META(w).id, w.* FROM demo._default.wishlist w;
-----
-	
-This query fails, because there is no matching index.
-Let's create an index on this collection.
+    [HttpGet]
+    [Route("api/getall")]
+    public async Task<IActionResult> GetAll()
+    {
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var cluster = bucket.Cluster;
 
-[source,SQL,indent=0]
-----
-CREATE PRIMARY INDEX ix_wishlist ON demo._default.wishlist;
+        // ... snip ...
+    }
 ----
 
-Now run the query again, and it works.
-
-So, let's code this in C#. Go back to the GetAll method.
+A `cluster` object is how ASP.NET Core will interact with a Couchbase cluster in a variety of ways. For now, we're interested in its `QueryAsync<T>` method:
 
 [source,C#,indent=0]
 ----
 include::src/AspNetCoreTutorial/AspNetCoreTutorial/Controllers/GiftsController.cs[tag=getall]
 ----
 
-Some notes:
-* ScanConsistency - I'm not going to go into much detail, check out the documentation for more on scanconsistency options. 	The short version is that this will give us the most complete results. But the tradeoff is a bit of a performance penalty. For this small demo application we won't even notice.
-* Make sure you have the following `using`s:
+Make sure you have the following `using` statements at the top of your GiftsController.cs file:
 
 [source,C#,indent=0]
 ----
@@ -58,17 +163,29 @@ Some notes:
 		using Couchbase.Extensions.DependencyInjection;
 ----
 
+One more thing to note. When executing SQL{plus}{plus}, there are a number of link:https://docs.couchbase.com/dotnet-sdk/current/howtos/n1ql-queries-with-sdk.html#scan-consistency[(scan) consistency options]. The default is `ScanConsistency.NotBounded`. This setting means that the query engine will *not* wait on indexes to finish updating before returning results. This is the most performant option. However, in some situations, you will want stronger index consistency. Couchbase provides `RequestPlus` and `AtPlus`.
+
+== Try out the ASP.NET Core Endpoint
+
 From Visual Studio, Ctrl+F5 will start the app. You should see an OpenAPI / Swagger page in your browser.
 
-*** openapi screenshot ***
+image:13510-open-api-asp-net-screenshot.png[OpenAPI / Swagger]
 
 (Ignore WeatherForecast, that just came with the Visual Studio template).
 
-Try out the `/api/getall` example:
+Click on the endpoint to try it out. There are no parameters to specify, so just click "Execute".
 
-*** screenshot ***
+image:13511-open-api-asp-net-result.png[OpenAPI / Swagger]
 
+You now have the "R" of CRUD in place.
 
-== Maybe part 3?
+== What's next?
 
-Next: build another "R" (read) endpoint to retrieve a single wishlist item. And another endpoint to delete a single wishlist item.
+The ASP.NET Core project is connected to Couchbase Capella, and it is reading data via SQL{plus}{plus}.
+
+In the next blog post, we'll create another "read" endpoint. Instead of SQL{plus}{plus}, we'll look at another, faster way that data can be accessed and read.
+
+In the meantime, you should:
+
+* link:https://cloud.couchbase.com/sign-up[Sign up for a Capella free-trial]
+* Check out the link:https://couchbase.live/examples/basic-dotnet-kv-get[Couchbase Playground for .NET] examples that you can run right in the browser.
