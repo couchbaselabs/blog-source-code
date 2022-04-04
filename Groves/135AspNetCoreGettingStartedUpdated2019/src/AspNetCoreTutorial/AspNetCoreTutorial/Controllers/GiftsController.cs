@@ -17,61 +17,66 @@ public class GiftsController : Controller
     }
 // end::controllerstart[]
 
-    // // tag::getall[]
-    // [HttpGet]
-    // [Route("api/getall")]
-    // public async Task<IActionResult> GetAll()
-    // {
-    //     var bucket = await _bucketProvider.GetBucketAsync("demo");
-    //     var cluster = bucket.Cluster;
-    //
-    //     var result = await cluster.QueryAsync<WishlistItem>(
-    //         "SELECT META(w).id, w.* FROM demo._default.wishlist w;",
-    //         options => options.ScanConsistency(QueryScanConsistency.RequestPlus));
-    //
-    //     return Ok(result);
-    // }
-    // // end::getall[]
-    //
-    // [HttpGet]
-    // [Route("api/get/{id}")]
-    // public async Task<IActionResult> Get(string id)
-    // {
-    //     var bucket = await _bucketProvider.GetBucketAsync("demo");
-    //     var collection = await bucket.CollectionAsync("wishlist");
-    //
-    //     var item = await collection.GetAsync(id);
-    //
-    //     return Ok(item.ContentAs<WishlistItem>());
-    // }
-    //
-    // [HttpPost]
-    // [Route("api/edit")]
-    // public async Task<IActionResult> CreateOrEdit(WishlistItem item)
-    // {
-    //     var bucket = await _bucketProvider.GetBucketAsync("demo");
-    //     var collection = await bucket.CollectionAsync("wishlist");
-    //
-    //     if (!item.Id.HasValue)
-    //         item.Id = Guid.NewGuid();
-    //
-    //     await collection.UpsertAsync(item.Id.ToString(), new
-    //     {
-    //         Name = item.Name
-    //     });
-    //
-    //     return Ok(new { success = true});
-    // }
-    //
-    // [HttpDelete]
-    // [Route("api/delete")]
-    // public async Task<IActionResult> Delete(Guid id)
-    // {
-    //     var bucket = await _bucketProvider.GetBucketAsync("demo");
-    //     var collection = await bucket.CollectionAsync("wishlist");
-    //
-    //     await collection.RemoveAsync(id.ToString());
-    //
-    //     return Ok(new { success = true });
-    // }
+    // tag::getall[]
+    [HttpGet]
+    [Route("api/getall")]
+    public async Task<IActionResult> GetAll()
+    {
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var cluster = bucket.Cluster;
+
+        var result = await cluster.QueryAsync<WishlistItem>(
+            "SELECT META(w).id, w.* FROM demo._default.wishlist w;"
+        );
+
+        return Ok(result);
+    }
+    // end::getall[]
+
+    // tag::get[]
+    [HttpGet]
+    [Route("api/get/{id}")]
+    public async Task<IActionResult> Get(Guid id)
+    {
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var collection = await bucket.CollectionAsync("wishlist");
+
+        var item = await collection.GetAsync(id.ToString());
+
+        return Ok(item.ContentAs<WishlistItem>());
+    }
+    // end::get[]
+
+    /*
+
+[HttpPost]
+[Route("api/edit")]
+public async Task<IActionResult> CreateOrEdit(WishlistItem item)
+{
+    var bucket = await _bucketProvider.GetBucketAsync("demo");
+    var collection = await bucket.CollectionAsync("wishlist");
+
+    if (!item.Id.HasValue)
+        item.Id = Guid.NewGuid();
+
+    await collection.UpsertAsync(item.Id.ToString(), new
+    {
+        Name = item.Name
+    });
+
+    return Ok(new { success = true});
+}
+
+[HttpDelete]
+[Route("api/delete")]
+public async Task<IActionResult> Delete(Guid id)
+{
+    var bucket = await _bucketProvider.GetBucketAsync("demo");
+    var collection = await bucket.CollectionAsync("wishlist");
+
+    await collection.RemoveAsync(id.ToString());
+
+    return Ok(new { success = true });
+}
+*/
 }

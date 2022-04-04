@@ -1,7 +1,7 @@
 :imagesdir: images
 :meta-description: TBD
-:title: ASP.NET Core CRUD with NoSQL: Part 1
-:slug: asp-net-crud-nosql
+:title: ASP.NET Core CRUD with NoSQL: Part 2
+:slug: asp-net-crud-nosql-part-2
 :focus-keyword: asp.net crud nosql, asp.net crud
 :categories: Couchbase Server, .NET
 :tags: ASP.NET, C#
@@ -10,7 +10,7 @@
 
 CRUD stands for Create, Read, Update, and Delete. In part 2, we'll look at R for Read, and build an ASP.NET Core endpoint to read data from Couchbase using SQL.
 
-Make sure to read {link:asp-net-core-crud-with-nosql-part-1}[part 1 of this series], which covers setup and configuration of your ASP.NET Core "wishlist" project.
+Make sure to read link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-1[part 1 of this series], which covers setup and configuration of your ASP.NET Core "wishlist" project.
 
 == SQL{plus}{plus} to read
 

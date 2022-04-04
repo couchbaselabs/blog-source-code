@@ -1,0 +1,108 @@
+:imagesdir: images
+:meta-description: TBD
+:title: ASP.NET Core CRUD with NoSQL: Part 3
+:slug: asp-net-crud-nosql-part-3
+:focus-keyword: asp.net crud nosql, asp.net crud
+:categories: Couchbase Server, .NET
+:tags: ASP.NET, C#
+:heroimage: TBD
+
+ASP.NET CRUD applications consist of create, read, update, and delete. In the link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-1/[part 1], we setup a basic ASP.NET Core project. In link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-2/[part 2], we added the first _read_ endpoint, using a SQL++ query against Couchbase wishlist data.
+
+SQL++ is a powerful query language, containing all the best features of relational SQL, with a superset of features for querying JSON data.
+
+However, SQL++ isn't the only way to interact with data in Couchbase. In this post, we'll explore using the key-value API.
+
+== Key-value vs SQL?
+
+If you have a relational background, then you are likely accustomed to SQL being _the only_ way to interact with data (even if you're using a tool like Entity Framework Core, it's still ultimately using SQL). One of the great features of a NoSQL database (like Couchbase) is that while SQL is available, there are other access methods availble too. (Hence the link:https://en.wikipedia.org/wiki/Backronym[backronym] "Not Only SQL").
+
+For Couchbase, the fastest most efficient way to access day is via link:https://docs.couchbase.com/server/current/guides/kv-operations.html[key-value lookup]. Every other index and query that Couchbase supports (link:https://docs.couchbase.com/server/current/n1ql/n1ql-intro/queriesandresults.html[SQL++], link:https://docs.couchbase.com/server/current/fts/fts-introduction.html[Full Text Search], link:https://docs.couchbase.com/server/current/analytics/introduction.html[Analytics], link:https://docs.couchbase.com/server/current/eventing/eventing-overview.html[Eventing], and more) are ultimately built upon or rely up the lowly key-value lookup.
+
+In a situation where:
+
+* A key is specified, or
+* Your code is given a key, or
+* You can construct a key deterministically
+
+the key-value API will give you the best performance.
+
+== Examples: when to use key-value
+
+Here are some examples of when (and when NOT) to use the key-value API for reading:
+
+|===
+| Use case | Key-value? | Why or why not?
+
+| Lookup a user with key "73892" | Yes | Direct look up
+| Lookup just the email address of a user with key "73892" | Yes | Even if the user document is large, Couchbase has a key-based link:https://docs.couchbase.com/server/current/guides/reading-data.html#reading-a-sub-document[sub-document API], which allows you to only retrieve a small portion of the document if you wish.
+| Lookup a group of users with keys "73892", "47212", and "90491" | Yes | This may require multiple key lookup operations, but chances are this will still be faster than using a SQL `SELECT ... WHERE ... IN` query.
+| Lookup the comments from a blog post | Maybe | If comments for a blog post are in a single document, and the blog post key is known, a blog post comment key can be constructed. E.g. blog post key is `I-like-balloons``, to get comments, use the key `I-like-balloons::comments`
+| Lookup all users from "Ohio" | No | User's state is likely a "secondary" attribute, not a key (multiple users can be from Ohio). This is a good use case for SQL++
+| Search for products with "balloons" in their description | No | Descriptions are a secondary attribute, not a key (multiple products may have "balloons" in their description). This is a good use case for Full Text Search (FTS)
+|===
+
+Note that Couchbase has a memory-first architecture. The built-in cache means that a key-value look up will often be retrieving data directly from memory--microsecond latency, no waiting on the disk.
+
+My rule of thumb is: use key-value API whenever possible, and then fall back to a more flexible option like SQL++ or Full Text Search when necessary.
+
+== Create a Get CRUD endpoint
+
+Let's create an endpoint that uses the key-value API to retrieve a single item from the wishlist.
+
+This endpoint will require the ID of the wishlist item to be given as a parameter:
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Controllers/GiftsController.cs[tag=get]
+----
+
+In this example, we don't need a cluster (like we did with SQL++), but we do need a link:https://blog.couchbase.com/scopes-and-collections-for-modern-multi-tenant-applications-couchbase-7-0/[collection]. Note that since the wishlist collection is in the "_default" scope, we can link:https://docs.couchbase.com/dotnet-sdk/current/concept-docs/collections.html#using-collections-scopes[skip right past getting the scope and go directly from bucket to collection].
+
+When the item is returned from `GetAsync`, it's in an `IGetResult` object. Couchbase doesn't store C# objects, it stores JSON. So, to serialize to a `WishlistItem` object, use `item.ContentAs<WishlistItem>`.
+
+This API gives you flexibility: a document returned from Couchbase could be serialized to `WishlistItem` here and perhaps `AmazonWishlistItem` in another part of the application.
+
+== Key-value in action
+
+Execute the ASP.NET Core application and let's look at the updated OpenAPI / Swagger page.
+
+image:13512-open-api-get-endpoint.png[Get endpoint in Swagger]
+
+The endpoint `/api/get/{id}` under "Gifts" should now be listed. Expand that endpoint by clicking on it. Unlike the `/api/getall` endpoint, this one requires a parameter: the ID of the wishlist item that you want to get. If you don't remember one of the GUIDs, you can execute `/api/getall` first and copy one of them, or use: "31c9cc33-8dfe-440c-bd1b-bb038939d2e0" (which was the ID I gave to the Joey Votto jersey). Click "Try it out", paste that id in and click "Execute":
+
+image:13513-get-endpoint-response.png[Get endpoint in Swagger]
+
+Notice that the ID returned is `null`. This is because, as I explained in link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-2/[part 2], Couchbase stores the ID as metadata. In this situation, that's not a big deal. The ID was given as a parameter, so you could just assign that to C# object being returned:
+
+[source,C#,indent=0]
+----
+        var itemObj = item.ContentAs<WishlistItem>();
+        itemObj.Id = Guid.Parse(id);
+
+        return Ok(itemObj);
+----
+
+Alternatively, if you don't want to return `id` at all, you could create a separate C# view class that only has `name`, and use that with `ContentAs`.
+
+== What about validation and error handling?
+
+How wise of you to ask! This endpoint is definitely not ready for production. What's missing?
+
+* Error handling: what if there's an exception?
+* Validation: what if the ID passed in is invalid?
+* Authentication/authorization: what if the consumer of this API isn't supposed to have read access?
+* Logging: what if something doesn't go quite right, and we want to examine the outcome later?
+
+These are all important concerns. For most of these, ASP.NET Core has built-in functionality and/or popular 3rd party libraries available to help you. But make sure to check out Couchbase documentation on link:https://docs.couchbase.com/dotnet-sdk/current/howtos/error-handling.html[Handling Errors with the .NET SDK] and link:https://docs.couchbase.com/server/current/manage/manage-security/security-management-overview.html[Security Management Overview].
+
+== What's next?
+
+The ASP.NET Core project is connected to Couchbase Capella, and it is reading data via both SQL{plus}{plus} and the key-value API.
+
+In the next blog post, we'll look at creating and updating ("C" and "U") data.
+
+In the meantime, you should:
+
+* link:https://cloud.couchbase.com/sign-up[Sign up for a Capella free-trial]
+* Check out the link:https://couchbase.live/examples/basic-dotnet-kv-get[Couchbase Playground for .NET] examples that you can run right in the browser.
