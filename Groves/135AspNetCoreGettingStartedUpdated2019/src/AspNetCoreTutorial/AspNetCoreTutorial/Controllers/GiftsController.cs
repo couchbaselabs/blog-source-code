@@ -47,36 +47,59 @@ public class GiftsController : Controller
     }
     // end::get[]
 
+    // tag::editWithSql[]
+    [HttpPost]
+    [Route("api/editWithSql")]
+    public async Task<IActionResult> CreateOrEditWithSql(WishlistItem item)
+    {
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var cluster = bucket.Cluster;
+
+        var id = item.Id ?? Guid.NewGuid();
+
+        var result = await cluster.QueryAsync<WishlistItem>(
+            @"UPSERT INTO demo._default.wishlist (KEY, VALUE)
+                      VALUES ($id, { ""name"" : $name });",
+            options => options
+                .Parameter("id", id)
+                .Parameter("name", item.Name)
+        );
+
+        return Ok(result);
+    }
+    // end::editWithSql[]
+
+    // tag::edit[]
+    [HttpPost]
+    [Route("api/edit")]
+    public async Task<IActionResult> CreateOrEdit(WishlistItem item)
+    {
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var collection = await bucket.CollectionAsync("wishlist");
+
+        var id = item.Id ?? Guid.NewGuid();
+
+        await collection.UpsertAsync(id.ToString(), new
+        {
+            Name = item.Name
+        });
+
+        return Ok(new { success = true});
+    }
+    // end::edit[]
+
     /*
 
-[HttpPost]
-[Route("api/edit")]
-public async Task<IActionResult> CreateOrEdit(WishlistItem item)
-{
-    var bucket = await _bucketProvider.GetBucketAsync("demo");
-    var collection = await bucket.CollectionAsync("wishlist");
-
-    if (!item.Id.HasValue)
-        item.Id = Guid.NewGuid();
-
-    await collection.UpsertAsync(item.Id.ToString(), new
+    [HttpDelete]
+    [Route("api/delete")]
+    public async Task<IActionResult> Delete(Guid id)
     {
-        Name = item.Name
-    });
-
-    return Ok(new { success = true});
-}
-
-[HttpDelete]
-[Route("api/delete")]
-public async Task<IActionResult> Delete(Guid id)
-{
     var bucket = await _bucketProvider.GetBucketAsync("demo");
     var collection = await bucket.CollectionAsync("wishlist");
 
     await collection.RemoveAsync(id.ToString());
 
     return Ok(new { success = true });
-}
-*/
+    }
+    */
 }

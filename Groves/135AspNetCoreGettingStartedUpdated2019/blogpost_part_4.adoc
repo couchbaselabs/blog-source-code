@@ -1,0 +1,88 @@
+:imagesdir: images
+:meta-description: TBD
+:title: ASP.NET Core CRUD with NoSQL: Part 4
+:slug: asp-net-crud-nosql-part-4
+:focus-keyword: asp.net crud nosql, asp.net crud
+:categories: Couchbase Server, .NET
+:tags: ASP.NET, C#
+:heroimage: TBD
+
+ASP.NET CRUD apps include interaction with data that consists of create, read, update, and delete. In link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-1/[part 1], we setup a basic ASP.NET Core project. In link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-2/[part 2], we added the first _read_ endpoint, using a SQL++ query against wishlist data. In link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-3/[part 3], we added another read endpoint, this time using the key-value API.
+
+Until this point, the only data modifications we've made have been directly in the Couchbase Capella UI. In this post, let's add an endpoint to handle creating and updating wishlist data.
+
+== SQL++ vs Key-Value: Revisited
+
+SQL{plus}{plus} includes `INSERT`, `UPDATE`, `DELETE` syntax. So, we could use SQL{plus}{plus} to build an endpoint for mutating data. It would be very similar to the code written in link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-2/[part 2].
+
+One keyword in SQL{plus}{plus} that you might not have seen before is `UPSERT`. As you might guess, it's a combination of `UPDATE` and `INSERT`. An update will happen if the data already exists; an insert will happen if it doesn't. Here's how an upsert endpoint using SQL{plus}{plus} might look:
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Controllers/GiftsController.cs[tag=editWithSql]
+----
+
+Two important things to point out about this code:
+
+* It handles both create and update. If `item` has a null id, this code assumes that a new wishlist item is being created.
+
+* Parameterization: just as in relational databases, SQL{plus}{plus} can be vulnerable to link:https://owasp.org/www-community/attacks/SQL_Injection[SQL injection], so parameterization is highly recommended. Notice that SQL{plus}{plus} syntax uses `$` to indicate named paramters (e.g. `$id` and `$name`).
+
+This endpoint will work. But as was the case in link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-3/[part 3], we do not have to use SQL{plus}{plus} to interact with Couchbase. In fact, very similar criteria apply to making the decision when to use key-value and when to use SQL{plus}{plus}:
+
+|===
+| Use case | Key-value? | Why or why not?
+
+| Create a new user with key "73892" | Yes | Direct access
+| Modify a user with key "73892" | Yes | Direct access
+| Modify just the email address of a user with key "73892" | Yes | Even if the user document is large, Couchbase has a key-based link:https://docs.couchbase.com/server/current/guides/updating-data.html#updating-a-sub-document[sub-document API], which allows you to modify a portion of the document.
+| Modify a group of users with keys "73892", "47212", and "90491" | Yes | This may require multiple key-value operations, but this still may be faster than using a SQL `SELECT ... WHERE ... IN` query.
+| Modify all addresses to use "OH" instead of "Ohio" | No | User's state is likely a "secondary" attribute, not a key (multiple users can be from Ohio). This is a good use case for a SQL++ `UPDATE`
+|===
+
+Because this endpoint only needs to add or change one single wishlist item, let's use the key-value API instead.
+
+== Write a CreateOrEdit CRUD endpoint
+
+Before we get to coding, it's wise to think about whether CreateOrEdit should be a single endpoint, or split into a Create endpoint and an Edit endpoint. For this very simple wishlist app, there is no validation, authentication, or other system-wide cross cutting concerns. However, in a production system, "adding" data and "updating" data may very well follow different business rules and require different permissions. In that case, you may want to break the operations into two endpoints.
+
+For now, let's start with a single endpoint that uses an "upsert":
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Controllers/GiftsController.cs[tag=edit]
+----
+
+Much like the SQL++ endpoint, this endpoint looks at `Id` to determine whether this is a "create" or an "update".
+
+The `UpsertAsync` function will either:
+
+* Create a new document with `id.ToString()` as the key
+* Change an existing document with a key of `id.ToString()`
+
+In either case, once this endpoint finishes executing, you will end up with a JSON document like `{ "name" = "wishlist item name"}` and a GUID as a key (technically all keys in Couchbase are strings, but we know it's a GUID string).
+
+NOTE: One subtle difference between the two APIs, is that the `UPSERT` statement will only mutate the one field (`name`), while the key-value method `UpsertAsync` will mutate the entire document (which is only `name` for now).
+
+== ASP.NET CRUD in action
+
+Fire up your application from Visual Studio with CTRL+F5, and you should see some new endpoints show up in the OpenAPI / Swagger UI:
+
+image:13514-swagger-create-update-endpoints.png[Edit endpoints in Swagger]
+
+From an API consumer's perspective, both `/api/edit` and `/api/editWithSql` endpoints will function the same. Try it once leaving the ID blank to create a new item, then try it again with a known ID (use `/api/getall`` if you need to get an ID) and observe what happens and what changes.
+
+For instance, I added a new item "Digital Photo Frame", by leaving the ID blank (my .NET code generated "1c3de2e7-70ea-4ee2-803b-425bbf6251cb" for me), and I updated the item with ID of "2dab198b-1836-4409-9bdf-17275a2b2462" to have a name of "Skyline Chili 2XL T-Shirt". Here are the results as seen in the Couchbase Capella UI:
+
+image:13515-couchbase-capella-wishlist-edit.png[Couchbase Capella UI after creating and updating]
+
+== What's next?
+
+The ASP.NET Core project is connected to Couchbase Capella, and it is now creating/updating ("upserting") data with key-value (recommended) or SQL{plus}{plus} (not recommended for this specific situation).
+
+In the next blog post, we'll round out CRUD "with "D" for "delete"."
+
+In the meantime, you should:
+
+* link:https://cloud.couchbase.com/sign-up[Sign up for a Capella free-trial]
+* Check out the link:https://couchbase.live/examples/basic-dotnet-kv-get[Couchbase Playground for .NET] examples that you can run right in the browser.
