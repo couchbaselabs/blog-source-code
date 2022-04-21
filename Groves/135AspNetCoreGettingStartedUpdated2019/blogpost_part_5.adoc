@@ -1,0 +1,181 @@
+:imagesdir: images
+:meta-description: TBD
+:title: ASP.NET Core CRUD with NoSQL: Part 5
+:slug: asp-net-crud-nosql-part-4
+:focus-keyword: asp.net crud nosql, asp.net crud
+:categories: Couchbase Server, .NET
+:tags: ASP.NET, C#
+:heroimage: TBD
+
+This ASP.NET Core CRUD series is coming to end. We've covered link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-1/[setup (part 1)], link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-2/[reading with SQL++ (part 2)], link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-3/[reading with key-value (part 3)], and link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-1/[creating/updating (part 4)]. In this last post, we'll look at the D in CRUD: deleting.
+
+== Deleting with SQL{plus}{plus} or Key-Value
+
+Hopefully you're noticing a pattern. Just as with reading, creating, and updating, you've got multiple paths for deleting. You can use a SQL{plus}{plus} `DELETE` statement:
+
+[source,SQL,indent=0]
+----
+DELETE FROM demo._default.wishlist w
+WHERE META(w).id = "1c3de2e7-70ea-4ee2-803b-425bbf6251cb"
+----
+
+Or you can use a key-value delete operation (aka "Remove"):
+
+[source,C#,indent=0]
+----
+await collection.RemoveAsync("1c3de2e7-70ea-4ee2-803b-425bbf6251cb");
+----
+
+And as before, here are the very similar guidelines to help you decide which one to use:
+
+|===
+| Use case | Key-value? | Why or why not?
+
+| Delete a user with key "73892" | Yes | Direct access
+| Delete a group of users with keys "73892", "47212", and "90491" | Yes | This may require multiple key-value operations, but this still may be faster than using a SQL `DELETE ... WHERE ... IN` query.
+| Delete every user from "Ohio" | No | User's state is likely a "secondary" attribute, not a key (multiple users can be from Ohio). This is a good use case for a SQL++ `DELETE`
+|===
+
+== A Delete endpoint for ASP.NET Core
+
+With that in mind, create a delete endpoint like so:
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Controllers/GiftsController.cs[tag=delete]
+----
+
+Try this endpoint with OpenAPI / Swagger, and it will behave how you'd expect.
+
+image:13518-delete.png[Delete endpoint]
+
+== Should I really delete?
+
+In many use cases, you may not want to *actually* delete data. You may want to do something called a "soft" delete. This involves moving or marking the data in such a way that it still exists in the database, but it is no longer shown to the end user. This has the benefit of being discoverable, recoverable, and reportable.
+
+It's also a great opportunity to show the flexibility of a JSON NoSQL database.
+
+== Soft-deleting
+
+Let's introduce a "deleted" field to wishlist items. This field will contain a date/time that the item was deleted. If this field exists, the rest of the endpoint should consider this item to be deleted. However, if we need to, we can still query it, report on it, and recover it.
+
+In a relational database, this would likely require an `ALTER`. Depending on the size of your data, it could require some downtime, or possibly a lot of NULL values. In a JSON database, we don't need to tell the database anything about a new field.
+
+Let's use the link:https://docs.couchbase.com/dotnet-sdk/current/howtos/subdocument-operations.html[subdocument API] to add a "deleted" field to the document. Subdocument means that we will only operate on a *portion* of the JSON, and leave the rest alone.
+
+[source,C#,indent=0]
+----
+include::src/AspNetCoreTutorial/AspNetCoreTutorial/Controllers/GiftsController.cs[tag=softDelete]
+----
+
+(Make sure `using Couchbase.KeyValue;` is at the top of your GiftsController file.)
+
+This code sends a command to Couchbase: `for the document with such-and-such ID, upsert a field called "deleted" and give it the current date/time as a value`.
+
+Notice that with sub-document, we didn't have to first load the existing document, and we didn't have to send the entire modified document back over the wire.
+
+== Soft-deleted data
+
+The end result will be a document that looks like this:
+
+[source,JavaScript,indent=0]
+----
+{
+  "name": "Digital Photo Frame",
+  "deleted": "2022-04-21T11:05:26.1766248-04:00"
+}
+----
+
+The other documents in my wishlist do *not* have a `deleted` field. They still look like:
+
+[source,JavaScript,indent=0]
+----
+{
+  "name": "Skyline Chili 2XL T-Shirt"
+}
+----
+
+and
+
+[source,JavaScript,indent=0]
+----
+{
+  "name": "Joey Votto jersey"
+}
+----
+
+Note that they don't have a `"deleted": null` field; they don't have a `"deleted"` field at all.
+
+== Soft-deleted SELECT
+
+The data is *marked* as deleted, but it's still in the database. We need to modify the `GetAll` endpoint (link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-2/[see part 2 for more about `GetAll`]) to take this into account:
+
+[source,SQL,indent=0]
+----
+SELECT META(w).id, w.*
+FROM demo._default.wishlist w
+WHERE w.deleted IS MISSING
+----
+
+I've introduced some more SQL{plus}{plus} syntax here: `MISSING`. This is a concept that doesn't exist in relational databases. In relational, any column specified in the query must be defined and must have a value (even if it's null). With a JSON NoSQL document database, there is no such constraint.
+
+== Improving the index
+
+One last point to discuss is indexing. Back in link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-2/[part 2], we created a primary index just to get started. However, that index will rarely be the most efficient. link:https://docs.couchbase.com/server/current/learn/services-and-indexes/indexes/global-secondary-indexes.html[Creating and tuning indexes] is a deep topic, just as it is in the relational database world.
+
+Fortunately, Couchbase Capella has a built-in link:https://docs.couchbase.com/cloud/clusters/query-service/query-workbench.html#index-advisor["Advise" tool] that can recommend better indexes. Just click "Advise" in the Query Workbench (or you can use `ADVISE` syntax).
+
+image:13516-index-advisor.png[Index Advisor]
+
+In this case, it gives the following recommendation:
+
+[source,JavaScript,indent=0]
+----
+"recommended_indexes": {
+          "indexes": [
+            {
+              "index_statement": "CREATE INDEX adv_deletedISMISSING ON `default`:`demo`.`_default`.`wishlist`(`deleted` IS MISSING) WHERE `deleted` IS MISSING",
+              "index_statement_relative": "CREATE INDEX adv_deletedISMISSING ON `wishlist`(`deleted` IS MISSING) WHERE `deleted` IS MISSING",
+              "keyspace_alias": "wishlist_w",
+              "query_context": "default:demo._default",
+              "recommending_rule": "Index keys follow order of predicate types: 2. equality/null/missing."
+            }
+          ]
+        }
+----
+
+In the case of our very small amount of wishlist data, this index is probably not worth creating. However, if we were managing the wishlists of an entire eCommerce site (for example), this index would be a good starting point.
+
+== The end of CRUD
+
+We've reached the end of creating a very simple ASP.NET Core CRUD application with Couchbase. The final API surface looks like:
+
+image:13517-api-surface-asp-net-core-crud.png[ASP.NET Core CRUD API]
+
+Here is a breakdown of the concepts in this series, with links to documentation to dive deeper:
+
+* link:https://docs.couchbase.com/cloud/get-started/get-started.html[Setting up Capella]
+* link:https://docs.couchbase.com/dotnet-sdk/current/howtos/managing-connections.html#connection-di[Setting up .NET dependency injection]
+* link:https://docs.couchbase.com/dotnet-sdk/current/howtos/n1ql-queries-with-sdk.html[SQL{plus}{plus}] (sometimes still called "N1QL")
+** link:https://docs.couchbase.com/cloud/clusters/query-service/query-workbench.html[Query Workbench]
+** link:https://docs.couchbase.com/server/current/guides/select.html[SELECT]
+** link:https://docs.couchbase.com/server/current/guides/insert.html[INSERT]
+** link:https://docs.couchbase.com/server/current/guides/update.html[UPDATE]
+** link:https://docs.couchbase.com/server/current/guides/delete.html[DELETE]
+** link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/upsert.html[UPSERT]
+** link:https://docs.couchbase.com/server/current/guides/create-index.html[CREATE INDEX]
+** link:https://docs.couchbase.com/cloud/clusters/query-service/query-workbench.html#index-advisor[Index Advisor]
+* link:https://docs.couchbase.com/dotnet-sdk/current/howtos/kv-operations.html[Key-value (.NET SDK)]
+** link:https://docs.couchbase.com/dotnet-sdk/current/howtos/kv-operations.html#crud-operations[Key-value CRUD operations]
+** link:https://docs.couchbase.com/dotnet-sdk/current/howtos/subdocument-operations.html[Sub-document] operations
+* link:https://docs.couchbase.com/dotnet-sdk/current/howtos/distributed-acid-transactions-from-the-sdk.html[ACID Transactions]
+
+link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/135AspNetCoreGettingStartedUpdated2019/src/AspNetCoreTutorial[The complete source code for this series is available on GitHub].
+
+== What's next?
+
+link:https://cloud.couchbase.com/sign-up[Sign up for a Capella free-trial]. The Couchbase Capella DBaaS is the easiest way to get started with Couchbase, and no credit card is required.
+
+Check out the link:https://couchbase.live/examples/basic-dotnet-kv-get[Couchbase Playground for .NET] examples that you can run right in the browser.
+
+Join the link:https://blog.couchbase.com/couchbase-on-discord/[Couchbase Discord] to ask questions and exchange comments with Couchbase engineers and with other members of the Couchbase community.

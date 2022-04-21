@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 // tag::addservice[]
 builder.Services.AddCouchbase(x =>
 {
-    x.ConnectionString = "couchbases://" + "cb.qhvgskr1n1m6fit.cloud.couchbase.com";
+    x.ConnectionString = "couchbases://" + "cb.abc123foo456.cloud.couchbase.com";
     x.UserName = "svc-wishlist";
     x.Password = "TOP-secret-123!";
     x.HttpIgnoreRemoteCertificateMismatch = true;

@@ -1,6 +1,7 @@
 ﻿using AspNetCoreTutorial.Models;
 using Microsoft.AspNetCore.Mvc;
 using Couchbase;
+using Couchbase.KeyValue;
 using Couchbase.Query;
 using Couchbase.Extensions.DependencyInjection;
 
@@ -26,7 +27,9 @@ public class GiftsController : Controller
         var cluster = bucket.Cluster;
 
         var result = await cluster.QueryAsync<WishlistItem>(
-            "SELECT META(w).id, w.* FROM demo._default.wishlist w;"
+            @"SELECT META(w).id, w.*
+                    FROM demo._default.wishlist w
+                    WHERE w.deleted IS MISSING"
         );
 
         return Ok(result);
@@ -88,18 +91,32 @@ public class GiftsController : Controller
     }
     // end::edit[]
 
-    /*
-
+    // tag::delete[]
     [HttpDelete]
     [Route("api/delete")]
     public async Task<IActionResult> Delete(Guid id)
     {
-    var bucket = await _bucketProvider.GetBucketAsync("demo");
-    var collection = await bucket.CollectionAsync("wishlist");
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var collection = await bucket.CollectionAsync("wishlist");
 
-    await collection.RemoveAsync(id.ToString());
+        await collection.RemoveAsync(id.ToString());
 
-    return Ok(new { success = true });
+        return Ok(new { success = true });
     }
-    */
+    // end::delete[]
+
+    // tag::softDelete[]
+    [HttpDelete]
+    [Route("api/softDelete")]
+    public async Task<IActionResult> SoftDelete(Guid id)
+    {
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var collection = await bucket.CollectionAsync("wishlist");
+
+        await collection.MutateInAsync(id.ToString(),
+            options => options.Upsert("deleted", DateTime.Now));
+
+        return Ok(new { success = true });
+    }
+    // end::softDelete[]
 }
