@@ -1,0 +1,36 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Make Your Voice Heard: Stack Overflow Developer Survey
+:slug: stack-overflow-developer-survey
+:focus-keyword: stack overflow
+:categories: ???
+:tags: stack overflow, survey, developers
+:heroimage: TBD
+
+Stack Overflow releases a survey of the developer community every year. This is the 12th annual survey, and I'm very excited at link:https://stackoverflow.blog/2022/05/11/stack-overflow-2022-developer-survey-is-open/[the changes and improvements] that have gone into it.
+
+== Who is a "Developer"?
+
+There's often gatekeeping around who is a developer or what makes a "real developer". Stack Overflow makes it easy: a developer is someone who has written code.
+
+image:13601-who-is-a-developer.png[Who is a developer? Anyone who codes.]
+
+So, if you've written ANY code...
+
+* Used one of the link:https://developer.couchbase.com/[many Couchbase SDKs]? You're a developer for sure.
+* A link:https://www.couchbase.com/products/n1ql[SQL++ query]? Copy/pasted into Query Workbench? You're a developer.
+* Tried out the link:https://couchbase.live/[Couchbase Playground]? You're a developer.
+* Wrote some HTML for WordPress? Modified an email template? You're a developer.
+* Are you in the 6th grade and you created something in link:https://scratch.mit.edu/[Scratch]? You're a developer!
+
+== Take the Survey!
+
+The Stack Overflow developer survey is very influential and helps everyone better understand the developer community.
+
+You have a chance to make your voice heard!
+
+link:https://stackoverflow.az1.qualtrics.com/jfe/form/SV_5jeoE1pq9sFcwIe[Take the survey right now].
+
+image:13602-couchbase-developer-survey.png[You can tell the survey you work with Couchbase!]
+
+It's not very long, maybe 10 minutes. You don't need a Stack Overflow account to participate (but since you're a developer, you should link:https://stackoverflow.com/questions/tagged/couchbase[create a StackOverflow account] eventually).
