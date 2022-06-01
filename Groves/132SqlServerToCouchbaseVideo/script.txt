@@ -1,0 +1,285 @@
+Hello! I'm Matthew Groves from Couchbase, and I'd
+like to show you today how to converting the data in
+a relational database like SQL Server over to
+Couchbase's NoSQL database, Couchbase Server.
+
+Couchbase Server 7, currently in beta, adds many features
+that map closely to familiar relational concepts.
+
+For a relational database, I'm going to use SQL Server.
+However, many SQL Server concepts also apply to other
+relational databases like Oracle, MySQL, Postgres, etc.
+
+[show sql server management studio]
+
+I'm running SQL Server here on my machine. I've loaded
+AdventureWorks dataset. This sample data set is a little
+outdated, but I think it's a realistic representation of
+a typical relational database, so that's why I'm using it.
+
+[show Couchbase]
+
+I've also got Couchbase 7 beta currently installed on my machine.
+You can download this right now at couchbase.com/downloads, or
+install it via Docker.
+
+In Couchbase, the equivalent of a "database" is called a "bucket".
+I've created a bucket here called AdventureWorks2016.
+
+[edit bucket, expand advanced to show replication]
+
+With Couchbase, each bucket is automatically distributed
+and replicated across every data node in the cluster.
+Each bucket also gets a memory quota. This is how much memory
+to give the bucket that Couchbase uses for automatic caching.
+
+Don't worry about these specific settings too much right now.
+Just know that its roughly equivalent to a SQL Server database
+
+[show SQL Server]
+
+Back in SQL Server, the next concept is "schema". in SQL Server,
+schema can be used for organization
+and security. For instance, AdventureWorks has a HumanResources schema,
+a Person schema, and so on. In my experience, often the only
+schema that's used is the default "dbo" schema, but not always.
+
+[expand Person Address table]
+
+SQL Server schemas contain tables. Each table has a defined, rigid
+schema of columns that all of the data within must follow.
+
+[show Couchbase Server - scopes/collections already populated]
+
+Over in Couchbase Server, the equivalent of a SQL Server "schema" is
+called a "scope". Here in AdventureWorks, I've already created
+scopes that correspond to the schemas in SQL Server. Also note
+that a "_default" scope exists here as well. This is equivalent to
+the "dbo" scope in SQL Server.
+
+Note that I didn't create these manually. I've used a utility program
+to automatically create/convert these, by reflecting 
+on a SQL Server database. I will show more of that later.
+
+[click a scope to show collections]
+
+Inside of each Couchbase scope, there are collections. These are
+equivalent to tables in SQL Server. However, unlike tables, there
+is not a fixed set of columns that each document must conform to.
+Each piece of data in a collection stands on its own. Generally
+speaking, the data should be as consistent as is useful, but the
+flexibility here provides opportunities for agile adaptation and
+change for developers when necessary.
+
+[back over to SQL Server]
+
+Within a SQL Server table, there are rows of data. Each row 
+of data is tightly coupled to the table. Here's an example
+of some data in the Address table in the Person schema.
+Data types vary from SQL Server, Oracle, etc, but there are
+many common data types like varchar, int, decimal, float, etc.
+SQL Server has its own propietary types too, like geography, shown
+here.
+
+[back to Couchbase Server]
+
+Within a Couchbase collection, data is stored as documents. Each document
+corresponds to a row of data. In Couchbase, data is stored as
+JSON. JSON is a popular data standard, with serializers available
+in every platform and programming language.
+
+[page to address]
+
+Here's an example
+of a document in the Person scope and Address collection.
+
+[click documents]
+
+The
+data represented here matches the data in SQL Server for the 
+most part. Most data can be converted and represented in
+a straightforward way. A propietary data format like geography can be
+represented by a nested JSON object.
+
+Again, I did not convert this data over manually, but used a
+utility to automate that process for me.
+
+[back to SQL Server]
+
+The next concept I want to show is indexing. In SQL Server, the
+only way you can interact with data is via writing a SQL query
+(SQL Server's implementation is called tSQL or transact-SQL).
+And, in order for those queries to be efficient, you often need
+to write indexes. In this AdventureWorks sample, there are many
+indexes. Let's look at Person.Address indexes, for instance.
+
+[do a create index to show it]
+
+These are created with CREATE INDEX syntax, shown here.
+
+[back to Couchbase Server - indexes]
+
+With Couchbase, there are multiple ways to interact with data.
+SQL is one of them (Couchbase's implementation is called N1QL,
+N 1 Q L). This also makes use of indexes for efficient querying.
+
+Shown here are indexes for the Person scope Address collection.
+The syntax involved is also CREATE INDEX. Here are some examples
+that are direct translations from SQL Server. Again, these were
+created automatically. Creating the RIGHT indexes for efficient
+querying may not always be possible to do automatically, but this
+is a good start.
+
+[back to SQL Server]
+
+Here's an example of a query in SQL Server (show the one from
+the blog post). We can execute it here, and show the results.
+This query is an official Microsoft example I copied
+from docs.microsoft.com, and it returns
+all the names of employees and cities they live in.
+
+[execute]
+
+We can also view the execution plan from SQL Server
+Management Studio.
+
+[show execution plan]
+
+This plan tells us how the query is being executed,
+which indexes are being used, where the compute time is
+being spent, suggested indexes, etc.
+
+[back to Couchbase]
+
+Let's run a very similar query on Couchbase.
+
+[paste query]
+
+The only change I have to make for this one is to
+change the concatenation operator from + to double-pipe.
+It won't always be this straightforward to convert
+syntaxes, but it'll usually be pretty close.
+
+[execute]
+
+The results here are identical, except that the
+result is in JSON format. We can click "Plan"
+to get a query plan visualization here, which also
+shows us where the compute time is being spent,
+which indexes are being used. I can click on "Advise"
+to see if there are any indexes or covering indexes
+recommended for better performance.
+
+[back to SQL Server]
+
+Finally, let's take a brief look at authorization
+and authentication. This is especially important
+for microservices and/or multi-tenancy.
+
+AdventureWorks doesn't come with
+any interesting users, but thinking back to schemas
+and tables, we could create a user that only has
+access to certain schemas, certain tables, maybe read
+only, maybe insert/update but not delete, etc.
+
+[show users]
+
+I create a user called "Person Microservice" that has
+some very fine-grained permissions to three tables.
+Insert/Update/Select on 2 of them, and Insert/Update/
+Select/Delete on 1 of them. This is the kind of user
+you might create for a microservice or for a multitenant
+configuration. You only want the microservice
+to have access to the Person schema. Or maybe you
+define a schema per tenant.
+
+There's also a user that represents my
+personal Windows account, and there's a dbo user and other
+system users by default.
+
+[back to Couchbase]
+
+Back over on Couchbase, let's take a look at Security.
+There are 3 users here. One of them corresponds to the
+Person Microservice user I created.
+
+[open edit dialog]
+
+You can see that it
+has a bunch of fine-grained permissions to certain collections
+and if you look closely, there is delete access
+for one, but not for the others.
+
+Again, this user was not created manually, but automatically
+by a utility that I'm about to show you. But unlike SQL Server,
+Couchbase has multiple ways to access data, included an
+extremely fast key/value lookup that pulls values right from
+memory. So I've given this user those permissions AS WELL AS
+SQL query permissions for update/delete/select/insert where
+applicable. The other two users I've given much broader
+permission of "Bucket Admin".
+
+Even though I've automated this, you should manually
+review and verify that these are the permissions and users that you want in
+your Couchbase cluster.
+
+[show github page]
+
+I've built an experimental utility to automate much
+of this conversion and translation. It's a .NET library,
+available on GitHub and it only works with SQL Server
+for now. It comes with a sample console app
+and some documentation to show you how to get started.
+
+[show link on screen]
+
+Let's take a brief tour of this utility.
+
+[show appsettings]
+
+The sample console app allows to you point to a SQL
+Server database and a Couchbase Server cluster,
+configure a few things about how you want the conversion
+to happen. Then you can start the conversion program.
+You'll get a log of all the activities that are going on,
+any exceptions or errors during the process.
+It took me about 20-30 minutes for all of AdventureWorks
+data to get copied over, along with indexes, users, collections,
+and scopes.
+
+[show filters docs]
+
+You can also configure filters and transformations
+if you wish to copy a subset of data (say, only the
+most recent data) or you want to change/augment the
+data as it's copied over.
+
+[show console app in progress]
+
+If you're interested in trying this out,
+experimenting with it, submitting issues or
+feedback, please check out https://github.com/mgroves/SqlServerToCouchbase
+
+[summary - show translation slide]
+
+At this point, you've seen how Couchbase matches up
+to the familiar relational concepts of Database, Schema, Table,
+Row of data, User, SQL query, and Index.
+
+[what you gain with couchbase, wheel maybe?]
+
+Most importantly, we've taken those familiar
+concepts and existing data and put them into a database
+that has automatic sharding and replication built-in
+for ease of scaling, a flexible JSON data model, and a built-in
+memory first caching layer for extremely fast access.
+
+And there's plenty more functionality that comes with Couchbase,
+including an Analytics engine that also uses SQL for big-data & BI queries,
+Full Text Search for text search with ranking, geography, and inverted indexing,
+Mobile offline-first capabilities with synchronization, and
+XDCR for synchronoization between data centers.
+
+Download Couchbase 7 today and see for yourself.
+
+Thank you for watching.
