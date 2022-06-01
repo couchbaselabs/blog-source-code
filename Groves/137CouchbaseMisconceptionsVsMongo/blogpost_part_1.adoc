@@ -1,0 +1,171 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Couchbase vs MongoDB: NoSQL Misconceptions Part 1
+:slug: tbd
+:focus-keyword: mongodb
+:categories: ???
+:tags: mongodb
+:heroimage: TBD
+
+Misconceptions about NoSQL have been around as long as NoSQL itself. It's always good to get different perspectives, and so I'm kicking off a new blog series about NoSQL misconceptions, specifically when it comes to two of the top document database companies in the world: Couchbase and MongoDb.
+
+I'm going to address some of the link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[misconceptions that Mongo has made about Couchbase and NoSQL], as well as some of the more common misconceptions and misunderstandings that I've heard in the developer community in general.
+
+== NoSQL means you can't write SQL
+
+I can't really blame anyone for this misconception. It's right in the name! And for many NoSQL databases, such as Mongo, this is absolutely true. However, NoSQL can also mean "Not Only SQL", and Couchbase is the first JSON document database to truly fulfill that promise.
+
+With Couchbase, data can be accessed in multiple ways:
+
+* Simple and efficient Key-value lookup
+* SQL{plus}{plus} querying (previous called "N1QL")
+* Full Text Search
+* Analytics (also with SQL{plus}{plus})
+* Mobile sync
+
+Couchbase is a multi-model database: you can start with simple-to-understand key-value operations, and progress to SQL{plus}{plus} or Full Text Search when you need them. It's all the same pool of data: no need to bolt-on extra tools or integrations. It's all in the box with Couchbase.
+
+Couchbase isn't the only NoSQL database exploring SQL: Microsoft's CosmosDB and Amazon's PartiQL also offer some degree of SQL compatibility (albeit not yet as full-featured as Couchbase's SQL{plus}{plus}). But the adoption of SQL{plus}{plus} as a standard makes for a more natural transition from legacy/relational databases.
+
+image:13701-sql-plus-plus-book-don-chamberlin.jpg[SQL{plus}{plus} for SQL Users by Don Chamberlain]
+
+I'd also recommend a resource for further research: link:https://www.amazon.com/SQL-Users-Tutorial-Don-Chamberlin/dp/0692184503[SQL{plus}{plus} for SQL Users], a book by one of the inventors of SQL, Don Chamberlain (also available for link:https://www.couchbase.com/sql-plus-plus-for-sql-users[free download], courtesy of Couchbase).
+
+== NoSQL has a steep learning curve
+
+With all these ways to interact with data, it must be complicated. Mongo specifically calls out Couchbase: "this growth in functionality comes at a cost: an explosion in complexity for developers".
+
+However, you do not need to use all these tools right away. You can start with a familiar SQL query, or a simple-to-use key-value API. Later, when your use case requires it, you can advance to more complex SQL++ for flexibility, sub-document API for performance, or a full text search index for efficient searching.
+
+When it comes to issues with learning NoSQL databases, they've been all but eliminated when it comes to Couchbase compared to others. Couchbase has been constantly working to make the developer experience smoother, including:
+
+* link:https://couchbase.live/[Couchbase Playground], a completely free, in-browser experience to modify and execute code samples for all SDKs (Java, Node.js, Python, .NET, PHP, Ruby, Scala, Go, C++, and Kotlin)
+* link:https://cloud.couchbase.com/sign-up[Couchbase Capella], a fully managed and hosted Database-as-a-Service (DBaaS) to reduce the overhead and time needed to perform administrative tasks. Just get a connection string and start coding.
+
+And, I'll again mention SQL++, because SQL is the most popular language in the world for working with data. Consider this side-by-side comparison of a SQL{plus}{plus} query and a Mongo query, which both return the same result: 
+
+++++
+<table class="">
+				<thead>
+				<tr style="border-top: 1px solid #BEC0C1;border-right: 1px solid #BEC0C1;border-left: 1px solid #BEC0C1;border-bottom: 1px solid #BEC0C1;" class="text-left">
+						<th style="border-top: 0;border-right: 0;border-left: 0;border-bottom: 0;" class="bg-black ">
+<h5 style="text-align:justify"><strong>Couchbase SQL++</strong></h5>						</th>
+						<th style="" class="bg-black text-left">
+<h5><strong>MongoDB</strong>™<strong> Query</strong></h5>						</th>
+				</tr>
+				</thead>
+			<tbody>
+        	<tr style="" class="text-left">
+							<td style="" class="bg-black ">
+<style>
+    .generic-fixed-table tr td pre {
+    white-space: inherit;
+    }
+    code, kbd, samp {
+
+    font-size: 1em;
+}
+    .token.punctuation {
+    color: #f8f8f2;
+}
+    
+
+.token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable {
+    color: #f8f8f2;
+}
+    .token.string, .token.char, .token.builtin, .token.inserted {
+    color: #a6e22e;
+}
+        .token.keyword {
+    color: #66d9ef;
+}
+    .token.function {
+    color: #e6db74;
+}
+    .token.number {
+    color: #ae81ff;
+}
+    code[class*="language-"], pre[class*="language-"] {
+    color: #f8f8f2;
+    background: none;
+    text-shadow: 0 1px rgb(0 0 0 / 30%);
+    font-family: 'Courier', sans-serif;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+    display: block;
+}
+
+    </style><div style="vertical-align: text-top;">
+<pre class="language-sql">                                        
+                                      <code class="hljs language-sql">   
+<span class="token keyword"><span class="hljs-keyword">SELECT</span></span> <span class="token function"><span class="hljs-keyword">SUM</span></span><span class="token punctuation">(</span><span class="token keyword"><span class="hljs-keyword">value</span></span> <span class="token operator">*</span> volume<span class="token punctuation">)</span> <span class="token keyword"><span class="hljs-keyword">AS</span></span> val<span class="token punctuation">,</span> symbol
+<span class="token keyword"><span class="hljs-keyword">FROM</span></span>   <span class="token number">db</span><span class="token punctuation">.</span>stocks
+<span class="token keyword"><span class="hljs-keyword">WHERE</span></span>  symbol <span class="token operator"><span class="hljs-keyword">IN</span></span> <span class="token punctuation">(</span> <span class="token string"><span class="hljs-string">"AAPL"</span></span><span class="token punctuation">,</span> <span class="token string"><span class="hljs-string">"GOOG"</span></span> <span class="token punctuation">)</span> <span class="token operator"><span class="hljs-keyword">AND</span></span> <span class="token keyword"><span class="hljs-keyword">value</span></span> <span class="token operator">&gt;</span> <span class="token number"><span class="hljs-number">0</span></span>
+<span class="token keyword"><span class="hljs-keyword">GROUP</span></span>  <span class="token keyword"><span class="hljs-keyword">BY</span></span> symbol
+<span class="token keyword"><span class="hljs-keyword">ORDER</span></span>  <span class="token keyword"><span class="hljs-keyword">BY</span></span> val <span class="token keyword"><span class="hljs-keyword">DESC</span></span><span class="token punctuation">,</span> symbol <span class="token keyword"><span class="hljs-keyword">ASC</span></span></code>
+                                </pre></div>							</td>
+							<td style="" class="bg-black text-left">
+<pre class="language-sql">                                        
+                                      <code class="hljs language-sql">   
+<span class="token number">db</span><span class="token punctuation">.</span>stocks<span class="token punctuation">.</span>aggregate<span class="token punctuation">(</span><span class="token punctuation">[</span>
+  { <span class="token string">"$match"</span>: {
+    <span class="token string">"$and"</span>: <span class="token punctuation">[</span>
+      {<span class="token string">"symbol"</span>: {
+        <span class="token string">"$in"</span>: <span class="token punctuation">[</span>
+        <span class="token string">"AAPL"</span><span class="token punctuation">,</span>
+        <span class="token string">"GOOG"</span><span class="token punctuation">]</span>}}<span class="token punctuation">,</span>
+      { <span class="token string">"value"</span>: {
+      <span class="token string">"$gt"</span>: <span class="token number">0</span> }}<span class="token punctuation">]</span>}}<span class="token punctuation">,</span>
+  { <span class="token string">"$group"</span>: {
+    <span class="token string">"_id"</span>: {
+      <span class="token string">"symbol"</span>: <span class="token string">"$symbol"</span> }<span class="token punctuation">,</span>
+    <span class="token string">"sum(value * volume)"</span>: {
+      <span class="token string">"$sum"</span>: {
+        <span class="token string">"$multiply"</span>: <span class="token punctuation">[</span>
+          <span class="token string">"$value"</span><span class="token punctuation">,</span>
+          <span class="token string">"$volume"</span><span class="token punctuation">]</span>}}}}<span class="token punctuation">,</span>
+  { <span class="token string">"$project"</span>: {
+    <span class="token string">"_id"</span>: <span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token string">"sum(value * volume)"</span>: <span class="token string">"$sum(value * volume)"</span><span class="token punctuation">,</span>
+    <span class="token string">"symbol"</span>: <span class="token string">"$_id.symbol"</span>}}
+  { <span class="token string">"$sort"</span>: {
+    <span class="token string">"sum(value * volume)"</span>: <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>
+    <span class="token string">"symbol"</span>: <span class="token number">1</span> }}<span class="token punctuation">]</span>}<span class="token punctuation">)</span></code>
+                                </pre>							</td>
+					</tr>
+      </tbody>
+		</table>
+++++
+
+Not only is the SQL example more concise and arguably more readable than the proprietary Mongo query language, but it's also a standard language understood by a large percentage of developers and software professionals.
+
+Couchbase has invested in the SQL standard for years, and in a difficult hiring market, SQL can be a skill that makes the NoSQL learning curve much less steep.
+
+== More Resources
+
+Since this blog post is on Couchbase.com, of course I am biased. So, make sure to do some further research.
+
+Here are some resources that can help you:
+
+* A presentation from Steve Yen, one of the founders of Couchbase: link:https://www.youtube.com/watch?v=o9XIzmfZNow[Why Couchbase?]
+* More details about SQL++ from Lior King, a long time engineer at Couchbase: link:https://www.youtube.com/watch?v=Z2WGwevHdi0[Climbing the Query Peak]
+* Make sure to link:https://couchbase.live/[visit the Couchbase Playground], and try Couchbase with your language of choice.
+* Download Don Chamberlin's book, link:https://www.amazon.com/SQL-Users-Tutorial-Don-Chamberlin/dp/0692184503[SQL{plus}{plus} for SQL Users]
+* Sign up for a link:https://cloud.couchbase.com/sign-up[Couchbase Capella trial for free]. No credit card required. And please let me know how you find the learning curve: we are listening and we want to continuously improve the experience for you.
+
+== What's Next?
+
+In the next post, I'll dig into more misconceptions: is Couchbase "just" a key-value store? Is Couchbase missing critical text search functionality? And how does Couchbase compare in these areas to other leading NoSQL databases like Mongo?
+
+Want to discuss further? You are welcome to join the link:https://blog.couchbase.com/couchbase-on-discord/[Couchbase Discord] for further conversation, questions, and answers with the Couchbase staff and community.

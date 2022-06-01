@@ -1,0 +1,23 @@
+= NoSQL misconceptions: Mongo vs Couchbase part 3
+
+5. NoSQL isn't secure
+
+mongo links
+
+couchbase security features / white paper?
+
+connect video: https://www.youtube.com/watch?v=2DnuCjYxmDA
+
+== Couchbase and NoSQL aren't consistent and lose data
+
+couchbase strong consistency
+
+index eventual consistency / request plus
+
+mongo jepsen article?
+
+connect video: https://www.youtube.com/watch?v=8qlfyW52-C0
+
+6. Couchbase can't support ACID transactions
+
+yes, link to Denis post

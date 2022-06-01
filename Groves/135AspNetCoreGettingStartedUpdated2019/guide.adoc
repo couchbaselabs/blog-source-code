@@ -14,7 +14,7 @@ CRUD is:
 * Update (changing existing data)
 * Delete (removing data)
 
-This guide will show you how to get up and running with ASP.NET Core and NoSQL (Couchbase) to create a very simple CRUD HTTP API. This API will be operating on a gift wishlist: all the items you want for your birthday. This guide won't cover building a UI, but you could use this API with the client-side framework of your choice (like React or Blazor, etc).
+This guide will show you how to get up and running with ASP.NET Core and NoSQL (Couchbase) to create a very simple CRUD HTTP API. This API will be operating on a gift wishlist: all the items you want for your birthday. This guide won't cover building an HTML UI, but you could use this API with the client-side framework of your choice (like React or Blazor, etc).
 
 == Developer tools you'll need
 
@@ -22,11 +22,11 @@ This guide uses Visual Studio 2022 (Enterprise), but you should be able to follo
 
 This guide uses link:https://cloud.couchbase.com/sign-up[Couchbase Capella], which is Couchbase's DBaaS (DataBase as a Service) offering. You can sign up for a free trial: https://cloud.couchbase.com/sign-up
 
-The *travel-sample* bucket is already loaded when you deploy your trial cluster. But I'm using link:https://docs.couchbase.com/cloud/clusters/data-service/manage-buckets.html[another bucket that I created] called "demo".
+The *travel-sample* bucket is already loaded when you deploy your trial cluster. For this guide, create link:https://docs.couchbase.com/cloud/clusters/data-service/manage-buckets.html[another bucket ] called "demo".
 
 image:13501-capella-buckets.png[Capella list of buckets]
 
-Inside that bucket, there's a _default scope, so I'll use that. Inside that scope, I've created a "wishlist" collection. (link:https://docs.couchbase.com/cloud/clusters/data-service/scopes-collections.html[Learn more about scopes and collections in Capella])
+Inside that bucket, there's a _default scope. Inside that scope, create a "wishlist" collection. (link:https://docs.couchbase.com/cloud/clusters/data-service/scopes-collections.html[Learn more about scopes and collections in Capella])
 
 image:13502-wishlist-collection.png[Capella list of collections]
 
@@ -225,7 +225,7 @@ Which produces the result:
 ]
 ----
 
-There's still something missing from this result. Where are those GUIDs that we used for the document keys? Couchbase doesn't store them as data; it stores them as *metadata*. SQL{plus}{plus} provides the `META()` function to query metadata. Use `META().id` like this:
+There's still something missing from this result. Where are those GUIDs used for the document keys? Couchbase doesn't store them as data; it stores them as *metadata*. SQL{plus}{plus} provides the `META()` function to query metadata. Use `META().id` like this:
 
 [source,SQL,indent=0]
 ----
@@ -266,7 +266,7 @@ In GiftsController, create a endpoint called GetAll:
     }
 ----
 
-To execute SQL{plus}{plus}, you need an object of type `Cluster`. SQL{plus}{plus} runs at the cluster level (not bucket, or scope, or collection, since it may need to `JOIN`/`UNION` between them). You could add link:https://docs.couchbase.com/dotnet-sdk/current/howtos/managing-connections.html#injecting-the-couchbase-cluster[`ClusterProvider`] as a constructor parameter. If this endpoint was going to _only_ work with SQL{plus}{plus}, that would be a good idea. However, let's stick with `BucketProvider` for now. We have an object of type `BucketProvider`. From that object, you can get a object of type `Cluster`:
+To execute SQL{plus}{plus}, you need an object of type `Cluster`. SQL{plus}{plus} runs at the cluster level (not bucket, or scope, or collection, since it may need to `JOIN`/`UNION` between them). You could add link:https://docs.couchbase.com/dotnet-sdk/current/howtos/managing-connections.html#injecting-the-couchbase-cluster[`ClusterProvider`] as a constructor parameter. If this endpoint was going to _only_ work with SQL{plus}{plus}, that would be a good idea. However, let's stick with `BucketProvider` for now. There is an object of type `BucketProvider`. From that object, you can get a object of type `Cluster`:
 
 [source,C#,indent=0]
 ----
@@ -388,7 +388,7 @@ Execute the ASP.NET Core application and look at the updated OpenAPI / Swagger p
 
 image:13512-open-api-get-endpoint.png[Get endpoint in Swagger]
 
-The endpoint `/api/get/{id}` under "Gifts" should now be listed. Expand that endpoint by clicking on it. Unlike the `/api/getall` endpoint, this one requires a parameter: the ID of the wishlist item that you want to get. If you don't remember one of the GUIDs, you can execute `/api/getall` first and copy one of them, or use: "31c9cc33-8dfe-440c-bd1b-bb038939d2e0" (which was the ID I gave to the Joey Votto jersey). Click "Try it out", paste that id, and click "Execute":
+The endpoint `/api/get/{id}` under "Gifts" should now be listed. Expand that endpoint by clicking on it. Unlike the `/api/getall` endpoint, this one requires a parameter: the ID of the wishlist item that you want to get. If you don't remember one of the GUIDs, you can execute `/api/getall` first and copy one of them, or use: "31c9cc33-8dfe-440c-bd1b-bb038939d2e0" (which was the ID for the Joey Votto jersey). Click "Try it out", paste that id, and click "Execute":
 
 image:13513-get-endpoint-response.png[Get endpoint in Swagger]
 
@@ -411,7 +411,7 @@ This endpoint is definitely not ready for production. What's missing?
 * Error handling: what if there's an exception?
 * Validation: what if the ID passed in is invalid?
 * Authentication/authorization: what if the consumer of this API isn't supposed to have read access?
-* Logging: what if something doesn't go quite right, and we want to examine the outcome later?
+* Logging: what if something doesn't go quite right, and you want to examine the outcome later?
 
 These are all important concerns. For most of these, ASP.NET Core has built-in functionality and/or popular 3rd party libraries available to help you. But make sure to check out Couchbase documentation on link:https://docs.couchbase.com/dotnet-sdk/current/howtos/error-handling.html[Handling Errors with the .NET SDK] and link:https://docs.couchbase.com/server/current/manage/manage-security/security-management-overview.html[Security Management Overview].
 
@@ -468,7 +468,7 @@ The `UpsertAsync` function will either:
 * Create a new document with `id.ToString()` as the key
 * Change an existing document with a key of `id.ToString()`
 
-In either case, once this endpoint finishes executing, you will end up with a JSON document like `{ "name" = "wishlist item name"}` and a GUID as a key (technically all keys in Couchbase are strings, but we know it's a GUID string).
+In either case, once this endpoint finishes executing, you will end up with a JSON document like `{ "name" = "wishlist item name"}` and a GUID as a key (technically all keys in Couchbase are strings).
 
 NOTE: One subtle difference between the two APIs, is that the `UPSERT` SQL++ statement will only mutate the one field (`name`), while the key-value method `UpsertAsync` will mutate the entire document (which is only `name` for now). Keep reading for more about using the sub-document key-value API.
 
@@ -534,7 +534,7 @@ It's also a great opportunity to show the flexibility of a JSON NoSQL database.
 
 Let's introduce a "deleted" field to wishlist items. This field will contain a date/time that the item was deleted. If this field exists, the rest of the endpoint should consider this item to be deleted. However, if necessary, you can still query it, report on it, and recover it.
 
-In a relational database, this would likely require an `ALTER` to add a new column. Depending on the size of your data, it could require some downtime, or possibly a lot of NULL values. In a JSON database, we don't need to tell the database anything about a new field.
+In a relational database, this would likely require an `ALTER` to add a new column. Depending on the size of your data, it could require some downtime, or possibly a lot of NULL values. In a JSON database, there is no need to tell the database anything about a new field.
 
 Let's use the link:https://docs.couchbase.com/dotnet-sdk/current/howtos/subdocument-operations.html[subdocument API] to add a "deleted" field to the document. Subdocument means that you will only operate on a *portion* of the JSON, and leave the rest alone.
 
@@ -581,7 +581,7 @@ Note that they don't have a `"deleted": null` field; they don't have a `"deleted
 
 == Soft-deleted SELECT
 
-The data is *marked* as deleted, but it's still in the database. We need to modify the `GetAll` endpoint (link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-2/[see part 2 for more about `GetAll`]) to take this into account:
+The data is *marked* as deleted, but it's still in the database. Next, you need to modify the `GetAll` endpoint (link:https://blog.couchbase.com/asp-net-core-crud-with-nosql-part-2/[see part 2 for more about `GetAll`]) to take this into account:
 
 [source,SQL,indent=0]
 ----

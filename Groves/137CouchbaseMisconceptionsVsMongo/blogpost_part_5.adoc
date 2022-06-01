@@ -1,0 +1,19 @@
+= NoSQL misconceptions: Mongo vs Couchbase part 5
+
+9. Couchbase is the most dreaded database
+
+stack overflow survey, what it actually means
+
+sql is in the top 3 languages
+
+javascript is in the top 3 languages (JSON)
+
+couchdb confusion (even mongo can't get it right - https://web.archive.org/web/20210202152108/https://www.mongodb.com/mongodb-vs-couchbase)
+
+(hopefully evidence of this in the 2022 survey!)
+
+connect video: https://www.youtube.com/watch?v=4u6qbZodfRY
+
+10. Every database uses memory, Couchbase's memory-first isn't special
+
+caching vs buffering

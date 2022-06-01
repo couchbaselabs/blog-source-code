@@ -1,0 +1,25 @@
+= NoSQL misconceptions: Mongo vs Couchbase part 4
+
+7. Couchbase is not good for scaling
+
+altoros
+
+mongo scaling comparison
+
+link to distributed database post
+
+operator
+
+maturity level 5: https://www.youtube.com/watch?v=vw17fWDoEk4
+
+new to operator: https://www.youtube.com/watch?v=nZLroRyPYAM
+
+cloud: https://www.youtube.com/watch?v=3kCrVjv2I40
+
+8. Couchbase isn't popular enough
+
+top 10% db-engines
+
+facet time and money: https://www.youtube.com/watch?v=ihcp84dLUBU
+
+techvalidate embed/links

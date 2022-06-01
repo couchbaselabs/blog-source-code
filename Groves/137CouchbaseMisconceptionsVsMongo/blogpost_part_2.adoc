@@ -1,0 +1,52 @@
+:imagesdir: images
+:meta-description: TBD
+:title: Couchbase vs MongoDB: NoSQL Misconceptions Part 2
+:slug: tbd
+:focus-keyword: mongodb
+:categories: ???
+:tags: mongodb
+:heroimage: TBD
+
+Misconceptions about NoSQL have been around as long as NoSQL itself. It's always good to get different perspectives, and so I'm continuing this blog series about NoSQL misconceptions, specifically when it comes to two of the top document database companies in the world: Couchbase and MongoDb.
+
+I'll continue to address some of the link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[misconceptions that Mongo has made about Couchbase and NoSQL], as well as some of the more common misconceptions and misunderstandings that I've heard in the developer community about NoSQL in general.
+
+== Couchbase NoSQL is "just" a Key-Value Store
+
+It's true that at the core of Couchbase is a very efficient, memory-first key-value engine. That's been the case from day 1. But Couchbase has built on that core engine, and it became one of the first "multi-model" NoSQL databases.
+
+*What does multi-model mean?*
+
+Multi-model means that Couchbase provides multiple ways to interact with a single pool of data:
+
+* *Key-value*: read/write data via a "key" lookup. Extremely fast, especially with a memory-first architecture, and great for simplicity.
+* *SQL++*: the world's most popular language for querying data, providing flexibility and an industry standard.
+* *Full-text Search*: aka "FTS", provides a text "search engine" for data, as well as geography-based searches.
+* *Analytics*: querying data with complex, adhoc SQL++ queries, with workload ioslation.
+* *Eventing*: JavaScript functions that can respond to data change events.
+* *Mobile*: Offline-first, automatic synchronization of data to mobile devices, edge devices, and even desktop software.
+
+
+_- - - [ [ [picture of new sandwich architecture diagram here ] ] ]- - -_
+
+Therefore, it is highly inaccurate to say that Couchbase is only for key-value use cases.
+
+== Couchbase Doesn't Have Lucene Search
+
+This is a bizarre point of comparison that link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[MongoDB calls out specifically about Couchbase].
+
+Couchbase has a link:https://docs.couchbase.com/server/current/fts/fts-introduction.html[built-in Full Text Search] engine powered by the popular open-source library link:https://github.com/blevesearch/bleve[Bleve] (written in Go). It's not Lucene, but it is still a full-featured library capable of stemming, language awareness, relevancy scoring, geographical search, fuzziness, etc.
+
+Bleve is built right into Couchbase, and does not require any additional connectors or integrations: just create an index and start searching.
+
+image:13702-full-text-search-playground.png[Full Text Search in Couchbase]
+
+For Mongo to call this out is akin to saying Ford cars don't use Honda engines: it's literally true, but irrelevant (disclaimer: I don't know anything about car engines).
+
+But if you are truly invested in Lucene or prefer to use ElasticSearch, that's okay! Couchbase has an link:https://docs.couchbase.com/elasticsearch-connector/current/getting-started.html[Elasticsearch Connector] available.
+
+== What's Next?
+
+In the next post, I'll dig into more misconceptions: is it still true that NoSQL isn't secure? That it also loses data and doesn't support ACID? How does Couchbase fare with security and potential data loss?
+
+Want to discuss further? You are welcome to join the link:https://blog.couchbase.com/couchbase-on-discord/[Couchbase Discord] for further conversation, questions, and answers with the Couchbase staff and community.
