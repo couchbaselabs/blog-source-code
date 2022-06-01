@@ -1,0 +1,50 @@
+apiVersion: couchbase.com/v1
+kind: CouchbaseCluster
+metadata:
+  name: cb-hellomicroservices
+spec:
+  baseImage: couchbase
+  version: 6.5.0-beta2
+  authSecret: cb-hellomicroservices-auth
+  exposeAdminConsole: true
+  adminConsoleServices:
+    - data
+  cluster:
+    dataServiceMemoryQuota: 256
+    indexServiceMemoryQuota: 256
+    searchServiceMemoryQuota: 256
+    eventingServiceMemoryQuota: 256
+    analyticsServiceMemoryQuota: 1024
+    indexStorageSetting: plasma
+    autoFailoverTimeout: 30
+    autoFailoverMaxCount: 3
+    autoFailoverOnDataDiskIssues: true
+    autoFailoverOnDataDiskIssuesTimePeriod: 30
+    autoFailoverServerGroup: false
+  buckets:
+    - name: hellomicroservice
+      type: couchbase
+      memoryQuota: 256
+      replicas: 0
+      ioPriority: high
+      evictionPolicy: fullEviction
+      conflictResolution: seqno
+      enableFlush: false
+      enableIndexReplica: false
+  servers:
+    - size: 2
+      name: all_services
+      services:
+        - data
+        - index
+        - query
+  volumeClaimTemplates:
+    - metadata:
+        name: couchbase
+      spec:
+        storageClassName: "default"
+        resources:
+          requests:
+            storage: 1Gi
+
+        
