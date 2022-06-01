@@ -1,0 +1,355 @@
+intro splash
+----
+Hello!
+In this video I'm going to show you how to
+get started with Couchbase in ASP NET Core.
+
+I'll be creating a basic CRUD 
+HTTP API (CRUD is Create, Read, Update, Delete).
+This API will be operating on a gift wishlist: all the items
+I want you to buy me for my birthday.
+I won't be building a UI, but you could use this API with
+the client-side framework of your choice (like React or Blazor, etc)
+
+I'm using Visual Studio 2022 (enterprise).
+
+I'm also using Couchbase Capella, which is the DBaaS (database as a service) Couchbase offering
+I've already signed up for a trial account.
+You can too, go to cloud.couchbase.com/sign-up
+The travel-sample bucket is already loaded
+But I'm using another bucket that I created called "demo".
+Inside that bucket, there's a _default scope, so I'll use that.
+And inside that scope, I've created a "wishlist" collection.
+
+I've also created database credentials with read/write access to everything in the 'demo' bucket
+and whitelisted my personal IP address so that my CRUD app can connect.
+
+Let's start with visual studio.
+
+File->New ->Project->ASP.NET Core Web API
+Call it AspNetCoreTutorial
+I'm using .NET 6, other defaults are fine
+(notice that OpenAPI, aka Swagger, is enabled)
+
+This creates a basic shell site. Let's use NuGet to
+add the Couchbase .NET SDK (CouchbaseNetClient). I'll use the NuGet UI
+but you can also use the command line to do this.
+I'll select "Latest Stable", which is 3.[whatever] at the time of this recording
+
+(while nuget is installing):
+
+The Couchbase SDK allows us to connect to a Couchbase
+Cluster. Couchbase is a distributed database, so typically
+there are several servers (called "nodes") in a group (called
+a "cluster") that all act together. A cluster has one or more
+"buckets", which as you saw earlier, contains scopes, which
+contain collections, which then contain documents.
+A bucket is distributed amongst the nodes in the cluster
+but it's treated as a single logical entity by the SDK
+Within a collection, each document has a unique "key" and a JSON "value"
+
+For the trial version of Capella, it  
+only has a single node. However, this doesn't affect your code:
+when nodes are added, the SDK is smart enough to be able to find them on its own.
+In production, you will typically have
+at least three nodes, possibly a few buckets, and as many scopes
+and collections as you need (within reason).
+
+----
+
+I'm also going to add the Couchbase.Extensions.DependencyInjection NuGet
+package (Couchbase.Extensions.DependencyInjection). This will give us an extension method to easily add Couchbase
+capabilities to ASP.NET Core's built-in dependency injection
+
+This package makes it easier to use Couchbase with ASP.NET Core, but it is
+optional.
+
+----
+
+Let's write some code in the ASP.NET app to connect to the Capella cluster.
+
+In Startup.cs, let's go to the ConfigureServices method.
+
+I will use the extension method on services:
+
+		builder.Services.AddCouchbase(x =>
+		{
+			x.ConnectionString = "couchbases://" + "cb.qhvgskr1n1m6fit.cloud.couchbase.com";
+			x.UserName = "svc-wishlist";
+			x.Password = "TOP-secret-123!";
+			x.HttpIgnoreRemoteCertificateMismatch = true;
+			x.KvIgnoreRemoteCertificateNameMismatch = true;
+		});
+
+In this example, I'm hardcoding the connection information, but you can also
+use the configuration in appsettings.json instead.
+			
+One more cleanup step: when the application stops, I need it to release any Couchbase resources that .NET is using.
+
+You can register code to execute on lifetime events, such as ApplicationStopped.
+
+		app.Lifetime.ApplicationStopped.Register(() =>
+		{
+			app.Services.GetService<ICouchbaseLifetimeService>()?.Close();
+		});
+
+Now ASP.NET Core's dependency injection system will automatically inject the
+Couchbase objects when we want.
+
+---
+
+Now, I'll create an ASP.NET Controller for my CRUD operations
+I'll call it "GiftsController"
+
+I'll add a constructor. I'll specify an IBucketProvider parameter.
+This is an object that can be used to get a Bucket from the Couchbase
+DependencyInjection module. I will use it to get a Bucket object for
+the "demo" bucket.
+
+----
+
+Before we start writing some code, let's think about the data model.
+It's going to be a very simple model:
+
+WishlishItem
+
+A document has a key and a JSON value. The key can just be a GUID for our purposes,
+but you could also make it a more meaningful key if you wanted.
+Each item on the wishlist has a "name", so there's going to be a name field.
+
+I'll create a C# class to represent an item: Id (nullable, we'll see why later) and Name.
+A really simple model, but because Couchbase does not require a pre-defined schema, adding
+more fields can be as easy as adding them right here in the C# class.
+
+----
+
+Let's go ahead and "prime" the database with a couple of wishlist items. (add in couchbase capella)
+Navigate to the wishlist collection:
+the first document will have a key "3ca6e87e-c3a6-4637-989d-33cbca5002b5", I'll give it a name of "Recliner"
+the second document will have a key "31c9cc33-8dfe-440c-bd1b-bb038939d2e0", I'll give it a name of "Joey Votto Jersey"
+
+This should be the only time I'll need to enter documents into couchbase directly
+
+----
+
+Let's start with a simple endpoint to get all the items in the list (let's call it GetAll).
+        [HttpGet]
+        [Route("api/getall")]
+
+The easiest way to do this is to write a SQL++ query (SQL for JSON, supported by Couchbase).
+Let's try out a query in Couchbase's Query Workbench.
+
+	SELECT META(w).id, w.* FROM demo._default.wishlist w;
+	
+This query fails, because there is no matching index.
+Let's create an index on this collection.
+	CREATE PRIMARY INDEX ix_wishlist ON demo._default.wishlist;
+
+Now run the query again, and it works.
+So let's code this in C#. Go back to the GetAll method
+QueryRequest.Create
+ScanConsistency - I'm not going to go into much detail, check out the documentation for more on scanconsistency options.
+	The short version is that this will give us the most complete results
+	But the tradeoff is a bit of a performance penalty
+	For this small demo application we won't even notice.
+
+return list of WishlistItems.
+
+	make sure usings at the top:
+		using AspNetCoreTutorial.Models;
+		using Microsoft.AspNetCore.Mvc;
+		using Couchbase;
+		using Couchbase.Query;
+		using Couchbase.Extensions.DependencyInjection;
+
+        var result = await cluster.QueryAsync<WishlishItem>(
+            "SELECT META(w).id, w.* FROM demo._default.wishlist w;",
+            options => options.ScanConsistency(QueryScanConsistency.RequestPlus));
+
+		return Ok(results.Rows);
+----
+
+(ctrl+f5 to start app)
+
+now we can try this endpoint directly in the browser with OpenAPI / Swagger
+you could also try it out in Postman, or any other API tool for making HTTP requests that you like
+
+ignore WeatherForecast, that just came with the template
+
+click to example /api/getall
+
+
+
+----
+
+Next, let's create another endpoint, this time to get a single
+item from the wishlist. This endpoint would be helpful
+when creating an 'edit' form in your web app, for instance.
+
+back in GiftsController
+
+        [HttpGet]
+        [Route("api/get/{id}")]
+This endpoint will take the document key as a parameter.
+We could use SQL++, but it's actually faster to use a 'get' operation
+since we already know the key.
+
+    public async Task<IActionResult> Get(string id)
+    {
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var collection = await bucket.CollectionAsync("wishlist");
+
+        var item = await collection.GetAsync(id);
+
+        return Ok(item.ContentAs<WishlishItem>());
+    }
+	
+Since I'm using the default scope, I can skip directly to the collection
+
+it would also be a good idea to add validation here
+for example: to check that a key was actually passed in
+that the user has permission, etc
+
+ctrl+f5
+
+try this endpoint out in swagger
+
+notice that the ID returned here is NULL
+this is because couchbase stores the key in the metadata of the document and not in the document itself. if you want to return the ID, in this case you'd need to manually assign it. if you don't want to return a null, you could create a separate C# view class
+
+----
+
+Next, let's create and endpoint to handle both "create" and "update".
+        [HttpPost]
+        [Route("api/edit")]
+This endpoint will be a POST
+And it will be expecting an object of type WishlistItem
+
+Again, we could use SQL++ here to do and INSERT or UPDATE or UPSERT,
+but it's going to be faster and easier to use an "upsert" API operation.
+
+Upsert will create a new document if it doesn't exist, or replace an
+existing document if it does.
+
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var collection = await bucket.CollectionAsync("wishlist");
+
+        if (!item.Id.HasValue)
+            item.Id = Guid.NewGuid();
+
+        await collection.UpsertAsync(item.Id.ToString(), new
+        {
+            Name = item.Name
+        });
+
+        return Ok(new { success = true});
+
+To handle a "create", we check the "Id" value of the object.
+If it's null, then we can assume we're creating a new item, and so we'll
+generate a GUID key.
+If it's not null, then we're updating an existing item.
+I'm going to use the "upsert" operation on the bucket with the key.
+I'll map just the name and type, into a new anonymous object.
+
+I could pass in the object directly,
+but I don't want to store a copy of the Id *within* the document
+
+You can, of course, change this to accomodate your own needs, use a mapping library or a different C# class/DTO.
+
+I've also left out validation--checking to see that "name" is not null or empty, for instance.
+
+let's try this in the browser
+
+First, let's get a list of all the items so far, using the 'getall' endpoint.
+There should be two.
+Let's use the new endpoint to create a new wishlist item.
+I'll specify a name of "Skyline Chili T-Shirt", something crucial that I need.
+
+okay hit "Execute"
+
+Now let's go back to the "getall", and we should see 3 total items in the wishlist now.
+
+Next, let's use the endpoint to update an existing item.
+I'll specify Id of "3ca6e87e-c3a6-4637-989d-33cbca5002b5", which was the recliner.
+I'll give it a new name of "Gray Recliner" because my wife says it has to match her existing living room design.
+I'll hit "execute"
+
+
+Now let's go back to the "getall", I should see 3 total items still, but one has been updated to "Gray Recliner"
+
+----
+
+Finally, we need a "delete" endpoint to complete the CRUD
+
+I'll create another endpoint, this time expecting the "DELETE" verb
+It just needs an Id passed to it.
+Once again, I could use N1QL here, but it's faster to use the "delete" operation
+since I already know the key.
+
+    [HttpDelete]
+    [Route("api/delete")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var bucket = await _bucketProvider.GetBucketAsync("demo");
+        var collection = await bucket.CollectionAsync("wishlist");
+
+        await collection.RemoveAsync(id.ToString());
+
+        return Ok(new { success = true });
+    }
+
+again, no validation, just keeping it simple.
+
+let's try in swagger
+
+enter the id of "3ca6e87e-c3a6-4637-989d-33cbca5002b5" (gray recliner) and hit "execute"
+
+go back to "getall" and there should only be two items
+
+----
+
+Now you have full CRUD cababilities and basic Couchbase connectivity from your
+ASP.NET Core application.
+
+For more interesting stuff you can do with Couchbase and
+.NET, check out developer.couchbase.com
+
+for technical questions, visit forums.couchbase.com
+
+Thank you for watching!
+----
+outro splash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
