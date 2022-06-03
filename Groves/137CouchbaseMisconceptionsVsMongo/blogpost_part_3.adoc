@@ -1,23 +1,105 @@
-= NoSQL misconceptions: Mongo vs Couchbase part 3
+:imagesdir: images
+:meta-description: TBD
+:title: Couchbase vs MongoDB: NoSQL Misconceptions Part 3
+:slug: tbd
+:focus-keyword: mongodb
+:categories: ???
+:tags: mongodb
+:heroimage: TBD
 
-5. NoSQL isn't secure
+Misconceptions about NoSQL have been around as long as NoSQL itself. It's always good to get different perspectives, and so this blog series continues. I'll be discussing NoSQL misconceptions, specifically when it comes to two of the top document database companies in the world: Couchbase and MongoDb.
 
-mongo links
+In this post, I'll again look at some of the link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[misconceptions that Mongo has made about Couchbase and NoSQL], and one of the more common misconceptions and misunderstandings that I've heard in the developer community about NoSQL in general.
 
-couchbase security features / white paper?
+== Is NoSQL secure?
 
-connect video: https://www.youtube.com/watch?v=2DnuCjYxmDA
+Some of the early (and even relatively recent) days of NoSQL had some glaring, high-profile security issues. Here are just a few:
 
-== Couchbase and NoSQL aren't consistent and lose data
+* link:http://www.theregister.co.uk/2017/01/09/mongodb/[MongoDB ransom attacks soar, body count hits 27,000 in hours]
+* link:https://www.itworld.com/article/3115247/fairware-ransomware-infects-servers-through-exposed-redis-instances.html[FairWare ransomware infects servers through exposed Redis instances]
+* link:http://www.zdnet.com/article/elasticsearch-ransomware-attacks-now-number-in-the-thousands/[Elasticsearch ransomware attacks now number in the thousands]
+* link:http://www.theregister.co.uk/2017/01/19/insecure_hadoop_installs_under_attack/[Insecure Hadoop installs next in 'net scum crosshairs]
 
-couchbase strong consistency
+Anyone casually reading news about NoSQL might have the impression that NoSQL is the wild west, when it comes to security. For a while, it was. "Easy to get started" often meant "Insecure by default".
 
-index eventual consistency / request plus
+But NoSQL doesn't have to mean "No Security". Couchbase Capella and cloud service providers like AWS and Microsoft have worked hard to make security a priority.
 
-mongo jepsen article?
+* link:https://resources.couchbase.com/capella/capella-security-protection-whitepaper[Couchbase Capella Security and Data Protection]: this white paper covers security and data protection from the highest levels down to implementation details.
+* Capella has also received link:https://blog.couchbase.com/this-just-in-couchbase-receives-soc-2-compliance-certification-for-capella/[SOC2 compliance] certification.
+* Capella link:https://docs.couchbase.com/cloud/security/security.html[automatically uses the cloud provider's underlying encryption].
+* Fine-grained access management, private networking, multi-factor authentication, monitoring, and alerts are just a few of the security features included.
 
-connect video: https://www.youtube.com/watch?v=8qlfyW52-C0
+And if you still want to run and manage Couchbase Server instead of Capella, you still have access to the full range of security features.
 
-6. Couchbase can't support ACID transactions
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/2DnuCjYxmDA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+++++
 
-yes, link to Denis post
+== Will NoSQL Lose my Data?
+
+Many NoSQL systems make different trade-offs with data operations, in order to reduce latency and increase performance (one of the key reasons people switch to NoSQL in the first place). But in the past, this has lead to edge case issues that can result in data loss.
+
+Again, you might have seen headlines like this one: link:https://www.infoq.com/news/2020/05/Jepsen-MongoDB-4-2-6/[Jepsen Disputes MongoDB’s Data Consistency Claims]. You also may have been caused stress by the term *"eventual consistency"*.
+
+Yes, these trade-offs were in place in order to acquire better numbers that look good in marketing benchmarks. But in reality, what modern NoSQL (like Couchbase) gives you is: *control*.
+
+link:https://docs.couchbase.com/server/current/learn/clusters-and-availability/metadata-management.html#consensus-based-metadata-management[The short story is]: 
+
+* Couchbase is strongly consistent.
+* Couchbase is fully tested with Jepsen.
+* Raft is used for metadata consensus.
+* If you want to reduce risk against extremely rare edge cases, you have the control to do so.
+
+The longer story:
+
+* Data storage within one Couchbase cluster is strongly consistent. You save data, it will save to memory, and then to disk, and then to other nodes (automatically).
+* If you are worried about edge cases, you can specify stronger link:https://docs.couchbase.com/server/current/learn/data/durability.html[durability requirements]. You can do this _per-operation_ if you want.
+* Query indexes in Couchbase are updated asynchronously (eventually), because otherwise it could significantly slow down operations if you have to wait on an index.
+* BUT, when querying, you can specify link:https://docs.couchbase.com/server/current/fts/fts-consistency.html[consistency level], again, on a _per query_ basis. When you need to read up-to-the-microsecond query results, you can trade-off latency to do so.
+
+Data storage when you have two or more Clusters link:https://docs.couchbase.com/cloud/clusters/xdcr/xdcr.html[synchronizing between data centers] is eventually consistent.
+
+This means if you make a change to document "A" in, say, US East, document "B" in US West will get updated a few microseconds later. (But link:https://docs.couchbase.com/cloud/clusters/xdcr/xdcr.html#conflict-resolution[conflicts] can be managed automatically).
+
+== Does NoSQL mean "No ACID"?
+
+Again, to initially provide low-latency, high-performance reads and writes, ACID transactions were not part of the early days of NoSQL. For a relational database user, this was often seen as a red flag.
+
+However, as I've link:https://blog.couchbase.com/acid-properties-couchbase-part-1/[noted in the past], ACID isn't only about transactions.
+
+That being said, link:https://blog.couchbase.com/distributed-multi-document-acid-transactions/[multi-document ACID transactions] have been available in Couchbase Server as far back as version 6.5.
+
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Saug3LllDfw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+++++
+
+On Mongo's link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[comparsion page], Couchbase's ACID transactions are characterized as "extremely limited". There's no more detail than that, so I can only speculate that this is an outdated reference to transactions being initially available as a preview to Java developers. But in the meantime, ACID transactions have been added to .NET, Node, PHP, Go, Python, and C SDKs, with more to come. But not only that, ACID transactions are available to link:https://blog.couchbase.com/couchbase-transactions-with-n1ql/[anyone using the new *BEGIN/COMMIT/ROLLBACK feature in SQL++*].
+
+[source,indent=0,SQL]
+----
+START TRANSACTION;
+SELECT COUNT(*) FROM airport WHERE city='Stanted';
+UPDATE airport SET city='London' WHERE faa='STN';
+SAVEPOINT s1;
+DELETE FROM airport WHERE city='London' AND faa != 'STN';
+ROLLBACK TRANSACTION TO SAVEPOINT s1;
+COMMIT TRANSACTION;
+----
+
+And sharding doesn't even enter into the equation, link:https://www.mongodb.com/docs/v5.0/core/transactions-sharded-clusters/[unlike with Mongo ### MAKE THIS AN ARCHIVE ORG LINK BEFORE PUBLISHING].
+
+== Summary
+
+* Modern NoSQL is secure.
+* Modern NoSQL won't lose your data.
+* Modern NoSQL supports ACID transactions.
+
+It's okay for _other_ NoSQL databases not to support these features: there's plenty of room for niche specialization. But for Couchbase, these are mature features used by large organizations for critical use cases.
+
+So, if you haven't checked out NoSQL in years, maybe it's time to link:https://cloud.couchbase.com/sign-up[sign up for a free trial of Couchbase Capella]. No credit card required.
+
+== What's Next?
+
+In the next post, I'll dig into more misconceptions: is NoSQL really all that good at scaling? Which NoSQL is most popular, and why does that matter?
+
+Want to discuss further? You are welcome to join the link:https://blog.couchbase.com/couchbase-on-discord/[Couchbase Discord] for further conversation, questions, and answers with the Couchbase staff and community.
