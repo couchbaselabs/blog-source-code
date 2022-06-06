@@ -37,11 +37,13 @@ And if you still want to run and manage Couchbase Server instead of Capella, you
 
 == Will NoSQL Lose my Data?
 
-Many NoSQL systems make different trade-offs with data operations, in order to reduce latency and increase performance (one of the key reasons people switch to NoSQL in the first place). But in the past, this has lead to edge case issues that can result in data loss.
+You may have seen headlines like this one: link:https://www.infoq.com/news/2020/05/Jepsen-MongoDB-4-2-6/[Jepsen Disputes MongoDB’s Data Consistency Claims].
 
-Again, you might have seen headlines like this one: link:https://www.infoq.com/news/2020/05/Jepsen-MongoDB-4-2-6/[Jepsen Disputes MongoDB’s Data Consistency Claims]. You also may have been caused stress by the term *"eventual consistency"*.
+Many NoSQL systems make different trade-offs with data operations, in order to reduce latency and increase performance (one of the key reasons people switch to NoSQL in the first place). This is a difficult thing to get right, and in the past, this has lead to edge case issues that can result in data loss.
 
-Yes, these trade-offs were in place in order to acquire better numbers that look good in marketing benchmarks. But in reality, what modern NoSQL (like Couchbase) gives you is: *control*.
+You also may have been caused stress by the term *"eventual consistency"*.
+
+These trade-offs were in place in order to acquire better numbers that look good in marketing benchmarks. But in reality, what modern, mature NoSQL (like Couchbase) gives you is: *control*.
 
 link:https://docs.couchbase.com/server/current/learn/clusters-and-availability/metadata-management.html#consensus-based-metadata-management[The short story is]: 
 
@@ -52,20 +54,20 @@ link:https://docs.couchbase.com/server/current/learn/clusters-and-availability/m
 
 The longer story:
 
-* Data storage within one Couchbase cluster is strongly consistent. You save data, it will save to memory, and then to disk, and then to other nodes (automatically).
-* If you are worried about edge cases, you can specify stronger link:https://docs.couchbase.com/server/current/learn/data/durability.html[durability requirements]. You can do this _per-operation_ if you want.
-* Query indexes in Couchbase are updated asynchronously (eventually), because otherwise it could significantly slow down operations if you have to wait on an index.
+* Data storage within one Couchbase cluster is strongly consistent. You save data, it will save to memory, and then to disk, and then to other nodes (automatically and asynchronously).
+* If you are worried about edge cases due to async, you can specify stronger link:https://docs.couchbase.com/server/current/learn/data/durability.html[durability requirements]. You can do this _per-operation_ if you want.
+* Query indexes in Couchbase are updated asynchronously (eventually), to avoid slowdown, having to wait on indexes when creating/updating data.
 * BUT, when querying, you can specify link:https://docs.couchbase.com/server/current/fts/fts-consistency.html[consistency level], again, on a _per query_ basis. When you need to read up-to-the-microsecond query results, you can trade-off latency to do so.
 
-Data storage when you have two or more Clusters link:https://docs.couchbase.com/cloud/clusters/xdcr/xdcr.html[synchronizing between data centers] is eventually consistent.
+Data storage when you have two or more Clusters link:https://docs.couchbase.com/cloud/clusters/xdcr/xdcr.html[synchronizing between data centers] is eventually consistent. This means if you make a change to document "A" in, say, US East, document "B" in US West will get updated a few microseconds later. (But link:https://docs.couchbase.com/cloud/clusters/xdcr/xdcr.html#conflict-resolution[conflicts] can be managed automatically). This _only_ applies if you are using multiple data centers.
 
-This means if you make a change to document "A" in, say, US East, document "B" in US West will get updated a few microseconds later. (But link:https://docs.couchbase.com/cloud/clusters/xdcr/xdcr.html#conflict-resolution[conflicts] can be managed automatically).
+There are always edge cases with _any_ database, not just NoSQL. However, modern Couchbase NoSQL has sensible defaults built-in, with a variety of options when you need them.
 
 == Does NoSQL mean "No ACID"?
 
 Again, to initially provide low-latency, high-performance reads and writes, ACID transactions were not part of the early days of NoSQL. For a relational database user, this was often seen as a red flag.
 
-However, as I've link:https://blog.couchbase.com/acid-properties-couchbase-part-1/[noted in the past], ACID isn't only about transactions.
+However, as I've link:https://blog.couchbase.com/acid-properties-couchbase-part-1/[noted in the past], ACID isn't only about transactions, and plenty of NoSQL databases can provide ACID guarantees.
 
 That being said, link:https://blog.couchbase.com/distributed-multi-document-acid-transactions/[multi-document ACID transactions] have been available in Couchbase Server as far back as version 6.5.
 
@@ -73,7 +75,7 @@ That being said, link:https://blog.couchbase.com/distributed-multi-document-acid
 <iframe width="560" height="315" src="https://www.youtube.com/embed/Saug3LllDfw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ++++
 
-On Mongo's link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[comparsion page], Couchbase's ACID transactions are characterized as "extremely limited". There's no more detail than that, so I can only speculate that this is an outdated reference to transactions being initially available as a preview to Java developers. But in the meantime, ACID transactions have been added to .NET, Node, PHP, Go, Python, and C SDKs, with more to come. But not only that, ACID transactions are available to link:https://blog.couchbase.com/couchbase-transactions-with-n1ql/[anyone using the new *BEGIN/COMMIT/ROLLBACK feature in SQL++*].
+On Mongo's link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[comparsion page], Couchbase's ACID transactions are characterized as "extremely limited". There's no more detail than that, so I can only speculate that this is an outdated reference to transactions being initially available as a preview to Java developers (and Scala/Kotlin by extension). But in the meantime, ACID transactions have been added to .NET, Node, PHP, Go, Python, and C SDKs, with more to come. And not only that, ACID transactions are available to link:https://blog.couchbase.com/couchbase-transactions-with-n1ql/[anyone using the new *BEGIN/COMMIT/ROLLBACK feature in SQL++*].
 
 [source,indent=0,SQL]
 ----
@@ -86,7 +88,7 @@ ROLLBACK TRANSACTION TO SAVEPOINT s1;
 COMMIT TRANSACTION;
 ----
 
-And sharding doesn't even enter into the equation, link:https://www.mongodb.com/docs/v5.0/core/transactions-sharded-clusters/[unlike with Mongo ### MAKE THIS AN ARCHIVE ORG LINK BEFORE PUBLISHING].
+And complex sharding scenarios don't even enter into the equation, link:https://web.archive.org/web/20220603214221/https://www.mongodb.com/docs/v5.0/core/transactions-sharded-clusters/[unlike with Mongo].
 
 == Summary
 
