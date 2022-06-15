@@ -1,25 +1,68 @@
-= NoSQL misconceptions: Mongo vs Couchbase part 4
+:imagesdir: images
+:meta-description: TBD
+:title: Couchbase vs MongoDB: NoSQL Misconceptions Part 4
+:slug: tbd
+:focus-keyword: mongodb
+:categories: ???
+:tags: mongodb
+:heroimage: TBD
 
-7. Couchbase is not good for scaling
+Misconceptions about NoSQL have been around as long as NoSQL itself. It's always good to get different perspectives, and so this blog series continues. I'll be discussing NoSQL misconceptions, specifically when it comes to two of the top document database companies in the world: Couchbase and MongoDb.
 
-altoros
+Be sure to check out the previous posts in this series:
 
-mongo scaling comparison
+* link:https://blog.couchbase.com/couchbase-mongodb-nosql-misconceptions-1/[Part 1: What about SQL? Is the learning curve steep?]
+* link:https://blog.couchbase.com/couchbase-mongodb-nosql-misconceptions-2/[Part 2: Is Couchbase just a Key-Value Store? Does Couchbase have Lucene search?]
+* link:https://blog.couchbase.com/couchbase-mongodb-nosql-misconceptions-3/[Part 3: Is NoSQL secure? Will it lose my data? What about ACID?]
 
-link to distributed database post
+In this post, I'll again look at some of the link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[misconceptions that Mongo has made about Couchbase and NoSQL].
 
-operator
+== Is Couchbase good for scaling?
 
-maturity level 5: https://www.youtube.com/watch?v=vw17fWDoEk4
+Short answer: yes. For a longer answer, let's start with "what does scaling mean"?
 
-new to operator: https://www.youtube.com/watch?v=nZLroRyPYAM
+Scaling just means that a system is able to handle growth by adding resources. The two types of scaling are horizontal (adding more nodes to a system) and vertical (adding more resources to a single node).
 
-cloud: https://www.youtube.com/watch?v=3kCrVjv2I40
+Relational databases often have trouble with horizontal scaling, because data in a relation is tightly coupled to tables, to other data in that table, and to other tables. It is very difficult to split it among multiple nodes.
 
-8. Couchbase isn't popular enough
+Couchbase is designed to scale horizontally (as well as vertically) from the ground up. It is explicitly designed for clustering (COUCH is an acronym, in fact, with the first "C" being "cluster").
 
-top 10% db-engines
+Many NoSQL databases claim to support horizontal scaling, but Couchbase's architecture takes a different approach than most for at least two key reasons (although, every feature built at Couchbase is designed with scalability in mind).
 
-facet time and money: https://www.youtube.com/watch?v=ihcp84dLUBU
+[ - - - grab your favorite diagram from https://blog.couchbase.com/distributed-databases-overview/ and put it here with a link to that post - - - ]
 
-techvalidate embed/links
+First, *Sharding* (the process of splitting up data among nodes) is completely automatic and built-in to Couchbase. This makes efficient use of all the resources by dividing up the data evenly, meaning that there will be no hot spots on any single node.
+
+Second, *Replication* is also built-in to Couchbase. Not only is it built in, it's built into every node. Every node contains some portion of primary and secondary data. There are no nodes that are "replica set" secondary nodes.
+
+For a refresher, make sure to check out link:https://blog.couchbase.com/distributed-databases-overview/[Distributed Databases: An Overview].
+
+How Does Couchbase stack up against the competition? Industry standard benchmarks are one way that you can compare the ability to handle larger workloads.
+
+In link:https://blog.couchbase.com/why-uplevel-from-mongodb/[Why Uplevel from MongoDB™], Rick Jacobs discusses YCSB benchmarks, as well as associated costs of Couchbase Capella compared to the competition.
+
+[ --- picture from that blog post with a link to it ---  ]
+
+In both design and implementation, Couchbase provides scalability to meet your performance needs at an affordable cost.
+
+== Is Couchbase Popular Enough?
+
+It's true that Couchbase isn't the most popular and used database in the world. It doesn't have the entrenched history of Oracle or the early momentum of Mongo. Despite those obstacles, Couchbase is still in the link:https://db-engines.com/en/ranking[top 10% of databases] in the world.
+
+There is still work to do, and Couchbase is committed to remaining on top when it comes to features, performance, scalability, and affordability.
+
+Just ask Scott W. Bradley of link:https://www.couchbase.com/customers/facet-digital[Facet Digital], who started out with a "more popular" NoSQL database, but switched to Couchbase Capella to reduce costs by 50% and increase performance by 2000%.
+
+[ - - - embed https://www.youtube.com/watch?v=ihcp84dLUBU - - -]
+
+You can also see that Couchbase is very popular with its customers, developers, and users. Over 288 customers have been surveyed by the 3rd party review site link:https://www.youtube.com/watch?v=ihcp84dLUBU[TechValidate], providing case studies and survey results about successful projects using Couchbase.
+
+Finally, while the name "Couchbase" may not be as popular as other vendors (yet), Couchbase enables use of widely regarded industry standards, properties, guidelines, tools, and frameworks that _are_ popular: *SQL, JSON, ACID, Kubernetes, Docker, Kafka, Spark, ASP.NET, Spring, Node.js, Elasticsearch, Tableau, Linq, ODBC, JDBC, S3, Prometheus, Grafana, Terraform, Visual Studio Code, JetBrains DataGrip, and more*, with more on the way.
+
+Couchbase may not be the default industry choice for a database yet, but it's the choice that many innovative companies make to help them build mission-critical applications and keep costs down.
+
+== What's Next?
+
+In the next (and final) post in this series, let's take a look at the unique way that Couchbase uses memory. Finally, we'll look at the link:https://www.couchbase.com/comparing-couchbase-vs-couchdb[confusion between CouchDB and Couchbase].
+
+Want to discuss further? You are welcome to join the link:https://blog.couchbase.com/couchbase-on-discord/[Couchbase Discord] for further conversation, questions, and answers with the Couchbase staff and community.
