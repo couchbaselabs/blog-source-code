@@ -1,19 +1,81 @@
-= NoSQL misconceptions: Mongo vs Couchbase part 5
+:imagesdir: images
+:meta-description: TBD
+:title: Couchbase vs MongoDB: NoSQL Misconceptions Part 5
+:slug: tbd
+:focus-keyword: mongodb
+:categories: ???
+:tags: mongodb
+:heroimage: TBD
 
-9. Couchbase is the most dreaded database
+Misconceptions on NoSQL have been around for a long time. This blog series is now wrapping up with a discussion of what it means to be "most dreaded" and what it means to give memory to a database.
 
-stack overflow survey, what it actually means
+Be sure to check out the previous posts in this series:
 
-sql is in the top 3 languages
+* link:https://blog.couchbase.com/couchbase-mongodb-nosql-misconceptions-1/[Part 1: What about SQL? Is the learning curve steep?]
+* link:https://blog.couchbase.com/couchbase-mongodb-nosql-misconceptions-2/[Part 2: Is Couchbase just a Key-Value Store? Does Couchbase have Lucene search?]
+* link:https://blog.couchbase.com/couchbase-mongodb-nosql-misconceptions-3/[Part 3: Is NoSQL secure? Will it lose my data? What about ACID?]
+* link:https://blog.couchbase.com/couchbase-mongodb-nosql-misconceptions-4/[Part 4: Scaling and Popularity]
 
-javascript is in the top 3 languages (JSON)
+In this post, I'll again look at some of the link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[misconceptions that Mongo has made about Couchbase and NoSQL].
 
-couchdb confusion (even mongo can't get it right - https://web.archive.org/web/20210202152108/https://www.mongodb.com/mongodb-vs-couchbase)
+== Is Couchbase the "most dreaded database"?
 
-(hopefully evidence of this in the 2022 survey!)
+link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[Mongo] calls attention to the Stack Overflow Developer Survey from 2020, which is now two years out of date. It's true that Couchbase was ranked low on that survey. However, it's not because developers ticked a box that said "I dread this database" (it's inferred from checkboxes about projects planned over the next year).
 
-connect video: https://www.youtube.com/watch?v=4u6qbZodfRY
+image:13703-stackoverflow-logo.png[Stack Overflow Developer Survey,link="https://survey.stackoverflow.co/2022/"]
 
-10. Every database uses memory, Couchbase's memory-first isn't special
+Furthermore, the name "Couchbase" is often confused with the similarly named but otherwise very different "CouchDB" (a link:https://web.archive.org/web/20210810020126/https://www.mongodb.com/mongodb-vs-couchbase[common mistaken assumption that even Mongo made] on their webpage). That's been proven out with the most recent results from the link:https://survey.stackoverflow.co/2022/[2022 Developer Survey], which added CouchDB as a distinct option. Since 2020, Couchbase has continued to climb in the 2021 and 2022 survey results, with an increase of over 11 points since 2021.
 
-caching vs buffering
+And even more important to point out, is that while Couchbase certainly has work to do in terms of awareness, the top two databases in the survey are PostgreSQL and Redis. These are two databases that provide excellent SQL support and caching, as two separate products. Clearly, SQL and memory-first architecture are two things that developers want, and Couchbase already brings those things together.
+
+For the 6,803 developers who "dread" working with Mongo, you might consider checking out link:https://cloud.couchbase.com/sign-up[Couchbase Capella], if you're looking for the flexibility of JSON and the familiarity of SQL (two of the top three languages in the survey are JavaScript and SQL, after all).
+
+Stack Overflow's Developer Survey is important, and Couchbase is always working to improve the developer experience. If you're interested in other surveys and awards where Couchbase did well, check out:
+
+* link:https://blog.couchbase.com/couchbase-trustradius-top-rated-awards-2022/[TrustRadius Top Rated], awarded based on feedback directly from customers
+* link:https://www.dbta.com/Editorial/Trends-and-Applications/DBTA-100-2022-The-Companies-That-Matter-Most-in-Data-153094.aspx[DBTA 100] - the companies that matter most, according to Database Trends and Applications
+* link:https://www.inspiring-workplaces.com/stories/top-50-inspiring-workplaces-across-emea-announced/[Top 50 inspiring workplaces]
+* link:https://www.crn.com/slide-shows/applications-os/the-coolest-database-system-companies-of-the-2022-big-data-100/3[The Coolest Database System Companies of 2022]
+* link:https://blog.couchbase.com/couchbase-database-leader-spring-2022-g2-reports/[7 awards from G2], a peer-to-peer reviewing site
+* A link:https://www.crn.com/slide-shows/cloud/crn-s-2021-products-of-the-year[Product of the year] from CRN.
+
+Yes, we have still have a lot work to do. But Couchbase cares about developers, and will continue to build and improve to meet your needs.
+
+== Can't Every Database use Memory?
+
+This last misconception is about how databases use memory. It can be a complex issue, but generally speaking, memory usage in databases breaks down into two categories:
+
+* Buffering
+* Caching
+
+These terms describe very different things, but are often used (mistakenly) interchangeably.
+
+=== What's a buffer?
+
+Simply put, a *buffer* is used to smooth out the speeds at which data is moved around. Results of a query could be put into a buffer, so that the client can read from the buffer instead of directly from the query process. Once the results are consumed, the data is no longer in the buffer.
+
+=== What's a cache?
+
+On the other hand, *caching* is used to provide fast access to data repeatedly. The result of a key-value lookup fetched from disk the first time, can be stored in memory for the next time it needs to be accessed. Data will stay in the cache until it's "invalidated" (expired, or kicked out, or whatever the caching mechanism is).
+
+This presentation from Couchbase customer UPS discusses (among other things) Couchbase's Managed Cache implementation, and the benefits of a managed cache:
+
+embed: https://www.youtube.com/watch?v=mXQ2uv63Wjk
+
+It's true that just about every database uses buffering, and it's true that the space for buffering could be adjusted, and that may improve performance. But it's NOT true that every database has a built-in managed cache. This is why, for instance, Redis (a caching system) is often paired with databases that _don't_ have any caching capabilities.
+
+Couchbase has a built-in managed cache, so you don't need to bolt on any additional tooling for caching, or worry about it getting out of sync: it's all automatic.
+
+So, just keep this in mind when evaluating database memory configuration: does it affect buffering, caching, or both?
+
+=== Should I just put everything in memory?
+
+Well, sure. That's one way to go. For certain databases sizes, this is feasible and affordable. For larger database sizes (e.g. multiple terabytes), that may not be the most affordable route. And you might not even be using enough of that data on a regular basis anyway.
+
+Enter: Couchbase's new link:https://blog.couchbase.com/low-tco-with-couchbase/[Magma storage engine], which can bring multiple terabyte support to your data with as low as a 1% memory-to-data ratio.
+
+== What's Next?
+
+Thanks for reading this series on NoSQL misconceptions.
+
+Want to discuss further? You are welcome to join the link:https://blog.couchbase.com/couchbase-on-discord/[Couchbase Discord] for further conversation, questions, and answers with the Couchbase staff and community. Also check out the new link:https://blog.couchbase.com/introducing-the-couchbase-community-hub/[Couchbase Community Hub].
