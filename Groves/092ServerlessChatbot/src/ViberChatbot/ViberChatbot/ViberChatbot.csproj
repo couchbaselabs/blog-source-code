@@ -5,7 +5,7 @@
   <ItemGroup>    
     <PackageReference Include="CouchbaseNetClient" Version="2.5.2" />    
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.2" />    
-    <PackageReference Include="RestSharp" Version="106.2.0-alpha0025" />
+    <PackageReference Include="RestSharp" Version="106.12.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
