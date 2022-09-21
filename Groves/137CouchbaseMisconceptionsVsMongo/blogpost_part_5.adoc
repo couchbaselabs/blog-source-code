@@ -60,7 +60,7 @@ On the other hand, *caching* is used to provide fast access to data repeatedly. 
 
 This presentation from Couchbase customer UPS discusses (among other things) Couchbase's Managed Cache implementation, and the benefits of a managed cache:
 
-embed: https://www.youtube.com/watch?v=mXQ2uv63Wjk
+https://www.youtube.com/watch?v=mXQ2uv63Wjk
 
 It's true that just about every database uses buffering, and it's true that the space for buffering could be adjusted, and that may improve performance. But it's NOT true that every database has a built-in managed cache. This is why, for instance, Redis (a caching system) is often paired with databases that _don't_ have any caching capabilities.
 
