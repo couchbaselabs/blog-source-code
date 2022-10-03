@@ -1,0 +1,173 @@
+:imagesdir: images
+:meta-description: Need an intro to data modeling? Check out this guide to learn the basics and find out more about conceptual, physical, and logical data models.
+:title: What is Data Modeling? Conceptual, Physical, Logical
+:slug: What-is-Data-Modeling-Conceptual-Physical-Logical
+:focus-keyword: how to model data
+:categories: Data Modeling
+:tags: data modeling
+:heroimage: TBD
+:wordcounttarget: 1600
+
+Data modeling is the process of planning a structure to represent how information and relationships between information will be stored in your system.
+
+This post is a brief introduction to data modeling, as well as three progressive types of data models: conceptual data modeling, logical data modeling, and physical data modeling. What do these data models accomplish? Who should be involved in creating them? How are they created.
+
+_This is part one of a three part series on how to model data._
+
+== What is Data Modeling?
+
+Data modeling is a process that helps you to understand the structures, form, and relationships of information. Just like any model, it's a simplified and imperfect version of reality. But with careful and considerate work, a well-designed data model will be able to cope with responding to change and handling future requirements.
+
+== Why is Data Modeling Important?
+
+Creating a data model is an important step in application development. Along the way, data modeling will force your team to make decisions about what data is necessary, how to collect it, and structure it.
+
+In fact, you can think of a data model as simply a "set of decisions", assertions, and assumptions. Even if something is modeled incorrectly, those assumptions are written down, and help the team in the future to understand why it was modeled. With this baseline of information, the team in the future can more carefully consider if making a change is the right course of action.
+
+== Conceptual vs Logical vs Physical Data Model
+
+There are three traditional levels of data modeling. Not every team will necessarily follow all three strictly. Often, all three are compressed into one modeling exercise.
+
+However, breaking the process down into these three levels can be valuable. Each step lays down a foundation for the next:
+
+1. Conceptual - the "what" data model
+2. Logical - the "how" of the details
+3. Physical - the "how" of the implementation
+
+Each level can involve different roles from your team.
+
+=== Conceptual Data Model
+
+The conceptual data model can be thought of as the "white board" data model. This model does not go into the "how" at all.
+
+For this model, it's important to focus on capturing all the types of data (or "entity") that the system will need. In addition to entities, a conceptual data model will also capture:
+
+* **Attributes.** Individual properties of an entity. For instance, a "person" entity may have "name" and "shoe size". An "address" entity may have "zip code" and "city".
+* **Relationship.** How an entity connects to other entities. For instance, a "person" entity may have one or more "addresses".
+
+Along with the entities, their attributes and relationships, a conceptual model can also:
+
+* **Organize scope.** Which entities are included, but also which are explicitly NOT included.
+* **Define business concepts / rules.** For instance, are person entities allowed to have multiple addresses? What about multiple emails? Do they need to have a unique identifier>
+
+The conceptual data model is often created by architects in conjunction with business stakeholders and domain experts.
+
+==== Conceptual Data Model Example
+
+There are many "languages" for describing a conceptual data model. But as long as it's documented in an accessible way, it can be as easy as boxes and arrows.
+
+Here's an example of a conceptual diagram that involves two core entities, _travel routes_ (and its associated schedules) and _airlines_:
+
+image:13801-conceptual-diagram.png[Conceptual diagram example]
+
+While these may look like tables in a relational database, conceptual modeling is too early to make a determination about _how_ the data will be stored. That determination comes later: it could be tables, JSON documents, graph nodes, CSV files, blockchain, or any other number of storage mediums.
+
+=== Logical Data Model
+
+A logical data model is the next step, once the stakeholders have agreed on a conceptual model.
+
+This step involves filling in the _details_ of the conceptual model. It's still too early to pick a specific DBMS, but this step can help you decide which _class_ of database to use (relational, document, etc). For instance, if you decide *relational*, then it's time to decide which tables to create. If you decide *document*, then it's time to define the collections.
+
+Decide the details of each individual field/column and relationship as well. This includes data types, sizes, lengths, arrays, nested objects, etc.
+
+The logical model is typically created by architects and business analysts.
+
+==== Logical Data Model Example
+
+For instance, if going with a relational model, the logical model might look like this:
+
+image:13802-logical-diagram-relational.png[Logical diagram relational database]
+
+However, with a document database, the schedule can be modeled as part of the route, directly. No need for a foreign key, but it's still helpful to think of it as its own sub-entity. So that logical model might look like this:
+
+image:13803-logical-diagram-document.png[Logical diagram document database]
+
+In the case of a schedule, which has a fairly small, finite footprint, embedding into the same collection makes sense. In the case of, for example, a user making social media posts, which is unbounded, it makes sense to model in separate collections.
+
+=== Physical Data Model
+
+Once a logical model has been defined, it's now time to actually implement it into a real database.
+
+If you decided on a relational model, options include SQL Server, Oracle, PostgreSQL, MySQL, etc. However, if your modeling process reveals that your data model is likely to change frequently to adapt to new requirements, you might still consider going with a document database. One of the best choices for this is Couchbase, a "NoSQL" document database that supports familiar relational concepts like JOINs, ACID transactions *and* flexible JSON data.
+
+The physical data model should include:
+
+* A specific DBMS (Couchbase, for instance)
+* How data is stored (On disk/RAM/hybrid/etc. Couchbase has a built-in cache to provide the speed of RAM with the durability of disk)
+* How to accommodate replications, shards, partitions, etc. (For Couchbase, sharding and partitioning is automatic. Replication is a drop-down box to select how many replicas you want).
+
+The physical data model is typically created by DBAs and/or developers.
+
+==== Physical Data Model Example
+
+Here's an example of a physical model for Couchbase:
+
+image:13804-physical-model-couchbase.png[Physical data model for Couchbase]
+
+It's sometimes helpful to show sample data along with the physical model.
+
+Here's a sample route document:
+
+[source,JavaScript,indent=0]
+----
+{
+  "airlineid": "airline_137",
+  "sourceairport": "TLV",
+  "destinationairport": "MRS",
+  "stops": 0,
+  "schedule": [
+    { "day": 0, "utc": "10:13:00", "flight": "AF198" },
+    { "day": 0, "utc": "01:31:00", "flight": "AF943" },
+    { "day": 1, "utc": "12:40:00", "flight": "AF356" },
+    // ... etc ...
+  ]
+}
+----
+
+And here's a sample airline document:
+
+[source,JavaScript,indent=0]
+----
+key: airline_137
+{
+  "name": "Air France",
+  "callsign": "AIRFRANS",
+}
+----
+
+This is a simplified view of an actual physical data model. You can sign up for a link:https://www.couchbase.com/products/capella[free trial of Couchbase Capella] and start working with this data model (no credit card required).
+
+== Difference Between Conceptual, Logical, and Physical Data Models
+
+Each model is a necessary step on a journey to build a useful data model for you applications. A conceptual data model is the highest level, and therefore the least detailed. A logical data model involves more detailed thinking about the implementation without actually implementing anything. Finally, the physical data model draws on the requirements from the logical data model to create a real database.
+
+== Advantages of Data Modeling
+
+The advantages of going through the data modeling process all come down to communication:
+
+* Short term communication among stakeholders to make decisions about what's important, what the business rules are, and how to implement them.
+* Long term communication through database specifications that can be used to connect your data to other services through ETLs (Couchbase can help you reduce the number of ETLs, as there are a variety of built-in services to help address your expanding use cases - query, text search, caching, analytics, eventing, mobile sync).
+* Communication to help your team more easily identify corrupt or incorrect data.
+
+== Disadvantages of Data Modeling
+
+Like anything, there are some costs to data modeling.
+
+* It can be a potentially long process. It can also be prone to waterfall mentality (e.g. a mistake found during the logical data modeling process could trigger a complete rework of the conceptual modeling process).
+* A physical relational model can be rigid and difficult to change once a physical data model has been created (especially in production).
+* A physical document model is easy to change at any time, but can't enforce constraints and data types as strongly as relational.
+** With Couchbase's document model, you can still use JOIN and ACID transactions when necessary, so the modeling process should be familiar to anyone who is used to relational modeling, but with added flexibility and data structures that line up exactly with application code objects/classes.
+
+If you start the logical modeling process with a document database in mind, you can potentially avoid cycle time and reap flexibility benefits. (Unless you know your data model and requirements don't change that much, e.g. once a year).
+
+== Next Steps and Resources
+
+In part 2, I'll be writing about the various physical data models, including relational, document, graph, wide-table, etc. This can help you to make decisions about which data model is best for your need.
+
+In the meantime, here are some more resources for data modeling:
+
+* link:https://docs.couchbase.com/server/current/learn/data/document-data-model.html[The Couchbase Data Model]
+* link:https://info.couchbase.com/rs/302-GJY-034/images/erwin_DM_High%20Perf_NoSQL-QOM-Technical_Whitepaper_Couchbase_Version.pdf [Designing High-Performance
+Data Structures]
+* link:https://docs.couchbase.com/tutorials/mobile-travel-tutorial/android/design/data-modeling.html[Data Modeling for Mobile Applications]
+* link:https://www.couchbase.com/blog/tag/data-modelling/[More data modeling blog posts]
