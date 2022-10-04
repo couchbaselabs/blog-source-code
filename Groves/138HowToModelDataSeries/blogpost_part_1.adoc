@@ -10,19 +10,19 @@
 
 Data modeling is the process of planning a structure to represent how information and relationships between information will be stored in your system.
 
-This post is a brief introduction to data modeling, as well as three progressive types of data models: conceptual data modeling, logical data modeling, and physical data modeling. What do these data models accomplish? Who should be involved in creating them? How are they created.
+This post is a brief introduction to data modeling, as well as three progressive types of data models: conceptual data modeling, logical data modeling, and physical data modeling. What do these data models accomplish? Who should be involved in creating them? How are they created?
 
 _This is part one of a three part series on how to model data._
 
 == What is Data Modeling?
 
-Data modeling is a process that helps you to understand the structures, form, and relationships of information. Just like any model, it's a simplified and imperfect version of reality. But with careful and considerate work, a well-designed data model will be able to cope with responding to change and handling future requirements.
+Data modeling is a process that helps you to understand the structures, form, and relationships of information. Just like any model, it's a simplified and imperfect version of reality. But with careful and considerate work, a well-designed data model will be able to respond to change and handle future requirements.
 
 == Why is Data Modeling Important?
 
-Creating a data model is an important step in application development. Along the way, data modeling will force your team to make decisions about what data is necessary, how to collect it, and structure it.
+Creating a data model is an important step in application development. Data modeling will force your team to make decisions about what data is necessary, how to collect and structure it.
 
-In fact, you can think of a data model as simply a "set of decisions", assertions, and assumptions. Even if something is modeled incorrectly, those assumptions are written down, and help the team in the future to understand why it was modeled. With this baseline of information, the team in the future can more carefully consider if making a change is the right course of action.
+In fact, you can think of a data model as simply a "set of decisions", assertions, and assumptions. Even if something is modeled incorrectly, those assumptions are written down, and help the team in the future to understand why it was modeled that way. With this baseline of information, the team in the future can more carefully consider if making a change is the right course of action.
 
 == Conceptual vs Logical vs Physical Data Model
 
@@ -30,7 +30,7 @@ There are three traditional levels of data modeling. Not every team will necessa
 
 However, breaking the process down into these three levels can be valuable. Each step lays down a foundation for the next:
 
-1. Conceptual - the "what" data model
+1. Conceptual - the "what" model
 2. Logical - the "how" of the details
 3. Physical - the "how" of the implementation
 
@@ -40,15 +40,15 @@ Each level can involve different roles from your team.
 
 The conceptual data model can be thought of as the "white board" data model. This model does not go into the "how" at all.
 
-For this model, it's important to focus on capturing all the types of data (or "entity") that the system will need. In addition to entities, a conceptual data model will also capture:
+For this model, it's important to focus on capturing all the types of data (or "entities") that the system will need. In addition to entities, a conceptual data model will also capture:
 
-* **Attributes.** Individual properties of an entity. For instance, a "person" entity may have "name" and "shoe size". An "address" entity may have "zip code" and "city".
-* **Relationship.** How an entity connects to other entities. For instance, a "person" entity may have one or more "addresses".
+* **Attributes:** individual properties of an entity. For instance, a "person" entity may have "name" and "shoe size". An "address" entity may have "zip code" and "city".
+* **Relationships:** how an entity connects to other entities. For instance, a "person" entity may have one or more "addresses".
 
 Along with the entities, their attributes and relationships, a conceptual model can also:
 
-* **Organize scope.** Which entities are included, but also which are explicitly NOT included.
-* **Define business concepts / rules.** For instance, are person entities allowed to have multiple addresses? What about multiple emails? Do they need to have a unique identifier>
+* **Organize scope:** which entities are included, but also which are explicitly NOT included.
+* **Define business concepts / rules:** For instance, are person entities allowed to have multiple addresses? What about multiple emails? Do they need to have a unique identifier?
 
 The conceptual data model is often created by architects in conjunction with business stakeholders and domain experts.
 
@@ -151,11 +151,11 @@ The advantages of going through the data modeling process all come down to commu
 
 == Disadvantages of Data Modeling
 
-Like anything, there are some costs to data modeling.
+There are costs to data modeling.
 
 * It can be a potentially long process. It can also be prone to waterfall mentality (e.g. a mistake found during the logical data modeling process could trigger a complete rework of the conceptual modeling process).
 * A physical relational model can be rigid and difficult to change once a physical data model has been created (especially in production).
-* A physical document model is easy to change at any time, but can't enforce constraints and data types as strongly as relational.
+* A physical document model is easy to change at any time, but relies on the application layer to enforce constraints and data types.
 ** With Couchbase's document model, you can still use JOIN and ACID transactions when necessary, so the modeling process should be familiar to anyone who is used to relational modeling, but with added flexibility and data structures that line up exactly with application code objects/classes.
 
 If you start the logical modeling process with a document database in mind, you can potentially avoid cycle time and reap flexibility benefits. (Unless you know your data model and requirements don't change that much, e.g. once a year).
@@ -167,7 +167,7 @@ In part 2, I'll be writing about the various physical data models, including rel
 In the meantime, here are some more resources for data modeling:
 
 * link:https://docs.couchbase.com/server/current/learn/data/document-data-model.html[The Couchbase Data Model]
-* link:https://info.couchbase.com/rs/302-GJY-034/images/erwin_DM_High%20Perf_NoSQL-QOM-Technical_Whitepaper_Couchbase_Version.pdf [Designing High-Performance
+* link:https://info.couchbase.com/rs/302-GJY-034/images/erwin_DM_High%20Perf_NoSQL-QOM-Technical_Whitepaper_Couchbase_Version.pdf[Designing High-Performance
 Data Structures]
 * link:https://docs.couchbase.com/tutorials/mobile-travel-tutorial/android/design/data-modeling.html[Data Modeling for Mobile Applications]
 * link:https://www.couchbase.com/blog/tag/data-modelling/[More data modeling blog posts]
