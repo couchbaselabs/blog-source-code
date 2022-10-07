@@ -60,7 +60,7 @@ Here's an example of a conceptual diagram that involves two core entities, _trav
 
 image:13801-conceptual-diagram.png[Conceptual diagram example]
 
-While these may look like tables in a relational database, conceptual modeling is too early to make a determination about _how_ the data will be stored. That determination comes later: it could be tables, JSON documents, graph nodes, CSV files, blockchain, or any other number of storage mediums.
+While these may look like tables in a relational database, the conceptual modeling stage is too early to make a determination about _how_ the data will be stored. That determination comes later: it could be tables, JSON documents, graph nodes, CSV files, blockchain, or any other number of storage mediums.
 
 === Logical Data Model
 
@@ -88,7 +88,7 @@ In the case of a schedule, which has a fairly small, finite footprint, embedding
 
 Once a logical model has been defined, it's now time to actually implement it into a real database.
 
-If you decided on a relational model, options include SQL Server, Oracle, PostgreSQL, MySQL, etc. However, if your modeling process reveals that your data model is likely to change frequently to adapt to new requirements, you might still consider going with a document database. One of the best choices for this is Couchbase, a "NoSQL" document database that supports familiar relational concepts like JOINs, ACID transactions *and* flexible JSON data.
+If you decided on a relational model, options include SQL Server, Oracle, PostgreSQL, MySQL, etc. However, if your modeling process reveals that your data model is likely to change frequently to adapt to new requirements, you might still consider going with a document database. One of the best choices for this is Couchbase, a link:https://www.couchbase.com/resources/why-nosql["NoSQL" document database] that supports familiar relational concepts like JOINs, ACID transactions *and* flexible JSON data.
 
 The physical data model should include:
 
@@ -162,7 +162,7 @@ If you start the logical modeling process with a document database in mind, you 
 
 == Next Steps and Resources
 
-In part 2, I'll be writing about the various physical data models, including relational, document, graph, wide-table, etc. This can help you to make decisions about which data model is best for your need.
+In part 2, I'll be writing about the various physical data models, including relational, document, graph, wide-table, etc. This can help you to make decisions about which data model is best for your needs.
 
 In the meantime, here are some more resources for data modeling:
 
