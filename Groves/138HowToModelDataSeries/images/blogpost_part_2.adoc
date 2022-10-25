@@ -1,0 +1,124 @@
+:imagesdir: images
+:meta-description: Learn all about the different types of data models and see illustrative examples to determine which one is best for your needs.
+:title: X Types of Data Models (With Examples)
+:slug: types-of-data-models
+:focus-keyword: how to model data
+:categories: Data Modeling
+:tags: data modeling
+:heroimage: TBD
+:wordcounttarget: 1840
+
+In this part 2 of the "how to model data" series, let's look at a variety of *logical* models, their strengths and weaknesses, pros and cons.
+
+Part 1 of this series covered the three steps of data modeling: link:https://www.couchbase.com/blog/conceptual-physical-logical-data-models/[conceptual, logical, and physical].
+
+== Common Data Models
+
+After you've defined a conceptual model, the next step is to start building a logical data model. This is still too early to pick a specific technology or vendor.
+
+The logical data models that I find to be the most common and popular include: relational, JSON (document), key-value, graph, wide-column, and text search.
+
+=== Relational Data Model
+
+The relational data model was proposed in 1970 by E.F. Codd. Generally speaking, the relational data model consists of tables that contain rows and columns, which contain data that follow pre-defined schemas and constraints.
+
+The term "relational" does *not* refer to relationships between tables and entities, but rather the theoretical concept of a set of tuples that are a member of a data domain, each containing attributes.
+
+Actual relationships are not part of the relational model (or any other model except Graph, discussed later), but are usually implemented with multiple tables and foreign key constraints.
+
+Relational is the most popular logical data model type in the world.
+
+SQL was not part of the original relational proposal, but is strongly (but not exclusively) associated with relational databases. In fact, SQL is generally the only way to interact with data in relational databases.
+
+=== JSON Data Model
+
+Most document databases store data as link:https://www.couchbase.com/blog/json-database/[JSON] (XML and other representations are far less popular).
+
+Highly scalable NoSQL implementations avoid relational constraints in favor of independent data that can be distributed amongst multiple servers (via clustering and sharding). JSON is a popular format for this kind of distributed data because:
+
+* It can provide a complex structure and "schema on read".
+* It's human readable.
+* There are (de)serializers for JSON in link:https://www.json.org/json-en.html[just about every programming language and platform].
+* It can support link:https://www.couchbase.com/products/n1ql[SQL++], a backwards-compatible implementation of SQL for JSON data models.
+
+If you are coming from a relational background, but want to explore the benefits of "NoSQL" (scaling, flexibility, performance, familiarity), then a JSON document model is a great place to start.
+
+Data access methods for document databases typically include (but are not limited to) a querying language (a standard like SQL++ or a proprietary vendor implementation like MQL) that can filter based on individual JSON values.
+
+=== Key-Value Data Model
+
+A key-value data model associates each piece of data with a key. The actual value can be in any format. It could be JSON, XML, binary, text, or anything else.
+
+These databases are great for certain use cases: caching, session storage, user profile, shopping carts.
+
+Beyond key-value reads and writes, functionality like "link:https://docs.couchbase.com/server/current/learn/data/data.html#sub-documents-overview[subdocument]" and "link:https://docs.couchbase.com/server/current/learn/views/views-intro.html[map/reduce]" adds more data access options, but using a pure key-value logical model on data with complex relationships can get very difficult.
+
+=== Graph Data Model
+
+A graph data model is the only model that has both concepts of data and relationships built in. In a graph model, a piece of data is called a "node", and a relationship between two nodes is called an "edge".
+
+A graph data model can be useful for modeling a complex system of relationships. For instance, modeling a physical computer network and the computers that are on the network. It's often used for specialized use cases like fraud detection and shopping recommendations.
+
+For queries, graph databases use a specialized graph query language like Gremlin or Cypher.
+
+_Note: GraphQL and the Graph Data Model are not related._
+
+=== Wide-Column Data Model
+
+A wide-column data model has tables (sometimes called "key families") that are similar to relational tables, but they are column-based instead of row based.
+
+This means that any given row can have an arbitrary amount of columns, different from other rows. Furthermore, columns can continuously be added to existing rows.
+
+Each row has a key, so you can also think of this model as a 2d evolution of a key value store.
+
+Query languages for wide-column data model are database specific. A popular example is CQL (Cassandra Query Language), which looks similar to SQL, but is a very limited subset.
+
+=== Text Search Data Model
+
+A text search data model is optimized for storing and searching text. This includes faceting and fuzziness, but can also include geographical search.
+
+Creating indexes is a key part of interacting with text search. Searches provide parameters to active indexes, and are often performed via REST requests or a specialized SDK. link:https://docs.couchbase.com/server/current/fts/fts-supported-queries.html[Types of queries] that might be used include string, match, phrase, compound, range, and geospatial.
+
+== Data Modeling Examples
+
+Multi-model databases are those which can support multiple types of the data models listed above with the same pool of data. That being said, here are some examples of physical data model implementation tools (databases) for each model:
+
+* *Relational*: SQL Server, Oracle, MySQL, MariaDB, PostgreSQL, SQLite, Microsoft Access, Snowflake.
+
+* *JSON Document*: Couchbase, CosmosDB*, DynamoDB, CouchDB (similar name, but this is different and separate from Couchbase), MongoDB.
+
+* *Key-value*: There are very few _pure_ key-value databases, but examples that have good key-value support: Memcached, Redis, Couchbase.
+
+* *Graph*: Neo4j, CosmosDB*, ArangoDB.
+
+* *Wide-column*: Cassandra, HBase, CosmosDB*.
+
+* *Text/Search*: Elasticsearch and Solr (Lucene), Couchbase (Bleve)
+
+_*Note that you must choose one data model up-front with CosmosDB._
+
+== Data Modeling Tools
+
+Data modeling doesn't require any tools, and can be done on a dry erase board or with pencil and paper (with the exception of physical data modeling, of course). However, there are many data modeling tools that can make your team's job easier. Here are some popular ones:
+
+JetBrains DataGrip provides a link:https://www.jetbrains.com/help/idea/creating-diagrams.html[database diagramming tool] to construct a model from an existing database. These diagrams can be saved to UML or PNG. This is great for *physical data modeling*.
+
+link:https://www.erwin.com/products/erwin-data-modeler/[Erwin Data Modeler] is a very popular tool that supports conceptual, logical, and physical data models. Quest, the makers of Erwin, have partnered with Couchbase for link:https://www.couchbase.com/partners/quest[modeling and migration use cases].
+
+link:https://hackolade.com/[Hackolade] is another data modeling tool that supports a variety of data models (including all the physical models mentioned in this post) as well as link:https://www.couchbase.com/blog/sql-to-json-data-modeling-hackolade/[data model migration].
+
+link:https://www.idera.com/er-studio-enterprise-architecture-solutions/[Idera] has a full suite of tools for modeling. For instance, ER/Studio Business Architect provides conceptual modeling, and ER/Studio Data Architect provides logical and physical modeling.
+
+If these tools seem overkill for getting started, remember that you can use a more general purpose diagramming tool, like link:https://www.diagrams.net/[Diagrams.net] to get your team working collaboratively.
+
+== Next Steps and Resources
+
+Conceptual, logical, and physical modeling were all introduced in the _previous_ post. _This_ post took a closer look at _logical_ data model choices. The _next_ (and final) post in this series will dive into physical JSON data modeling specifically.
+
+In the meantime, check out these resources for more info:
+
+* link:https://developer.couchbase.com/tutorial-comparing-document-oriented-relational-data?learningPath=learn/json-data-modeling-guide[Comparing Document Databases and Relational Databases]
+
+* link:https://www.couchbase.com/blog/ending-the-relational-vs-nosql-debate-once-and-for-all/[Ending the Relational vs NoSQL Debate, Once and for All]
+
+* link:https://www.couchbase.com/blog/tag/data-modelling/[More blog posts on data modeling]
