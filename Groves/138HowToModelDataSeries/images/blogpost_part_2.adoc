@@ -1,14 +1,14 @@
 :imagesdir: images
 :meta-description: Learn all about the different types of data models and see illustrative examples to determine which one is best for your needs.
-:title: X Types of Data Models (With Examples)
+:title: 6 Types of Data Models (With Examples)
 :slug: types-of-data-models
-:focus-keyword: how to model data
+:focus-keyword: types of data models, how to model data
 :categories: Data Modeling
 :tags: data modeling
 :heroimage: TBD
 :wordcounttarget: 1840
 
-In this part 2 of the "how to model data" series, let's look at a variety of *logical* models, their strengths and weaknesses, pros and cons.
+In part 2 of the "how to model data" series, we'll look at a variety of *logical* models, their strengths and weaknesses, and pros and cons.
 
 Part 1 of this series covered the three steps of data modeling: link:https://www.couchbase.com/blog/conceptual-physical-logical-data-models/[conceptual, logical, and physical].
 
@@ -20,7 +20,7 @@ The logical data models that I find to be the most common and popular include: r
 
 === Relational Data Model
 
-The relational data model was proposed in 1970 by E.F. Codd. Generally speaking, the relational data model consists of tables that contain rows and columns, which contain data that follow pre-defined schemas and constraints.
+The relational data model was link:https://www.ibm.com/ibm/history/ibm100/us/en/icons/reldb/[proposed in 1970 by E.F. Codd]. Generally speaking, the relational data model consists of tables that contain rows and columns, which contain data that follow pre-defined schemas and constraints.
 
 The term "relational" does *not* refer to relationships between tables and entities, but rather the theoretical concept of a set of tuples that are a member of a data domain, each containing attributes.
 
@@ -109,7 +109,7 @@ link:https://hackolade.com/[Hackolade] is another data modeling tool that suppor
 
 link:https://www.idera.com/er-studio-enterprise-architecture-solutions/[Idera] has a full suite of tools for modeling. For instance, ER/Studio Business Architect provides conceptual modeling, and ER/Studio Data Architect provides logical and physical modeling.
 
-If these tools seem overkill for getting started, remember that you can use a more general purpose diagramming tool, like link:https://www.diagrams.net/[Diagrams.net] to get your team working collaboratively.
+If these tools seem like overkill for getting started, remember that you can use a more general purpose diagramming tool, like link:https://www.diagrams.net/[Diagrams.net] to get your team working collaboratively.
 
 == Next Steps and Resources
 
