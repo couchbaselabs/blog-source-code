@@ -1,0 +1,29 @@
+:imagesdir: images
+:meta-description: 
+:title: DevIntersection 2022 Recap
+:slug: devintersection-2022-recap
+:focus-keyword: DevIntersection
+:categories: Community, .NET
+:tags: conference, .net, microsoft
+:heroimage: TBD
+:wordcounttarget: n/a
+
+As a sponsor of the DevIntersection 2022 conference in Las Vegas, Couchbase was able to showcase its NoSQL database solutions to the attendees. We had a booth in the expo hall and a speaking session featuring Matthew Groves discussing caching. Finally, the event was capped off with a very popular prize drawing.
+
+At the booth, attendees had the opportunity to learn more about Couchbase's key features, such as its familiar query language link:https://www.couchbase.com/products/n1ql[SQL++], flexible JSON data model, and the link:https://www.couchbase.com/products/capella[Capella DBaaS]. Many attendees stopped by to speak with Couchbase's engineers and staff and to check out brief demos of link:https://www.couchbase.com/products/capella[Couchbase Capella] in action.
+
+We brought some swag, including stickers and pens, but the most popular swag had to be the link:https://www.amazon.com/Nite-Ize-DoohicKey-Stainless-Carabiner/dp/B00FIX126K[Couchbase-branded Doohickey] and the bamboo-cased sticky note set.
+
+image:14003-booth.jpg[Couchbase booth at DevIntersection]
+
+In addition to the booth, Couchbase also participated in a speaking session. This session covered the basics of caching: reading, writing, eviction, and link:https://www.couchbase.com/caching-comparison[distributed caching]. Attendees asked questions and were able to follow up with more discussion at the booth afterwards.
+
+image:14001-session-flier.jpg[DevIntersection session flier]
+
+Probably the most attractive thing about the Couchbase booth, beyond the idea of link:https://www.couchbase.com/products/n1ql[SQL for JSON], was the prize giveaway. A Lego Nintendo Entertainment System set.
+
+image:14002-lego-prize.jpg[Lego NES giveaway]
+
+Everyone had stories of playing the NES when they were kids. Over 350 people entered to win the set. Sadly, it's not a working NES and can't play cartridges, but it's still a fun prize just in time for the holidays. Congrats to the winner, Ethan M!
+
+Thank you link:https://www.devintersection.com/[DevIntersection], for having Couchbase be a part of your event, and thank you to all the speakers and everyone who stopped by the Couchbase booth. We'll see you again, soon!
