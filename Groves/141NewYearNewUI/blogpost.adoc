@@ -1,0 +1,85 @@
+:imagesdir: images
+:meta-description: 
+:title: Join Us for a New Webcast: New Year, New UI
+:slug: Join-New-Webcast-New-Year-New-UI
+:focus-keyword: new UI
+:categories: Couchbase Capella
+:tags: Capella, UI, UX, introduction, webcast, video
+:heroimage: TBD
+:wordcounttarget: n/a
+
+Join us on January 18th for a link:https://info.couchbase.com/mktg_webinar_quick_tour_capella_UI_US0118E_LP.html?utm_source=social&utm_medium=webinar[live, free webcast: "New Year, New UI"].
+
+The Couchbase Capella UI had a recent link:https://www.couchbase.com/blog/capella-new-developer-experience/[developer experience refresh]. In the upcoming webcast, I'll take you through a live tour. There won't be any slides, but here's what you can expect to be covered:
+
+== Signing in / Getting Started
+
+When you visit the Couchbase Capella homepage, you'll see the option to link:https://www.couchbase.com/products/capella["Try for free"] with a 30-day trial, no credit card required. If you sign up for that trial now, you can follow along during the webcast.
+
+When signing in, there's a new feature right off the bat: the "Use Single Sign-On" option is now available for those who prefer to use this method of authentication. I won't be doing this during the webcast, but you can check out the documentation on link:https://docs.couchbase.com/cloud/organizations/ui-auth/capella-ui-auth.html[Capella UI Authentication].
+
+Once signed in, you'll be taken to the main "getting started" hub. The three steps of the trial process are shown: setup, trial database, and upgrade.
+
+In the main hub, you'll also see several options for next steps, including:
+
+* Explore data
+* Import data
+* Connect
+* App services (won't be covered in the webcast, so link:https://docs.couchbase.com/cloud/app-services/index.html[check out the App Services overview])
+
+In the top navigation bar, you'll find links to:
+
+* Data tools
+* Monitoring (won't be covered in the webcast, so link:https://docs.couchbase.com/cloud/clusters/monitoring/monitoring.html[check out the Monitoring overview])
+* Backup (won't be covered in the webcast, check out link:https://docs.couchbase.com/cloud/clusters/backup-restore.html[Backup and Restore Data] documentation for Capella)
+* Settings
+
+== Explore Data
+
+One area that is particularly useful for working with Couchbase is the "explore data" section.
+
+Here, you can select a bucket and scope to query. You can view data insights, and expand to see all available scopes and collections. You can also enter a SQL++ query to retrieve data from the database.
+
+== Import Data
+
+Another important feature of Couchbase Capella is the ability to import data. The platform supports both JSON and CSV formats and offers several options for importing, including through a browser, using a blob, or via the command line for larger sets of data.
+
+== Connect
+
+For when you need to connect to Capella from your application code or other external sources, the "connect" section allows you to add your IP address to the whitelist. You can also add credentials and specify read/write access to specific buckets and scopes.
+
+== Data Tools
+
+Finally, the "data tools" section includes several options for working with data, including:
+
+* Query Workbench (which is where "Explore Data" goes direclty)
+* Key-value lookup (and document browsing)
+* Indexes
+* Full text/geospatial search.
+
+== Security and Storage Engine
+
+Some other "invisible" features of Couchbase Capella will be discussed, although it's difficult to show them in a UI.
+
+=== Security
+
+You can always check out the link:https://www.couchbase.com/products/capella/trust[Couchbase Trust Center] for the latest on security and certifications, including SOC 2 and HIPAA.
+
+Also, SSO (single sign-on) is a new part of Capella that will help organizations to better manage their data security.
+
+=== Storage Engine
+
+The new link:https://docs.couchbase.com/cloud/clusters/data-service/storage-engines.html#storage-engine-magma[Magma storage engine] compliments the existing Couchstore engine to provide better options for large data sets. Both are still available, and when to use which engine will be discussed in the webcast.
+
+== Summary and Next Steps
+
+I hope this quick tour of the Couchbase Capella UI will be helpful. link:https://info.couchbase.com/mktg_webinar_quick_tour_capella_UI_US0118E_LP.html?utm_source=social&utm_medium=webinar[Sign up for FREE to attend on January 18th].
+
+Be sure to link:couchbase.com/products/capella[check out Capella and sign up for a free trial].
+
+I'll be able to answer questions live during the webcast, but if you are already working on the trial and need help, you can visit the link:https://forums.couchbase.com[Couchbase forums] or join the link:https://www.couchbase.com/blog/couchbase-on-discord/[Couchbase Discord].
+
+_Replays for other time zones are also available:_
+
+* link:https://info.couchbase.com/mktg_webinar_quick_tour_capella_UI_APAC0119E_LP.html?utm_source=social&utm_medium=webinar[APAC (Asia-Pacific)]
+* link:https://info.couchbase.com/mktg_webinar_quick_tour_capella_UI_EMEA0119E_LP.html?utm_source=social&utm_medium=webinar[EMEA (Europe, Middle East, Africa)]
