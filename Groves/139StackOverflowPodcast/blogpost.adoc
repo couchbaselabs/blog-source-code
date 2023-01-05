@@ -1,0 +1,37 @@
+:imagesdir: images
+:meta-description: 
+:title: Developer Velocity on the Stack Overflow Podcast
+:slug: developer-velocity-stack-overflow-podcast
+:focus-keyword: developer velocity
+:categories: Community, Culture
+:tags: podcast, Stack Overflow, developers, velocity
+:heroimage: TBD
+:wordcounttarget: n/a
+
+I was fortunate to be a guest on the link:https://stackoverflow.blog/2022/10/19/faster-feedback-loops-make-for-faster-developer-velocity/[Stack Overflow podcast] recently. The topic was "Developer Velocity", which was something that my fellow guest (and long-time developer community compatriot) Cory House wanted to discuss.
+
+== What is Developer Velocity?
+
+In the podcast we discuss several factors that affect developer velocity, including:
+
+* How velocity is measured
+* Feedback loops
+* Cloud vs on-prem
+* Custom Tooling
+* Buy vs build
+* Familiarity of tooling vs learning from scratch
+* Continuous Integration / Continuous Deployment (CI/CD)
+
+One of the topics that's most important to Couchbase (and myself) is familiarity of tooling. SQL is the language of data that developers (and DBAs, admins, BI analysts, architects, etc) are most likely to be familiar with. However, much of the history of NoSQL, although it comes with many benefits, has been spent _avoiding_ SQL (hence the name).
+
+Couchbase, however, has invested heavily in SQL. Specifically, SQL++, an open standard, backwards compatible implementation of SQL designed for flexible JSON data. It's just one of the ways that Couchbase is committed to making flexible and fast data accessible via the _familiar_.
+
+You can listen to the link:https://stackoverflow.blog/2022/10/19/faster-feedback-loops-make-for-faster-developer-velocity/[Stack Overflow Podcast here], or find it in your podcast app of choice.
+
+== Next Steps
+
+Do you have opinions on developer velocity and developer productivity?
+
+What did you think of this episode?
+
+Come and discuss on the link:https://www.couchbase.com/blog/couchbase-on-discord/[Couchbase Discord] with other developers.
