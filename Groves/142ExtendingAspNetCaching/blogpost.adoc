@@ -12,6 +12,8 @@ To help .NET developers better use Couchbase in their applications, there is a c
 
 The main extension for discussion today is *Couchbase.Extensions.Caching*, which implements the link:https://learn.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-7.0[.NET Distributed Cache interface] using Couchbase. This can be added to your project with link:https://www.nuget.org/packages/Couchbase.Extensions.Caching[NuGet] (`dotnet add package Couchbase.Extensions.Caching`).
 
+Recently, I was working with a customer ?INSERT CUSTOMER NAME HERE? that is managing several applications, and wants to store caching data separately for each application. However, creating an entire new bucket for each application is overkill. They were wondering how to specify a scope/collection when using the Couchbase.Extensions.Caching library.
+
 ## Session and Caching Extensions
 
 In recent years, the shift from Couchbase SDK 2 to SDK 3 introduced many new features and improvements, including link:https://www.couchbase.com/blog/couchbase-server-7-0-release/[scopes/collections support]. The Couchbase.Extensions family has also been updated to support SDK 3.
