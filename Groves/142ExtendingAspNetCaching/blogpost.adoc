@@ -107,7 +107,7 @@ With a custom implementation of an interface, and one extra line in `Program.cs`
 
 Further, the *Couchbase.Extensions.Session* extension uses the caching extension as the underlying storage mechanism.
 
-Happy caching!
+Happy caching! link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/142ExtendingAspNetCachingSource code is available in GitHub].
 
 For more on .NET, check out the link:https://forums.couchbase.com/c/net-sdk/6[Couchbase .NET forum] and link:https://docs.couchbase.com/dotnet-sdk/current/hello-world/start-using-sdk.html[.NET SDK documentation].
 
