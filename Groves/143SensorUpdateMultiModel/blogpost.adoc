@@ -335,6 +335,6 @@ Couchbase is a multi-model database that offers options and tradeoffs for your u
 * SQL{plus}{plus} - familiar, declarative, but has query parsing and execution overhead
 * Eventing - close to the data, consolidates logic, but has overhead of eventing service and extra collections
 
-All the code samples are link://[available on GitHub].
+All the code samples are link:https://github.com/couchbaselabs/blog-source-code/tree/master/Groves/143SensorUpdateMultiModel/src[available on GitHub].
 
 Have you thought of a different approach? Leave a comment below, or share it on the link:https://www.couchbase.com/developers/community/[Couchbase Discord].
