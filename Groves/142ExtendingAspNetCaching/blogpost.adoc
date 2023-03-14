@@ -1,0 +1,114 @@
+:imagesdir: images
+:meta-description: 
+:title: Extending .NET Caching Provider for Collections
+:slug: Extending-dotnet-Caching-Provider-Collections
+:focus-keyword: TBD
+:categories: .NET
+:tags: Couchbase Server, .NET, caching
+:heroimage: TBD
+:wordcounttarget: n/a
+
+To help .NET developers better use Couchbase in their applications, there is a collection of community-supported link:https://github.com/couchbaselabs/Couchbase.Extensions[Couchbase Extensions]. These include extensions for caching, session, multiop, compression, and locking. And there are some officially supported extensions for dependency injection, open telemetry, and transactions.
+
+The main extension for discussion today is *Couchbase.Extensions.Caching*, which implements the link:https://learn.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-7.0[.NET Distributed Cache interface] using Couchbase. This can be added to your project with link:https://www.nuget.org/packages/Couchbase.Extensions.Caching[NuGet] (`dotnet add package Couchbase.Extensions.Caching`).
+
+## Session and Caching Extensions
+
+In recent years, the shift from Couchbase SDK 2 to SDK 3 introduced many new features and improvements, including link:https://www.couchbase.com/blog/couchbase-server-7-0-release/[scopes/collections support]. The Couchbase.Extensions family has also been updated to support SDK 3.
+
+However, the *default* usage of this library uses the `_default` scope and `_default` collection, with no built-in option to specify anything else.
+
+To see this in action, here's the line of configuration to add Couchbase as a distributed cache (taken from the link:https://github.com/couchbaselabs/Couchbase.Extensions/tree/master/example/Couchbase.Extensions.Caching.Example[GitHub example project]):
+
+[source,C#,indent=0]
+----
+builder.Services.AddDistributedCouchbaseCache("myproject", opt => { });
+----
+
+In that code, "myproject" is a bucket name. The `opt` object doesn't have an option for scope/collection name.
+
+Using the sample project, you'll end up with cached information like this:
+
+image:14201-default-scope-default-collection.png[Default scope and default collection used for caching by default]
+
+(Notice the bucket, scope, and collection names are "myproject", "_default", and "_default").
+
+## Extending the Extension
+
+Thankfully, the library is extensible enough that with a little bit of code, it can be pointed to whatever collection you'd like.
+
+Let's look a little deeper at the project, specifically ICouchbaseCacheCollectionProvider.cs and DefaultCouchbaseCacheCollectionProvider.cs
+
+* `ICouchbaseCacheCollectionProvider` contains one method, `GetCollectionAsync`.
+* `DefaultCouchbaseCacheCollectionProvider`'s implements that method with `return bucket.DefaultCollection();`
+
+But what if you don't want to use the default collection?
+
+In that case, create a custom implementation of `ICouchbaseCacheCollectionProvider`. I'll call mine `CustomCouchbaseCacheCollectionProvider`:
+
+[source,C#,indent=0]
+----
+using Couchbase.KeyValue;
+
+namespace Couchbase.Extensions.Caching.Example.Caching;
+
+public class CustomCouchbaseCacheCollectionProvider : ICouchbaseCacheCollectionProvider
+{
+    private readonly ICouchbaseCacheBucketProvider _bucketProvider;
+    private readonly string _scopeName;
+    private readonly string _collectionName;
+
+    public CustomCouchbaseCacheCollectionProvider(ICouchbaseCacheBucketProvider bucketProvider, string scopeName, string collectionName)
+    {
+        _bucketProvider = bucketProvider;
+        _scopeName = scopeName;
+        _collectionName = collectionName;
+    }
+
+    public async ValueTask<ICouchbaseCollection> GetCollectionAsync()
+    {
+        var bucket = await _bucketProvider.GetBucketAsync().ConfigureAwait(false);
+
+        var scope = await bucket.ScopeAsync(_scopeName);
+
+        return await scope.CollectionAsync(_collectionName);
+    }
+}
+----
+
+Consider this a starting point. In your implementation, you can set it up however you'd like, add additional logic, etc.
+
+The next step is to add that as a service (in Program.cs typically), specifying the scope/collection names.
+
+[source,C#,indent=0]
+----
+builder.Services.AddSingleton<ICouchbaseCacheCollectionProvider>(x =>
+    new CustomCouchbaseCacheCollectionProvider(
+        x.GetRequiredService<ICouchbaseCacheBucketProvider>(),
+        "mycachingscope",
+        "mycachingcollection"));
+----
+
+If you're concerned about this being overwritten by the default provider, note that link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/src/Couchbase.Extensions.Caching/CouchbaseCacheServiceCollectionExtensions.cs#L30[`TryAddSingleton` is used inside of `AddDistributedCouchbaseCache`]. This means that it *won't* override your custom provider with the default provider.
+
+## Custom Provider in Action
+
+This extension will not actually create the specified scope and collection, so make sure you've created them ahead of time.
+
+Run the app, and try out the Weather Forecast API with the OpenAPI interactive page. The first time executing the endpoint will result in a "cache miss", at which point the weather forecast data will be written to the collection specified:
+
+image:14202-custom-scope-custom-collection.png[Swagger OpenAPI example]
+
+(Notice the bucket, scope, and collection names are "myproject", "mycachingscope", and "mycachingcollection").
+
+## Summary
+
+With a custom implementation of an interface, and one extra line in `Program.cs`, you can specify whatever scope/collection you want to store cached data into.
+
+Further, the *Couchbase.Extensions.Session* extension uses the caching extension as the underlying storage mechanism.
+
+Happy caching!
+
+For more on .NET, check out the link:https://forums.couchbase.com/c/net-sdk/6[Couchbase .NET forum] and link:https://docs.couchbase.com/dotnet-sdk/current/hello-world/start-using-sdk.html[.NET SDK documentation].
+
+If you've got questions on caching, session, or architecture in general, check out the link:https://www.couchbase.com/developers/community/[Couchbase Discord].
