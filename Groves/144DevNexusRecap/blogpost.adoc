@@ -1,0 +1,35 @@
+:imagesdir: images
+:meta-description: 
+:title: DevNexus 2023 Recap
+:slug: devnexus-2022-recap
+:focus-keyword: DevNexus
+:categories: Community, Java
+:tags: conference, Java, Spring Data
+:heroimage: TBD
+:wordcounttarget: n/a
+
+As a sponsor of the link:https://devnexus.com/[DevNexus] 2023 conference in Atlanta, Couchbase showcased its NoSQL database solutions to the attendees. We had a booth in the hall and a speaking session featuring Matthew Groves discussing JSON Data Modeling. Finally, the event was capped off with a prize drawing for two Raspberry Pis.
+
+At the booth, attendees had the opportunity to learn more about Couchbase's key features, such as its familiar query language link:https://www.couchbase.com/products/n1ql[SQL++], flexible JSON data model, and the link:https://www.couchbase.com/products/capella[Capella DBaaS]. Attendees from a variety of local companies came by the booth to discuss databases.
+
+image:14003-devnexus-booth.jpg[Discussion at the DevNexus booth]
+
+We brought some swag, including bags and pens, but the most popular swag had to be the Java mascot "Duke" Couchbase sticker.
+
+image:14401-java-sticker.jpg[Couchbase Java stickers at DevNexus]
+
+The most attractive thing about the Couchbase booth, beyond the idea of link:https://www.couchbase.com/products/n1ql[SQL for JSON], was the prize giveaway: two Raspberry Pi 4 Model B's
+
+image:14002-raspberry-pi-prize.jpg[Raspberry Pi prize giveaway]
+
+Everyone had ideas of interesting things to build with Raspberry Pi, including link:https://www.couchbase.com/blog/arm-cpu-support-for-couchbase-server-71/[deploying Couchbase Server, which now has ARM support]. Hundreds of people entered to win. Congrats to the winners: Frank W and Ravindra T!
+
+I was very busy during DevNexus: I presented link:https://www.couchbase.com/blog/a-json-data-modeling-guide/["JSON Data Modeling for Document Databases"] on Thursday. There were many insightful and interesting questions, and I appreciated how engaged the DevNexus audience was.
+
+image:14004-json-modeling-devnexus.jpg[JSON Data Modeling at the DevNexus conference]
+
+I also appeared on the link:https://twitter.com/DevopsSpeakeasy[DevOps Speakeasy podcast], which was being recorded live on a stage throughout the event. Make sure to follow and subscribe for great DevOps content.
+
+image:14005-devops-speakeasy-devnexus.jpg[DevOps Speakeasy podcast at DevNexus]
+
+Thank you link:https://www.devnexus.com/[DevIntersection], for having Couchbase be a part of your event, and thank you to all the speakers and everyone who stopped by the Couchbase booth. We'll see you again, soon!
