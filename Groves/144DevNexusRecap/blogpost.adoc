@@ -32,4 +32,4 @@ I also appeared on the link:https://twitter.com/DevopsSpeakeasy[DevOps Speakeasy
 
 image:14005-devops-speakeasy-devnexus.jpg[DevOps Speakeasy podcast at DevNexus]
 
-Thank you link:https://www.devnexus.com/[DevIntersection], for having Couchbase be a part of your event, and thank you to all the speakers and everyone who stopped by the Couchbase booth. We'll see you again, soon!
+Thank you link:https://www.devnexus.com/[DevNexus], for having Couchbase be a part of your event, and thank you to all the speakers and everyone who stopped by the Couchbase booth. We'll see you again, soon!
