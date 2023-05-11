@@ -1,0 +1,53 @@
+:imagesdir: images
+:meta-description: Take the anonymous Stack Overflow Developer Survey and share with your team. Help shape the future of software development in just 10 minutes
+:title: Stack Overflow Developer Survey for 2023 Now Open
+:slug: stack-overflow-developer-survey
+:focus-keyword: stack overflow
+:categories: ???
+:tags: stack overflow, survey, developers
+:heroimage: TBD
+
+It's that time of year again: the Stack Overflow Developer Survey is open. This year has an increased emphasis on AI and ML. link:https://stackoverflow.blog/2023/05/08/the-2023-developer-survey-is-now-live/[Check out the Stack Overflow blog for more details].
+
+== Who is a "Developer"?
+
+A developer is someone who has written code. You don't have to have "developer" or "engineer" or "programmer" in your job title. In marketing and wrote SQL++ queries to power a dashboard? In sales and wrote some Python to parse SalesForce data? You're a developer!
+
+image:14501-who-is-a-developer.png[Who is a developer? Anyone who codes.]
+
+* Used one of the link:https://developer.couchbase.com/[many Couchbase SDKs]? You're a developer for sure.
+* A link:https://www.couchbase.com/products/n1ql[SQL++ query]? Copy/pasted into Query Workbench? You're a developer.
+* Tried out the link:https://couchbase.live/[Couchbase Playground]? You're a developer.
+* Started a link:https://www.couchbase.com/products/capella/[free trial of Capella]? You're a coder.
+* Wrote some HTML for WordPress? Modified an email template? You're a developer.
+* Are you in the 6th grade and you created something in link:https://scratch.mit.edu/[Scratch]? You're a developer!
+
+== Why Take the Survey?
+
+Why should you give up a few minutes of your time to take this survey?
+
+1. Share your experiences: The survey gives you the opportunity to share your experiences as a developer and provide valuable feedback to the community.
+
+2. Influence the industry: The survey results are highly influential and help shape the future of software development.
+
+3. Stay up-to-date: By taking the survey, you can stay up-to-date on the latest trends and technologies in the industry.
+
+4. Connect with the community: The survey helps to build a sense of community among developers, and your participation can help strengthen that community.
+
+5. It's quick and easy: The survey takes only around 10 minutes to complete and doesn't require a Stack Overflow account to participate.
+
+link:https://stackoverflow.az1.qualtrics.com/jfe/form/SV_czLVsbnGnF4Q04e[Take the survey right now].
+
+image:14502-database-stack-overflow.png[You can tell the survey you work with Couchbase. Don't select CouchDB by mistake!]
+
+== Share the Survey With Your Team
+
+Don't keep the Stack Overflow Developer Survey all to yourself!
+
+Encourage your teams and colleagues to participate in the survey too. By sharing the survey with your network, you'll help make the results more representative and valuable for the entire developer community. Plus, the more responses they receive, the better insights we can gather and share with the world. So spread the word and let's work together to create a better future for software development!
+
+*Reminder: the survey is totally anonymous, and no PII is collected.*
+
+== Thank you!
+
+Thank you for taking the time to read our blog post about the Stack Overflow Developer Survey! This is an important survey that helps shape the future of software development. By reading this post and sharing the survey with your network, you are contributing to the growth and evolution of the developer community. Thank you for being a part of the developer community.
