@@ -1,0 +1,68 @@
+:imagesdir: images
+:meta-description: 
+:title: Netlify Teams Up with Couchbase Capella: Enabling Scalable Web Applications
+:slug: Netlify-Teams-Up-Couchbase-Capella-Enabling-Scalable-Web-Applications
+:focus-keyword: Netlify
+:categories: Couchbase Capella
+:tags: Node.js, JavaScript, Netlify
+:heroimage: TBD
+
+Great news for developers and web development teams: Netlify has recently introduced a new integration with Couchbase Capella, aimed at making web application development more efficient. This new integration brings together the popular cloud deployment platform of Netlify and the advanced cloud DBaaS solution of Couchbase Capella. By combining their strengths, Netlify and Capella can help developers build outstanding web applications. To help you get started, Couchbase has also created a quickstart developer tutorial.
+
+## New Integration
+
+link:https://www.netlify.com/integrations/couchbase/[Netlify's Couchbase Capella integration] brings Netlify's low-friction database connection management to Couchbase Capella.
+
+With a standard approach of creating a "netlify.toml" and ".env" files, connecting to Capella from Netlify becomes as easy as:
+
+[source,JavaScript,indent=0]
+----
+const couchbase = require('couchbase')
+require('dotenv').config()
+
+const ENDPOINT = process.env.COUCHBASE_ENDPOINT
+const USERNAME = process.env.COUCHBASE_USERNAME
+const PASSWORD = process.env.COUCHBASE_PASSWORD
+
+const couchbaseClientPromise = couchbase.connect('couchbases://' + ENDPOINT, {
+  username: USERNAME,
+  password: PASSWORD,
+  timeouts: {
+    kvTimeout: 10000, // milliseconds
+  },
+})
+----
+
+Developers no longer have to manage their Capella credentials and connection strings manually.
+
+## Benefits of Netlify and Capella together
+
+The integration between Couchbase Capella DBaaS and link:https://www.netlify.com/products/functions/[Netlify Functions] opens up a world of possibilities for developers. One of the key advantages of this combination is the ease of scaling. With Couchbase Capella's cloud-native architecture, teams can scale their databases to meet the demands of growing web applications with a Database-as-a-Service (DBaaS). Combined with Netlify's auto-scaling capabilities, your application can handle high traffic with fewer downtime and performance issues. Whether you're building a small-scale web app or a large enterprise solution, the Couchbase Capella and Netlify duo provides a solid foundation for your growing application.
+
+Another reason why Couchbase Capella DBaaS and Netlify work well together is the deployment process. Netlify's interface simplifies the deployment of web applications, allowing developers to manage and deploy their projects from a single dashboard. By integrating Couchbase Capella with Netlify, developers can deploy their application alongside the database service, improving the overall deployment workflow. This deployment combination process reduces the need for complex configurations and the potential for errors or compatibility issues.
+
+Furthermore, developers can use Couchbase Capella's SQL++ query language, which provides a familiar and powerful tool for querying data, making it easier to work with and manipulate data within the deployed application.
+
+[source,JavaScript,indent=0]
+----
+const cluster = await couchbaseClientPromise
+const results = await cluster.query(
+  'SELECT * from `travel-sample`.inventory.airline LIMIT 5'
+)
+----
+
+With Couchbase Capella DBaaS and Netlify, developers can focus on building their applications without getting caught up in deployment and querying complexities, resulting in a smoother and more efficient development experience.
+
+## Get Started with Netlify and Capella
+
+Getting started with Netlify and Couchbase Capella requires a few prerequisites.
+
+First, you'll need a Couchbase Capella account, which you can easily obtain by signing up for a link:https://www.couchbase.com/products/capella[free trial database account] (no credit card or commitment required).
+
+image:14701-netlify-couchbase-capella-screenshot.jpeg[Couchbase Capella and Netlify in action]
+
+You'll need a link:https://www.netlify.com/[Netlify account], which you can create for free by signing in with your GitHub account.
+
+You'll also need to have the Netlify CLI, Node.js 16+, cURL or an API testing tool (like Postman).
+
+To help you kickstart your journey, Couchbase provides a comprehensive link:Quickstart using Couchbase Capella and Netlify Serverless Functions[getting started tutorial]. This will guide you through the entire process and get you up and running.
