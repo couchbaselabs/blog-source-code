@@ -2,7 +2,7 @@
 :meta-description: 
 :title: Couchbase Capella Outshines DynamoDB, MongoDB, Redis in Speed, Functionality, and TCO
 :slug: couchbase-capella-outshines-dynamodb-mongodb-redis-speed-functionality-tco
-:focus-keyword: 
+:focus-keyword: TBD
 :categories: Couchbase Capella
 :tags: ROI, TCO, YCSB, benchmarks, latency, throughput, performance
 :heroimage: TBD
