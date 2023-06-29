@@ -1,0 +1,58 @@
+:imagesdir: images
+:meta-description: 
+:title: KCDC 2023 Developer's Conference Recap
+:slug: KCDC-2023-developers-conference-recap
+:focus-keyword: KCDC
+:categories: ?
+:tags: events, conferences
+:heroimage: maybe the big purple image seen below?
+
+In June 2023, Kansas City became a hub for developers and tech enthusiasts as it hosted the link:https://www.kcdc.info/[Kansas City Developer Conference (KCDC)], a huge gathering of developers and tech leaders.
+
+## KCDC 2023
+
+Couchbase was a Platinum Level sponsor of the event. Here's a recap of the notable Couchbase and Couchbase-related activities of KCDC.
+
+image:14801-kcdc-2023-signage.jpg[KCDC 2023]
+
+KCDC, known for its excellent speakers and engaging activities, gathered a significant crowd of tech enthusiasts from various domains, including health care, banking, startups, consulting companies, software companies, and more. The people from Couchbase partner link:https://www.couchbase.com/partners/amazon/[Amazon] shared a fantastic video that gives a great overview of what KCDC is about.
+
+++++
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Here we go! Day two at <a href="https://twitter.com/hashtag/KCDC2023?src=hash&amp;ref_src=twsrc%5Etfw">#KCDC2023</a>. <a href="https://twitter.com/kc_dc?ref_src=twsrc%5Etfw">@kc_dc</a> Director Jonathan Mills gave us some insight into what goes into getting this event off the ground plus what is so important about creating connection and community amongst developers. <a href="https://t.co/m8Hno3izAN">https://t.co/m8Hno3izAN</a> <a href="https://twitter.com/hashtag/AlexaatKCDC?src=hash&amp;ref_src=twsrc%5Etfw">#AlexaatKCDC</a> <a href="https://t.co/dHMD6B46l9">pic.twitter.com/dHMD6B46l9</a></p>&mdash; Alexa Developers (@alexadevs) <a href="https://twitter.com/alexadevs/status/1672261769568329729?ref_src=twsrc%5Etfw">June 23, 2023</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+++++
+
+Look closely and you might even catch a glimpse of Couchbase's booth, and speaker Ted Neward presenting his Busy Developer's Guide to NoSQL.
+
+## Couchbase Booth
+
+Couchbase's booth was very busy between sessions. Everyone from students to experienced developers stopped by to discuss database and learn about Couchbase and Couchbase Capella. 
+
+Visitors to the booth could pick up various kinds of swag, including a handy sticky note kit (which we called an "analog database"). One creative attendee used one of the sticky notes to craft a unique piece of origami
+
+++++
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Swag art. Someone made this origami with a <a href="https://twitter.com/hashtag/couchbase?src=hash&amp;ref_src=twsrc%5Etfw">#couchbase</a> sticky note. <a href="https://twitter.com/hashtag/kcdc2023?src=hash&amp;ref_src=twsrc%5Etfw">#kcdc2023</a> <a href="https://t.co/vKJkk3zu0Z">pic.twitter.com/vKJkk3zu0Z</a></p>&mdash; Matthew D. Groves (@mgroves) <a href="https://twitter.com/mgroves/status/1671965398101639170?ref_src=twsrc%5Etfw">June 22, 2023</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+++++
+
+## Ted Neward
+
+During the conference, Ted Neward conducted an engaging session titled "Busy Developer's Guide to NoSQL." This session surveyed NoSQL options, the history of NoSQL, use cases, and more. 
+
+++++
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Great NoSQL session at <a href="https://twitter.com/hashtag/kcdc2023?src=hash&amp;ref_src=twsrc%5Etfw">#kcdc2023</a> from <a href="https://twitter.com/tedneward?ref_src=twsrc%5Etfw">@tedneward</a>. Got more questions about what he covered? Come on by the <a href="https://twitter.com/hashtag/Couchbase?src=hash&amp;ref_src=twsrc%5Etfw">#Couchbase</a> booth, and let&#39;s talk. <a href="https://t.co/nP1XjhGmUO">pic.twitter.com/nP1XjhGmUO</a></p>&mdash; Matthew D. Groves (@mgroves) <a href="https://twitter.com/mgroves/status/1671917699990163456?ref_src=twsrc%5Etfw">June 22, 2023</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+++++
+
+Ted Neward has recently written an article called link:https://thenewstack.io/reducing-complexity-with-a-multimodel-database/[Reducing Complexity with a Multimodel Database] for The New Stack, and he touched on some of these same points during his NoSQL session.
+
+Not stopping there, Ted also presented another session where he surveyed next-generation languages. Those who attended left with an overview of modern language trends, problems, and solutions.
+
+## Raspberry Pi Giveaway
+
+One of the best moments at the Couchbase booth was the giveaway of the always hard to find Raspberry Pi 4, with a complete kit. Hundreds entered the drawing. Congratulations to the winner, Matt B!
+
+image:14803-raspberry-pi-couchbase-winner.jpg[Couchbase giveaway winner]
+
+## See You Next Year?
+
+The KCDC event was a tremendous success, generating insightful discussions both in the sessions and in the hallways, promoting knowledge exchange, networking, and delicious BBQ.
+
+If you missed KCDC this time around, join our link:https://www.couchbase.com/blog/couchbase-on-discord/[Couchbase Discord] to stay informed about future events coming to an area near you. If you're intrigued by our discussions on NoSQL and multi-model databases, why not give link:https://www.couchbase.com/products/capella[Couchbase Capella] a try?
