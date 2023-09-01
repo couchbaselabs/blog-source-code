@@ -1,0 +1,52 @@
+:imagesdir: images
+:meta-description: 
+:title: Putting the SQL back into NoSQL Videos
+:slug: putting-sql-back-into-nosql-videos
+:focus-keyword: ?
+:categories: ?
+:tags: 
+:heroimage: TBD
+
+Are you interested in using the familiar SQL language while also benefiting from the flexibility of JSON data? We've got a series of three videos that can help you achieve the best of both worlds.
+
+== Putting the SQL back into NoSQL
+
+The first video is a webcast that introduces SQL\+\+: how to bring the familiarity of SQL to the speed and flexibility of JSON.
+
+You can learn how to apply your existing SQL skills to start modeling JSON data right away.  This link:https://resources.couchbase.com/sqlforjson/putting-sql-in-nosql-video[webcast includes]:
+
+* How SQL++ eases your transition from relational to NoSQL
+* The basics of SQL++ and the extensions for working with JSON
+* How to start using SQL++ in production with Couchbase Capella™ DBaaS
+
+== More SQL++ Samples
+
+The link:https://resources.couchbase.com/sqlforjson/basic-sql-queries-for-json-video[next video] is a deeper dive into the capabilities of SQL++ for JSON data, including matching text (`LIKE`), matching JSON data in arrays (`ANY ... IN ... SATISFIES ... END`), get advice for indexes (`ADVISE`, `EXPLAIN`), and more.
+
+This video shows the Visual Studio Code extension for Couchbase to demonstrate these queries. Subqueries, common table expressions (CTEs), and window functions are also available in SQL++, making complex queries more manageable.
+
+If you'd like to follow along with the examples:
+
+* Install the link:https://marketplace.visualstudio.com/items?itemName=Couchbase.vscode-couchbase[Couchbase extension for VSCode]
+* Download the link:https://resources.couchbase.com/sqlforjson/pub[sample SQL++ Notebook].
+
+== ChatGPT and SQL++
+
+Generative AI like ChatGPT and link:https://www.couchbase.com/blog/introducing-couchbase-capella-iq/[Capella iQ] are helpful tools for creating SQL++ queries. In link:https://resources.couchbase.com/sqlforjson/chatgpt-for-sql-vid[this video], you'll see the benefits of over-specifying and providing example data to get the most useful results with the fewest hallucinations. An example workflow might include:
+
+1. Telling ChatGPT about your model by pasting in example JSON documents.
+2. Running examples that ChatGPT generates to better understand the data.
+3. Asking ChatGPT to generate a query.
+4. Reading the query and explanation.
+5. Trying to query to make sure it works.
+6. Asking ChatGPT to iterate/improve/refine the query.
+7. Asking ChatGPT to generate some client code (C#, Java, Python, etc) to execute the query.
+8. Go back to step 3 for your next set of requirements.
+
+== Next Steps
+
+Want to keep going with JSON data and generative AI?
+
+* Check out the link:https://resources.couchbase.com/sqlforjson/putting-sql-in-nosql-video[Putting the SQL Back into NoSQL] Video Series.
+* Sign up for a link:https://www.couchbase.com/products/capella[Couchbase Capella free trial] (no credit card needed).
+* Register for link:https://www.couchbase.com/ai-cloud-services/[Capella iQ] (currently in a private preview)
