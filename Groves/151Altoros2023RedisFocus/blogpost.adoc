@@ -1,0 +1,100 @@
+:imagesdir: images
+:meta-description: 
+:title: Couchbase Capella: Advantages in Speed, Functionality, and TCO Over Redis
+:slug: Couchbase-Capella-Advantages-Speed-Functionality-TCO-Over-Redis
+:focus-keyword: TBD
+:categories: Couchbase Capella
+:tags: ROI, TCO, YCSB, benchmarks, latency, throughput, performance, Redis
+:heroimage: TBD
+
+Altoros, an IT consulting organization known for database comparison, has released their latest independent benchmark, commissioned by Couchbase. The benchmark assesses the DBaaS solutions provided by Couchbase and Redis. Using the widely recognized YCSB standard for benchmarking NoSQL databases, this study offers insights into their capabilities. This blog provides a concise overview of the Couchbase Capella and Redis report, highlighting that Couchbase Capella excels over Redis Enterprise Cloud in terms of features, performance, and total cost of ownership (TCO) across various workloads and cluster sizes.
+
+YCSB (Yahoo! Cloud Serving Benchmark) is a standardized framework used for benchmarking the performance of cloud-based database systems. It consists of a variety of workload tests. Here are the workloads chosen for this study:
+
+* *Workload A*, 50% read and 50% update: This is designed to simulate a write-heavy workload scenario where the database system primarily handles read operations with occasional updates.
+* *Pagination workload*: This tests how a database system manages paginated data retrieval. By evaluating the system's efficiency in fetching specific data segments from a larger dataset, it gives insight into common application tasks like showing data in bite-sized portions, such as in leaderboards or pagination for extensive ordered results.
+* *Workload E*, 95% read, 5% update: This workload examines the database system's performance when most operations are reads, with a minor fraction of updates.
+* *Workload C*, 100% read: This is a pure caching scenario, where only reads are performed.
+
+## Benchmark Highlights
+
+For the Capella and Redis results, make sure to check out the link:https://resources.couchbase.com/nosql_comparison_web/altoros-report-2023-nosql-dbaas-performance-couchbase-capella-redis-enterprise-cloud[detailed Altoros report].
+
+It's important to note that the new Magma storage engine was used for this set of benchmarks (Magma has efficiency benefits and reduced memory requirements for large data storage, but for pure speed link:https://docs.couchbase.com/server/current/learn/buckets-memory-and-storage/storage-engines.html#couchstore-and-magma-at-a-glance[Couchstore] will often be the better choice).
+
+Here are some highlights.
+
+### Performance - Workload A
+
+As in previous years, Couchbase does extraordinarily well in an update-heavy use case, especially as the need for large scale increases. For example, here's Workload A results:
+
+image:14601-workload-a-throughput.png[YCSB Workload A results - throughput]
+
+image:14602-workload-a-latency.png[YCSB Workload A results - latency]
+
+In these graphs, you can see that Capella's throughput is higher than Redis's DBaaS offering. Due to Capella's memory-first architecture and automatic sharding, the latency is also lower than Redis for this workload.
+
+### Functionality - Pagination Workload
+
+Workload C is worth highlighting for a "pure cache" use case. Capella and Redis Enterprise Cloud both perform well for this workload due to their memory-first designs, which can cache results for faster response.
+
+image:14603-workload-c-throughput.png[YCSB Workload C results - throughput]
+
+image:14604-workload-c-latency.png[YCBS Workload C results - latency]
+
+Once again, high throughput and low latency from both technologies.
+
+However, while Redis performs very well in the case of a pure cache, it struggles with another more general purpose 100% read workload: pagination.
+
+image:14605-workload-pagination-throughput.png[YCSB Pagination Workload - throughput]
+
+Take special note of the Y-axis of these charts: they have a logarithmic scale (otherwise they would be unreadable). Redis's latency is so high, and throughput so low, that it would otherwise be, literally, off the charts.
+
+image:14606-workload-pagination-latency.png[YCSB Pagination Workload - latency]
+
+In a typical Redis deployment, this type of processing would typically require on a secondary database. However, Capella by itself handles this workload very well: high throughput, low latency, and easy as SQL syntax of `SELECT . . . LIMIT . . . OFFSET`.
+
+### Total Cost of Ownership (TCO)
+
+In the case of a "pure cache", Redis is often used in conjunction with other databases. You will get good cache performance, but at the price of running two (or more) separate databases. (For instance, Redis *and* Mongo, Redis *and* Oracle, etc).
+
+In regards to "bang for your buck", there are charts included that summarize the cost of each database deployment in "dollars per billion operations". For example, here is Workload A's chart (shorter bars means less expensive):
+
+image:14607-cost-per-billion-operations.png[Cost per billion operations]
+
+These costs do *not* take into account the second database that Redis may often require. It only takes into account the cost of the database and data operations.
+
+When you look at the whole report, Couchbase doesn't win every time, every workload. But, it does offer an impressive mix of price, features, and speed. This is what lead to link:https://resources.couchbase.com/c/broadjump-case-study?x=s9hNYZ[Couchbase customer Broadjump claiming that Capella is the "trifecta of value"]).
+
+Couchbase Capella does very well for the majority of workload+cluster combinations. In addition, Capella is a fast, extremely versatile multi-model database that includes:
+
+*Data Types and Access Patterns:*
+
+* Key-value - direct lookup at memory speeds
+* Built-in caching - low latency, fast lookup
+* JSON Document - flexible data
+* Time Series - stored in TS_arrays in JSON with built-in formatting functions
+
+*Querying and Analysis:*
+
+* SQL++ - flexible querying
+* Full Text Search - text, ranking, geospatial searches (without needing a separate tool like Solr)
+* Analytics with SQL++ - complex query options for BI
+* Eventing - processing logic at the database level
+
+*Operational and Integration Features:*
+
+* Mobile Sync - automatic and offline-first with client to client sync, too!
+* Automatic sharding/partitioning - easy for developers and great for growth
+* Automatic replication and rebalancing - easy for ops
+* Change-data-capture (with Kafka integration to stream document change logs)
+
+With Capella, all of this functionality is built in: no separate modules to install, no additional database technology needed.
+
+## Next Steps
+
+Make sure to read the link:https://resources.couchbase.com/nosql_comparison_web/altoros-report-2023-nosql-dbaas-performance-couchbase-capella-redis-enterprise-cloud[final report from Altoros on Capella and Redis]. A shorter link:https://resources.couchbase.com/nosql_comparison_web/executive-summary-altoros-benchmark-study-redis[Executive Summary] is also available.
+
+Sign-up for a free trial of link:https://www.couchbase.com/products/capella/[Couchbase Capella].
+
+Got questions? Check out the link:https://www.couchbase.com/blog/couchbase-on-discord/[Couchbase Discord].
