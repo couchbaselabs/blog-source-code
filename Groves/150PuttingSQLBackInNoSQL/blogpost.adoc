@@ -11,9 +11,9 @@ Are you interested in using the familiar SQL language while also benefiting from
 
 == Putting the SQL back into NoSQL
 
-The first video is a webcast that introduces SQL\+\+: how to bring the familiarity of SQL to the speed and flexibility of JSON.
+The first video is an on-demand webcast that introduces SQL\+\+: how to bring the familiarity of SQL to the speed and flexibility of JSON.
 
-You can learn how to apply your existing SQL skills to start modeling JSON data right away.  This link:https://resources.couchbase.com/sqlforjson/putting-sql-in-nosql-video[webcast includes]:
+You can learn how to apply your existing SQL skills to start modeling JSON data right away.  This link:https://resources.couchbase.com/sqlforjson/putting-sql-in-nosql-video?utm_source=website&utm_medium=blog&utm_campaign=sql-json-demo[webcast includes]:
 
 * How SQL++ eases your transition from relational to NoSQL
 * The basics of SQL++ and the extensions for working with JSON
@@ -21,7 +21,7 @@ You can learn how to apply your existing SQL skills to start modeling JSON data 
 
 == More SQL++ Samples
 
-The link:https://resources.couchbase.com/sqlforjson/basic-sql-queries-for-json-video[next video] is a deeper dive into the capabilities of SQL++ for JSON data, including matching text (`LIKE`), matching JSON data in arrays (`ANY ... IN ... SATISFIES ... END`), get advice for indexes (`ADVISE`, `EXPLAIN`), and more.
+The link:https://resources.couchbase.com/sqlforjson/basic-sql-queries-for-json-video?utm_source=website&utm_medium=blog&utm_campaign=sql-json-demo[next video] is a deeper dive into the capabilities of SQL++ for JSON data, including matching text (`LIKE`), matching JSON data in arrays (`ANY ... IN ... SATISFIES ... END`), get advice for indexes (`ADVISE`, `EXPLAIN`), and more.
 
 This video shows the Visual Studio Code extension for Couchbase to demonstrate these queries. Subqueries, common table expressions (CTEs), and window functions are also available in SQL++, making complex queries more manageable.
 
@@ -32,7 +32,7 @@ If you'd like to follow along with the examples:
 
 == ChatGPT and SQL++
 
-Generative AI like ChatGPT and link:https://www.couchbase.com/blog/introducing-couchbase-capella-iq/[Capella iQ] are helpful tools for creating SQL++ queries. In link:https://resources.couchbase.com/sqlforjson/chatgpt-for-sql-vid[this video], you'll see the benefits of over-specifying and providing example data to get the most useful results with the fewest hallucinations. An example workflow might include:
+Generative AI like ChatGPT and link:https://www.couchbase.com/blog/introducing-couchbase-capella-iq/[Capella iQ] are helpful tools for creating SQL++ queries. In link:https://resources.couchbase.com/sqlforjson/chatgpt-for-sql-vid?utm_source=website&utm_medium=blog&utm_campaign=sql-json-demo[this video], you'll see the benefits of over-specifying and providing example data to get the most useful results with the fewest hallucinations. An example workflow might include:
 
 1. Telling ChatGPT about your model by pasting in example JSON documents.
 2. Running examples that ChatGPT generates to better understand the data.
