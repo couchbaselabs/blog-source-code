@@ -1,0 +1,92 @@
+:imagesdir: images
+:meta-description: 
+:title: A Tour of the Couchbase JetBrains Plugin for Developers
+:slug: A-Tour-Couchbase-JetBrains-Plugin-Developers
+:focus-keyword: ?
+:categories: Copmmunity, Partners, I'm not sure?
+:tags: JetBrains, IntelliJ, plugin, 
+:heroimage: TBD
+:wordcounttarget: 
+
+There is a link:https://plugins.jetbrains.com/plugin/22131-couchbase[Couchbase plugin available for use with any JetBrains IDE], including: IntelliJ IDEA, Android Studio, AppCode, Aqua, CLion, Code With Me Guest, DataGrip, DataSpell, GoLand, MPS, PhpStorm, PyCharm, Rider, RubyMine, RustRover, and WebStorm.
+
+Over on Couchbase social media (link:https://twitter.com/couchbase[X] and link:https://www.linkedin.com/company/couchbase[LinkedIn]), there has been a series of short videos showcasing what you can do with this plugin.
+
+Those videos have been compiled into one longer video, which you can watch here:
+
+--- youtube embed ---
+
+## Getting Started
+
+Adding the Couchbase plugin is straightforward. Go to File > Settings > Plugins, find the Couchbase plugin in the Marketplace, and install it.
+
+image:15401-installing-plugin.png[Installing the Couchbase plugin in a JetBrains IDE like Rider]
+
+Once installed, you'll have a dedicated Couchbase tab from which to perform helpful Couchbase tasks.
+
+## What Can You Do with It?
+
+Once you've installed the plugin, you can connect to your own Couchbase server or to Couchbase Capella in the cloud. If you haven't tried Capella yet, you can sign up for a link:https://www.couchbase.com/products/capella/[30-day free trial] (no credit card needed).
+
+image:15402-connecting-to-couchbase-from-jetbrains.png[Connecting to Couchbase Server or Capella from a JetBrains IDE]
+
+## Work with Your Data Efficiently
+
+With the plugin, you can directly access and manage your database's buckets, scopes, collections, indexes, and documents from within the IDE.
+
+image:15403-navigating-cluster-bucket-scope-collection.png[Viewing and navigating Couchbase clusters, buckets, scopes, collections, and documents]
+
+It allows you to edit documents and save changes back to the database without leaving your coding environment.
+
+image:15404-viewing-editing-document.png[Viewing and editing a document right inside a JetBrains IDE]
+
+## Smart Features to Help You Out
+
+When creating new documents, the plugin can automatically suggests document structures based on your existing data, helping you keep your JSON documents consistent.
+
+image:15405-suggest-fields.png[Suggesting fields for a new document, based on existing data]
+
+It also includes a link:https://www.couchbase.com/sqlplusplus/[SQL++] Workbench where you can write and run queries, check the results in JSON or table view, and even see a breakdown of how your queries are running with a detailed execution plan.
+
+image:15406-query-execution.png[Executing a SQL++ query directly in a JetBrains IDE]
+
+## Visual Data Tools
+
+Need to visualize your data? The plugin comes with tools to create charts and graphs.
+
+image:15407-chart-visualization.png[Chart visualizations of SQL++ query results in a JetBrains IDE]
+
+Map views of link:https://www.couchbase.com/blog/how-to-geospatial-polygon-search/[geospatial data] are also included, which is great for data with geographical information (like latitude and longitude).
+
+image:15408-map-visualization.png[Map visualization of geospatial data in a JetBrains IDE]
+
+## Easy Data Migration
+
+The plugin also supports moving data and indexes from MongoDB to Couchbase, which is handy if you're considering multiple databases or link:https://www.couchbase.com/comparing-couchbase-vs-mongodb/[moving off of MongoDB].
+
+image:15409-mongodb-migration-to-couchbase.png[JetBrains plugin to migrate data and indexes from MongoDB to Couchbase]
+
+## Couchbase Lite Integration
+
+For those working on mobile or edge computing, the plugin supports Couchbase Lite, an link:https://www.couchbase.com/products/mobile/[embedded database that syncs with Couchbase Capella] or your local server.
+
+image:15410-couchbase-lite.png[Accessing a Couchbase Lite database from a JetBrains IDE]
+
+This feature is perfect for building apps that need to work link:https://www.couchbase.com/blog/couchbase-offline-first-app-use-cases/[offline]. You can manage Couchbase Lite databases right from your IDE, making your workflow smoother.
+
+## Why Use the Couchbase Plugin?
+
+The Couchbase plugin for link:https://www.jetbrains.com/[JetBrains/IntelliJ IDEs] turns your favorite IDE into a powerful tool for managing both local and cloud databases.
+
+It's designed to make your development work easier, and with less context switching:
+
+* Connecting to Couchbase
+* CRUD operations on data
+* SQL++ queries and index analysis
+* Visualization
+* Data migration
+* Couchbase Lite
+
+The plugin is also link:https://github.com/couchbaselabs/couchbase_jetbrains_plugin[fully open source], so you can see upcoming features, exactly how it works, make suggestions, submit bugs, and even extend it to suit your needs.
+
+link:https://plugins.jetbrains.com/plugin/22131-couchbase[Install the Couchbase plugin] today and start making your JetBrains IDE work harder for you.
