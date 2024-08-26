@@ -1,0 +1,152 @@
+:imagesdir: images
+:meta-description: 
+:title: New to Capella Free Tier? 10 Things for you to Know
+:slug: New-Capella-Free-Tier-10-Things-for-you-to-Know
+:focus-keyword: ?
+:categories: 
+:tags: 
+:heroimage: TBD
+:wordcounttarget: 
+
+The wait for a Capella perpetual free tier is over]]]link[[[! Now the Couchbase DBaaS is available to all: students, hobbyists, startups, and enterprises alike. For those brand new to the Couchbase ecosystem, here are 10 resources you should check out that will help you get the most out of Capella.
+
+## 1. IDE Plugins for VSCode and JetBrains
+
+Capella has a web UI for running queries, setting up buckets, managing credentials, and more. But for day-to-day coding work, you may benefit from an IDE plugin.
+
+* link:https://marketplace.visualstudio.com/items?itemName=Couchbase.vscode-couchbase[VSCode]
+* link:https://plugins.jetbrains.com/plugin/22131-couchbase[JetBrains] (link:https://www.couchbase.com/blog/a-tour-couchbase-jetbrains-plugin-developers/[7 Minute Tour])
+
+These plugins provide syntax highlighting, CRUD operations, visualizations, data migration, Couchbase Lite integration, and more.
+
+These plugins are open source, and you can contribute to them on GitHub:
+
+* link:https://github.com/Couchbase-Ecosystem/VSCode-Couchbase[Couchbase VSCode plugin on GitHub]
+* link:https://github.com/Couchbase-Ecosystem/couchbase_jetbrains_plugin[Couchbase JetBrains plugin on GitHub]
+
+## 2. Sample Projects
+
+There are a variety of sample projects, in a variety of languages that range from "Hello, World" to complete applications.
+
+### Conduit
+
+**Conduit** (from the RealWorld project) is a spec of a basic Medium (social blog platform) clone, with implementation in a variety of frontend and backend platforms and languages. Here are some that use Couchbase:
+
+* link:https://github.com/mgroves/realworld-aspnet-couchbase[ASP.NET Core] (C#)
+* link:https://github.com/MacklinEngineering/Conduit[Express] (Node.js)
+* link:https://github.com/couchbase-examples/realWorld-server-ottomanjs[Express + Ottoman.js] (Node.js)
+* link:https://github.com/couchbase-examples/couchbase-springboot-realworld-example-app[Spring Data Couchbase + Spring Boot] (Java)
+* For more on Conduit, check out this summary video from a Twitch live coding series: link:https://www.youtube.com/watch?v=3ynXWW_Vyrc[Kickstarting a Real-World ASP.NET Project with Couchbase]
+
+### What is this thing?
+
+**link:https://github.com/mgroves/WhatIsThisThing[What is this thing?]** Is a demo project of an ecommerce application that uses the hybrid search capabilities of Couchbase: SQL, key/value, vector, geospatial. (link:https://www.youtube.com/watch?v=sYy0ob2GqUo[Overview video])
+
+### RAG demos
+
+RAG (retreival-augmented generation) is a technique that uses a large language model (LLM) to generate a response to a user query. The LLM is augmented with information from a database (usually retrieved via vector search).
+
+* link:https://github.com/couchbase-examples/rag-demo[RAG Demo using LangChain]
+* link:https://github.com/couchbase-examples/rag-demo-llama-index[RAG Demo using LlamaIndex]
+* link:https://github.com/couchbase-examples/hybrid-search-demo[RAG Demo using Hybrid Search]
+
+### Try CB
+
+"link:https://github.com/orgs/couchbaselabs/repositories?q=try-cb[Try CB]" is a series of sample projects that demonstrate how to use Couchbase with a variety of SDKs (e.g. try-cb-ruby, try-cb-dotnet, etc)
+
+### Hello World
+
+If you just want to get started with a bare minimum console app, the Couchbase documentation for each SDK has a "Start Using" page that can help you through installation, connect, and execution: link:https://docs.couchbase.com/java-sdk/current/hello-world/start-using-sdk.html[Java], link:https://docs.couchbase.com/go-sdk/current/hello-world/start-using-sdk.html[Go], link:https://docs.couchbase.com/php-sdk/current/hello-world/start-using-sdk.html[PHP], and more. Click on the link:https://docs.couchbase.com/home/sdk.html[SDK of your choice] and then "Getting Started".
+
+## 3. Framework integrations
+
+Couchbase has a growing ecosystem of framework integrations, both official and community-contributed. Here are some of the most notable:
+
+* link:https://docs.couchbase.com/sdk-extensions/spring-data-couchbase.html[Spring Data]: for the popular Spring framework for Java
+* link:https://ottomanjs.com/[Ottoman.js]: an ODM for Node.js with a similar interface to Mongoose
+* Ruby/Rails: a link:https://docs.couchbase.com/ruby-sdk/current/project-docs/third-party-integrations.html[cache store for Rails] and an link:https://github.com/Couchbase-Ecosystem/couchbase-ruby-orm[OR/M for Ruby]
+* ASP.NET: link:https://docs.couchbase.com/dotnet-sdk/current/howtos/managing-connections.html#connection-di[dependency injection], link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/caching.md[caching], link:https://github.com/couchbaselabs/Couchbase.Extensions/blob/master/docs/session.md[session], and link:https://github.com/couchbaselabs/Linq2Couchbase[Linq]
+* link:https://vercel.com/integrations/couchbase-capella[Vercel]: a serverless platform for Node.js
+* link:https://www.netlify.com/integrations/couchbase/[Netlify]: a serverless platform for Node.js
+* link:https://python.langchain.com/v0.2/docs/integrations/providers/couchbase/[Langchain]: a framework for building RAG applications with Python: Couchbase can act as a vector store, a document loader, a semantic cache, and chat message history.
+* link:https://docs.llamaindex.ai/en/stable/api_reference/storage/vector_store/couchbase/[LlamaIndex]: a framework for building RAG applications with Python: Couchbase can act as a reader and a vector store 
+* link:https://github.com/friendsofcat/laravel-couchbase[Laravel]: a popular PHP web framework
+
+## 4. Playground
+
+You can get started coding with Couchbase in a browser without having to install anything. Capella has a built-in link:https://docs.couchbase.com/cloud/get-started/sdk-playground.html[playground] that allows you to use SDKs and/or SQL to try out code samples through interactive tutorials.
+
+image:15601-capella-playground-screenshot.png[Screenshot of Capella playground]
+
+## 5. Capella iQ
+
+Seems like AI is everywhere. Capella iQ is a built-in AI chat that can help you create sample data, construct queries, indexes, generate code for using SDKs, and more.
+
+]]]embed: https://youtu.be/UXkk7stqbkQ [[[
+
+## 6. Community Discord and Forums
+
+Got questions about Couchbase, technical or otherwise? You can interact with the Couchbase community on link:https://discord.com/invite/K7NPMPGrPk[Discord].
+
+]]]embed: https://x.com/couchbase/status/1821724097748824147 [[[
+
+You can also ask questions, browse previous posts, and get help on the link:https://forums.couchbase.com/[Couchbase forums]. (Before posting your question, you may want to check out #10 in this blog post).
+
+## 7. Couchbase Shell
+
+link:https://www.nushell.sh/[Couchbase Shell] is a command-line interface that allows you to interact with Capella and/or Couchbase Server. It provides a way to execute commands and queries against Couchbase Server, as well as manage data, perform administrative tasks, and even interact with LLMs for RAG use cases.
+
+image:15602-couchbase-shell-animated.gif[Couchbase shell]
+
+It's built on NuShell, an open source shell that enables pipelines, treats everything as data, and has a plugin ecosystem. 
+
+## 8. Documentation
+
+Documentation is the treasure map that everyone ignores until they're hopelessly lost. The Couchbase documentation is a great resource for learning about Couchbase and its features.
+
+Based on my interactions with developers over the years, here are a few pages to highlight frequently asked questions (once you get past the basics):
+
+- link:https://docs.couchbase.com/server/current/learn/services-and-indexes/indexes/index-replication.html#index-consistency[Scan Consistency]: If your query isn't returning your latest documents, you probably need to review scan consistency.
+- link:https://docs.couchbase.com/sdk-extensions/distributed-acid-transactions.html[ACID Transactions] are available in Couchbase SQL, as well as C++, .NET, Java, Go, Node.js, PHP, and Python.
+- link:https://docs.couchbase.com/scala-sdk/current/concept-docs/data-durability-acid-transactions.html[CAP Theorem]: Review the guarantees that Couchbase makes. The short answer is that Couchbase is CP (or AP over multiple data centers).
+- link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/join.html[JOINs]: Yes, Couchbase supports SQL++; yes it supports JOINs.
+- link:https://docs.couchbase.com/server/current/guides/indexes.html[Indexing] is important to understand.
+- Time series: Couchbase is not a time series database, but it has link:https://docs.couchbase.com/cloud/n1ql/n1ql-language-reference/time-series.html[time series functionality].
+- CTE (Common Table Expressions): Couchbase supports link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/with.html[CTEs (`WITH ...`)] and link:https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/with-recursive.html[recursive CTEs (`WITH RECURSIVE ...`)]
+- Subdocument: SDKs (like link:https://docs.couchbase.com/dotnet-sdk/current/howtos/subdocument-operations.html[.NET]) support partial reads/writes, to avoid sending large documents over the network for small changes.
+
+Want to know more? The Couchbase documentation has an experimental AI tool that allows you to have a conversation with the documentation. Just click the Couchbase logo at the bottom right on the docs site.
+
+image:15603-couchbase-docs-ai-chat.gif[Couchbase docs AI chat]
+
+And finally, the docs are open source! You can submit a pull request to link:https://docs.couchbase.com/home/contribute/index.html[fix a typo or contribute a new page].
+
+## 9. Test Containers
+
+Automated testing is important, and when you're testing your application, you'll want to test it against a real database, not a mock. The popular Test Containers project supports Couchbase for Java, Go, .NET, and Node.js.
+
+With Test Containers, you can create a "disposable" Couchbase container for use with integration tests in code:
+
+[source,C#,indent=0]
+----
+var couchbaseContainer = new CouchbaseBuilder()
+  .WithImage("couchbase:enterprise-7.6.2")
+  .Build();
+await couchbaseContainer.StartAsync();
+----
+
+Another project that can be useful for testing is link:https://github.com/brantburnett/couchbasefakeit[CouchbaseFakeIt], a Docker image that can initialize Couchbase with indexes and fake data.
+
+## 10. Advanced SDK tooling
+
+When you're ready to tackle more advanced functionality and/or troubleshoot networking issues, here are some more advanced integrations for Couchbase:
+
+* link:https://docs.couchbase.com/server/current/sdk/sdk-doctor.html[SDK doctor] - A tool to diagnose application-server-side connectivity issues with your Couchbase or Capella Cluster. If you are having connection issues, definitely try this tool first.
+
+* link:https://docs.couchbase.com/sdk-extensions/field-level-encryption.html[Field-level encryption] - Fields within a JSON document can be securely encrypted by the SDK to support FIPS 140-2 compliance.
+
+* link:https://docs.couchbase.com/sdk-extensions/response-time-observability.html[Response time observability] - Tracing and Metrics provide fine-grained insight into how a distributed application is performing, and helps to diagnose when it is not.
+
+## Summary
+
+Now that you're armed with all of these tools, it's time to build something amazing with Couchbase Capella. Sign up today for the forever free tier ]]]link[[[. Explore the endless possibilities Capella has to offer. We can't wait to see what you create—be sure to share your projects and join the growing Couchbase community!
