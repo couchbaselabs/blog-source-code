@@ -3,8 +3,8 @@
 :title: New to Capella Free Tier? 10 Things for you to Know
 :slug: New-Capella-Free-Tier-10-Things-for-you-to-Know
 :focus-keyword: ?
-:categories: 
-:tags: 
+:categories: Couchbase SDK
+:tags: VSCode, JetBrains, IDE, sample, starter, AI, RAG, vector, frameworks, iq, testing, test containers, SDKs
 :heroimage: TBD
 :wordcounttarget: 
 
