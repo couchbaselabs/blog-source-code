@@ -7,7 +7,7 @@
 :tags: Couchbase Server, XML, Json, .NET, C#
 :heroimage: 072-hero-xml.png (https://commons.wikimedia.org/wiki/File:XML_icon.svg)
 
-XML data can be converted to JSON, which can be loaded into Couchbase Server (link:https://www.couchbase.com/downloads[Couchbase Server 5.0 beta now available]). Depending on the source of the data, you might be able to use a tool like link:https://developer.couchbase.com/documentation/server/current/connectors/talend/talend.html[Talend]. But you may also want to write a simple C# .NET application with link:http://www.newtonsoft.com/json[Newtonsoft's Json.NET] to do it.
+XML data can be converted to JSON, which can be loaded into link:https://www.couchbase.com/products/server/[Couchbase Server] or link:https://www.couchbase.com/products/capella/[Couchbase Capella]. Depending on the source of the data, you might be able to link:https://www.couchbase.com/developers/integrations/?category=Connectors[Kafka, Talend, Camel, etc]. But you may also want to write a simple C# .NET application with link:http://www.newtonsoft.com/json[Newtonsoft's Json.NET] to do it.
 
 == XML data
 
@@ -43,7 +43,7 @@ In this example, I'm asking Json.NET to serialize an XML node:
 
 == Saving the Json result
 
-Finally, let's put the Json into Couchbase. The easiest way to do this would be to again call on `JsonConvert` to deserialize the Json into a C# `object`. That object would then be used with Couchbase's `bucket.Insert(...)` method.
+Finally, let's put the Json into Couchbase. The easiest way to do this would be to again call on `JsonConvert` to deserialize the Json into a C# `object`. That object would then be used with Couchbase's `collection.InsertAsync(...)` method.
 
 [source,C#,indent=0]
 ----
@@ -80,4 +80,4 @@ image:07202-xml-to-dotnet-object-storage.png[XML serialized to new class object]
 
 One more minor thing to point out: I used `Guid.NewGuid().ToString()` to create arbitrary keys for the documents. If you have value(s) in the XML data that you want to use for a key, you could/should use those value(s) instead.
 
-This blog post was inspired by an email conversation with a Couchbase user. If you have any suggestions on tools, tips, or tricks to make this process easier, please let me know. Or, contact me if there's something you'd like to see me blog about! You can link:mailto:matthew.groves@couchbase.com[email me] or link:https://twitter.com/mgroves[contact me @mgroves on Twitter].
+This blog post was inspired by an email conversation with a Couchbase user. If you have any suggestions on tools, tips, or tricks to make this process easier, please let me know. Or, contact me if there's something you'd like to see me blog about! You can link:mailto:matthew.groves@couchbase.com[email me] or link:https://x.com/mgroves[contact me @mgroves on X].
