@@ -7,77 +7,130 @@
 :tags: Couchbase Server, XML, Json, .NET, C#
 :heroimage: 072-hero-xml.png (https://commons.wikimedia.org/wiki/File:XML_icon.svg)
 
-XML data can be converted to JSON, which can be loaded into link:https://www.couchbase.com/products/server/[Couchbase Server] or link:https://www.couchbase.com/products/capella/[Couchbase Capella]. Depending on the source of the data, you might be able to link:https://www.couchbase.com/developers/integrations/?category=Connectors[Kafka, Talend, Camel, etc]. But you may also want to write a simple C# .NET application with link:http://www.newtonsoft.com/json[Newtonsoft's Json.NET] to do it.
+XML-to-JSON conversion is a common requirement when modernizing .NET applications: migrating from legacy XML-based services or storage to JSON-native systems like link:https://www.couchbase.com/products/server/[Couchbase Server] or link:https://www.couchbase.com/products/capella/[Couchbase Capella]. In C#, two libraries handle this conversion: Newtonsoft Json.NET (the long-standing community standard, now at v13) and System.Text.Json (built into .NET Core 3.1+ as a lightweight alternative). This post covers the key differences between XML and JSON, how to perform the conversion using both libraries, edge cases to watch for, and how to store the resulting JSON documents in Couchbase using the .NET SDK.
 
-== XML data
 
-For the purposes of this tutorial, I'm going to use a very simple XML example. If your XML is more complex (multiple attributes, for instance), then your approach will also have to be more complex. (Json.NET can handle all XML to Json conversions, but it follows a specific set of link:http://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm[conversion rules]). Here's a sample piece of data:
+// XML data can be converted to JSON, which can be loaded into link:https://www.couchbase.com/products/server/[Couchbase Server] or link:https://www.couchbase.com/products/capella/[Couchbase Capella]. Depending on the source of the data, you might be able to link:https://www.couchbase.com/developers/integrations/?category=Connectors[Kafka, Talend, Camel, etc]. But you may also want to write a simple C# .NET application with link:http://www.newtonsoft.com/json[Newtonsoft's Json.NET] to do it.
 
-[source,C#,indent=0]
-----
-include::LoadingXml/LoadingXml/Program.cs[tag=xml]
-----
+== XML vs JSON: Key Differences
 
-Notice that I've got this XML as a hardcoded string in C#. In a real-life situation, you would likely be pulling XML from a database, a REST API, XML files, etc.
+[options="header"]
+|===
+| Characteristic | XML | JSON | Migration Considerations
+h| Syntax | Tag-based: `<name>Alice</name>` | Key-value: `{"name": "Alice"}` | XML tags become JSON keys
+h| Verbosity | High: opening and closing tags | Low: minimal syntax overhead | JSON documents can be 30-60% smaller than XML equivalent
+h| Arrays | Repeated elements: `<item/><item/>` | Native array type: `["a","b"]` | c
+h| Attributes | Native: `<user id="1">` | No direct equivalent | XML attributes need a convention in the JSON object, e.g `@id` or `id`` field in the JSON object
+h| Human readability | Moderate: verbose but structured | High: compact and familiar to developers | JSON is generally preferred for modern APIs and document databases
+h| Browser / API support | Declining: REST APIs prefer JSON | Universal: native in JavaScript | REST APIs almost universally use JSON; XML remains in SOAP or legacy systems
+|===
 
-Once you have the raw XML, you can create an `XmlDocument` object (`XmlDocument` lives in the `System.Xml` namespace).
+== Option 1: Newtonsoft Json.NET
 
-[source,C#,indent=0]
-----
-include::LoadingXml/LoadingXml/Program.cs[tag=xmldocument]
-----
-
-== Conversion with Json.NET
-
-Once you have an `XmlDocument` object, you can use Json.NET to convert that object into a Json representation.
+Newtonsoft Json.NET is the most widely used JSON library in the .NET ecosystem. It provides a one-line XML-to-JSON conversion via XmlNodeConverter:
 
 [source,C#,indent=0]
 ----
-include::LoadingXml/LoadingXml/Program.cs[tag=jsonconvert]
+include::LoadingXml/LoadingXml/Program.cs[tag=newtonsoftjsonconvert]
 ----
 
-In this example, I'm asking Json.NET to serialize an XML node:
+Output:
 
-* I used `Formatting.None`. If I wanted to display the actual Json, it might be better to use `Formatting.Indented`
-* The last `true` specifies that I want to omit the root object. In the XML above, you can think of `<Invoice></Invoice>` as the root object. I just want the values of the Invoice object. If I didn't omit the root node, the resultant Json would look like: `{"Invoice":{"Timestamp":"1/1/2017 00:01","CustNumber":"12345","AcctNumber":"54321"}}`
+[source,JavaScript,indent=0]
+----
+{
+  "user": {
+    "@id": "1",
+    "name": "Alice",
+    "email": "alice@example.com",
+    "roles": {
+      "role": [
+        "admin",
+        "editor"
+      ]
+    }
+  }
+}
+----
 
-== Saving the Json result
+== Option 2: System.Text.Json (.NET Built-in)
 
-Finally, let's put the Json into Couchbase. The easiest way to do this would be to again call on `JsonConvert` to deserialize the Json into a C# `object`. That object would then be used with Couchbase's `collection.InsertAsync(...)` method.
+System.Text.Json is built into .NET (Core) 3.1 and later. It does not have native XML-to-JSON conversion, but you can combine it with XDocument for a two-step approach:
 
 [source,C#,indent=0]
 ----
-include::LoadingXml/LoadingXml/Program.cs[tag=insertobject]
+include::LoadingXml/LoadingXml/Program.cs[tag=systemjsonconvert]
 ----
 
-With this method, the Json would be stored in Couchbase like so:
-
-image:07201-xml-to-json-object-storage.png[XML serialized to object]
-
-That might be fine, but often times you're going to want more control of the format. With Json.NET, we can serialize to a given class, instead of just `object`. Let's create an `Invoice` class like so:
+This option needs a helper function:
 
 [source,C#,indent=0]
 ----
-include::LoadingXml/LoadingXml/Program.cs[tag=invoiceclass]
+include::LoadingXml/LoadingXml/Program.cs[tag=XmlToDictionary]
 ----
 
-Notice that there is some type information now. The Timestamp is a `DateTime` and the AcctNumber is an `int`. The conversion will still work, but the result will be different, according to link:http://www.newtonsoft.com/json/help/html/ConvertingJSONandXML.htm[Json.NET's conversion rules]. (Also check out the link:http://www.newtonsoft.com/json/help/html/Introduction.htm[full Json.NET documentation] if you aren't familiar with it already).
+For most XML-to-JSON migration scenarios, Newtonsoft Json.NET is the simpler choice, and is generally more feature rich. System.Text.Json would make sense for new .NET 6+ projects that are not migrating from XML and when serialization performance is critical.
+
+[options="header"]
+|===
+| Characteristic | Newtonsoft Json.NET | System.Text.Json
+h| XML conversion | Native: `SerializeXmlNode` and `DeserializeXmlNode` | Manual: requires custom helper code
+h| Performance | Generally adequate | Optimized for for `Span<T>` / `ReadOnlySpan<T>`
+h| Availability | NuGet package | Built into .NET Core 3.1+ / .NET 5+
+h| Flexibility | High: extensive feature set and customisation options | Moderate: opinionated, fewer extension points
+h| When to consider? | XML migration; complex serialisation scenarios | New .NET 6+ projects; performance-sensitive APIs
+|===
+
+== Storing Converted JSON in Couchbase (.NET SDK)
+
+Once converted to JSON, documents can be stored in Couchbase using the .NET SDK 3.x. The SDK accepts any C# object or JObject (Newtonsoft) as a document value:
 
 [source,C#,indent=0]
 ----
-include::LoadingXml/LoadingXml/Program.cs[tag=insertobject2]
+include::LoadingXml/LoadingXml/Program.cs[tag=couchbase]
 ----
 
-The result of that insert will look like:
+For bulk migration of many XML documents, use `Task.WhenAll` to insert/upsert documents in parallel:
 
-image:07202-xml-to-dotnet-object-storage.png[XML serialized to new class object]
+[source,C#,indent=0]
+----
+include::LoadingXml/LoadingXml/Program.cs[tag=bulk]
+----
 
-* Notice that the timestamp field is different: it's stored in a more standardized way.
-* The acctNumber field value is not in quotes, indicating that it's being stored as a number.
-* Finally, notice that the field names are different. This is due to the way Json.NET names Json fields by default. You can specify different names by using the `JsonProperty` attribute.
+== Common Edge Cases
 
-== That's it
+[options="header"]
+|===
+| Edge Case | Issue | Solution
+h| Single vs multiple child elements | A single `<role>` element becomes a string; multiple become an array | Force array output with JsonConvert settings or post-process the JSON
+h| XML attributes vs elements | Attributes get @ prefix in Json.NET output | Strip @ prefix in post-processing if not needed in Couchbase documents
+h| XML namespaces | Namespaces appear as @xmlns keys | Strip namespaces before conversion using XmlDocument.RemoveAll() on namespace nodes
+h| Null / empty elements | Empty XML tags become null or empty strings | Normalise to null or remove from document in post-processing
+h| Large XML files | Loading a large `XmlDocument` into memory may cause out-of-memory errors | Use `XmlReader` for streaming conversion of large files
+|===
 
-One more minor thing to point out: I used `Guid.NewGuid().ToString()` to create arbitrary keys for the documents. If you have value(s) in the XML data that you want to use for a key, you could/should use those value(s) instead.
+== Frequently Asked Questions
+
+*How do I convert XML to JSON in C#?*
+
+The simplest approach is Newtonsoft Json.NET: load your XML into an XmlDocument, then call JsonConvert.SerializeXmlNode(doc). For .NET 6+ projects without an XML migration need, System.Text.Json is the built-in alternative. See the code examples above for both approaches.
+
+*What is Newtonsoft Json.NET?*
+
+Newtonsoft Json.NET is the most widely used JSON library in the .NET ecosystem, maintained by James Newton-King. The current version is 13.x. It provides serialisation, deserialisation, querying (LINQ to JSON), and XML-to-JSON conversion. Install via NuGet: Install-Package Newtonsoft.Json.
+
+*What is the difference between XML and JSON?*
+
+XML uses tag-based syntax with attributes, namespaces, and schema validation via XSD. JSON uses a compact key-value format natively supported by JavaScript. JSON documents are typically 30-60% smaller, faster to parse, and universally supported by modern REST APIs and document databases. See the comparison table above for a full breakdown.
+
+*How do I store converted JSON in Couchbase from C#?*
+Use the Couchbase .NET SDK 3.x (NuGet: CouchbaseNetClient). Connect to your Couchbase cluster or Capella endpoint, get a reference to a collection, and call collection.UpsertAsync(documentId, jsonObject). The SDK accepts JObject (from Newtonsoft) or any .NET POCO. See the code example in the 'Storing in Couchbase' section above.
+
+*Should I use Newtonsoft Json.NET or System.Text.Json?*
+For XML migration scenarios, Newtonsoft Json.NET is the better choice — it has native XML-to-JSON conversion via SerializeXmlNode(). For new .NET 6+ projects that don't involve XML, System.Text.Json is the preferred option: it is built in, allocation-efficient, and performs better in high-throughput scenarios.
+
+== Conclusion
+
+Converting XML to JSON in C# is straightforward with Newtonsoft Json.NET's `SerializeXmlNode` method. The main considerations are attribute handling (@ prefix convention), repeated element array coercion, and namespace stripping. Once converted, the Couchbase .NET SDK makes it simple to store the resulting JSON documents in Couchbase Capella or Server using `UpsertAsync`.
 
 This blog post was inspired by an email conversation with a Couchbase user. If you have any suggestions on tools, tips, or tricks to make this process easier, please let me know. Or, contact me if there's something you'd like to see me blog about! You can link:mailto:matthew.groves@couchbase.com[email me] or link:https://x.com/mgroves[contact me @mgroves on X].

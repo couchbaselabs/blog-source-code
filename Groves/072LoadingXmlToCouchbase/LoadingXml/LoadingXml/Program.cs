@@ -1,71 +1,174 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
-using Couchbase;
-using Couchbase.KeyValue;
+using System.Xml.Linq;
 using Newtonsoft.Json;
-using Formatting = Newtonsoft.Json.Formatting;
+using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using Couchbase;
 
-namespace LoadingXml
+class Program
 {
-    class Program
+    static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
+        string xml = @"<user id='1'>
+                        <name>Alice</name>
+                        <email>alice@example.com</email>
+                        <roles>
+                            <role>admin</role>
+                            <role>editor</role>
+                        </roles>
+                       </user>";
+
+        Console.WriteLine("=== ORIGINAL XML ===");
+        Console.WriteLine(xml);
+
+        // =========================
+        // OPTION 1: Newtonsoft Json.NET
+        // =========================
+        Console.WriteLine("\n=== NEWTONSOFT JSON.NET ===");
+
+        // tag::newtonsoftjsonconvert[]
+        var xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(xml);
+
+        string jsonNewtonsoft =
+            JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.Indented);
+        // end::newtonsoftjsonconvert[]
+
+        Console.WriteLine(jsonNewtonsoft);
+        Console.ReadLine();
+
+        // =========================
+        // OPTION 2: System.Text.Json (manual)
+        // =========================
+        Console.WriteLine("\n=== SYSTEM.TEXT.JSON ===");
+
+        // tag::systemjsonconvert[]
+        var xdoc = XDocument.Parse(xml);
+        var dict = XmlToDictionary(xdoc.Root!);
+
+        string jsonSystemText = System.Text.Json.JsonSerializer.Serialize(
+            dict,
+            new JsonSerializerOptions { WriteIndented = true });
+        // end::systemjsonconvert[]
+
+        Console.WriteLine(jsonSystemText);
+        Console.ReadLine();
+
+        // =========================
+        // COUCHBASE DEMO
+        // =========================
+        // tag::couchbase[]
+        var cluster = await Cluster.ConnectAsync(
+            "couchbases://cb.<connectionString>.cloud.couchbase.com",
+            new ClusterOptions
+            {
+                UserName = "xmlconvert",
+                Password = "password"
+            });
+
+        var bucket = await cluster.BucketAsync("loadxml");
+        var collection = await bucket.DefaultCollectionAsync();
+
+        var jsonObj = JObject.Parse(jsonNewtonsoft);
+        var documentId = $"user::{jsonObj["user"]!["@id"]}";
+
+        await collection.UpsertAsync(documentId, jsonObj);
+        // end::couchbase[]
+
+        Console.WriteLine($"Stored document: {documentId}");
+        Console.ReadLine();
+
+        // =========================
+        // BULK DEMO (simulated)
+        // =========================
+        Console.WriteLine("\n=== BULK CONVERSION DEMO ===");
+
+        string xmlA = @"<user id='2'>
+                        <name>Matt</name>
+                        <email>matt@example.com</email>
+                        <roles>
+                            <role>admin</role>
+                        </roles>
+                       </user>";
+        string xmlB = @"<user id='3'>
+                        <name>Emma</name>
+                        <email>emma@example.com</email>
+                        <roles>
+                            <role>editor</role>
+                        </roles>
+                       </user>";
+
+
+        // tag::bulk[]
+        var xmlSamples = new List<string> { xmlA, xmlB };
+
+        var tasks = xmlSamples.Select(async (x, i) =>
         {
-            // sample XML, parsed into an XmlDocument
-            // this might come from an XML file, another database, a REST API, etc
-            // but for this example, it's just a hardcoded string
-            // tag::xml[]
-            var xml = @"
-                <Invoice>
-                    <Timestamp>4/16/2026 02:23</Timestamp>
-                    <CustNumber>12345</CustNumber>
-                    <AcctNumber>54321</AcctNumber>
-                </Invoice>";
-            // end::xml[]
-            // tag::xmldocument[]
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xml);
-            // end::xmldocument[]
+            var doc = new XmlDocument();
+            doc.LoadXml(x);
 
-            // convert XML into JSON using Newtonsoft Json.net
-            // tag::jsonconvert[]
-            var json = JsonConvert.SerializeXmlNode(doc, Formatting.None, true);
-            // end::jsonconvert[]
+            var json = JsonConvert.SerializeXmlNode(doc, Newtonsoft.Json.Formatting.None);
+            var obj = JObject.Parse(json);
 
-            // this is just an example of what the Json would look like if I DIDN'T omit root node
-            // {"Invoice":{"Timestamp":"4/16/2026 02:23","CustNumber":"12345","AcctNumber":"54321"}}
+            var id = $"doc::{i}";
+            await collection.UpsertAsync(id, obj);
 
-            // connect to couchbase cluster
-            var cluster = await Cluster.ConnectAsync(
-                "couchbases://cb.ojzftkgudoak8tkc.cloud.couchbase.com",
-                "xmlconvert",
-                "5M1+cjb$LAhP"
-            );
-            var bucket = await cluster.BucketAsync("loadxml");
-            var collection = bucket.DefaultCollection();
+            await Task.Delay(10); // simulate async work
 
-            // insert directly (literal translation)
-            // tag::insertobject[]
-            object transactObject1 = JsonConvert.DeserializeObject(json);
-            await collection.InsertAsync(Guid.NewGuid().ToString(), transactObject1);
-            // end::insertobject[]
+            Console.WriteLine($"Processed {id}");
+        });
 
-            // insert via class (type information, naming conventions applied)
-            // tag::insertobject2[]
-            Invoice transactObject2 = JsonConvert.DeserializeObject<Invoice>(json);
-            await collection.InsertAsync(Guid.NewGuid().ToString(), transactObject2);
-            // end::insertobject2[]
+        await Task.WhenAll(tasks);
+        // end::bulk[]
 
-            await cluster.DisposeAsync();
-        }
-    }
 
-    // tag::invoiceclass[]
-    public class Invoice
+        Console.WriteLine("\nDone.");
+         Console.ReadLine();
+   }
+
+    // =========================
+    // XML -> Dictionary helper
+    // =========================
+    // tag::XmlToDictionary[]
+    static object XmlToDictionary(XElement element)
     {
-        public DateTime Timestamp { get; set; }
-        public string CustNumber { get; set; }
-        public int AcctNumber { get; set; }
+        var hasElements = element.Elements().Any();
+
+        // leaf node
+        if (!hasElements)
+        {
+            return element.Value;
+        }
+
+        var dict = new Dictionary<string, object>();
+
+        // group children by name (handles arrays)
+        foreach (var group in element.Elements().GroupBy(e => e.Name.LocalName))
+        {
+            if (group.Count() == 1)
+            {
+                dict[group.Key] = XmlToDictionary(group.First());
+            }
+            else
+            {
+                dict[group.Key] = group
+                    .Select(XmlToDictionary)
+                    .ToList();
+            }
+        }
+
+        // attributes (prefix with @ to match Newtonsoft style)
+        foreach (var attr in element.Attributes())
+        {
+            dict[$"@{attr.Name.LocalName}"] = attr.Value;
+        }
+
+        return dict;
     }
-    // end::invoiceclass[]
+    // end::XmlToDictionary[]
 }
